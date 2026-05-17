@@ -11,8 +11,8 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#050a0e]/80 backdrop-blur-xl border-b border-electric-cyan/10">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        {/* Logo Redirects to Home */}
-        <Link href="/" className="flex items-center gap-3">
+        {/* LOGO REDIRECT FIX */}
+        <Link href="/" className="flex items-center gap-3 cursor-pointer">
           <img src="https://assets.cdn.filesafe.space/NkFUgZER3rrdnofCwAIl/media/648dd017a1f733fa5b51e5e9.png" alt="Advon Media" className="h-10 w-auto filter drop-shadow-[0_0_8px_rgba(71,200,245,0.5)]" />
         </Link>
 
@@ -69,7 +69,7 @@ export default function Header() {
           </button>
         </nav>
 
-        {/* Mobile Nav Toggle */}
+        {/* Mobile Toggle */}
         <div className="md:hidden flex items-center gap-3">
           <button onClick={toggleLang} className="flex items-center justify-center gap-2 px-2 py-1 rounded-lg border border-electric-cyan/40 bg-electric-cyan/10 text-xs font-bold text-electric-cyan hover:bg-electric-cyan hover:text-[#050a0e] transition-all cursor-pointer">
             {lang === 'el' ? '🇬🇧 EN' : '🇬🇷 EL'}

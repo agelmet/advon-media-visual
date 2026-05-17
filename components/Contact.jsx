@@ -7,7 +7,7 @@ export default function Contact() {
   const { lang } = useLangStore();
   const [status, setStatus] = useState('');
 
-  // Exact reproduction of the HTML Trafft script injection
+  // Trafft Booking Script Injection (Exact replica of HTML logic)
   useEffect(() => {
     if (!document.getElementById('trafft-script')) {
       const script = document.createElement('script');
@@ -78,7 +78,7 @@ export default function Contact() {
                 <textarea name="message" rows="4" required className="w-full h-full min-h-[120px] bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors resize-none"></textarea>
               </div>
               <div className="mt-auto">
-                <button type="submit" className="w-full py-4 bg-electric-cyan text-[#050a0e] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-[0_0_20px_rgba(71,200,245,0.3)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)]">
+                <button type="submit" className="w-full py-4 bg-electric-cyan text-[#050a0e] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-[0_0_20px_rgba(71,200,245,0.3)]">
                   {lang === 'el' ? 'Αποστολή' : 'Send'}
                 </button>
                 {status && <p className="mt-4 text-center text-electric-cyan font-bold">{status}</p>}
@@ -86,12 +86,12 @@ export default function Contact() {
             </form>
           </div>
           
-          {/* Booking Widget Exact Reproduction */}
+          {/* Booking Widget */}
           <div className="glass-panel p-8 md:p-10 rounded-3xl text-left flex flex-col h-full overflow-hidden">
              <h3 className="text-2xl md:text-3xl font-black mb-6 text-white font-display">{lang === 'el' ? 'Κλείστε Ραντεβού' : 'Book Appointment'}</h3>
              <p className="text-gray-400 mb-8">{lang === 'el' ? 'Επιλέξτε την ημέρα και ώρα που σας εξυπηρετεί για μια δωρεάν συμβουλευτική κλήση.' : 'Choose the day and time that suits you for a free consultation call.'}</p>
              <div className="w-full flex-grow rounded-xl bg-white relative min-h-[500px]">
-                <div className="embedded-booking absolute inset-0 w-full h-full" data-url="https://advonmedia.trafft.com" data-query="&t=s&uuid=1003c403-d56e-439b-876a-c563b3127470" data-employee="aggelos-metrides" data-lang="el" data-autoresize="1" data-showsidebar="0" data-showservices="0" style={{width: '100%', height: '100%'}}></div>
+                <div className="embedded-booking absolute inset-0 w-full h-full" data-url="https://advonmedia.trafft.com" data-query="&t=s&uuid=1003c403-d56e-439b-876a-c563b3127470" data-employee="aggelos-metrides" data-lang={lang} data-autoresize="1" data-showsidebar="0" data-showservices="0" style={{width: '100%', height: '100%'}}></div>
              </div>
           </div>
         </div>

@@ -4,6 +4,13 @@ import Link from 'next/link';
 import { useLangStore } from '@/store/langStore';
 import Reviews from '@/components/Reviews';
 
+// Bullet checkmark SVG to avoid library crashes
+const CheckIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+);
+
 export default function Home() {
   const { lang } = useLangStore();
 
@@ -72,6 +79,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Complete Services Summary */}
       <section className="py-32 relative">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
@@ -80,6 +88,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
+            {/* Service 1 */}
             <div className="glass-panel rounded-2xl p-8 transition-colors duration-300 flex flex-col h-full hover:border-electric-cyan/50">
               <div className="w-14 h-14 rounded-2xl bg-electric-cyan/10 flex items-center justify-center mb-6 text-electric-cyan">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
@@ -89,12 +98,21 @@ export default function Home() {
                 <span className="text-sm text-gray-400">{lang === 'el' ? '(10.83€/μήνα hosting)' : '(10.83€/mo hosting)'}</span>
               </div>
               <h3 className="text-xl font-bold mb-4 font-display">{lang === 'el' ? 'Κατασκευή Ιστοσελίδας' : 'Website Creation'}</h3>
-              <p className="text-gray-400 mb-6 leading-relaxed flex-grow">{lang === 'el' ? 'Επαγγελματική ιστοσελίδα που κατακτά υψηλές θέσεις στη Google.' : 'Professional website that conquers high rankings on Google.'}</p>
-              <Link href="/kataskevi-istoselidas" className="flex items-center justify-center gap-2 w-full py-3 bg-electric-cyan text-[#050a0e] font-bold rounded-xl hover:bg-white transition-colors uppercase text-sm">
+              <p className="text-gray-400 mb-6 leading-relaxed">{lang === 'el' ? 'Επαγγελματική ιστοσελίδα που κατακτά υψηλές θέσεις στη Google.' : 'Professional website that conquers high rankings on Google.'}</p>
+              
+              <ul className="space-y-3 mb-8 flex-grow">
+                  <li className="flex items-center gap-3 text-sm text-gray-300"><CheckIcon /> <span className="el-text">{lang === 'el' ? 'Επαγγελματικός σχεδιασμός' : 'Professional design'}</span></li>
+                  <li className="flex items-center gap-3 text-sm text-gray-300"><CheckIcon /> <span className="el-text">{lang === 'el' ? 'SEO βελτιστοποίηση' : 'SEO optimization'}</span></li>
+                  <li className="flex items-center gap-3 text-sm text-gray-300"><CheckIcon /> <span className="el-text">{lang === 'el' ? 'Mobile responsive' : 'Mobile responsive'}</span></li>
+                  <li className="flex items-center gap-3 text-sm text-gray-300"><CheckIcon /> <span className="el-text">{lang === 'el' ? 'Παράδοση σε 5-10 ημέρες' : 'Delivery in 5-10 days'}</span></li>
+              </ul>
+
+              <Link href="/kataskevi-istoselidas" className="flex items-center justify-center gap-2 w-full py-3 bg-electric-cyan text-[#050a0e] font-bold rounded-xl hover:bg-white transition-colors uppercase text-sm mt-auto">
                 {lang === 'el' ? 'ΠΕΡΙΣΣΟΤΕΡΕΣ ΠΛΗΡΟΦΟΡΙΕΣ' : 'LEARN MORE'}
               </Link>
             </div>
 
+            {/* Service 2 */}
             <div className="glass-panel rounded-2xl p-8 transition-colors duration-300 flex flex-col h-full hover:border-electric-cyan/50">
               <div className="w-14 h-14 rounded-2xl bg-electric-cyan/10 flex items-center justify-center mb-6 text-electric-cyan">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
@@ -104,12 +122,21 @@ export default function Home() {
                 <span className="text-sm text-gray-400">{lang === 'el' ? 'εφάπαξ' : 'one-time'}</span>
               </div>
               <h3 className="text-xl font-bold mb-4 font-display">{lang === 'el' ? 'Βάση Αξιολογήσεων' : 'Reviews Base'}</h3>
-              <p className="text-gray-400 mb-6 leading-relaxed flex-grow">{lang === 'el' ? '50+ νέες αξιολογήσεις κάθε μήνα. Ανεβείτε στην κορυφή της Google.' : '50+ new reviews every month. Reach the top of Google.'}</p>
-              <Link href="/google-reviews-nfc" className="flex items-center justify-center gap-2 w-full py-3 bg-electric-cyan text-[#050a0e] font-bold rounded-xl hover:bg-white transition-colors uppercase text-sm">
+              <p className="text-gray-400 mb-6 leading-relaxed">{lang === 'el' ? '50+ νέες αξιολογήσεις κάθε μήνα. Ανεβείτε στην κορυφή της Google σε 3 μήνες.' : '50+ new reviews every month. Reach the top of Google in 3 months.'}</p>
+              
+              <ul className="space-y-3 mb-8 flex-grow">
+                  <li className="flex items-center gap-3 text-sm text-gray-300"><CheckIcon /> <span className="el-text">{lang === 'el' ? 'Αύξηση κριτικών Google' : 'Increase Google reviews'}</span></li>
+                  <li className="flex items-center gap-3 text-sm text-gray-300"><CheckIcon /> <span className="el-text">{lang === 'el' ? 'Βελτίωση τοπικού SEO' : 'Improve Local SEO'}</span></li>
+                  <li className="flex items-center gap-3 text-sm text-gray-300"><CheckIcon /> <span className="el-text">{lang === 'el' ? 'Εύκολη χρήση (NFC)' : 'Easy to use (NFC)'}</span></li>
+                  <li className="flex items-center gap-3 text-sm text-gray-300"><CheckIcon /> <span className="el-text">{lang === 'el' ? 'Χωρίς μηνιαία συνδρομή' : 'No monthly subscription'}</span></li>
+              </ul>
+
+              <Link href="/google-reviews-nfc" className="flex items-center justify-center gap-2 w-full py-3 bg-electric-cyan text-[#050a0e] font-bold rounded-xl hover:bg-white transition-colors uppercase text-sm mt-auto">
                 {lang === 'el' ? 'ΠΕΡΙΣΣΟΤΕΡΕΣ ΠΛΗΡΟΦΟΡΙΕΣ' : 'LEARN MORE'}
               </Link>
             </div>
 
+            {/* Service 3 */}
             <div className="glass-panel rounded-2xl p-8 transition-colors duration-300 flex flex-col h-full hover:border-electric-cyan/50">
               <div className="w-14 h-14 rounded-2xl bg-electric-cyan/10 flex items-center justify-center mb-6 text-electric-cyan">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
@@ -119,8 +146,16 @@ export default function Home() {
                 <span className="text-sm text-gray-400">{lang === 'el' ? '/μήνα' : '/month'}</span>
               </div>
               <h3 className="text-xl font-bold mb-4 font-display">{lang === 'el' ? 'Διαχείριση Social Media' : 'Social Media Management'}</h3>
-              <p className="text-gray-400 mb-6 leading-relaxed flex-grow">{lang === 'el' ? 'Επαγγελματικά posts, hashtag research, copywriting.' : 'Professional posts, hashtag research, copywriting.'}</p>
-              <Link href="/diaxeirisi-social-media" className="flex items-center justify-center gap-2 w-full py-3 bg-electric-cyan text-[#050a0e] font-bold rounded-xl hover:bg-white transition-colors uppercase text-sm">
+              <p className="text-gray-400 mb-6 leading-relaxed">{lang === 'el' ? 'Επαγγελματικά posts, hashtag research, copywriting. 7 ημέρες δωρεάν δοκιμή.' : 'Professional posts, hashtag research, copywriting. 7 day free trial.'}</p>
+              
+              <ul className="space-y-3 mb-8 flex-grow">
+                  <li className="flex items-center gap-3 text-sm text-gray-300"><CheckIcon /> <span className="el-text">{lang === 'el' ? '3 posts/εβδομάδα' : '3 posts/week'}</span></li>
+                  <li className="flex items-center gap-3 text-sm text-gray-300"><CheckIcon /> <span className="el-text">{lang === 'el' ? 'Hashtag research' : 'Hashtag research'}</span></li>
+                  <li className="flex items-center gap-3 text-sm text-gray-300"><CheckIcon /> <span className="el-text">{lang === 'el' ? 'Copywriting' : 'Copywriting'}</span></li>
+                  <li className="flex items-center gap-3 text-sm text-gray-300"><CheckIcon /> <span className="el-text">{lang === 'el' ? 'Μηνιαία αναφορά' : 'Monthly report'}</span></li>
+              </ul>
+
+              <Link href="/diaxeirisi-social-media" className="flex items-center justify-center gap-2 w-full py-3 bg-electric-cyan text-[#050a0e] font-bold rounded-xl hover:bg-white transition-colors uppercase text-sm mt-auto">
                 {lang === 'el' ? 'ΠΕΡΙΣΣΟΤΕΡΕΣ ΠΛΗΡΟΦΟΡΙΕΣ' : 'LEARN MORE'}
               </Link>
             </div>
