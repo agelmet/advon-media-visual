@@ -3,7 +3,6 @@
 import { useLangStore } from '@/store/langStore';
 import { reviewsData } from '@/lib/data';
 
-// SVG Star to completely eliminate lucide-react dependency here
 const StarIcon = ({ className }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
 );
@@ -13,7 +12,7 @@ export default function Reviews() {
   const renderArray = [...reviewsData, ...reviewsData, ...reviewsData]; 
 
   return (
-    <section id="reviews" className="py-32 relative overflow-hidden">
+    <section id="reviews" className="py-32 relative overflow-hidden cursor-none">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[60%] bg-electric-cyan/5 blur-[120px] rounded-full pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -21,7 +20,7 @@ export default function Reviews() {
           <span className="text-electric-cyan text-xs font-bold tracking-[0.3em] uppercase mb-4 block">
             {lang === 'el' ? 'Αξιολογήσεις' : 'Reviews'}
           </span>
-          <h2 className="text-4xl md:text-5xl font-black font-display mb-4">
+          <h2 className="text-4xl md:text-5xl font-black font-display mb-4 text-white">
             {lang === 'el' ? 'Τι λένε οι πελάτες μας' : 'What our clients say'}
           </h2>
         </div>
@@ -30,15 +29,17 @@ export default function Reviews() {
           <div className="lg:col-span-5 lg:sticky lg:top-[30%] pt-12 lg:pt-24 flex flex-col items-center lg:items-start text-center lg:text-left">
             
             {/* UPDATED REVIEWS LAYOUT (5.0 ON LEFT, 80+) */}
-            <div className="flex items-center gap-3 mb-8 justify-center lg:justify-start">
-              <span className="text-4xl font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">
+            <div className="flex items-center gap-4 mb-8 justify-center lg:justify-start">
+              <span className="text-6xl font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">
                 5.0
               </span>
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-1">
                 <div className="flex gap-1 text-[#FBBC05] drop-shadow-[0_0_8px_rgba(251,188,5,0.5)]">
                   {[1, 2, 3, 4, 5].map((i) => <StarIcon key={i} className="w-5 h-5" />)}
                 </div>
-                <span className="text-gray-400 font-bold text-sm text-left mt-1">(80+) {lang === 'el' ? 'Αξιολογήσεις' : 'Reviews'}</span>
+                <span className="text-gray-400 font-bold text-sm text-left uppercase tracking-wider">
+                  (80+) {lang === 'el' ? 'Αξιολογήσεις' : 'Reviews'}
+                </span>
               </div>
             </div>
 
@@ -48,7 +49,7 @@ export default function Reviews() {
                 : 'See what our clients have to say about the digital solutions we offer. Your satisfaction is our greatest reward.'}
             </p>
             <div>
-              <a href="https://share.google/zWUQyGTmywjaljaMW" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-4 border border-electric-cyan text-electric-cyan rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all font-bold uppercase tracking-wide">
+              <a href="https://share.google/zWUQyGTmywjaljaMW" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-4 border border-electric-cyan text-electric-cyan rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all font-bold uppercase tracking-wide cursor-none">
                 {lang === 'el' ? 'ΔΕΙΤΕ ΟΛΕΣ ΤΙΣ ΑΞΙΟΛΟΓΗΣΕΙΣ' : 'SEE ALL REVIEWS'} 
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
               </a>

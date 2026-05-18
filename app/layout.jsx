@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Background from '@/components/Background';
 import Contact from '@/components/Contact';
+import CustomCursor from '@/components/CustomCursor';
 
 export const metadata = {
   title: 'Κατασκευή Ιστοσελίδων | Web Design & SEO - Advon Media',
@@ -14,6 +15,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="el" className="scroll-smooth">
       <body className="font-body antialiased relative min-h-screen flex flex-col">
+        {/* Luxury Hardware Cursor */}
+        <CustomCursor />
+        
         {/* Global Background */}
         <Background />
         
@@ -25,7 +29,7 @@ export default function RootLayout({ children }) {
           {children}
         </main>
         
-        {/* Global Contact & Footer (Always at bottom, exactly like your HTML) */}
+        {/* Global Contact & Footer */}
         <Contact />
         <Footer />
       </body>
