@@ -1,8 +1,17 @@
 // app/kataskevi-istoselidas/page.jsx
 'use client';
 import { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { useLangStore } from '@/store/langStore';
 import { portfolioData } from '@/lib/data';
+
+// Bullet checkmark SVG
+const CheckIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+);
 
 export default function WebsiteCreation() {
   const { lang } = useLangStore();
@@ -26,6 +35,7 @@ export default function WebsiteCreation() {
           </p>
         </div>
         
+        {/* Domain Inclusion Offer */}
         <div className="relative overflow-hidden bg-gradient-to-r from-[rgba(71,200,245,0.15)] to-transparent border border-electric-cyan/40 rounded-3xl p-8 md:p-12 mb-16 shadow-[0_0_40px_rgba(71,200,245,0.15)] flex flex-col md:flex-row items-center gap-8 group">
           <div className="absolute -right-20 -top-20 w-64 h-64 bg-electric-cyan/10 rounded-full blur-[80px] pointer-events-none"></div>
           <div className="bg-electric-cyan/20 p-5 rounded-2xl text-electric-cyan shrink-0 ring-1 ring-electric-cyan/50 group-hover:scale-110 transition-transform duration-300">
@@ -36,7 +46,7 @@ export default function WebsiteCreation() {
               {lang === 'el' ? 'Bonus: Το Domain Name Περιλαμβάνεται!' : 'Bonus: Domain Name Included!'}
             </h3>
             <p className="text-gray-300 text-lg leading-relaxed">
-              {lang === 'el' ? 'Το επιθυμητό σας domain name (π.χ. www.to-onoma-sas.gr) παρέχεται εντελώς δωρεάν και συμπεριλαμβάνεται στην τιμή της μηνιαίας συνδρομής. Χωρίς κανένα κρυφό κόστος ή επιπλέον χρεώσεις.' : 'Your desired domain name is provided completely free and included in the monthly subscription price. No hidden costs.'}
+              {lang === 'el' ? 'Το επιθυμητό σας domain name παρέχεται εντελώς δωρεάν και συμπεριλαμβάνεται στην τιμή της μηνιαίας συνδρομής. Χωρίς κανένα κρυφό κόστος ή επιπλέον χρεώσεις.' : 'Your desired domain name is provided completely free and included in the monthly subscription price. No hidden costs.'}
             </p>
           </div>
         </div>
@@ -121,7 +131,7 @@ export default function WebsiteCreation() {
         </div>
       </section>
 
-      {/* Portfolio Section matches HTML perfectly */}
+      {/* PORTFOLIO SECTION (With Next/Image and exact pagination) */}
       <section id="portfolio" className="py-24 bg-[#0a1418] border-t border-electric-cyan/10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
@@ -129,10 +139,17 @@ export default function WebsiteCreation() {
             <h2 className="text-4xl md:text-5xl font-black font-display mb-4 text-white">{lang === 'el' ? 'Δείτε μερικές από τις Δουλειές μας' : 'Check Out Some Of Our Work'}</h2>
           </div>
 
+          {/* Grid maps over visibleItems (6 at a time), fetching all 48 from data.js securely */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 min-h-[800px]">
             {visibleItems.map((item, index) => (
-              <a key={index} href={item.url} target="_blank" rel="noopener noreferrer" className="group relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/10 block bg-black">
-                <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+              <a key={index} href={item.url} target="_blank" rel="noopener noreferrer" className="group relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/10 block bg-[#050a0e]">
+                <Image 
+                  src={item.image} 
+                  alt={item.name} 
+                  fill 
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-110" 
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050a0e] via-[#050a0e]/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
                   <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                     <h3 className="text-lg font-black text-white mb-2 leading-tight">{lang === 'el' ? item.name : item.nameEn}</h3>
