@@ -1,22 +1,12 @@
 // components/Contact.jsx
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import Script from 'next/script';
 import { useLangStore } from '@/store/langStore';
 
 export default function Contact() {
   const { lang } = useLangStore();
   const [status, setStatus] = useState('');
-
-  // Trafft Booking Script Injection (Exact replica of HTML logic)
-  useEffect(() => {
-    if (!document.getElementById('trafft-script')) {
-      const script = document.createElement('script');
-      script.id = 'trafft-script';
-      script.src = 'https://advonmedia.trafft.com/embed.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,6 +31,10 @@ export default function Contact() {
 
   return (
     <section id="contact" className="py-32 relative border-t border-electric-cyan/10 bg-gradient-to-b from-[#050a0e] to-[#0a1418] z-20">
+      
+      {/* NATIVE FAST SCRIPT LOADER */}
+      <Script id="trafft-script" src="https://advonmedia.trafft.com/embed.js" strategy="lazyOnload" />
+
       <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
         <span className="text-electric-cyan text-xs font-black tracking-[0.4em] uppercase mb-4 block drop-shadow-[0_0_15px_rgba(71,200,245,0.6)]">
           {lang === 'el' ? 'ΕΠΙΚΟΙΝΩΝΙΑ' : 'CONTACT'}
@@ -78,7 +72,7 @@ export default function Contact() {
                 <textarea name="message" rows="4" required className="w-full h-full min-h-[120px] bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors resize-none"></textarea>
               </div>
               <div className="mt-auto">
-                <button type="submit" className="w-full py-4 bg-electric-cyan text-[#050a0e] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-[0_0_20px_rgba(71,200,245,0.3)]">
+                <button type="submit" className="w-full py-4 bg-electric-cyan text-[#050a0e] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-[0_0_20px_rgba(71,200,245,0.3)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)]">
                   {lang === 'el' ? 'Αποστολή' : 'Send'}
                 </button>
                 {status && <p className="mt-4 text-center text-electric-cyan font-bold">{status}</p>}
