@@ -1,7 +1,6 @@
 // components/Contact.jsx
 'use client';
 import { useState } from 'react';
-import Script from 'next/script';
 import { useLangStore } from '@/store/langStore';
 
 export default function Contact() {
@@ -31,10 +30,6 @@ export default function Contact() {
 
   return (
     <section id="contact" className="py-32 relative border-t border-electric-cyan/10 bg-gradient-to-b from-[#050a0e] to-[#0a1418] z-20">
-      
-      {/* NATIVE FAST SCRIPT LOADER */}
-      <Script id="trafft-script" src="https://advonmedia.trafft.com/embed.js" strategy="lazyOnload" />
-
       <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
         <span className="text-electric-cyan text-xs font-black tracking-[0.4em] uppercase mb-4 block drop-shadow-[0_0_15px_rgba(71,200,245,0.6)]">
           {lang === 'el' ? 'ΕΠΙΚΟΙΝΩΝΙΑ' : 'CONTACT'}
@@ -80,26 +75,30 @@ export default function Contact() {
             </form>
           </div>
           
-          {/* Booking Widget */}
+          {/* NATIVE, INSTANT LOAD BOOKING IFRAME */}
           <div className="glass-panel p-8 md:p-10 rounded-3xl text-left flex flex-col h-full overflow-hidden">
              <h3 className="text-2xl md:text-3xl font-black mb-6 text-white font-display">{lang === 'el' ? 'Κλείστε Ραντεβού' : 'Book Appointment'}</h3>
              <p className="text-gray-400 mb-8">{lang === 'el' ? 'Επιλέξτε την ημέρα και ώρα που σας εξυπηρετεί για μια δωρεάν συμβουλευτική κλήση.' : 'Choose the day and time that suits you for a free consultation call.'}</p>
-             <div className="w-full flex-grow rounded-xl bg-white relative min-h-[500px]">
-                <div className="embedded-booking absolute inset-0 w-full h-full" data-url="https://advonmedia.trafft.com" data-query="&t=s&uuid=1003c403-d56e-439b-876a-c563b3127470" data-employee="aggelos-metrides" data-lang={lang} data-autoresize="1" data-showsidebar="0" data-showservices="0" style={{width: '100%', height: '100%'}}></div>
+             <div className="w-full flex-grow rounded-xl bg-white relative min-h-[500px] overflow-hidden">
+                <iframe 
+                  src={`https://advonmedia.trafft.com/book/aggelos-metrides?lang=${lang}`} 
+                  className="absolute inset-0 w-full h-full border-none"
+                  title="Booking Calendar"
+                />
              </div>
           </div>
         </div>
 
         {/* Contact Tiles */}
         <div className="grid md:grid-cols-2 gap-8">
-          <a href="mailto:angelos@advonmedia.com" className="group glass-panel p-8 rounded-3xl transition-all duration-300 hover:bg-electric-cyan/5">
+          <a href="mailto:angelos@advonmedia.com" className="group glass-panel p-8 rounded-3xl transition-all duration-300">
             <div className="w-16 h-16 bg-electric-cyan/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-electric-cyan group-hover:bg-electric-cyan group-hover:text-[#050a0e] transition-all">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8"><rect width="24" height="16" x="0" y="4" rx="2" ry="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             </div>
             <h3 className="text-xl font-black mb-2 text-white">Email</h3>
             <p className="text-electric-cyan font-bold tracking-wide">angelos@advonmedia.com</p>
           </a>
-          <a href="https://www.instagram.com/advon_media" target="_blank" rel="noopener noreferrer" className="group glass-panel p-8 rounded-3xl transition-all duration-300 hover:bg-electric-cyan/5">
+          <a href="https://www.instagram.com/advon_media" target="_blank" rel="noopener noreferrer" className="group glass-panel p-8 rounded-3xl transition-all duration-300">
             <div className="w-16 h-16 bg-electric-cyan/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-electric-cyan group-hover:bg-electric-cyan group-hover:text-[#050a0e] transition-all">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
             </div>
