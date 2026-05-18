@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
 
 @theme {
   --color-electric-cyan: #47c8f5;
@@ -111,6 +111,7 @@
     will-change: transform, opacity;
   }
 
+  /* LUXURY CINEMATIC REVEAL ANIMATIONS */
   .reveal-item {
     opacity: 0;
     animation: reveal-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -134,4 +135,10 @@
 @keyframes btn-shine { 
   0% { transform: translateX(-150%) skewX(-20deg); } 
   100% { transform: translateX(150%) skewX(-20deg); } 
+}
+
+/* LUXURY CUSTOM CURSOR LOGIC */
+@media (pointer: fine) {
+  body { cursor: none; }
+  a, button, input, textarea, iframe { cursor: none !important; }
 }
