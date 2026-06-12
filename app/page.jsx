@@ -268,7 +268,7 @@ export default function Home() {
             <div className="inline-flex items-center gap-4 flex-wrap justify-center">
               <span className="text-gray-500 text-sm">{lang === 'el' ? 'Δεν είστε σίγουροι ποια υπηρεσία ταιριάζει;' : 'Not sure which service fits?'}</span>
               <Link href="#contact" className="btn-premium inline-flex items-center gap-2 px-6 py-2.5 border border-electric-cyan/40 text-electric-cyan text-sm font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all">
-                {lang === 'el' ? 'Δωρεάν Συμβουλή →' : 'Free Consultation →'}
+                {lang === 'el' ? 'Δωρεάν Ραντεβού →' : 'Free Consultation →'}
               </Link>
             </div>
           </ScrollReveal>

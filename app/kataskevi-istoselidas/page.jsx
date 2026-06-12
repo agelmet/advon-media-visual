@@ -1,31 +1,39 @@
 // app/kataskevi-istoselidas/page.jsx
 'use client';
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { useLangStore } from '@/store/langStore';
 import { portfolioData } from '@/lib/data';
 import ScrollReveal from '@/components/ScrollReveal';
 
-const CheckIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0">
-    <polyline points="20 6 9 17 4 12"/>
-  </svg>
-);
+const ITEMS_PER_PAGE = 36;
 
 export default function WebsiteCreation() {
   const { lang } = useLangStore();
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 6;
-  const totalPages = Math.ceil(portfolioData.length / itemsPerPage);
+  const [fading, setFading] = useState(false);
+  const portfolioRef = useRef(null);
 
+  const totalPages = Math.ceil(portfolioData.length / ITEMS_PER_PAGE);
   const visibleItems = portfolioData.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
+    currentPage * ITEMS_PER_PAGE,
+    (currentPage + 1) * ITEMS_PER_PAGE
   );
+
+  const goToPage = useCallback((newPage) => {
+    if (newPage === currentPage || fading) return;
+    setFading(true);
+    setTimeout(() => {
+      setCurrentPage(newPage);
+      setFading(false);
+      // Scroll to top of portfolio section smoothly
+      portfolioRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 280);
+  }, [currentPage, fading]);
 
   return (
     <>
+      {/* ─── SERVICE INFO SECTION ─── */}
       <section className="py-32 pt-40 max-w-6xl mx-auto px-6">
         {/* Header */}
         <ScrollReveal className="text-center mb-16">
@@ -63,7 +71,6 @@ export default function WebsiteCreation() {
         {/* Main Info Panel */}
         <ScrollReveal delay={60}>
           <div className="glass-panel p-8 md:p-12 rounded-3xl text-gray-300 leading-relaxed font-body text-lg mb-20 shadow-[0_0_50px_rgba(71,200,245,0.08)]">
-            {/* Pricing header */}
             <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 mb-12 pb-8 border-b border-white/8 text-center md:text-left">
               <div>
                 <span className="text-electric-cyan text-xs font-bold tracking-widest uppercase mb-2 block">{lang === 'el' ? 'ΚΟΣΤΟΣ ΚΑΤΑΣΚΕΥΗΣ' : 'CONSTRUCTION COST'}</span>
@@ -78,7 +85,6 @@ export default function WebsiteCreation() {
               </div>
             </div>
 
-            {/* Why free grid */}
             <div className="grid md:grid-cols-2 gap-10 mb-16">
               {[
                 {
@@ -116,7 +122,6 @@ export default function WebsiteCreation() {
               ))}
             </div>
 
-            {/* Process steps */}
             <div className="mt-12">
               <h3 className="text-3xl font-bold text-white mb-4 font-display text-center">
                 {lang === 'el' ? 'Πανεύκολη Διαδικασία Κατασκευής' : 'Super Easy Creation Process'}
@@ -146,74 +151,133 @@ export default function WebsiteCreation() {
         </ScrollReveal>
       </section>
 
-      {/* ─── PORTFOLIO ─── */}
-      <section id="portfolio" className="py-24 bg-[#0a1418]/60 border-t border-electric-cyan/8 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6">
-          <ScrollReveal className="text-center mb-20">
+      {/* ─── PORTFOLIO SECTION ─── */}
+      <section
+        id="portfolio"
+        ref={portfolioRef}
+        className="py-24 bg-[#0a1418]/60 border-t border-electric-cyan/8 backdrop-blur-sm scroll-mt-24"
+      >
+        <div className="max-w-[1600px] mx-auto px-4 md:px-8">
+
+          {/* Section header */}
+          <ScrollReveal className="text-center mb-14">
             <span className="section-label">{lang === 'el' ? 'Πορτφόλιο' : 'Portfolio'}</span>
-            <h2 className="text-4xl md:text-5xl font-black font-display mb-4 text-white tracking-tight">
+            <h2 className="text-4xl md:text-5xl font-black font-display mb-3 text-white tracking-tight">
               {lang === 'el' ? 'Δείτε μερικές από τις Δουλειές μας' : 'Check Out Some Of Our Work'}
             </h2>
+            <p className="text-gray-500 text-sm">
+              {portfolioData.length} {lang === 'el' ? 'ιστοσελίδες' : 'websites'} &nbsp;·&nbsp;
+              {lang === 'el' ? 'Σελίδα' : 'Page'} {currentPage + 1} / {totalPages}
+            </p>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 min-h-[800px]">
-            {visibleItems.map((item, index) => (
-              <ScrollReveal key={index} delay={index * 60} direction="scale">
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/8 block bg-[#050a0e] glow-border-hover"
-                >
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#050a0e] via-[#050a0e]/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
-                    <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                      <h3 className="text-lg font-black text-white mb-2 leading-tight">{lang === 'el' ? item.name : item.nameEn}</h3>
-                      <span className="inline-flex items-center gap-2 px-4 py-2 bg-electric-cyan/20 border border-electric-cyan/50 rounded-full text-[10px] font-bold text-electric-cyan uppercase">
-                        {lang === 'el' ? 'ΠΡΟΒΟΛΗ' : 'VIEW SITE'}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
-                      </span>
-                    </div>
-                  </div>
-                </a>
-              </ScrollReveal>
-            ))}
-          </div>
-
-          {/* Pagination */}
-          <div className="flex justify-center items-center gap-6">
-            <button
-              onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
-              disabled={currentPage === 0}
-              className="p-3 rounded-full border border-electric-cyan/30 hover:bg-electric-cyan/10 transition-colors disabled:opacity-25 disabled:cursor-not-allowed text-electric-cyan"
+          {/* ── DESKTOP grid (hidden on mobile) ── */}
+          <div className="hidden md:block">
+            <div
+              className="grid grid-cols-6 gap-3 mb-10"
+              style={{
+                opacity: fading ? 0 : 1,
+                transform: fading ? 'translateY(8px)' : 'translateY(0)',
+                transition: 'opacity 0.28s ease, transform 0.28s ease',
+              }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="m15 18-6-6 6-6"/></svg>
-            </button>
-            <div className="flex gap-2 items-center">
-              {Array.from({ length: totalPages }).map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentPage(i)}
-                  className={`rounded-full transition-all duration-300 ${i === currentPage ? 'w-8 h-2 bg-electric-cyan shadow-[0_0_10px_#47c8f5]' : 'w-2 h-2 bg-white/20 hover:bg-white/40'}`}
-                />
+              {visibleItems.map((item, index) => (
+                <PortfolioCard key={`${currentPage}-${index}`} item={item} lang={lang} />
               ))}
             </div>
-            <button
-              onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))}
-              disabled={currentPage === totalPages - 1}
-              className="p-3 rounded-full border border-electric-cyan/30 hover:bg-electric-cyan/10 transition-colors disabled:opacity-25 disabled:cursor-not-allowed text-electric-cyan"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="m9 18 6-6-6-6"/></svg>
-            </button>
+
+            {/* Pagination controls */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-6 pt-4">
+                {/* Prev */}
+                <button
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 0 || fading}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-electric-cyan/30 text-electric-cyan text-sm font-bold hover:bg-electric-cyan/10 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="m15 18-6-6 6-6"/></svg>
+                  {lang === 'el' ? 'Προηγούμενη' : 'Previous'}
+                </button>
+
+                {/* Dot indicators */}
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => goToPage(i)}
+                      className="rounded-full transition-all duration-300 focus:outline-none"
+                      style={{
+                        width: i === currentPage ? '32px' : '8px',
+                        height: '8px',
+                        background: i === currentPage ? '#47c8f5' : 'rgba(255,255,255,0.2)',
+                        boxShadow: i === currentPage ? '0 0 10px #47c8f5' : 'none',
+                      }}
+                      aria-label={`Page ${i + 1}`}
+                    />
+                  ))}
+                </div>
+
+                {/* Page counter */}
+                <span className="text-gray-500 text-sm font-mono tabular-nums select-none">
+                  {currentPage + 1} / {totalPages}
+                </span>
+
+                {/* Next */}
+                <button
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages - 1 || fading}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-electric-cyan/30 text-electric-cyan text-sm font-bold hover:bg-electric-cyan/10 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200"
+                >
+                  {lang === 'el' ? 'Επόμενη' : 'Next'}
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* ── MOBILE list (hidden on desktop, all items, no pagination) ── */}
+          <div className="md:hidden grid grid-cols-1 gap-5">
+            {portfolioData.map((item, index) => (
+              <PortfolioCard key={index} item={item} lang={lang} mobile />
+            ))}
           </div>
         </div>
       </section>
     </>
+  );
+}
+
+/* ─── Shared card component ─── */
+function PortfolioCard({ item, lang, mobile = false }) {
+  return (
+    <a
+      href={item.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group relative overflow-hidden rounded-2xl border border-white/8 block bg-[#050a0e] glow-border-hover shadow-lg"
+      style={{ aspectRatio: mobile ? '16/9' : '4/3' }}
+    >
+      <Image
+        src={item.image}
+        alt={item.name}
+        fill
+        sizes={mobile
+          ? '100vw'
+          : '(max-width: 1600px) 17vw, 267px'}
+        className="object-cover transition-transform duration-700 group-hover:scale-110"
+      />
+      {/* Hover overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#050a0e] via-[#050a0e]/55 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-400 flex flex-col justify-end p-4">
+        <div className="translate-y-3 group-hover:translate-y-0 transition-transform duration-400">
+          <p className="text-sm font-black text-white mb-2 leading-tight line-clamp-2">
+            {lang === 'el' ? item.name : item.nameEn}
+          </p>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-electric-cyan/20 border border-electric-cyan/50 rounded-full text-[9px] font-black text-electric-cyan uppercase tracking-wider">
+            {lang === 'el' ? 'ΠΡΟΒΟΛΗ' : 'VIEW SITE'}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-2.5 h-2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+          </span>
+        </div>
+      </div>
+    </a>
   );
 }

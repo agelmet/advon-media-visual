@@ -41,7 +41,7 @@ export default function Stats() {
     { end: 3,   suffix: '+', labelEl: 'ΧΡΟΝΙΑ ΕΜΠΕΙΡΙΑΣ', labelEn: 'YEARS EXPERIENCE' },
     { end: 120, suffix: '+', labelEl: 'ΠΕΛΑΤΕΣ',           labelEn: 'CLIENTS' },
     { end: 100, suffix: '%', labelEl: 'ΕΠΙΤΥΧΙΑ',          labelEn: 'SUCCESS' },
-    { end: 80,  suffix: '+', labelEl: 'ΑΞΙΟΛΟΓΗΣΕΙΣ',      labelEn: '5-STAR REVIEWS' },
+    { end: 90,  suffix: '+', labelEl: 'ΑΞΙΟΛΟΓΗΣΕΙΣ',      labelEn: '5-STAR REVIEWS' },
   ];
 
   return (
