@@ -1,35 +1,12 @@
 // app/kataskevi-istoselidas/page.jsx
 'use client';
-import { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { useLangStore } from '@/store/langStore';
 import { portfolioData } from '@/lib/data';
 import ScrollReveal from '@/components/ScrollReveal';
 
-const ITEMS_PER_PAGE = 36;
-
 export default function WebsiteCreation() {
   const { lang } = useLangStore();
-  const [currentPage, setCurrentPage] = useState(0);
-  const [fading, setFading] = useState(false);
-  const portfolioRef = useRef(null);
-
-  const totalPages = Math.ceil(portfolioData.length / ITEMS_PER_PAGE);
-  const visibleItems = portfolioData.slice(
-    currentPage * ITEMS_PER_PAGE,
-    (currentPage + 1) * ITEMS_PER_PAGE
-  );
-
-  const goToPage = useCallback((newPage) => {
-    if (newPage === currentPage || fading) return;
-    setFading(true);
-    setTimeout(() => {
-      setCurrentPage(newPage);
-      setFading(false);
-      // Scroll to top of portfolio section smoothly
-      portfolioRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 280);
-  }, [currentPage, fading]);
 
   return (
     <>
@@ -154,7 +131,6 @@ export default function WebsiteCreation() {
       {/* ─── PORTFOLIO SECTION ─── */}
       <section
         id="portfolio"
-        ref={portfolioRef}
         className="py-24 bg-[#0a1418]/60 border-t border-electric-cyan/8 backdrop-blur-sm scroll-mt-24"
       >
         <div className="max-w-[1600px] mx-auto px-4 md:px-8">
@@ -165,79 +141,12 @@ export default function WebsiteCreation() {
             <h2 className="text-4xl md:text-5xl font-black font-display mb-3 text-white tracking-tight">
               {lang === 'el' ? 'Δείτε μερικές από τις Δουλειές μας' : 'Check Out Some Of Our Work'}
             </h2>
-            <p className="text-gray-500 text-sm">
-              {lang === 'el' ? 'Σελίδα' : 'Page'} {currentPage + 1} / {totalPages}
-            </p>
           </ScrollReveal>
 
-          {/* ── DESKTOP grid (hidden on mobile) ── */}
-          <div className="hidden md:block">
-            <div
-              className="grid grid-cols-6 gap-3 mb-10"
-              style={{
-                opacity: fading ? 0 : 1,
-                transform: fading ? 'translateY(8px)' : 'translateY(0)',
-                transition: 'opacity 0.28s ease, transform 0.28s ease',
-              }}
-            >
-              {visibleItems.map((item, index) => (
-                <PortfolioCard key={`${currentPage}-${index}`} item={item} lang={lang} />
-              ))}
-            </div>
-
-            {/* Pagination controls */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-6 pt-4">
-                {/* Prev */}
-                <button
-                  onClick={() => goToPage(currentPage - 1)}
-                  disabled={currentPage === 0 || fading}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-electric-cyan/30 text-electric-cyan text-sm font-bold hover:bg-electric-cyan/10 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="m15 18-6-6 6-6"/></svg>
-                  {lang === 'el' ? 'Προηγούμενη' : 'Previous'}
-                </button>
-
-                {/* Dot indicators */}
-                <div className="flex items-center gap-2">
-                  {Array.from({ length: totalPages }).map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => goToPage(i)}
-                      className="rounded-full transition-all duration-300 focus:outline-none"
-                      style={{
-                        width: i === currentPage ? '32px' : '8px',
-                        height: '8px',
-                        background: i === currentPage ? '#47c8f5' : 'rgba(255,255,255,0.2)',
-                        boxShadow: i === currentPage ? '0 0 10px #47c8f5' : 'none',
-                      }}
-                      aria-label={`Page ${i + 1}`}
-                    />
-                  ))}
-                </div>
-
-                {/* Page counter */}
-                <span className="text-gray-500 text-sm font-mono tabular-nums select-none">
-                  {currentPage + 1} / {totalPages}
-                </span>
-
-                {/* Next */}
-                <button
-                  onClick={() => goToPage(currentPage + 1)}
-                  disabled={currentPage === totalPages - 1 || fading}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-electric-cyan/30 text-electric-cyan text-sm font-bold hover:bg-electric-cyan/10 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200"
-                >
-                  {lang === 'el' ? 'Επόμενη' : 'Next'}
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="m9 18 6-6-6-6"/></svg>
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* ── MOBILE list (hidden on desktop, all items, no pagination) ── */}
-          <div className="md:hidden grid grid-cols-1 gap-5">
+          {/* Single full grid — 2 cols mobile, 3 cols tablet, 6 cols desktop */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {portfolioData.map((item, index) => (
-              <PortfolioCard key={index} item={item} lang={lang} mobile />
+              <PortfolioCard key={index} item={item} lang={lang} />
             ))}
           </div>
         </div>
@@ -246,23 +155,21 @@ export default function WebsiteCreation() {
   );
 }
 
-/* ─── Shared card component ─── */
-function PortfolioCard({ item, lang, mobile = false }) {
+/* ─── Card component ─── */
+function PortfolioCard({ item, lang }) {
   return (
     <a
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
       className="group relative overflow-hidden rounded-2xl border border-white/8 block bg-[#050a0e] glow-border-hover shadow-lg"
-      style={{ aspectRatio: mobile ? '16/9' : '4/3' }}
+      style={{ aspectRatio: '4/3' }}
     >
       <Image
         src={item.image}
         alt={item.name}
         fill
-        sizes={mobile
-          ? '100vw'
-          : '(max-width: 1600px) 17vw, 267px'}
+        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 17vw"
         className="object-cover transition-transform duration-700 group-hover:scale-110"
       />
       {/* Hover overlay */}
