@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useLangStore } from '@/store/langStore';
 import { ChevronDown } from 'lucide-react';
 import Contact from '@/components/Contact';
+import ScrollReveal from '@/components/ScrollReveal';
 
 export default function FAQ() {
   const { lang } = useLangStore();
@@ -52,34 +53,32 @@ export default function FAQ() {
     <div className="pt-20">
       <section className="py-32">
         <div className="max-w-3xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <span className="text-electric-cyan text-xs font-bold tracking-[0.3em] uppercase mb-4 block">
-              {lang === 'el' ? 'ΠΛΗΡΟΦΟΡΙΕΣ' : 'INFORMATION'}
-            </span>
-            <h1 className="text-4xl md:text-5xl font-black font-display mb-4 text-white">
+          <ScrollReveal className="text-center mb-16">
+            <span className="section-label">{lang === 'el' ? 'ΠΛΗΡΟΦΟΡΙΕΣ' : 'INFORMATION'}</span>
+            <h1 className="text-4xl md:text-5xl font-black font-display mb-4 text-white tracking-tight">
               {lang === 'el' ? 'Συχνές Ερωτήσεις' : 'Frequently Asked Questions'}
             </h1>
-          </div>
+          </ScrollReveal>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {faqs.map((faq, index) => (
-              <div key={index} className="bg-[#081219] border border-electric-cyan/10 rounded-xl overflow-hidden">
-                <button 
-                  onClick={() => setOpenIndex(openIndex === index ? null : index)} 
-                  className={`w-full flex items-center justify-between p-6 text-left font-medium hover:text-electric-cyan transition-colors text-lg ${openIndex === index ? 'text-electric-cyan' : 'text-white'}`}
-                >
-                  <span>{lang === 'el' ? faq.qEl : faq.qEn}</span>
-                  <ChevronDown className={`w-5 h-5 transition-transform text-gray-400 ${openIndex === index ? 'rotate-180' : 'rotate-0'}`} />
-                </button>
-                <div 
-                  className={`overflow-hidden transition-all duration-300 ${openIndex === index ? 'max-h-96' : 'max-h-0'}`}
-                >
-                  <div 
-                    className="px-6 pb-6 text-gray-400 leading-relaxed text-md"
-                    dangerouslySetInnerHTML={{ __html: lang === 'el' ? faq.aEl : faq.aEn }}
-                  />
+              <ScrollReveal key={index} delay={index * 50} direction="up">
+                <div className="bg-[#081219]/80 border border-electric-cyan/10 rounded-2xl overflow-hidden hover:border-electric-cyan/25 transition-colors duration-300">
+                  <button
+                    onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                    className={`w-full flex items-center justify-between p-6 text-left font-medium hover:text-electric-cyan transition-colors text-lg ${openIndex === index ? 'text-electric-cyan' : 'text-white'}`}
+                  >
+                    <span>{lang === 'el' ? faq.qEl : faq.qEn}</span>
+                    <ChevronDown className={`w-5 h-5 transition-transform duration-300 text-gray-400 shrink-0 ml-4 ${openIndex === index ? 'rotate-180 text-electric-cyan' : 'rotate-0'}`} />
+                  </button>
+                  <div className={`overflow-hidden transition-all duration-400 ${openIndex === index ? 'max-h-96' : 'max-h-0'}`}>
+                    <div
+                      className="px-6 pb-6 text-gray-400 leading-relaxed text-base border-t border-white/5 pt-4"
+                      dangerouslySetInnerHTML={{ __html: lang === 'el' ? faq.aEl : faq.aEn }}
+                    />
+                  </div>
                 </div>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>

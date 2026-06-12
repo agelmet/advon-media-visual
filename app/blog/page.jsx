@@ -5,6 +5,7 @@ import { useLangStore } from '@/store/langStore';
 import { blogsData } from '@/lib/data';
 import { ArrowRight, X } from 'lucide-react';
 import Contact from '@/components/Contact';
+import ScrollReveal from '@/components/ScrollReveal';
 
 export default function Blog() {
   const { lang } = useLangStore();
@@ -23,65 +24,72 @@ export default function Blog() {
     <div className="pt-20">
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-20">
-            <span className="text-electric-cyan text-xs font-bold tracking-[0.3em] uppercase mb-4 block">
-              {lang === 'el' ? 'ΑΡΘΡΑ' : 'ARTICLES'}
-            </span>
-            <h1 className="text-4xl md:text-5xl font-black font-display mb-4 text-white">
+          <ScrollReveal className="text-center mb-20">
+            <span className="section-label">{lang === 'el' ? 'ΑΡΘΡΑ' : 'ARTICLES'}</span>
+            <h1 className="text-4xl md:text-5xl font-black font-display mb-4 text-white tracking-tight">
               {lang === 'el' ? 'Blog της Advon Media' : 'Advon Media Blog'}
             </h1>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              {lang === 'el' ? 'Χρήσιμες συμβουλές και insights για την ψηφιακή παρουσία τοπικών επιχειρήσεων και ελεύθερων επαγγελματιών.' : 'Useful tips and insights for the digital presence of local businesses and freelancers.'}
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed">
+              {lang === 'el'
+                ? 'Χρήσιμες συμβουλές και insights για την ψηφιακή παρουσία τοπικών επιχειρήσεων και ελεύθερων επαγγελματιών.'
+                : 'Useful tips and insights for the digital presence of local businesses and freelancers.'}
             </p>
-          </div>
+          </ScrollReveal>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogList.map((post) => (
-              <div 
-                key={post.id}
-                onClick={() => {
-                  setActiveBlog(post.id);
-                  document.body.style.overflow = 'hidden'; 
-                }}
-                className="glass-panel p-8 rounded-3xl cursor-pointer hover:-translate-y-2 transition-all flex flex-col h-full"
-              >
-                <div className="text-sm text-electric-cyan font-bold mb-4">{lang === 'el' ? post.dateEl : post.dateEn}</div>
-                <h2 className="text-2xl font-bold font-display text-white mb-4 line-clamp-3">{lang === 'el' ? post.titleEl : post.titleEn}</h2>
-                <p className="text-gray-400 line-clamp-3 flex-grow">{lang === 'el' ? post.descEl : post.descEn}</p>
-                <span className="mt-6 flex items-center gap-2 text-electric-cyan font-bold text-sm uppercase tracking-wide">
-                  {lang === 'el' ? 'ΔΙΑΒΑΣΤΕ ΤΟ ΑΡΘΡΟ' : 'READ ARTICLE'} <ArrowRight className="w-4 h-4" />
-                </span>
-              </div>
+            {blogList.map((post, i) => (
+              <ScrollReveal key={post.id} delay={i * 80} direction="up">
+                <div
+                  onClick={() => {
+                    setActiveBlog(post.id);
+                    document.body.style.overflow = 'hidden';
+                  }}
+                  className="glass-panel p-8 rounded-3xl cursor-pointer flex flex-col h-full group glow-border-hover"
+                >
+                  <div className="text-sm text-electric-cyan font-bold mb-4 tracking-wide">
+                    {lang === 'el' ? post.dateEl : post.dateEn}
+                  </div>
+                  <h2 className="text-xl font-bold font-display text-white mb-4 line-clamp-3 group-hover:text-electric-cyan transition-colors duration-300">
+                    {lang === 'el' ? post.titleEl : post.titleEn}
+                  </h2>
+                  <p className="text-gray-400 line-clamp-3 flex-grow text-sm leading-relaxed">
+                    {lang === 'el' ? post.descEl : post.descEn}
+                  </p>
+                  <span className="mt-6 flex items-center gap-2 text-electric-cyan font-bold text-xs uppercase tracking-widest group-hover:gap-3 transition-all duration-300">
+                    {lang === 'el' ? 'ΔΙΑΒΑΣΤΕ ΤΟ ΑΡΘΡΟ' : 'READ ARTICLE'}
+                    <ArrowRight className="w-4 h-4" />
+                  </span>
+                </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* The Blog Modal Popup */}
+      {/* Blog Modal */}
       {activeBlog && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div 
-            className="absolute inset-0 bg-[#050a0e]/95 backdrop-blur-md"
+          <div
+            className="absolute inset-0 bg-[#050a0e]/96 backdrop-blur-xl"
             onClick={() => {
               setActiveBlog(null);
-              document.body.style.overflow = 'auto'; 
+              document.body.style.overflow = 'auto';
             }}
-          ></div>
-          <div className="relative bg-[#0a1418] border border-electric-cyan/40 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-[0_0_50px_rgba(71,200,245,0.2)] z-10">
-            <div className="sticky top-0 right-0 p-4 flex justify-end bg-gradient-to-b from-[#0a1418] via-[#0a1418] to-transparent z-10">
-              <button 
+          />
+          <div className="relative bg-[#0a1418] border border-electric-cyan/35 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-[0_0_80px_rgba(71,200,245,0.2),0_0_160px_rgba(71,200,245,0.05)] z-10">
+            <div className="sticky top-0 p-4 flex justify-end bg-gradient-to-b from-[#0a1418] via-[#0a1418]/90 to-transparent z-10">
+              <button
                 onClick={() => {
                   setActiveBlog(null);
                   document.body.style.overflow = 'auto';
                 }}
-                className="p-3 rounded-full bg-white/5 hover:bg-electric-cyan hover:text-[#050a0e] text-white transition-all shadow-lg backdrop-blur-sm"
+                className="p-3 rounded-full bg-white/5 hover:bg-electric-cyan hover:text-[#050a0e] text-white transition-all duration-300 shadow-lg"
               >
                 <X className="w-6 h-6" />
               </button>
             </div>
-            {/* Using arbitrary Tailwind values to style the raw HTML */}
-            <div 
-              className="px-8 pb-16 pt-4 text-gray-300 leading-relaxed max-w-3xl mx-auto [&>h1]:font-display [&>h1]:text-white [&>h1]:text-3xl [&>h1]:font-black [&>h1]:mb-6 [&>h2]:text-electric-cyan [&>h2]:text-xl [&>h2]:font-bold [&>h2]:mt-8 [&>h2]:mb-4 [&>p]:mb-4 [&>ul]:list-disc [&>ul]:pl-6"
+            <div
+              className="px-8 pb-16 pt-2 text-gray-300 leading-relaxed max-w-3xl mx-auto [&>h1]:font-display [&>h1]:text-white [&>h1]:text-3xl [&>h1]:font-black [&>h1]:mb-8 [&>h1]:leading-tight [&>h2]:text-electric-cyan [&>h2]:text-xl [&>h2]:font-bold [&>h2]:mt-10 [&>h2]:mb-4 [&>p]:mb-5 [&>p]:leading-relaxed [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-5 [&>ul>li]:mb-2 [&>strong]:text-white"
               dangerouslySetInnerHTML={{ __html: lang === 'el' ? blogsData[activeBlog].el : blogsData[activeBlog].en }}
             />
           </div>
