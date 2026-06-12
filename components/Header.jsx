@@ -36,7 +36,7 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
           <img
-            src="https://assets.cdn.filesafe.space/NkFUgZER3rrdnofCwAIl/media/648dd017a1f733fa5b51e5e9.png"
+            src="https://raw.githubusercontent.com/agelmet/Advon-Media/refs/heads/main/logo.png"
             alt="Advon Media"
             className="h-10 w-auto transition-all duration-300"
             style={{ filter: 'drop-shadow(0 0 10px rgba(71,200,245,0.5))' }}
