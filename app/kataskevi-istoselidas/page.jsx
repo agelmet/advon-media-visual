@@ -166,7 +166,6 @@ export default function WebsiteCreation() {
               {lang === 'el' ? 'Δείτε μερικές από τις Δουλειές μας' : 'Check Out Some Of Our Work'}
             </h2>
             <p className="text-gray-500 text-sm">
-              {portfolioData.length} {lang === 'el' ? 'ιστοσελίδες' : 'websites'} &nbsp;·&nbsp;
               {lang === 'el' ? 'Σελίδα' : 'Page'} {currentPage + 1} / {totalPages}
             </p>
           </ScrollReveal>

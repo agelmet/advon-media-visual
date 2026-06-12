@@ -1,5 +1,6 @@
 // app/page.jsx
 'use client';
+import { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useLangStore } from '@/store/langStore';
 import Reviews from '@/components/Reviews';
@@ -25,22 +26,114 @@ const marqueeItems = [
 
 export default function Home() {
   const { lang } = useLangStore();
+  const heroDecoRef = useRef(null);
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (heroDecoRef.current) {
+        heroDecoRef.current.style.transform = `translateY(${window.scrollY * 0.25}px)`;
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <>
       {/* ─── HERO ─── */}
-      <section className="relative min-h-[95vh] flex items-center justify-center py-20 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center py-20 overflow-hidden">
 
-        {/* Hero accent glow */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] bg-[radial-gradient(ellipse,rgba(71,200,245,0.06)_0%,transparent_65%)] blur-[60px]" />
+        {/* ── PARALLAX DECORATION LAYERS (slower than scroll) ── */}
+        <div
+          ref={heroDecoRef}
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden="true"
+          style={{ willChange: 'transform' }}
+        >
+          {/* Ambient aurora orbs */}
+          <div className="absolute rounded-full" style={{ top: '-15%', left: '-10%', width: 'min(70vw, 700px)', height: 'min(70vw, 700px)', background: 'radial-gradient(circle, rgba(71,200,245,0.13) 0%, transparent 65%)', filter: 'blur(70px)', animation: 'auroraFloat1 22s ease-in-out infinite' }} />
+          <div className="absolute rounded-full" style={{ bottom: '-12%', right: '-5%', width: 'min(60vw, 620px)', height: 'min(60vw, 620px)', background: 'radial-gradient(circle, rgba(107,63,160,0.16) 0%, transparent 65%)', filter: 'blur(90px)', animation: 'auroraFloat2 28s ease-in-out infinite' }} />
+          <div className="absolute rounded-full" style={{ top: '28%', left: '55%', width: 'min(38vw, 420px)', height: 'min(38vw, 420px)', background: 'radial-gradient(circle, rgba(71,200,245,0.09) 0%, transparent 60%)', filter: 'blur(55px)', animation: 'auroraFloat3 17s ease-in-out infinite' }} />
+
+          {/* Tech grid */}
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                'linear-gradient(rgba(71,200,245,0.055) 1px, transparent 1px),' +
+                'linear-gradient(90deg, rgba(71,200,245,0.055) 1px, transparent 1px)',
+              backgroundSize: '64px 64px',
+              maskImage: 'radial-gradient(ellipse 90% 80% at 50% 50%, black 5%, transparent 72%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 90% 80% at 50% 50%, black 5%, transparent 72%)',
+            }}
+          />
+
+          {/* Laser beams — skewed outer wrapper keeps angle fixed; inner div sweeps via laserSweep */}
+          {[
+            { top: '17%', skew: -8,  dur: '5s',    delay: '0s',   w: 2, cyan: true,  op: 0.65 },
+            { top: '40%', skew: -5,  dur: '8.5s',  delay: '1.8s', w: 1, cyan: true,  op: 0.4  },
+            { top: '63%', skew: -13, dur: '11.5s', delay: '0.5s', w: 2, cyan: true,  op: 0.5  },
+            { top: '29%', skew: -6,  dur: '7s',    delay: '3.5s', w: 1, cyan: false, op: 0.36 },
+          ].map((b, i) => (
+            <div
+              key={i}
+              style={{
+                position: 'absolute',
+                top: b.top,
+                left: 0,
+                right: 0,
+                height: `${b.w}px`,
+                transform: `skewX(${b.skew}deg)`,
+                overflow: 'hidden',
+              }}
+            >
+              <div
+                style={{
+                  position: 'absolute',
+                  left: '-30%',
+                  width: '30%',
+                  height: '100%',
+                  opacity: b.op,
+                  background: b.cyan
+                    ? 'linear-gradient(90deg, transparent 0%, rgba(71,200,245,0.6) 25%, #47c8f5 50%, rgba(71,200,245,0.6) 75%, transparent 100%)'
+                    : 'linear-gradient(90deg, transparent 0%, rgba(201,255,0,0.5) 25%, #c9ff00 50%, rgba(201,255,0,0.5) 75%, transparent 100%)',
+                  boxShadow: b.cyan
+                    ? '0 0 6px 2px rgba(71,200,245,0.9), 0 0 20px 5px rgba(71,200,245,0.3)'
+                    : '0 0 6px 2px rgba(201,255,0,0.75), 0 0 20px 5px rgba(201,255,0,0.22)',
+                  animation: `laserSweep ${b.dur} ${b.delay} infinite linear`,
+                  willChange: 'transform',
+                }}
+              />
+            </div>
+          ))}
         </div>
 
+        {/* ── Scanline overlay (fixed — not parallaxed) ── */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden="true"
+          style={{
+            backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.1) 3px, rgba(0,0,0,0.1) 4px)',
+            opacity: 0.35,
+          }}
+        />
+
+        {/* ── Central radial glow ── */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            style={{ width: '900px', height: '600px', background: 'radial-gradient(ellipse, rgba(71,200,245,0.08) 0%, transparent 65%)', filter: 'blur(60px)' }}
+          />
+        </div>
+
+        {/* ── CONTENT ── */}
         <div className="container max-w-7xl mx-auto px-6 text-center z-10">
 
           {/* Animated badge */}
-          <div className="reveal-item delay-1 inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-electric-cyan/50 bg-electric-cyan/8 mb-10 badge-scan"
-               style={{ boxShadow: '0 0 30px rgba(71,200,245,0.18), inset 0 0 20px rgba(71,200,245,0.04)' }}>
+          <div
+            className="reveal-item delay-1 inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-electric-cyan/50 bg-electric-cyan/8 mb-10 badge-scan"
+            style={{ boxShadow: '0 0 30px rgba(71,200,245,0.2), inset 0 0 20px rgba(71,200,245,0.05)' }}
+          >
             <span className="w-2 h-2 rounded-full bg-electric-cyan animate-pulse" style={{ boxShadow: '0 0 12px #47c8f5' }} />
             <span className="text-[0.65rem] font-black tracking-[0.3em] text-white uppercase">ADVON MEDIA</span>
             <span className="text-[0.65rem] font-semibold tracking-[0.15em] text-electric-cyan/70 uppercase hidden sm:inline">
@@ -69,7 +162,7 @@ export default function Home() {
             <span className="reveal-word inline-block" style={{ animationDelay: '0.68s' }}>
               <span
                 className="text-shimmer"
-                style={{ filter: 'drop-shadow(0 0 40px rgba(71,200,245,0.55))' }}
+                style={{ filter: 'drop-shadow(0 0 45px rgba(71,200,245,0.6))' }}
               >
                 {lang === 'el' ? 'Πελάτες' : 'Customers'}
               </span>
@@ -88,10 +181,11 @@ export default function Home() {
 
           {/* CTA Buttons */}
           <div className="reveal-item delay-5 flex flex-wrap items-center justify-center gap-5">
+            {/* Primary — animated glow pulse */}
             <Link
               href="/kataskevi-istoselidas"
               className="btn-premium group relative overflow-hidden px-9 py-4 bg-electric-cyan text-[#050a0e] font-black text-base uppercase tracking-[0.1em] rounded-xl flex items-center gap-3 transition-all duration-300 hover:scale-105"
-              style={{ boxShadow: '0 0 30px rgba(71,200,245,0.45), 0 4px 20px rgba(0,0,0,0.4)' }}
+              style={{ animation: 'heroCTAPulse 3s ease-in-out infinite' }}
             >
               <span className="relative z-10 flex items-center gap-3">
                 {lang === 'el' ? 'ΥΠΗΡΕΣΙΕΣ' : 'SERVICES'}
@@ -99,9 +193,11 @@ export default function Home() {
               </span>
             </Link>
 
+            {/* Secondary — neon border glow */}
             <Link
               href="/kataskevi-istoselidas#portfolio"
               className="btn-premium group px-9 py-4 bg-transparent border-2 border-electric-cyan text-electric-cyan font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all duration-300 flex items-center gap-3 backdrop-blur-sm"
+              style={{ animation: 'borderGlow 3s ease-in-out infinite 1s' }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><polygon points="6 3 20 12 6 21 6 3"/></svg>
               {lang === 'el' ? 'ΠΟΡΤΦΟΛΙΟ' : 'PORTFOLIO'}
