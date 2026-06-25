@@ -282,7 +282,7 @@ export default function WebsiteCreation() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:[&>*:last-child]:col-span-2 lg:[&>*:last-child]:col-span-1 lg:[&>*:last-child]:col-start-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
               {
                 icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="m13 2-2 2.5h3L12 7"/><path d="M10 14v-3"/><path d="M14 14v-3"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><circle cx="12" cy="14" r="8"/></svg>,
@@ -297,13 +297,6 @@ export default function WebsiteCreation() {
                 titleEn: 'Automated SSL/TLS Encryption',
                 bodyEl: 'Η ιστοσελίδα προστατεύεται με αυτόματα ανανεούμενο, επαγγελματικό πιστοποιητικό SSL. Κάθε σύνδεση πραγματοποιείται μέσω HTTPS, ώστε όλα τα δεδομένα που ανταλλάσσονται μεταξύ server και browser να παραμένουν κρυπτογραφημένα και απόλυτα ιδιωτικά.',
                 bodyEn: 'Secured with a continuously renewed, enterprise-grade SSL certificate. Every connection is served over HTTPS — all data between server and browser stays strictly private and encrypted.',
-              },
-              {
-                icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
-                titleEl: 'Αρχιτεκτονική Μηδενικής Ευπάθειας',
-                titleEn: 'Zero-Vulnerability Architecture',
-                bodyEl: 'Επειδή η ιστοσελίδα είναι χτισμένη σε στατική HTML, χωρίς βάση δεδομένων ή δυναμικό backend, είναι εκ φύσεως άτρωτη στις πιο συνηθισμένες διαδικτυακές επιθέσεις, όπως το SQL injection και το cross-site scripting (XSS).',
-                bodyEn: 'Built on static HTML with no database or dynamic backend, the site is inherently immune to the most common web attacks such as SQL injection and cross-site scripting (XSS).',
               },
               {
                 icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>,
