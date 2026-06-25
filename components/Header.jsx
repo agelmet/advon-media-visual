@@ -38,11 +38,16 @@ export default function Header() {
           <img
             src="https://raw.githubusercontent.com/agelmet/Advon-Media/refs/heads/main/logo.png"
             alt="Advon Media"
-            className="h-14 w-14 transition-all duration-300 object-cover"
+            className="transition-all duration-300"
             style={{
+              width: '68px',
+              height: '68px',
               borderRadius: '50%',
-              objectFit: 'cover',
-              filter: 'drop-shadow(0 0 12px rgba(71,200,245,0.6))',
+              objectFit: 'contain',
+              padding: '5px',
+              background: 'rgba(5,10,14,0.6)',
+              filter: 'drop-shadow(0 0 12px rgba(71,200,245,0.55))',
+              border: '1px solid rgba(71,200,245,0.18)',
             }}
           />
         </Link>

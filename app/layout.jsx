@@ -5,7 +5,6 @@ import Footer from '@/components/Footer';
 import Background from '@/components/Background';
 import Contact from '@/components/Contact';
 import CustomCursor from '@/components/CustomCursor';
-import Preloader from '@/components/Preloader';
 
 export const metadata = {
   title: 'Κατασκευή Ιστοσελίδων | Web Design & SEO - Advon Media',
@@ -23,7 +22,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="el" className="scroll-smooth">
       <body className="font-body antialiased relative min-h-screen flex flex-col">
-        <Preloader />
         <Background />
         <CustomCursor />
         <Header />

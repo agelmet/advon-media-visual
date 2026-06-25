@@ -41,7 +41,7 @@ export default function Reviews() {
                   {[1,2,3,4,5].map(i => <StarIcon key={i} className="w-6 h-6" />)}
                 </div>
                 <span className="text-gray-400 font-bold text-sm uppercase tracking-widest">
-                  (90+) {lang === 'el' ? 'Αξιολογήσεις' : 'Reviews'}
+                  (100+) {lang === 'el' ? 'Αξιολογήσεις' : 'Reviews'}
                 </span>
               </div>
             </div>

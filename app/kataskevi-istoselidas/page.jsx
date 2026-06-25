@@ -138,78 +138,113 @@ export default function WebsiteCreation() {
               {lang === 'el' ? 'Τιμολόγηση Φιλοξενίας' : 'Hosting Pricing'}
             </h2>
             <p className="text-gray-500 text-base max-w-xl mx-auto">
-              {lang === 'el' ? 'Το μόνο κόστος που έχετε — επιλέξτε τον τρόπο χρέωσης.' : 'The only cost you have — choose your billing cycle.'}
+              {lang === 'el' ? 'Επιλέξτε τον τρόπο χρέωσης που σας βολεύει.' : 'Choose the billing cycle that suits you best.'}
             </p>
 
             {/* Toggle */}
-            <div className="inline-flex items-center gap-1 mt-6 p-1 rounded-full bg-white/5 border border-white/10">
+            <div className="inline-flex items-center gap-2 mt-6 p-1.5 rounded-full bg-white/5 border border-white/12">
               <button
                 onClick={() => setBillingAnnual(true)}
-                className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${billingAnnual ? 'bg-electric-cyan text-[#050a0e]' : 'text-gray-400 hover:text-white'}`}
+                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${billingAnnual ? 'bg-electric-cyan text-[#050a0e] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
               >
                 {lang === 'el' ? 'Ετήσια' : 'Annual'}
               </button>
               <button
                 onClick={() => setBillingAnnual(false)}
-                className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${!billingAnnual ? 'bg-electric-cyan text-[#050a0e]' : 'text-gray-400 hover:text-white'}`}
+                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${!billingAnnual ? 'bg-electric-cyan text-[#050a0e] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
               >
                 {lang === 'el' ? 'Μηνιαία' : 'Monthly'}
               </button>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-            {/* Annual card */}
-            <div className={`glass-panel rounded-2xl p-7 border-2 relative transition-all duration-300 ${billingAnnual ? 'border-electric-cyan/60 shadow-[0_0_40px_rgba(71,200,245,0.18)]' : 'border-electric-cyan/15'}`}>
-              {billingAnnual && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-electric-cyan text-[#050a0e] text-[0.6rem] font-black tracking-[0.18em] uppercase shadow-[0_0_16px_rgba(71,200,245,0.4)] whitespace-nowrap">
+          {/* Single card — swaps on toggle */}
+          <div className="max-w-md mx-auto">
+            {billingAnnual ? (
+              /* Annual card */
+              <div className="glass-panel rounded-2xl p-8 border-2 border-electric-cyan/60 relative shadow-[0_0_50px_rgba(71,200,245,0.18)]">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full bg-electric-cyan text-[#050a0e] text-[0.6rem] font-black tracking-[0.2em] uppercase shadow-[0_0_20px_rgba(71,200,245,0.5)] whitespace-nowrap">
                   {lang === 'el' ? 'ΚΑΛΥΤΕΡΗ ΤΙΜΗ' : 'BEST VALUE'}
                 </div>
-              )}
-              <div className="text-electric-cyan text-xs font-black uppercase tracking-widest mb-3">
-                {lang === 'el' ? 'Ετήσια Χρέωση' : 'Annual Billing'}
+                <div className="text-electric-cyan text-xs font-black uppercase tracking-widest mb-4 mt-1">
+                  {lang === 'el' ? 'Ετήσια Χρέωση' : 'Annual Billing'}
+                </div>
+                <div className="flex items-end gap-2 mb-1">
+                  <span className="text-5xl font-black text-white">10.83€</span>
+                  <span className="text-gray-500 mb-1.5 text-sm">{lang === 'el' ? '/μήνα' : '/month'}</span>
+                </div>
+                <p className="text-gray-400 text-sm mb-5">
+                  {lang === 'el' ? 'Τιμολογείται ως 130€/χρόνο' : 'Billed as €130/year'}
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 bg-electric-cyan/8 border border-electric-cyan/25 rounded-xl px-4 py-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                    <span className="text-electric-cyan font-bold text-sm">
+                      {lang === 'el' ? 'Domain name δωρεάν — περιλαμβάνεται' : 'Domain name free — included'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span className="text-gray-300 text-sm font-semibold">
+                      {lang === 'el' ? 'Εξοικονομείτε 50€ τον χρόνο' : 'Save €50 per year'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                    <span className="text-gray-400 text-sm">
+                      {lang === 'el' ? 'Ελάχιστη δέσμευση 12 μήνες' : 'Minimum 12-month commitment'}
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-end gap-2 mb-1">
-                <span className="text-4xl font-black text-white">10.83€</span>
-                <span className="text-gray-500 mb-1 text-sm">{lang === 'el' ? '/μήνα' : '/month'}</span>
+            ) : (
+              /* Monthly card */
+              <div className="glass-panel rounded-2xl p-8 border-2 border-electric-cyan/60 relative shadow-[0_0_50px_rgba(71,200,245,0.18)]">
+                <div className="text-gray-300 text-xs font-black uppercase tracking-widest mb-4">
+                  {lang === 'el' ? 'Μηνιαία Χρέωση' : 'Monthly Billing'}
+                </div>
+                <div className="flex items-end gap-2 mb-1">
+                  <span className="text-5xl font-black text-white">15€</span>
+                  <span className="text-gray-500 mb-1.5 text-sm">{lang === 'el' ? '/μήνα' : '/month'}</span>
+                </div>
+                <p className="text-gray-400 text-sm mb-5">
+                  {lang === 'el' ? 'Χρέωση μία φορά τον μήνα' : 'Billed once per month'}
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 bg-electric-cyan/8 border border-electric-cyan/25 rounded-xl px-4 py-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                    <span className="text-electric-cyan font-bold text-sm">
+                      {lang === 'el' ? 'Domain name δωρεάν — περιλαμβάνεται' : 'Domain name free — included'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span className="text-gray-300 text-sm font-semibold">
+                      {lang === 'el' ? '180€/χρόνο με μηνιαία πληρωμή' : '€180/year with monthly payments'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                    <span className="text-gray-400 text-sm">
+                      {lang === 'el' ? 'Ελάχιστη δέσμευση 12 μήνες' : 'Minimum 12-month commitment'}
+                    </span>
+                  </div>
+                </div>
               </div>
-              <p className="text-gray-400 text-sm mb-4">
-                {lang === 'el' ? 'Τιμολογείται ως 130€/χρόνο' : 'Billed as €130/year'}
-              </p>
-              <div className="bg-electric-cyan/8 border border-electric-cyan/20 rounded-lg px-4 py-2 text-sm text-electric-cyan font-semibold">
-                {lang === 'el' ? '🎁 Εξοικονομείτε 50€ τον χρόνο' : '🎁 Save €50 per year'}
-              </div>
-            </div>
-
-            {/* Monthly card */}
-            <div className={`glass-panel rounded-2xl p-7 border-2 relative transition-all duration-300 ${!billingAnnual ? 'border-electric-cyan/60 shadow-[0_0_40px_rgba(71,200,245,0.18)]' : 'border-white/8'}`}>
-              <div className="text-gray-400 text-xs font-black uppercase tracking-widest mb-3">
-                {lang === 'el' ? 'Μηνιαία Χρέωση' : 'Monthly Billing'}
-              </div>
-              <div className="flex items-end gap-2 mb-1">
-                <span className="text-4xl font-black text-white">15€</span>
-                <span className="text-gray-500 mb-1 text-sm">{lang === 'el' ? '/μήνα' : '/month'}</span>
-              </div>
-              <p className="text-gray-400 text-sm mb-4">
-                {lang === 'el' ? 'Χρέωση κάθε μήνα, ακύρωση ανά πάσα στιγμή' : 'Billed monthly, cancel anytime'}
-              </p>
-              <div className="bg-white/4 border border-white/8 rounded-lg px-4 py-2 text-sm text-gray-500">
-                {lang === 'el' ? '180€/χρόνο με μηνιαία χρέωση' : '€180/year on monthly billing'}
-              </div>
-            </div>
+            )}
           </div>
 
           <p className="text-center text-gray-600 text-xs mt-5">
-            {lang === 'el' ? 'Domain name δωρεάν · Χωρίς κρυφές χρεώσεις · Ακύρωση ανά πάσα στιγμή' : 'Free domain name · No hidden fees · Cancel anytime'}
+            {lang === 'el' ? 'Χωρίς κρυφές χρεώσεις · Χωρίς εγκατάσταση · Domain name δωρεάν' : 'No hidden fees · No setup fee · Free domain name'}
           </p>
         </ScrollReveal>
 
         {/* ─── FUTURE CHANGES POLICY + ADD-ONS ─── */}
         <ScrollReveal delay={80} className="mt-20">
           <div className="text-center mb-10">
-            <span className="section-label">{lang === 'el' ? 'Πολιτική & Extras' : 'Policy & Extras'}</span>
+            <span className="section-label">{lang === 'el' ? 'Extras' : 'Extras'}</span>
             <h2 className="text-3xl md:text-4xl font-black font-display mb-3 text-white tracking-tight">
-              {lang === 'el' ? 'Αλλαγές & Προαιρετικά' : 'Changes & Add-ons'}
+              {lang === 'el' ? 'Αλλαγές & Extras' : 'Changes & Extras'}
             </h2>
           </div>
 
@@ -283,7 +318,7 @@ export default function WebsiteCreation() {
               href="#contact"
               className="btn-premium inline-flex items-center gap-2 px-8 py-3.5 border border-electric-cyan/40 text-electric-cyan font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all duration-300 text-sm"
             >
-              {lang === 'el' ? 'Ρωτήστε μας για τα extras →' : 'Ask us about the extras →'}
+              {lang === 'el' ? 'Επικοινωνία' : 'Contact Us'}
             </Link>
           </div>
         </ScrollReveal>
