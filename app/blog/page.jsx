@@ -21,7 +21,7 @@ export default function Blog() {
   ];
 
   return (
-    <div className="pt-20">
+    <div className="pt-28">
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-6">
           <ScrollReveal className="text-center mb-20">

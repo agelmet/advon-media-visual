@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
         <Background />
         <CustomCursor />
         <Header />
-        <main className="relative z-10 pt-20 flex-1">
+        <main className="relative z-10 pt-28 flex-1">
           {children}
         </main>
         <Contact />

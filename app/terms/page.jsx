@@ -7,7 +7,7 @@ export default function Terms() {
   const { lang } = useLangStore();
 
   return (
-    <div className="pt-20">
+    <div className="pt-28">
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-6 legal-format glass-panel p-10 rounded-3xl">
           <h1 className="text-3xl md:text-4xl font-black text-white text-center mb-8 font-display">

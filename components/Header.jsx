@@ -32,7 +32,7 @@ export default function Header() {
           : 'none',
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 h-28 pt-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
           <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -60,10 +60,8 @@ export default function Header() {
             />
             {/* Logo circle */}
             <div
-              className="transition-all duration-300 shrink-0"
+              className="transition-all duration-300 shrink-0 w-[104px] h-[104px] md:w-[116px] md:h-[116px]"
               style={{
-                width: '80px',
-                height: '80px',
                 borderRadius: '50%',
                 overflow: 'hidden',
                 border: '1.5px solid rgba(71,200,245,0.30)',

@@ -50,7 +50,7 @@ export default function FAQ() {
   ];
 
   return (
-    <div className="pt-20">
+    <div className="pt-28">
       <section className="py-32">
         <div className="max-w-3xl mx-auto px-6">
           <ScrollReveal className="text-center mb-16">
