@@ -46,7 +46,7 @@ export default function SocialMedia() {
   ];
 
   return (
-    <section className="py-32 pt-40 max-w-7xl mx-auto px-6">
+    <section className="py-32 pt-16 max-w-7xl mx-auto px-6">
       {/* Header */}
       <ScrollReveal className="text-center mb-16">
         <span className="section-label">{lang === 'el' ? 'Υπηρεσία' : 'Service'}</span>

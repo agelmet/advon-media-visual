@@ -14,7 +14,7 @@ export default function WebsiteCreation() {
   return (
     <>
       {/* ─── SERVICE INFO SECTION ─── */}
-      <section className="py-32 pt-40 max-w-6xl mx-auto px-6">
+      <section className="py-32 pt-16 max-w-6xl mx-auto px-6">
         {/* Header */}
         <ScrollReveal className="text-center mb-16">
           <span className="section-label">{lang === 'el' ? 'Υπηρεσία' : 'Service'}</span>
@@ -54,6 +54,33 @@ export default function WebsiteCreation() {
             <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 mb-12 pb-8 border-b border-white/8 text-center md:text-left">
               <div>
                 <span className="text-electric-cyan text-xs font-bold tracking-widest uppercase mb-2 block">{lang === 'el' ? 'ΚΟΣΤΟΣ ΚΑΤΑΣΚΕΥΗΣ' : 'CONSTRUCTION COST'}</span>
+                {/* Anchor / original price — crossed out with hand-drawn SVG line */}
+                <div className="relative inline-block mb-1">
+                  <span className="text-xl md:text-2xl font-bold text-gray-400/75 tracking-tight whitespace-nowrap select-none">
+                    700€ – 5.000€
+                  </span>
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 210 40"
+                    fill="none"
+                    className="absolute inset-0 w-full h-full pointer-events-none"
+                    preserveAspectRatio="none"
+                  >
+                    <path
+                      d="M6,32 C45,25 95,16 140,10 C168,6 190,4 204,2"
+                      stroke="#ef4444"
+                      strokeWidth="3.8"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M4,34 C48,28 99,19 144,13 C171,9 192,6 206,4"
+                      stroke="#ef4444"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      opacity="0.45"
+                    />
+                  </svg>
+                </div>
                 <div className="flex flex-col md:flex-row md:items-end gap-3">
                   <span className="text-6xl font-black text-white tracking-tight" style={{ textShadow: '0 0 30px rgba(255,255,255,0.2)' }}>
                     {lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE'}

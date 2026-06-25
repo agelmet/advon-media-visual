@@ -75,7 +75,7 @@ export default function Header() {
               <img
                 src="https://raw.githubusercontent.com/agelmet/Advon-Media/refs/heads/main/logo.png"
                 alt="Advon Media"
-                style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#050a0e', display: 'block' }}
+                style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#ffffff', display: 'block' }}
               />
             </div>
           </div>
