@@ -169,10 +169,11 @@ export default function WebsiteCreation() {
                 <div className="text-electric-cyan text-xs font-black uppercase tracking-widest mb-4 mt-1">
                   {lang === 'el' ? 'Ετήσια Χρέωση' : 'Annual Billing'}
                 </div>
-                <div className="flex items-end gap-2 mb-1">
+                <div className="flex items-end gap-2 mb-0.5">
                   <span className="text-5xl font-black text-white">10.83€</span>
                   <span className="text-gray-500 mb-1.5 text-sm">{lang === 'el' ? '/μήνα' : '/month'}</span>
                 </div>
+                <p className="text-gray-500 text-xs mb-1">{lang === 'el' ? '(+ΦΠΑ)' : '(+VAT)'}</p>
                 <p className="text-gray-400 text-sm mb-5">
                   {lang === 'el' ? 'Τιμολογείται ως 130€/χρόνο' : 'Billed as €130/year'}
                 </p>
@@ -203,10 +204,11 @@ export default function WebsiteCreation() {
                 <div className="text-gray-300 text-xs font-black uppercase tracking-widest mb-4">
                   {lang === 'el' ? 'Μηνιαία Χρέωση' : 'Monthly Billing'}
                 </div>
-                <div className="flex items-end gap-2 mb-1">
+                <div className="flex items-end gap-2 mb-0.5">
                   <span className="text-5xl font-black text-white">15€</span>
                   <span className="text-gray-500 mb-1.5 text-sm">{lang === 'el' ? '/μήνα' : '/month'}</span>
                 </div>
+                <p className="text-gray-500 text-xs mb-1">{lang === 'el' ? '(+ΦΠΑ)' : '(+VAT)'}</p>
                 <p className="text-gray-400 text-sm mb-5">
                   {lang === 'el' ? 'Χρέωση μία φορά τον μήνα' : 'Billed once per month'}
                 </p>
@@ -237,6 +239,85 @@ export default function WebsiteCreation() {
           <p className="text-center text-gray-600 text-xs mt-5">
             {lang === 'el' ? 'Χωρίς κρυφές χρεώσεις · Χωρίς εγκατάσταση · Domain name δωρεάν' : 'No hidden fees · No setup fee · Free domain name'}
           </p>
+        </ScrollReveal>
+
+        {/* ─── HOSTING TECHNICAL FEATURES ─── */}
+        <ScrollReveal delay={60} className="mt-20">
+          <div className="text-center mb-12">
+            <span className="section-label">{lang === 'el' ? 'Τεχνικά Χαρακτηριστικά' : 'Technical Features'}</span>
+            <h2 className="text-3xl md:text-4xl font-black font-display mb-3 text-white tracking-tight">
+              {lang === 'el' ? 'Enterprise-Grade Υποδομή' : 'Enterprise-Grade Infrastructure'}
+            </h2>
+            <p className="text-gray-500 text-base max-w-2xl mx-auto">
+              {lang === 'el'
+                ? 'Η ιστοσελίδα σας τρέχει σε υποδομή επιπέδου μεγάλης επιχείρησης — ασφαλής, γρήγορη, και πάντα online.'
+                : 'Your website runs on enterprise-level infrastructure — secure, fast, and always online.'}
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              {
+                icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="m13 2-2 2.5h3L12 7"/><path d="M10 14v-3"/><path d="M14 14v-3"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><circle cx="12" cy="14" r="8"/></svg>,
+                titleEl: 'Ταχύτατη Φόρτωση μέσω Global CDN',
+                titleEn: 'Lightning-Fast Loading via Global CDN',
+                bodyEl: 'Η ιστοσελίδα σερβίρεται από παγκόσμιο δίκτυο διανομής (CDN). Τα αρχεία φορτώνουν από το πλησιέστερο data center στον επισκέπτη, εξαλείφοντας καθυστερήσεις και εξασφαλίζοντας εξαιρετικά γρήγορους χρόνους φόρτωσης.',
+                bodyEn: 'The website is served from a globally distributed CDN. Files load from the data center closest to each visitor, eliminating lag and guaranteeing ultra-fast load times.',
+              },
+              {
+                icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
+                titleEl: 'Αυτόματη Κρυπτογράφηση SSL/TLS',
+                titleEn: 'Automated SSL/TLS Encryption',
+                bodyEl: 'Ασφαλισμένη με αυτόματα ανανεούμενο, επαγγελματικό πιστοποιητικό SSL. Κάθε σύνδεση εξυπηρετείται μέσω HTTPS — τα δεδομένα μεταξύ server και browser παραμένουν κρυπτογραφημένα και απόλυτα ιδιωτικά.',
+                bodyEn: 'Secured with a continuously renewed, enterprise-grade SSL certificate. Every connection is served over HTTPS — all data between server and browser stays strictly private and encrypted.',
+              },
+              {
+                icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+                titleEl: 'Αρχιτεκτονική Μηδενικής Ευπάθειας',
+                titleEn: 'Zero-Vulnerability Architecture',
+                bodyEl: 'Χτισμένη σε στατική HTML χωρίς βάση δεδομένων ή δυναμικό backend, η ιστοσελίδα είναι εκ φύσεως άτρωτη στις πιο συνηθισμένες επιθέσεις, όπως SQL injection και cross-site scripting (XSS).',
+                bodyEn: 'Built on static HTML with no database or dynamic backend, the site is inherently immune to the most common web attacks such as SQL injection and cross-site scripting (XSS).',
+              },
+              {
+                icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>,
+                titleEl: 'Ενεργή Προστασία από DDoS',
+                titleEn: 'Active DDoS Mitigation',
+                bodyEl: 'Το δίκτυο περιλαμβάνει ενσωματωμένη προστασία DDoS Layer 3, 4 και 7, που απορροφά και εξουδετερώνει αυτόματα κακόβουλη κυκλοφορία bot ή flood attacks πριν επηρεάσουν την απόδοση.',
+                bodyEn: 'The edge network includes built-in Layer 3, 4, and 7 DDoS protection, automatically absorbing and neutralizing malicious bot traffic or server floods before they affect performance.',
+              },
+              {
+                icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>,
+                titleEl: 'Αμετάβλητα Deployments & Συνεχή Backups',
+                titleEn: 'Immutable Deployments & Continuous Backups',
+                bodyEl: 'Κάθε ενημέρωση δημιουργεί ένα πλήρες, read-only snapshot ολόκληρης της ιστοσελίδας — ένα αυτόματο, αδιάσπαστο αντίγραφο ασφαλείας της ψηφιακής σας παρουσίας.',
+                bodyEn: 'Every update generates a complete, read-only snapshot of the entire site — an automated, unbreakable backup of your entire web property.',
+              },
+              {
+                icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.54"/></svg>,
+                titleEl: 'Άμεση Επαναφορά με Ένα Κλικ',
+                titleEn: 'Instant One-Click Rollbacks',
+                bodyEl: 'Επειδή κάθε ενημέρωση αποθηκεύεται ως αμετάβλητο snapshot, η ιστοσελίδα μπορεί να επιστρέψει σε οποιαδήποτε προηγούμενη λειτουργική έκδοση σε δευτερόλεπτα, αν χρειαστεί.',
+                bodyEn: 'Because every update is saved as an immutable snapshot, the site can be reverted to any previous working version in seconds if any issue ever occurs.',
+              },
+              {
+                icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
+                titleEl: 'Παγκόσμια Πλεονασία & Μέγιστη Διαθεσιμότητα',
+                titleEn: 'Global Redundancy & Maximum Uptime',
+                bodyEl: 'Η ιστοσελίδα διανέμεται σε παγκόσμιο δίκτυο, όχι σε έναν μόνο server. Αν ένα περιφερειακό data center παρουσιάσει πρόβλημα, η κυκλοφορία ανακατευθύνεται αυτόματα στο πλησιέστερο διαθέσιμο.',
+                bodyEn: 'The site is distributed across a massive global network, not a single server. If one regional data center goes down, traffic is seamlessly rerouted to keep the site online.',
+              },
+            ].map(({ icon, titleEl, titleEn, bodyEl, bodyEn }) => (
+              <div key={titleEn} className="glass-panel rounded-2xl p-6 flex gap-4 group hover:border-electric-cyan/30 transition-colors duration-300">
+                <div className="w-11 h-11 bg-electric-cyan/10 border border-electric-cyan/20 rounded-xl flex items-center justify-center text-electric-cyan shrink-0 group-hover:bg-electric-cyan/18 transition-colors duration-300">
+                  {icon}
+                </div>
+                <div>
+                  <h4 className="text-white font-bold text-sm mb-1.5 leading-tight">{lang === 'el' ? titleEl : titleEn}</h4>
+                  <p className="text-gray-500 text-xs leading-relaxed">{lang === 'el' ? bodyEl : bodyEn}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </ScrollReveal>
 
         {/* ─── FUTURE CHANGES POLICY + ADD-ONS ─── */}

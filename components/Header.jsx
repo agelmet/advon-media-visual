@@ -35,21 +35,23 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
-          <img
-            src="https://raw.githubusercontent.com/agelmet/Advon-Media/refs/heads/main/logo.png"
-            alt="Advon Media"
-            className="transition-all duration-300"
+          <div
+            className="transition-all duration-300 shrink-0"
             style={{
-              width: '68px',
-              height: '68px',
+              width: '80px',
+              height: '80px',
               borderRadius: '50%',
-              objectFit: 'contain',
-              padding: '5px',
-              background: 'rgba(5,10,14,0.6)',
-              filter: 'drop-shadow(0 0 12px rgba(71,200,245,0.55))',
-              border: '1px solid rgba(71,200,245,0.18)',
+              overflow: 'hidden',
+              border: '1.5px solid rgba(71,200,245,0.25)',
+              boxShadow: '0 0 16px rgba(71,200,245,0.45), 0 0 32px rgba(71,200,245,0.15)',
             }}
-          />
+          >
+            <img
+              src="https://raw.githubusercontent.com/agelmet/Advon-Media/refs/heads/main/logo.png"
+              alt="Advon Media"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+          </div>
         </Link>
 
         {/* Desktop Nav */}
