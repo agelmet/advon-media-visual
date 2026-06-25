@@ -35,22 +35,49 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
-          <div
-            className="transition-all duration-300 shrink-0"
-            style={{
-              width: '80px',
-              height: '80px',
-              borderRadius: '50%',
-              overflow: 'hidden',
-              border: '1.5px solid rgba(71,200,245,0.25)',
-              boxShadow: '0 0 16px rgba(71,200,245,0.45), 0 0 32px rgba(71,200,245,0.15)',
-            }}
-          >
-            <img
-              src="https://raw.githubusercontent.com/agelmet/Advon-Media/refs/heads/main/logo.png"
-              alt="Advon Media"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+            {/* Animated outer ring */}
+            <div
+              className="logo-glow-ring"
+              style={{
+                position: 'absolute',
+                inset: '-9px',
+                borderRadius: '50%',
+                border: '1.5px solid rgba(71,200,245,0.5)',
+                pointerEvents: 'none',
+              }}
             />
+            {/* Radial halo */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: '-20px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(71,200,245,0.22) 0%, rgba(71,200,245,0.06) 55%, transparent 72%)',
+                filter: 'blur(8px)',
+                pointerEvents: 'none',
+              }}
+            />
+            {/* Logo circle */}
+            <div
+              className="transition-all duration-300 shrink-0"
+              style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
+                overflow: 'hidden',
+                border: '1.5px solid rgba(71,200,245,0.30)',
+                boxShadow: '0 0 22px rgba(71,200,245,0.55), 0 0 50px rgba(71,200,245,0.22), 0 0 90px rgba(71,200,245,0.08)',
+                position: 'relative',
+                zIndex: 1,
+              }}
+            >
+              <img
+                src="https://raw.githubusercontent.com/agelmet/Advon-Media/refs/heads/main/logo.png"
+                alt="Advon Media"
+                style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#050a0e', display: 'block' }}
+              />
+            </div>
           </div>
         </Link>
 

@@ -350,3 +350,11 @@
   0%   { transform: translateX(-150%) skewX(-20deg); }
   100% { transform: translateX(150%)  skewX(-20deg); }
 }
+@keyframes logoPulse {
+  0%, 100% { transform: scale(1);    opacity: 0.45; }
+  50%       { transform: scale(1.14); opacity: 0.85; }
+}
+.logo-glow-ring { animation: logoPulse 3s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .logo-glow-ring { animation: none !important; }
+}

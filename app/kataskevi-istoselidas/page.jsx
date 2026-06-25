@@ -193,7 +193,7 @@ export default function WebsiteCreation() {
                   <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                     <span className="text-gray-400 text-sm">
-                      {lang === 'el' ? 'Ελάχιστη δέσμευση 12 μήνες' : 'Minimum 12-month commitment'}
+                      {lang === 'el' ? 'Ελάχιστη δέσμευση 1 έτος' : 'Minimum commitment 1 year'}
                     </span>
                   </div>
                 </div>
@@ -255,55 +255,55 @@ export default function WebsiteCreation() {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:[&>*:last-child]:col-span-2 lg:[&>*:last-child]:col-span-1 lg:[&>*:last-child]:col-start-2">
             {[
               {
                 icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="m13 2-2 2.5h3L12 7"/><path d="M10 14v-3"/><path d="M14 14v-3"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><circle cx="12" cy="14" r="8"/></svg>,
                 titleEl: 'Ταχύτατη Φόρτωση μέσω Global CDN',
                 titleEn: 'Lightning-Fast Loading via Global CDN',
-                bodyEl: 'Η ιστοσελίδα σερβίρεται από παγκόσμιο δίκτυο διανομής (CDN). Τα αρχεία φορτώνουν από το πλησιέστερο data center στον επισκέπτη, εξαλείφοντας καθυστερήσεις και εξασφαλίζοντας εξαιρετικά γρήγορους χρόνους φόρτωσης.',
+                bodyEl: 'Η ιστοσελίδα εξυπηρετείται από παγκόσμιο δίκτυο διανομής περιεχομένου (CDN). Τα αρχεία της φορτώνουν από το πλησιέστερο data center σε κάθε επισκέπτη, εξαλείφοντας τις καθυστερήσεις και εξασφαλίζοντας εξαιρετικά γρήγορους χρόνους φόρτωσης.',
                 bodyEn: 'The website is served from a globally distributed CDN. Files load from the data center closest to each visitor, eliminating lag and guaranteeing ultra-fast load times.',
               },
               {
                 icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
                 titleEl: 'Αυτόματη Κρυπτογράφηση SSL/TLS',
                 titleEn: 'Automated SSL/TLS Encryption',
-                bodyEl: 'Ασφαλισμένη με αυτόματα ανανεούμενο, επαγγελματικό πιστοποιητικό SSL. Κάθε σύνδεση εξυπηρετείται μέσω HTTPS — τα δεδομένα μεταξύ server και browser παραμένουν κρυπτογραφημένα και απόλυτα ιδιωτικά.',
+                bodyEl: 'Η ιστοσελίδα προστατεύεται με αυτόματα ανανεούμενο, επαγγελματικό πιστοποιητικό SSL. Κάθε σύνδεση πραγματοποιείται μέσω HTTPS, ώστε όλα τα δεδομένα που ανταλλάσσονται μεταξύ server και browser να παραμένουν κρυπτογραφημένα και απόλυτα ιδιωτικά.',
                 bodyEn: 'Secured with a continuously renewed, enterprise-grade SSL certificate. Every connection is served over HTTPS — all data between server and browser stays strictly private and encrypted.',
               },
               {
                 icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
                 titleEl: 'Αρχιτεκτονική Μηδενικής Ευπάθειας',
                 titleEn: 'Zero-Vulnerability Architecture',
-                bodyEl: 'Χτισμένη σε στατική HTML χωρίς βάση δεδομένων ή δυναμικό backend, η ιστοσελίδα είναι εκ φύσεως άτρωτη στις πιο συνηθισμένες επιθέσεις, όπως SQL injection και cross-site scripting (XSS).',
+                bodyEl: 'Επειδή η ιστοσελίδα είναι χτισμένη σε στατική HTML, χωρίς βάση δεδομένων ή δυναμικό backend, είναι εκ φύσεως άτρωτη στις πιο συνηθισμένες διαδικτυακές επιθέσεις, όπως το SQL injection και το cross-site scripting (XSS).',
                 bodyEn: 'Built on static HTML with no database or dynamic backend, the site is inherently immune to the most common web attacks such as SQL injection and cross-site scripting (XSS).',
               },
               {
                 icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>,
                 titleEl: 'Ενεργή Προστασία από DDoS',
                 titleEn: 'Active DDoS Mitigation',
-                bodyEl: 'Το δίκτυο περιλαμβάνει ενσωματωμένη προστασία DDoS Layer 3, 4 και 7, που απορροφά και εξουδετερώνει αυτόματα κακόβουλη κυκλοφορία bot ή flood attacks πριν επηρεάσουν την απόδοση.',
+                bodyEl: 'Το υποκείμενο δίκτυο διαθέτει ενσωματωμένη προστασία DDoS σε Layer 3, 4 και 7, που απορροφά και εξουδετερώνει αυτόματα την κακόβουλη κίνηση από bots ή τις επιθέσεις υπερφόρτωσης, πριν προλάβουν να επηρεάσουν την απόδοση της ιστοσελίδας.',
                 bodyEn: 'The edge network includes built-in Layer 3, 4, and 7 DDoS protection, automatically absorbing and neutralizing malicious bot traffic or server floods before they affect performance.',
               },
               {
                 icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>,
-                titleEl: 'Αμετάβλητα Deployments & Συνεχή Backups',
+                titleEl: 'Αμετάβλητα Deployments & Συνεχή Αντίγραφα Ασφαλείας',
                 titleEn: 'Immutable Deployments & Continuous Backups',
-                bodyEl: 'Κάθε ενημέρωση δημιουργεί ένα πλήρες, read-only snapshot ολόκληρης της ιστοσελίδας — ένα αυτόματο, αδιάσπαστο αντίγραφο ασφαλείας της ψηφιακής σας παρουσίας.',
+                bodyEl: 'Κάθε ενημέρωση δημιουργεί ένα πλήρες, μη επεξεργάσιμο (read-only) snapshot ολόκληρης της ιστοσελίδας — ένα αυτόματο και αδιάσπαστο αντίγραφο ασφαλείας της ψηφιακής σας παρουσίας.',
                 bodyEn: 'Every update generates a complete, read-only snapshot of the entire site — an automated, unbreakable backup of your entire web property.',
               },
               {
                 icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.54"/></svg>,
                 titleEl: 'Άμεση Επαναφορά με Ένα Κλικ',
                 titleEn: 'Instant One-Click Rollbacks',
-                bodyEl: 'Επειδή κάθε ενημέρωση αποθηκεύεται ως αμετάβλητο snapshot, η ιστοσελίδα μπορεί να επιστρέψει σε οποιαδήποτε προηγούμενη λειτουργική έκδοση σε δευτερόλεπτα, αν χρειαστεί.',
+                bodyEl: 'Καθώς κάθε ενημέρωση αποθηκεύεται ως αμετάβλητο snapshot, η ιστοσελίδα μπορεί να επανέλθει σε οποιαδήποτε προηγούμενη, πλήρως λειτουργική έκδοση μέσα σε δευτερόλεπτα, αν ποτέ προκύψει κάποιο πρόβλημα.',
                 bodyEn: 'Because every update is saved as an immutable snapshot, the site can be reverted to any previous working version in seconds if any issue ever occurs.',
               },
               {
                 icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
-                titleEl: 'Παγκόσμια Πλεονασία & Μέγιστη Διαθεσιμότητα',
+                titleEl: 'Παγκόσμια Εφεδρεία & Μέγιστη Διαθεσιμότητα',
                 titleEn: 'Global Redundancy & Maximum Uptime',
-                bodyEl: 'Η ιστοσελίδα διανέμεται σε παγκόσμιο δίκτυο, όχι σε έναν μόνο server. Αν ένα περιφερειακό data center παρουσιάσει πρόβλημα, η κυκλοφορία ανακατευθύνεται αυτόματα στο πλησιέστερο διαθέσιμο.',
+                bodyEl: 'Η ιστοσελίδα δεν φιλοξενείται σε έναν μόνο server, αλλά διανέμεται σε ένα τεράστιο παγκόσμιο δίκτυο. Αν ένα περιφερειακό data center παρουσιάσει πρόβλημα, η κίνηση ανακατευθύνεται αυτόματα στο πλησιέστερο διαθέσιμο, διασφαλίζοντας τη μέγιστη δυνατή διαθεσιμότητα.',
                 bodyEn: 'The site is distributed across a massive global network, not a single server. If one regional data center goes down, traffic is seamlessly rerouted to keep the site online.',
               },
             ].map(({ icon, titleEl, titleEn, bodyEl, bodyEn }) => (
