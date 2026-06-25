@@ -66,7 +66,7 @@ export default function WebsiteCreation() {
                     {lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE'}
                   </span>
                   <span className="text-electric-cyan font-bold mb-2 md:mb-1.5 bg-electric-cyan/10 px-3 py-1 rounded-lg border border-electric-cyan/30">
-                    {lang === 'el' ? 'ΜΟΝΟ 10.83€/μήνα' : 'ONLY 10.83€/mo'}
+                    {lang === 'el' ? 'ΜΟΝΟ 10.83€/μήνα, περιλαμβάνονται όλα - φιλοξενία της ιστοσελίδας σας, domain name της επιλογής σας, ασφάλεια & αυτόματα backups και άλλα...' : 'ONLY 10.83€/month — website hosting, domain name, security & automatic backups, all included'}
                   </span>
                 </div>
               </div>
@@ -347,7 +347,7 @@ export default function WebsiteCreation() {
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Future changes policy */}
             <div className="glass-panel rounded-2xl p-7 border border-electric-cyan/20 hover:border-electric-cyan/40 transition-colors duration-300">
               <div className="w-12 h-12 bg-electric-cyan/10 border border-electric-cyan/20 rounded-xl flex items-center justify-center text-electric-cyan mb-5">
@@ -408,6 +408,28 @@ export default function WebsiteCreation() {
                 {lang === 'el'
                   ? 'Ενσωματώνουμε φόρμα επικοινωνίας στον κώδικα της ιστοσελίδας σας. Κάθε φορά που κάποιος υποβάλλει τη φόρμα, λαμβάνετε αμέσως email στη διεύθυνση που επιλέγετε.'
                   : 'We embed a contact form into your website\'s code. Every time someone submits the form, you immediately receive an email at your preferred address.'}
+              </p>
+            </div>
+
+            {/* Add-on: Admin Panel */}
+            <div className="glass-panel rounded-2xl p-7 border border-white/8 hover:border-electric-cyan/30 transition-colors duration-300 relative">
+              <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-void-purple/80 border border-void-purple text-white text-[0.55rem] font-black tracking-widest uppercase">
+                {lang === 'el' ? 'ΠΡΟΑΙΡΕΤΙΚΟ' : 'ADD-ON'}
+              </div>
+              <div className="w-12 h-12 bg-electric-cyan/10 border border-electric-cyan/20 rounded-xl flex items-center justify-center text-electric-cyan mb-5 mt-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+              </div>
+              <div className="flex items-baseline gap-2 mb-3">
+                <span className="text-3xl font-black price-gradient">180€</span>
+                <span className="text-gray-500 text-sm">{lang === 'el' ? 'εφάπαξ' : 'one-off'}</span>
+              </div>
+              <h3 className="text-white font-bold text-lg mb-3">
+                {lang === 'el' ? 'Πίνακας Διαχείρισης (Admin Panel)' : 'Admin Panel'}
+              </h3>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                {lang === 'el'
+                  ? 'Χτίζουμε και ενσωματώνουμε στον κώδικα της ιστοσελίδας σας έναν πίνακα διαχείρισης, ώστε να μπορείτε να αλλάζετε μόνοι σας κείμενα και εικόνες όποτε θέλετε — δωρεάν, έως 5 αλλαγές τον μήνα.'
+                  : 'We build and integrate an admin panel into your website\'s code so you can change texts and images yourself whenever you want — free, up to 5 changes per month.'}
               </p>
             </div>
           </div>
