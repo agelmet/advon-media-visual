@@ -28,26 +28,6 @@ export default function WebsiteCreation() {
           </p>
         </ScrollReveal>
 
-        {/* Domain Bonus Banner */}
-        <ScrollReveal delay={80} className="mb-16">
-          <div className="relative overflow-hidden bg-gradient-to-r from-electric-cyan/12 to-transparent border border-electric-cyan/35 rounded-3xl p-8 md:p-12 shadow-[0_0_40px_rgba(71,200,245,0.12)] flex flex-col md:flex-row items-center gap-8 group glow-border-hover">
-            <div className="absolute -right-20 -top-20 w-64 h-64 bg-electric-cyan/8 rounded-full blur-[80px] pointer-events-none" />
-            <div className="bg-electric-cyan/15 p-5 rounded-2xl text-electric-cyan shrink-0 ring-1 ring-electric-cyan/40 group-hover:scale-110 transition-transform duration-300 icon-glow">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10"><rect x="3" y="8" width="18" height="14" rx="2"/><path d="M12 5a3 3 0 1 0-3 3"/><path d="M15 8a3 3 0 1 0-3-3"/><path d="M12 8v14"/><path d="M3 15h18"/></svg>
-            </div>
-            <div className="text-center md:text-left z-10">
-              <h3 className="text-2xl md:text-3xl font-black text-white mb-3 font-display">
-                {lang === 'el' ? 'Bonus: Το Domain Name Περιλαμβάνεται!' : 'Bonus: Domain Name Included!'}
-              </h3>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                {lang === 'el'
-                  ? 'Το επιθυμητό σας domain name παρέχεται εντελώς δωρεάν και συμπεριλαμβάνεται στην τιμή της μηνιαίας συνδρομής. Χωρίς κανένα κρυφό κόστος ή επιπλέον χρεώσεις.'
-                  : 'Your desired domain name is provided completely free and included in the monthly subscription price. No hidden costs or extra charges.'}
-              </p>
-            </div>
-          </div>
-        </ScrollReveal>
-
         {/* Main Info Panel */}
         <ScrollReveal delay={60}>
           <div className="glass-panel p-8 md:p-12 rounded-3xl text-gray-300 leading-relaxed font-body text-lg mb-20 shadow-[0_0_50px_rgba(71,200,245,0.08)]">
@@ -86,9 +66,27 @@ export default function WebsiteCreation() {
                     {lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE'}
                   </span>
                   <span className="text-electric-cyan font-bold mb-2 md:mb-1.5 bg-electric-cyan/10 px-3 py-1 rounded-lg border border-electric-cyan/30">
-                    {lang === 'el' ? 'ΜΟΝΟ 10.83€/μήνα hosting' : 'ONLY 10.83€/mo hosting'}
+                    {lang === 'el' ? 'ΜΟΝΟ 10.83€/μήνα' : 'ONLY 10.83€/mo'}
                   </span>
                 </div>
+              </div>
+            </div>
+
+            {/* Domain Bonus Banner */}
+            <div className="relative overflow-hidden bg-gradient-to-r from-electric-cyan/12 to-transparent border border-electric-cyan/35 rounded-3xl p-8 md:p-12 shadow-[0_0_40px_rgba(71,200,245,0.12)] flex flex-col md:flex-row items-center gap-8 group glow-border-hover mb-16">
+              <div className="absolute -right-20 -top-20 w-64 h-64 bg-electric-cyan/8 rounded-full blur-[80px] pointer-events-none" />
+              <div className="bg-electric-cyan/15 p-5 rounded-2xl text-electric-cyan shrink-0 ring-1 ring-electric-cyan/40 group-hover:scale-110 transition-transform duration-300 icon-glow">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10"><rect x="3" y="8" width="18" height="14" rx="2"/><path d="M12 5a3 3 0 1 0-3 3"/><path d="M15 8a3 3 0 1 0-3-3"/><path d="M12 8v14"/><path d="M3 15h18"/></svg>
+              </div>
+              <div className="text-center md:text-left z-10">
+                <h3 className="text-2xl md:text-3xl font-black text-white mb-3 font-display">
+                  {lang === 'el' ? 'Bonus: Το Domain Name Περιλαμβάνεται!' : 'Bonus: Domain Name Included!'}
+                </h3>
+                <p className="text-gray-300 text-lg leading-relaxed">
+                  {lang === 'el'
+                    ? 'Το επιθυμητό σας domain name παρέχεται εντελώς δωρεάν και συμπεριλαμβάνεται στην τιμή της μηνιαίας συνδρομής. Χωρίς κανένα κρυφό κόστος ή επιπλέον χρεώσεις.'
+                    : 'Your desired domain name is provided completely free and included in the monthly subscription price. No hidden costs or extra charges.'}
+                </p>
               </div>
             </div>
 
