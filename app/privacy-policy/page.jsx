@@ -1,6 +1,7 @@
 // app/privacy-policy/page.jsx
 'use client';
 import { useLangStore } from '@/store/langStore';
+import ScrollReveal from '@/components/ScrollReveal';
 
 export default function PrivacyPolicy() {
   const { lang } = useLangStore();
@@ -8,6 +9,7 @@ export default function PrivacyPolicy() {
   return (
     <div className="pt-28 pb-32">
       <section className="py-20">
+        <ScrollReveal direction="fade">
         <div className="max-w-4xl mx-auto px-6 legal-format glass-panel p-10 rounded-3xl">
           <h1 className="text-3xl md:text-4xl font-black text-white text-center mb-8 font-display">
             {lang === 'el' ? 'Πολιτική Απορρήτου & Προστασίας Προσωπικών Δεδομένων' : 'Privacy Policy & Personal Data Protection'}
@@ -95,6 +97,7 @@ export default function PrivacyPolicy() {
             </div>
           )}
         </div>
+        </ScrollReveal>
       </section>
     </div>
   );

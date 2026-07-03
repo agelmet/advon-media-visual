@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useLangStore } from '@/store/langStore';
 import { portfolioData } from '@/lib/data';
 import ScrollReveal from '@/components/ScrollReveal';
+import TiltCard from '@/components/TiltCard';
 
 export default function WebsiteCreation() {
   const { lang } = useLangStore();
@@ -142,7 +143,7 @@ export default function WebsiteCreation() {
                   { num: '4', titleEl: 'Στοιχεία Επικοινωνίας', titleEn: 'Contact Details', bodyEl: 'Τηλέφωνο, email, διεύθυνση, και ωράριο λειτουργίας.', bodyEn: 'Phone, email, address, and operating hours.' },
                   { num: '5', titleEl: 'Λογότυπο', titleEn: 'Logo', bodyEl: 'Ένα λογότυπο αν έχετε, αλλιώς δημιουργούμε εμείς ένα εντελώς δωρεάν για εσάς.', bodyEn: 'A logo if you have one, otherwise we will design one for free.' },
                 ].map(({ num, titleEl, titleEn, bodyEl, bodyEn }) => (
-                  <div key={num} className="bg-white/4 border border-white/8 p-6 rounded-2xl hover:bg-white/8 hover:border-electric-cyan/25 transition-all duration-300 group">
+                  <div key={num} className="bg-white/4 border border-white/8 p-6 rounded-2xl hover:bg-white/8 hover:border-electric-cyan/25 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.5),0_0_24px_rgba(71,200,245,0.08)] transition-all duration-300 group">
                     <div className="w-10 h-10 bg-electric-cyan/15 rounded-full flex items-center justify-center text-electric-cyan font-black mb-4 group-hover:bg-electric-cyan group-hover:text-[#050a0e] transition-all duration-300 text-sm">
                       {num}
                     </div>
@@ -156,7 +157,7 @@ export default function WebsiteCreation() {
         </ScrollReveal>
 
         {/* ─── HOSTING PRICING TOGGLE ─── */}
-        <ScrollReveal delay={60} className="mt-4">
+        <ScrollReveal delay={60} direction="scale" className="mt-4">
           <div className="text-center mb-10">
             <span className="section-label">{lang === 'el' ? 'Φιλοξενία (Hosting)' : 'Hosting'}</span>
             <h2 className="text-3xl md:text-4xl font-black font-display mb-3 text-white tracking-tight">
@@ -187,7 +188,7 @@ export default function WebsiteCreation() {
           <div className="max-w-md mx-auto">
             {billingAnnual ? (
               /* Annual card */
-              <div className="glass-panel rounded-2xl p-8 border-2 border-electric-cyan/60 relative shadow-[0_0_50px_rgba(71,200,245,0.18)]">
+              <div key="annual" className="pricing-swap-in pricing-featured glass-panel rounded-2xl p-8 border-2 border-electric-cyan/60 relative shadow-[0_0_50px_rgba(71,200,245,0.18)]">
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full bg-electric-cyan text-[#050a0e] text-[0.6rem] font-black tracking-[0.2em] uppercase shadow-[0_0_20px_rgba(71,200,245,0.5)] whitespace-nowrap">
                   {lang === 'el' ? 'ΚΑΛΥΤΕΡΗ ΤΙΜΗ' : 'BEST VALUE'}
                 </div>
@@ -225,7 +226,7 @@ export default function WebsiteCreation() {
               </div>
             ) : (
               /* Monthly card */
-              <div className="glass-panel rounded-2xl p-8 border-2 border-electric-cyan/60 relative shadow-[0_0_50px_rgba(71,200,245,0.18)]">
+              <div key="monthly" className="pricing-swap-in glass-panel rounded-2xl p-8 border-2 border-electric-cyan/60 relative shadow-[0_0_50px_rgba(71,200,245,0.18)]">
                 <div className="text-gray-300 text-xs font-black uppercase tracking-widest mb-4">
                   {lang === 'el' ? 'Μηνιαία Χρέωση' : 'Monthly Billing'}
                 </div>
@@ -267,7 +268,7 @@ export default function WebsiteCreation() {
         </ScrollReveal>
 
         {/* ─── HOSTING TECHNICAL FEATURES ─── */}
-        <ScrollReveal delay={60} className="mt-20">
+        <ScrollReveal delay={60} direction="fade" className="mt-20">
           <div className="text-center mb-12">
             <span className="section-label">{lang === 'el' ? 'Τεχνικά Χαρακτηριστικά' : 'Technical Features'}</span>
             <h2 className="text-3xl md:text-4xl font-black font-display mb-3 text-white tracking-tight">
@@ -325,7 +326,7 @@ export default function WebsiteCreation() {
                 bodyEn: 'The site is distributed across a massive global network, not a single server. If one regional data center goes down, traffic is seamlessly rerouted to keep the site online.',
               },
             ].map(({ icon, titleEl, titleEn, bodyEl, bodyEn }) => (
-              <div key={titleEn} className="glass-panel rounded-2xl p-6 flex gap-4 group hover:border-electric-cyan/30 transition-colors duration-300">
+              <div key={titleEn} className="glass-panel card-sweep rounded-2xl p-6 flex gap-4 group hover:border-electric-cyan/30 transition-colors duration-300">
                 <div className="w-11 h-11 bg-electric-cyan/10 border border-electric-cyan/20 rounded-xl flex items-center justify-center text-electric-cyan shrink-0 group-hover:bg-electric-cyan/18 transition-colors duration-300">
                   {icon}
                 </div>
@@ -349,7 +350,8 @@ export default function WebsiteCreation() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Future changes policy */}
-            <div className="glass-panel rounded-2xl p-7 border border-electric-cyan/20 hover:border-electric-cyan/40 transition-colors duration-300">
+            <TiltCard className="h-full">
+            <div className="glass-panel card-sweep rounded-2xl p-7 h-full border border-electric-cyan/20 hover:border-electric-cyan/40 transition-colors duration-300">
               <div className="w-12 h-12 bg-electric-cyan/10 border border-electric-cyan/20 rounded-xl flex items-center justify-center text-electric-cyan mb-5">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>
               </div>
@@ -366,9 +368,11 @@ export default function WebsiteCreation() {
                   : 'For any changes to your website, contact us and we complete them within 3 working days. One request can include multiple detailed changes.'}
               </p>
             </div>
+            </TiltCard>
 
             {/* Add-on: Articles/Seminars section */}
-            <div className="glass-panel rounded-2xl p-7 border border-white/8 hover:border-electric-cyan/30 transition-colors duration-300 relative">
+            <TiltCard className="h-full">
+            <div className="glass-panel card-sweep rounded-2xl p-7 h-full border border-white/8 hover:border-electric-cyan/30 transition-colors duration-300 relative">
               <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-void-purple/80 border border-void-purple text-white text-[0.55rem] font-black tracking-widest uppercase">
                 {lang === 'el' ? 'ΠΡΟΑΙΡΕΤΙΚΟ' : 'ADD-ON'}
               </div>
@@ -388,9 +392,11 @@ export default function WebsiteCreation() {
                   : 'We build a dedicated articles, seminars, or workshops section into your website\'s code. Afterwards, you can upload and edit the content whenever you want, independently.'}
               </p>
             </div>
+            </TiltCard>
 
             {/* Add-on: Contact form */}
-            <div className="glass-panel rounded-2xl p-7 border border-white/8 hover:border-electric-cyan/30 transition-colors duration-300 relative">
+            <TiltCard className="h-full">
+            <div className="glass-panel card-sweep rounded-2xl p-7 h-full border border-white/8 hover:border-electric-cyan/30 transition-colors duration-300 relative">
               <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-void-purple/80 border border-void-purple text-white text-[0.55rem] font-black tracking-widest uppercase">
                 {lang === 'el' ? 'ΠΡΟΑΙΡΕΤΙΚΟ' : 'ADD-ON'}
               </div>
@@ -410,9 +416,11 @@ export default function WebsiteCreation() {
                   : 'We embed a contact form into your website\'s code. Every time someone submits the form, you immediately receive an email at your preferred address.'}
               </p>
             </div>
+            </TiltCard>
 
             {/* Add-on: Admin Panel */}
-            <div className="glass-panel rounded-2xl p-7 border border-white/8 hover:border-electric-cyan/30 transition-colors duration-300 relative">
+            <TiltCard className="h-full">
+            <div className="glass-panel card-sweep rounded-2xl p-7 h-full border border-white/8 hover:border-electric-cyan/30 transition-colors duration-300 relative">
               <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-void-purple/80 border border-void-purple text-white text-[0.55rem] font-black tracking-widest uppercase">
                 {lang === 'el' ? 'ΠΡΟΑΙΡΕΤΙΚΟ' : 'ADD-ON'}
               </div>
@@ -432,6 +440,7 @@ export default function WebsiteCreation() {
                   : 'We build and integrate an admin panel into your website\'s code so you can change texts and images yourself whenever you want — free, up to 5 changes per month.'}
               </p>
             </div>
+            </TiltCard>
           </div>
 
           <div className="mt-10 text-center">
@@ -480,7 +489,7 @@ function PortfolioCard({ item, lang }) {
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative overflow-hidden rounded-2xl border border-white/8 block bg-[#050a0e] glow-border-hover shadow-lg"
+      className="group img-shine relative overflow-hidden rounded-2xl border border-white/8 block bg-[#050a0e] glow-border-hover shadow-lg transition-transform duration-500 hover:-translate-y-1.5"
       style={{ aspectRatio: '4/3' }}
     >
       <Image

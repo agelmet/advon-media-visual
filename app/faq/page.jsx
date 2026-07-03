@@ -51,8 +51,19 @@ export default function FAQ() {
 
   return (
     <div className="pt-28">
-      <section className="py-32">
-        <div className="max-w-3xl mx-auto px-6">
+      <section className="py-32 relative overflow-hidden">
+        {/* Ambient depth */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div
+            className="absolute rounded-full"
+            style={{ top: '-8%', right: '-12%', width: 'min(50vw, 520px)', height: 'min(50vw, 520px)', background: 'radial-gradient(circle, rgba(71,200,245,0.08) 0%, transparent 65%)', filter: 'blur(80px)', animation: 'auroraFloat1 22s ease-in-out infinite' }}
+          />
+          <div
+            className="absolute rounded-full"
+            style={{ bottom: '-10%', left: '-10%', width: 'min(45vw, 460px)', height: 'min(45vw, 460px)', background: 'radial-gradient(circle, rgba(107,63,160,0.1) 0%, transparent 65%)', filter: 'blur(90px)', animation: 'auroraFloat2 28s ease-in-out infinite' }}
+          />
+        </div>
+        <div className="max-w-3xl mx-auto px-6 relative z-10">
           <ScrollReveal className="text-center mb-16">
             <span className="section-label">{lang === 'el' ? 'ΠΛΗΡΟΦΟΡΙΕΣ' : 'INFORMATION'}</span>
             <h1 className="text-4xl md:text-5xl font-black font-display mb-4 text-white tracking-tight">

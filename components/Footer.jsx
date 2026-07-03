@@ -8,6 +8,7 @@ export default function Footer() {
   
   return (
     <footer className="py-8 bg-[#050a0e] border-t border-electric-cyan/20 text-gray-400 relative z-20">
+      <div className="absolute top-0 left-0 right-0 cyber-divider" aria-hidden="true" />
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
         <div className="flex flex-col md:flex-row items-center gap-4">
           <img src="https://assets.cdn.filesafe.space/NkFUgZER3rrdnofCwAIl/media/648dd017a1f733fa5b51e5e9.png" alt="Advon Media" className="h-8 w-auto opacity-50" />

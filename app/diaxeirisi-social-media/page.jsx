@@ -2,6 +2,7 @@
 'use client';
 import { useLangStore } from '@/store/langStore';
 import ScrollReveal from '@/components/ScrollReveal';
+import TiltCard from '@/components/TiltCard';
 
 export default function SocialMedia() {
   const { lang } = useLangStore();
@@ -84,14 +85,16 @@ export default function SocialMedia() {
           {/* Features Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
             {features.map(({ icon, titleEl, titleEn, bodyEl, bodyEn }, i) => (
-              <ScrollReveal key={titleEn} delay={i * 60} direction="up">
-                <div className="bg-[#050a0e]/50 border border-white/5 p-6 rounded-2xl hover:border-electric-cyan/30 hover:bg-[#050a0e]/80 transition-all duration-300 group h-full">
+              <ScrollReveal key={titleEn} delay={i * 60} direction={i % 3 === 0 ? 'left' : i % 3 === 2 ? 'right' : 'up'} className="h-full">
+                <TiltCard className="h-full">
+                <div className="bg-[#050a0e]/50 border border-white/5 card-sweep p-6 rounded-2xl hover:border-electric-cyan/30 hover:bg-[#050a0e]/80 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,0,0.55),0_0_30px_rgba(71,200,245,0.08)] transition-all duration-300 group h-full">
                   <div className="mb-4 group-hover:scale-110 transition-transform duration-300 inline-block">
                     {icon}
                   </div>
                   <h4 className="text-white font-bold text-lg mb-2">{lang === 'el' ? titleEl : titleEn}</h4>
                   <p className="text-sm text-gray-400 leading-relaxed">{lang === 'el' ? bodyEl : bodyEn}</p>
                 </div>
+                </TiltCard>
               </ScrollReveal>
             ))}
           </div>

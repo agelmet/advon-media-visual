@@ -6,6 +6,7 @@ import { blogsData } from '@/lib/data';
 import { ArrowRight, X } from 'lucide-react';
 import Contact from '@/components/Contact';
 import ScrollReveal from '@/components/ScrollReveal';
+import TiltCard from '@/components/TiltCard';
 
 export default function Blog() {
   const { lang } = useLangStore();
@@ -38,13 +39,14 @@ export default function Blog() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogList.map((post, i) => (
-              <ScrollReveal key={post.id} delay={i * 80} direction="up">
+              <ScrollReveal key={post.id} delay={i * 80} direction={i % 3 === 0 ? 'left' : i % 3 === 2 ? 'right' : 'up'} className="h-full">
+                <TiltCard className="h-full">
                 <div
                   onClick={() => {
                     setActiveBlog(post.id);
                     document.body.style.overflow = 'hidden';
                   }}
-                  className="glass-panel p-8 rounded-3xl cursor-pointer flex flex-col h-full group glow-border-hover"
+                  className="glass-panel card-sweep p-8 rounded-3xl cursor-pointer flex flex-col h-full group glow-border-hover"
                 >
                   <div className="text-sm text-electric-cyan font-bold mb-4 tracking-wide">
                     {lang === 'el' ? post.dateEl : post.dateEn}
@@ -60,6 +62,7 @@ export default function Blog() {
                     <ArrowRight className="w-4 h-4" />
                   </span>
                 </div>
+                </TiltCard>
               </ScrollReveal>
             ))}
           </div>
@@ -71,12 +74,16 @@ export default function Blog() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div
             className="absolute inset-0 bg-[#050a0e]/96 backdrop-blur-xl"
+            style={{ animation: 'backdropIn 0.35s ease both' }}
             onClick={() => {
               setActiveBlog(null);
               document.body.style.overflow = 'auto';
             }}
           />
-          <div className="relative bg-[#0a1418] border border-electric-cyan/35 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-[0_0_80px_rgba(71,200,245,0.2),0_0_160px_rgba(71,200,245,0.05)] z-10">
+          <div
+            className="relative bg-[#0a1418] border border-electric-cyan/35 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-[0_0_80px_rgba(71,200,245,0.2),0_0_160px_rgba(71,200,245,0.05)] z-10"
+            style={{ animation: 'modalIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both' }}
+          >
             <div className="sticky top-0 p-4 flex justify-end bg-gradient-to-b from-[#0a1418] via-[#0a1418]/90 to-transparent z-10">
               <button
                 onClick={() => {

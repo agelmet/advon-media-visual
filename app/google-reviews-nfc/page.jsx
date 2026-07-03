@@ -1,9 +1,58 @@
 // app/google-reviews-nfc/page.jsx
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useLangStore } from '@/store/langStore';
 import ScrollReveal from '@/components/ScrollReveal';
+import TiltCard from '@/components/TiltCard';
+
+/* Counts a stat like "150+" / "50+" / "0€" up from zero when it scrolls into view */
+function StatNumber({ value }) {
+  const match = value.match(/^(\d+)(.*)$/);
+  const end = match ? parseInt(match[1], 10) : 0;
+  const suffix = match ? match[2] : '';
+  const ref = useRef(null);
+  const [count, setCount] = useState(0);
+  const [triggered, setTriggered] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setCount(end);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTriggered(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.4 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [end]);
+
+  useEffect(() => {
+    if (!triggered) return;
+    let start = null;
+    let raf;
+    const step = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / 1800, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(easeOut * end));
+      if (progress < 1) raf = requestAnimationFrame(step);
+      else setCount(end);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [triggered, end]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+}
 
 const CheckIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0">
@@ -175,7 +224,7 @@ export default function NFC() {
 
             {/* Right: product image */}
             <ScrollReveal delay={100} direction="up">
-              <div className="relative flex items-center justify-center">
+              <div className="relative flex items-center justify-center animate-float">
                 <div className="absolute inset-0 bg-electric-cyan/8 blur-[100px] rounded-full" aria-hidden="true" />
                 <img
                   src="https://assets.cdn.filesafe.space/61icdoMiJ2pHklO6mmKW/media/6724bf7a4eb48eb705a7b389.gif"
@@ -198,7 +247,7 @@ export default function NFC() {
               { num: '0€', labelEl: 'μηνιαία συνδρομή', labelEn: 'monthly subscription' },
             ].map(({ num, labelEl, labelEn }) => (
               <div key={num}>
-                <div className="text-2xl md:text-3xl font-black price-gradient">{num}</div>
+                <div className="text-2xl md:text-3xl font-black price-gradient"><StatNumber value={num} /></div>
                 <div className="text-gray-500 text-xs md:text-sm mt-1">{lang === 'el' ? labelEl : labelEn}</div>
               </div>
             ))}
@@ -217,9 +266,10 @@ export default function NFC() {
           </ScrollReveal>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURES.map(({ icon, titleEl, titleEn, bodyEl, bodyEn }) => (
-              <ScrollReveal key={titleEn} delay={60} direction="up">
-                <div className="glass-panel rounded-2xl p-6 flex gap-4 h-full group">
+            {FEATURES.map(({ icon, titleEl, titleEn, bodyEl, bodyEn }, i) => (
+              <ScrollReveal key={titleEn} delay={i * 70} direction={i % 3 === 0 ? 'left' : i % 3 === 2 ? 'right' : 'up'} className="h-full">
+                <TiltCard className="h-full">
+                <div className="glass-panel card-sweep rounded-2xl p-6 flex gap-4 h-full group">
                   <div className="w-12 h-12 bg-electric-cyan/10 border border-electric-cyan/20 rounded-xl flex items-center justify-center text-electric-cyan shrink-0 group-hover:bg-electric-cyan/20 transition-colors duration-300">
                     {icon}
                   </div>
@@ -228,6 +278,7 @@ export default function NFC() {
                     <p className="text-gray-400 text-sm leading-relaxed">{lang === 'el' ? bodyEl : bodyEn}</p>
                   </div>
                 </div>
+                </TiltCard>
               </ScrollReveal>
             ))}
           </div>
@@ -248,8 +299,8 @@ export default function NFC() {
             {/* connector line on desktop */}
             <div className="hidden md:block absolute top-10 left-[calc(16.66%+1rem)] right-[calc(16.66%+1rem)] h-px bg-gradient-to-r from-electric-cyan/30 via-electric-cyan/60 to-electric-cyan/30" aria-hidden="true" />
 
-            {STEPS.map(({ num, iconEl, iconEn, bodyEl, bodyEn }) => (
-              <ScrollReveal key={num} delay={80} direction="up">
+            {STEPS.map(({ num, iconEl, iconEn, bodyEl, bodyEn }, i) => (
+              <ScrollReveal key={num} delay={i * 140} direction="up">
                 <div className="text-center relative">
                   <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-electric-cyan/10 border-2 border-electric-cyan/40 flex items-center justify-center relative z-10"
                     style={{ boxShadow: '0 0 30px rgba(71,200,245,0.15)' }}>
@@ -267,7 +318,7 @@ export default function NFC() {
       {/* ─── MATH PANEL ─── */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-6">
-          <ScrollReveal>
+          <ScrollReveal direction="scale">
             <div className="glass-panel p-8 md:p-12 rounded-3xl text-center shadow-[0_0_60px_rgba(71,200,245,0.08)]">
               <div className="w-14 h-14 mx-auto mb-6 rounded-2xl bg-electric-cyan/10 border border-electric-cyan/25 flex items-center justify-center text-electric-cyan">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
@@ -322,7 +373,7 @@ export default function NFC() {
 
           <div className="space-y-3">
             {FAQS.map(({ qEl, qEn, aEl, aEn }, i) => (
-              <ScrollReveal key={i} delay={40}>
+              <ScrollReveal key={i} delay={i * 60}>
                 <div
                   className="glass-panel rounded-2xl overflow-hidden border border-white/8 hover:border-electric-cyan/25 transition-colors duration-300"
                 >
@@ -339,11 +390,13 @@ export default function NFC() {
                       <path d="m6 9 6 6 6-6"/>
                     </svg>
                   </button>
-                  {openFaq === i && (
-                    <div className="px-6 pb-5 text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-4">
-                      {lang === 'el' ? aEl : aEn}
+                  <div className={`acc-body ${openFaq === i ? 'acc-open' : ''}`}>
+                    <div>
+                      <div className="px-6 pb-5 text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-4">
+                        {lang === 'el' ? aEl : aEn}
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               </ScrollReveal>
             ))}

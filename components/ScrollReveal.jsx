@@ -8,6 +8,7 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const dirMap = {
       up: 'sr-up',

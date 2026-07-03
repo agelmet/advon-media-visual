@@ -9,6 +9,7 @@ export default function CustomCursor() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     setIsMounted(true);
 
     const target = { x: -200, y: -200 };

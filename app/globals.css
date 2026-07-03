@@ -325,6 +325,94 @@
     background-clip: text;
     color: transparent;
   }
+
+  /* ─── Conic Gradient Border Sweep (cards) ─── */
+  .card-sweep {
+    position: relative;
+  }
+  .card-sweep::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: conic-gradient(
+      from var(--sweep-angle),
+      transparent 0%,
+      rgba(71, 200, 245, 0.9) 10%,
+      rgba(201, 255, 0, 0.35) 16%,
+      transparent 28%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    pointer-events: none;
+  }
+  .card-sweep:hover::after {
+    opacity: 1;
+    animation: sweepSpin 2.8s linear infinite;
+  }
+
+  /* ─── 3D Tilt ─── */
+  .tilt-wrap {
+    perspective: 900px;
+  }
+  .tilt-inner {
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  /* ─── Pricing Toggle Transition ─── */
+  .pricing-swap-in {
+    animation: pricingIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .pricing-featured {
+    animation: featuredGlow 3.2s ease-in-out infinite;
+  }
+
+  /* ─── Smooth Accordion ─── */
+  .acc-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .acc-body.acc-open {
+    grid-template-rows: 1fr;
+  }
+  .acc-body > * {
+    overflow: hidden;
+  }
+
+  /* ─── Image Shine Sweep (portfolio) ─── */
+  .img-shine {
+    position: relative;
+    overflow: hidden;
+  }
+  .img-shine::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+    transform: skewX(-18deg);
+    transition: left 0.7s ease;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .img-shine:hover::before {
+    left: 130%;
+  }
+
+  /* ─── Button press feedback ─── */
+  .btn-premium:active {
+    filter: brightness(1.15) saturate(1.1);
+  }
 }
 
 /* ─── Scrollbar ─── */
@@ -355,6 +443,59 @@
   50%       { transform: scale(1.14); opacity: 0.85; }
 }
 .logo-glow-ring { animation: logoPulse 3s ease-in-out infinite; }
+
+/* ─── Registered property for animatable conic sweep angle ─── */
+@property --sweep-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes sweepSpin {
+  to { --sweep-angle: 360deg; }
+}
+@keyframes pricingIn {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0)  scale(1);      filter: blur(0); }
+}
+@keyframes featuredGlow {
+  0%, 100% { box-shadow: 0 0 30px rgba(71, 200, 245, 0.15); }
+  50%      { box-shadow: 0 0 60px rgba(71, 200, 245, 0.38), 0 0 110px rgba(71, 200, 245, 0.12); }
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(26px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)  scale(1); }
+}
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── Reduced motion: calm, minimal-motion version ─── */
 @media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto !important; }
+  * { cursor: auto !important; }
   .logo-glow-ring { animation: none !important; }
+  .marquee-track,
+  .animate-vertical-scroll { animation: none !important; }
+  .sr,
+  .reveal-item,
+  .reveal-word {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+  }
+  .card-sweep::after,
+  .badge-scan::after,
+  .btn-premium::after,
+  .btn-shine-effect,
+  .img-shine::before {
+    animation: none !important;
+    display: none !important;
+  }
 }

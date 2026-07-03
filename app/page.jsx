@@ -6,6 +6,7 @@ import { useLangStore } from '@/store/langStore';
 import Reviews from '@/components/Reviews';
 import Stats from '@/components/sats';
 import ScrollReveal from '@/components/ScrollReveal';
+import TiltCard from '@/components/TiltCard';
 
 const CheckIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0 icon-glow">
@@ -27,6 +28,20 @@ const marqueeItems = [
 export default function Home() {
   const { lang } = useLangStore();
   const heroDecoRef = useRef(null);
+  const magnetRef = useRef(null);
+
+  const onMagnetMove = (e) => {
+    const el = magnetRef.current;
+    if (!el || !window.matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) return;
+    const r = el.getBoundingClientRect();
+    const x = e.clientX - r.left - r.width / 2;
+    const y = e.clientY - r.top - r.height / 2;
+    el.style.transform = `translate(${(x * 0.18).toFixed(1)}px, ${(y * 0.25).toFixed(1)}px) scale(1.05)`;
+  };
+  const onMagnetLeave = () => {
+    const el = magnetRef.current;
+    if (el) el.style.transform = 'translate(0px, 0px) scale(1)';
+  };
 
   useEffect(() => {
     const onScroll = () => {
@@ -183,8 +198,11 @@ export default function Home() {
           <div className="reveal-item delay-5 flex flex-wrap items-center justify-center gap-5">
             {/* Primary — animated glow pulse */}
             <Link
+              ref={magnetRef}
+              onMouseMove={onMagnetMove}
+              onMouseLeave={onMagnetLeave}
               href="/kataskevi-istoselidas"
-              className="btn-premium group relative overflow-hidden px-9 py-4 bg-electric-cyan text-[#050a0e] font-black text-base uppercase tracking-[0.1em] rounded-xl flex items-center gap-3 transition-all duration-300 hover:scale-105"
+              className="btn-premium group relative overflow-hidden px-9 py-4 bg-electric-cyan text-[#050a0e] font-black text-base uppercase tracking-[0.1em] rounded-xl flex items-center gap-3 transition-all duration-300"
               style={{ animation: 'heroCTAPulse 3s ease-in-out infinite' }}
             >
               <span className="relative z-10 flex items-center gap-3">
@@ -259,8 +277,9 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Card 1 — Website */}
-            <ScrollReveal delay={0} direction="up">
-              <div className="glass-panel service-card rounded-3xl p-8 flex flex-col h-full group">
+            <ScrollReveal delay={0} direction="left" className="h-full">
+              <TiltCard className="h-full">
+              <div className="glass-panel service-card card-sweep rounded-3xl p-8 flex flex-col h-full group">
                 <div className="w-14 h-14 rounded-2xl bg-electric-cyan/10 border border-electric-cyan/20 flex items-center justify-center mb-6 text-electric-cyan group-hover:bg-electric-cyan/20 group-hover:scale-110 transition-all duration-300">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
                 </div>
@@ -288,11 +307,13 @@ export default function Home() {
                   {lang === 'el' ? 'ΠΕΡΙΣΣΟΤΕΡΕΣ ΠΛΗΡΟΦΟΡΙΕΣ' : 'LEARN MORE'}
                 </Link>
               </div>
+              </TiltCard>
             </ScrollReveal>
 
             {/* Card 2 — Reviews */}
-            <ScrollReveal delay={120} direction="up">
-              <div className="glass-panel service-card rounded-3xl p-8 flex flex-col h-full group relative">
+            <ScrollReveal delay={120} direction="up" className="h-full">
+              <TiltCard className="h-full">
+              <div className="glass-panel service-card card-sweep rounded-3xl p-8 flex flex-col h-full group relative">
                 {/* Featured badge */}
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-electric-cyan text-[#050a0e] text-[0.6rem] font-black tracking-[0.2em] uppercase shadow-[0_0_20px_rgba(71,200,245,0.4)]">
                   {lang === 'el' ? 'ΔΗΜΟΦΙΛΕΣ' : 'POPULAR'}
@@ -324,11 +345,13 @@ export default function Home() {
                   {lang === 'el' ? 'ΠΕΡΙΣΣΟΤΕΡΕΣ ΠΛΗΡΟΦΟΡΙΕΣ' : 'LEARN MORE'}
                 </Link>
               </div>
+              </TiltCard>
             </ScrollReveal>
 
             {/* Card 3 — Social Media */}
-            <ScrollReveal delay={240} direction="up">
-              <div className="glass-panel service-card rounded-3xl p-8 flex flex-col h-full group">
+            <ScrollReveal delay={240} direction="right" className="h-full">
+              <TiltCard className="h-full">
+              <div className="glass-panel service-card card-sweep rounded-3xl p-8 flex flex-col h-full group">
                 <div className="w-14 h-14 rounded-2xl bg-electric-cyan/10 border border-electric-cyan/20 flex items-center justify-center mb-6 text-electric-cyan group-hover:bg-electric-cyan/20 group-hover:scale-110 transition-all duration-300">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
                 </div>
@@ -356,6 +379,7 @@ export default function Home() {
                   {lang === 'el' ? 'ΠΕΡΙΣΣΟΤΕΡΕΣ ΠΛΗΡΟΦΟΡΙΕΣ' : 'LEARN MORE'}
                 </Link>
               </div>
+              </TiltCard>
             </ScrollReveal>
           </div>
 
