@@ -161,17 +161,17 @@ export default function Home() {
             className="font-black font-display mb-8 leading-[1.05] tracking-tight"
             style={{ fontSize: 'clamp(2.8rem, 8vw, 6.5rem)', perspective: '1000px' }}
           >
-            <span className="reveal-word block" style={{ animationDelay: '0.15s' }}>
-              {lang === 'el' ? 'Μετατρέπουμε' : 'We Turn'}
+            <span className="reveal-word !block" style={{ animationDelay: '0.15s' }}>
+              <span className="bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-200 to-gray-500">
+                {lang === 'el' ? 'Ιστοσελίδες' : 'Websites'}
+              </span>
             </span>
             <span className="reveal-word inline-block" style={{ animationDelay: '0.35s' }}>
-              <span className="bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-200 to-gray-500">
-                {lang === 'el' ? 'Επισκέπτες' : 'Visitors'}
-              </span>
+              <span className="text-gray-400">{lang === 'el' ? 'που' : 'that'}</span>
             </span>
             {' '}
             <span className="reveal-word inline-block" style={{ animationDelay: '0.5s' }}>
-              <span className="text-gray-400">{lang === 'el' ? 'σε' : 'into'}</span>
+              {lang === 'el' ? 'Φέρνουν' : 'Bring You'}
             </span>
             {' '}
             <span className="reveal-word inline-block" style={{ animationDelay: '0.68s' }}>
@@ -179,7 +179,7 @@ export default function Home() {
                 className="text-shimmer"
                 style={{ filter: 'drop-shadow(0 0 45px rgba(71,200,245,0.6))' }}
               >
-                {lang === 'el' ? 'Πελάτες' : 'Customers'}
+                {lang === 'el' ? 'Πελάτες' : 'Clients'}
               </span>
             </span>
           </h1>
@@ -190,8 +190,8 @@ export default function Home() {
             style={{ fontSize: 'clamp(1rem, 2.2vw, 1.25rem)' }}
           >
             {lang === 'el'
-              ? 'Οι πιο αποτελεσματικές λύσεις marketing για τοπικές επιχειρήσεις και ελεύθερους επαγγελματίες. Ανεβείτε στην κορυφή των αποτελεσμάτων χωρίς ρίσκο.'
-              : 'The most effective marketing solutions for local businesses and freelancers. Reach the top of search results without risk.'}
+              ? 'Σχεδιάζουμε premium ιστοσελίδες για επαγγελματίες και μικρές επιχειρήσεις — όμορφες, γρήγορες και φτιαγμένες να μετατρέπουν τους επισκέπτες σας σε πελάτες.'
+              : 'We design premium websites for professionals and small businesses — beautiful, fast, and built to turn your visitors into clients.'}
           </p>
 
           {/* CTA Buttons */}

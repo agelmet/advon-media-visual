@@ -32,12 +32,15 @@ export default function WebsiteCreation() {
         {/* Main Info Panel */}
         <ScrollReveal delay={60}>
           <div className="glass-panel p-8 md:p-12 rounded-3xl text-gray-300 leading-relaxed font-body text-lg mb-20 shadow-[0_0_50px_rgba(71,200,245,0.08)]">
-            <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 mb-12 pb-8 border-b border-white/8 text-center md:text-left">
-              <div>
-                <span className="text-electric-cyan text-xs font-bold tracking-widest uppercase mb-2 block">{lang === 'el' ? 'ΚΟΣΤΟΣ ΚΑΤΑΣΚΕΥΗΣ' : 'CONSTRUCTION COST'}</span>
+            {/* ── Pricing hero ── */}
+            <div className="text-center mb-16 pb-12 border-b border-white/8">
+              <span className="text-electric-cyan text-xs font-bold tracking-widest uppercase mb-6 block">
+                {lang === 'el' ? 'ΤΙΜΗ ΚΑΤΑΣΚΕΥΗΣ' : 'CREATION PRICE'}
+              </span>
+              <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-8 mb-5">
                 {/* Anchor / original price — crossed out with hand-drawn SVG line */}
-                <div className="relative inline-block mb-1">
-                  <span className="text-xl md:text-2xl font-bold text-gray-400/75 tracking-tight whitespace-nowrap select-none">
+                <div className="relative inline-block">
+                  <span className="text-2xl md:text-3xl font-bold text-gray-400/75 tracking-tight whitespace-nowrap select-none">
                     700€ – 5.000€
                   </span>
                   <svg
@@ -62,71 +65,111 @@ export default function WebsiteCreation() {
                     />
                   </svg>
                 </div>
-                <div className="flex flex-col md:flex-row md:items-end gap-3">
-                  <span className="text-6xl font-black text-white tracking-tight" style={{ textShadow: '0 0 30px rgba(255,255,255,0.2)' }}>
-                    {lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE'}
+                <span className="free-pulse text-7xl md:text-8xl font-black text-white tracking-tight leading-none">
+                  {lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE'}
+                </span>
+              </div>
+              <p className="text-lg md:text-xl text-gray-300 mb-8">
+                {lang === 'el' ? (
+                  <>Μόνο <span className="text-white font-black">10.83€/μήνα</span> — όλα περιλαμβάνονται</>
+                ) : (
+                  <>Only <span className="text-white font-black">10.83€/month</span> — everything included</>
+                )}
+              </p>
+              {/* Included-items chips */}
+              <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-3xl mx-auto">
+                {[
+                  { el: 'Φιλοξενία (hosting)', en: 'Hosting' },
+                  { el: 'Domain name της επιλογής σας', en: 'Domain name of your choice' },
+                  { el: 'Ασφάλεια', en: 'Security' },
+                  { el: 'Αυτόματα backups', en: 'Automatic backups' },
+                ].map(({ el, en }) => (
+                  <span
+                    key={en}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-electric-cyan/8 border border-electric-cyan/25 text-sm font-semibold text-gray-200 whitespace-nowrap"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 text-electric-cyan shrink-0"><polyline points="20 6 9 17 4 12"/></svg>
+                    {lang === 'el' ? el : en}
                   </span>
-                  <span className="text-electric-cyan font-bold mb-2 md:mb-1.5 bg-electric-cyan/10 px-3 py-1 rounded-lg border border-electric-cyan/30">
-                    {lang === 'el' ? 'ΜΟΝΟ 10.83€/μήνα, περιλαμβάνονται όλα - φιλοξενία της ιστοσελίδας σας, domain name της επιλογής σας, ασφάλεια & αυτόματα backups και άλλα...' : 'ONLY 10.83€/month — website hosting, domain name, security & automatic backups, all included'}
-                  </span>
-                </div>
+                ))}
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/4 border border-white/12 text-sm font-semibold text-gray-400 whitespace-nowrap">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 shrink-0"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                  {lang === 'el' ? 'και άλλα' : 'and more'}
+                </span>
               </div>
             </div>
 
-            {/* Domain Bonus Banner */}
-            <div className="relative overflow-hidden bg-gradient-to-r from-electric-cyan/12 to-transparent border border-electric-cyan/35 rounded-3xl p-8 md:p-12 shadow-[0_0_40px_rgba(71,200,245,0.12)] flex flex-col md:flex-row items-center gap-8 group glow-border-hover mb-16">
-              <div className="absolute -right-20 -top-20 w-64 h-64 bg-electric-cyan/8 rounded-full blur-[80px] pointer-events-none" />
-              <div className="bg-electric-cyan/15 p-5 rounded-2xl text-electric-cyan shrink-0 ring-1 ring-electric-cyan/40 group-hover:scale-110 transition-transform duration-300 icon-glow">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10"><rect x="3" y="8" width="18" height="14" rx="2"/><path d="M12 5a3 3 0 1 0-3 3"/><path d="M15 8a3 3 0 1 0-3-3"/><path d="M12 8v14"/><path d="M3 15h18"/></svg>
-              </div>
-              <div className="text-center md:text-left z-10">
-                <h3 className="text-2xl md:text-3xl font-black text-white mb-3 font-display">
-                  {lang === 'el' ? 'Bonus: Το Domain Name Περιλαμβάνεται!' : 'Bonus: Domain Name Included!'}
+            {/* ── Why is it free? — story block ── */}
+            <ScrollReveal delay={60}>
+              <div className="relative overflow-hidden rounded-3xl border border-electric-cyan/30 bg-gradient-to-br from-electric-cyan/8 via-transparent to-transparent p-8 md:p-12 mb-16 shadow-[0_0_40px_rgba(71,200,245,0.1)]">
+                <div aria-hidden="true" className="absolute -right-24 -top-24 w-72 h-72 bg-electric-cyan/8 rounded-full blur-[90px] pointer-events-none" />
+                <h3 className="text-2xl md:text-3xl font-black text-white mb-6 font-display relative z-10">
+                  {lang === 'el' ? 'Γιατί είναι Δωρεάν;' : 'Why is it Free?'}
                 </h3>
-                <p className="text-gray-300 text-lg leading-relaxed">
-                  {lang === 'el'
-                    ? 'Το επιθυμητό σας domain name παρέχεται εντελώς δωρεάν και συμπεριλαμβάνεται στην τιμή της μηνιαίας συνδρομής. Χωρίς κανένα κρυφό κόστος ή επιπλέον χρεώσεις.'
-                    : 'Your desired domain name is provided completely free and included in the monthly subscription price. No hidden costs or extra charges.'}
-                </p>
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-10 mb-16">
-              {[
-                {
-                  Icon: () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-electric-cyan shrink-0 mt-1"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>,
-                  titleEl: 'Γιατί είναι Δωρεάν;', titleEn: 'Why is it Free?',
-                  bodyEl: 'Δεν είναι κάποιο μάρκετινγκ τρικ, όντως η κατασκευή είναι εντελώς δωρεάν. Το κάνουμε αυτό γιατί θέλουμε να προσθέσουμε όσες περισσότερες ιστοσελίδες γίνεται στο πορτφόλιο μας.',
-                  bodyEn: 'Construction is completely free. We do this to add websites to our portfolio to establish ourselves in the market.',
-                },
-                {
-                  Icon: () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-electric-cyan shrink-0 mt-1"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>,
-                  titleEl: 'Το Μοναδικό Κόστος', titleEn: 'The Only Cost',
-                  bodyEl: 'Το μόνο κόστος για εσάς είναι η φιλοξενία (hosting) στο διαδίκτυο. Είναι 10.83€/μήνα, ποσό που θα πληρώνατε ούτως ή άλλως.',
-                  bodyEn: 'The only cost for you is the internet hosting. It is 10.83€/month, an amount you would pay anyway.',
-                },
-                {
-                  Icon: () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-electric-cyan shrink-0 mt-1"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
-                  titleEl: 'Σημασία για το SEO', titleEn: 'Importance for SEO',
-                  bodyEl: 'Μια καλά σχεδιασμένη ιστοσελίδα σας βοηθά να κατακτήσετε υψηλότερες θέσεις στις μηχανές αναζήτησης.',
-                  bodyEn: 'A well-designed website helps you achieve higher positions in search engines.',
-                },
-                {
-                  Icon: () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-electric-cyan shrink-0 mt-1"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg>,
-                  titleEl: 'Η Ψηφιακή σας Βιτρίνα', titleEn: 'Your Digital Storefront',
-                  bodyEl: 'Λειτουργεί ως η ψηφιακή σας βιτρίνα, ενισχύοντας την επαγγελματική σας εικόνα.',
-                  bodyEn: 'It acts as your digital storefront, enhancing your professional image.',
-                },
-              ].map(({ Icon, titleEl, titleEn, bodyEl, bodyEn }) => (
-                <div key={titleEn} className="flex gap-4">
-                  <Icon />
-                  <div>
-                    <h4 className="text-white font-bold text-xl mb-2">{lang === 'el' ? titleEl : titleEn}</h4>
-                    <p className="text-gray-400 text-sm leading-relaxed">{lang === 'el' ? bodyEl : bodyEn}</p>
-                  </div>
+                <div className="relative z-10 space-y-5">
+                  <p className="text-gray-200 text-lg leading-relaxed border-l-2 border-electric-cyan/60 pl-5">
+                    {lang === 'el'
+                      ? 'Στη σημερινή εποχή, δεν νοείται επιχείρηση ή επαγγελματίας χωρίς παρουσία στο διαδίκτυο. Μια δική σας ιστοσελίδα δεν είναι πολυτέλεια — είναι αναγκαιότητα: είναι ο χώρος όπου σας βρίσκουν όσοι σας αναζητούν και όπου παρουσιάζεστε όπως πραγματικά σας αξίζει — με το δικό σας περιεχόμενο, τα δικά σας λόγια, τη δική σας ταυτότητα. Ένα απρόσωπο προφίλ σε κάποιον κατάλογο, ανάμεσα σε δεκάδες ανταγωνιστές, δεν είναι δική σας παρουσία — είναι απλώς μια καταχώρηση.'
+                      : "In today's world, no business or professional can afford to be invisible online. A website of your own isn't a luxury — it's a necessity: it's where people find you when they're looking for you, and where you present yourself the way you truly deserve — with your own content, your own words, your own identity. An impersonal profile in some directory, buried among dozens of competitors, isn't your presence — it's just a listing."}
+                  </p>
+                  <p className="text-gray-400 text-base leading-relaxed">
+                    {lang === 'el'
+                      ? 'Πιστεύουμε ότι κάθε επαγγελματίας αξίζει μια πραγματικά επαγγελματική παρουσία στο διαδίκτυο — όχι μόνο όσοι μπορούν να διαθέσουν χιλιάδες ευρώ. Γι’ αυτό αναλαμβάνουμε την κατασκευή εντελώς δωρεάν: για να στηρίξουμε μικρές επιχειρήσεις, ελεύθερους επαγγελματίες και όσους κάνουν τώρα τα πρώτα τους βήματα, χωρίς κανένα εμπόδιο στην εκκίνηση.'
+                      : "We believe every professional deserves a truly professional online presence — not just those who can spend thousands of euros. That's why we build your website completely free: to support small businesses, freelancers, and anyone taking their first steps, with zero barriers to getting started."}
+                  </p>
+                  <p className="text-gray-400 text-base leading-relaxed">
+                    {lang === 'el' ? (
+                      <>Κερδίζουμε κι εμείς: κάθε ιστοσελίδα που παραδίδουμε μεγαλώνει το πορτφόλιό μας και μας φέρνει τους επόμενους πελάτες μέσα από τη δουλειά μας — όχι από διαφημίσεις. Εσείς αποκτάτε μια premium ιστοσελίδα χωρίς ρίσκο, εμείς ένα ακόμα δείγμα δουλειάς που μας κάνει περήφανους. <span className="text-electric-cyan font-bold">Όλοι κερδίζουν.</span></>
+                    ) : (
+                      <>We win too: every website we deliver grows our portfolio and brings us our next clients through our work — not through ads. You get a premium website with zero risk; we get one more project we&apos;re proud of. <span className="text-electric-cyan font-bold">Everyone wins.</span></>
+                    )}
+                  </p>
                 </div>
-              ))}
-            </div>
+              </div>
+            </ScrollReveal>
+
+            {/* ── Benefit cards ── */}
+            <ScrollReveal delay={80}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
+                {[
+                  {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
+                    titleEl: 'Πρώτοι στη Google', titleEn: 'First on Google',
+                    bodyEl: 'Μια σωστά δομημένη, γρήγορη ιστοσελίδα σας ανεβάζει στα αποτελέσματα αναζήτησης — εκεί όπου σας ψάχνουν οι αυριανοί σας πελάτες.',
+                    bodyEn: "A well-structured, fast website lifts you up the search results — right where tomorrow's clients are looking for you.",
+                  },
+                  {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6"/><path d="M22 11h-6"/></svg>,
+                    titleEl: 'Επισκέπτες → Πελάτες', titleEn: 'Visitors → Clients',
+                    bodyEl: 'Δεν φτιάχνουμε απλώς κάτι όμορφο. Κάθε ενότητα είναι σχεδιασμένη να εμπνέει εμπιστοσύνη και να οδηγεί τον επισκέπτη να σας καλέσει ή να κλείσει ραντεβού.',
+                    bodyEn: "We don't just make something beautiful. Every section is designed to build trust and lead visitors to call you or book an appointment.",
+                  },
+                  {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+                    titleEl: 'Επαγγελματική Εικόνα 24/7', titleEn: 'A Professional Image, 24/7',
+                    bodyEl: 'Η ιστοσελίδα σας δουλεύει για εσάς όλο το 24ωρο: παρουσιάζει τις υπηρεσίες σας, απαντά στις βασικές ερωτήσεις και κάνει την πρώτη εντύπωση — πάντα άψογη.',
+                    bodyEn: 'Your website works for you around the clock: it showcases your services, answers the basics and makes the first impression — flawless, every time.',
+                  },
+                  {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>,
+                    titleEl: 'Χωρίς Ρίσκο, Χωρίς Δεσμεύσεις στην Αρχή', titleEn: 'No Risk, No Strings Attached',
+                    bodyEl: 'Δεν πληρώνετε τίποτα προκαταβολικά. Βλέπετε πρώτα την ιστοσελίδα σας έτοιμη, κάνουμε δωρεάν όσες αλλαγές θέλετε — και μόνο τότε ξεκινά η συνδρομή.',
+                    bodyEn: 'You pay nothing upfront. You see your finished website first, we make as many free changes as you want — and only then does your subscription begin.',
+                  },
+                ].map(({ icon, titleEl, titleEn, bodyEl, bodyEn }) => (
+                  <div
+                    key={titleEn}
+                    className="group bg-white/4 border border-white/8 rounded-2xl p-6 h-full transition-all duration-300 hover:bg-white/8 hover:border-electric-cyan/30 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,0,0.5),0_0_24px_rgba(71,200,245,0.1)]"
+                  >
+                    <div className="w-11 h-11 rounded-xl bg-electric-cyan/10 border border-electric-cyan/20 flex items-center justify-center text-electric-cyan mb-4 group-hover:bg-electric-cyan/18 transition-colors duration-300">
+                      {icon}
+                    </div>
+                    <h4 className="text-white font-bold text-base mb-2 leading-snug">{lang === 'el' ? titleEl : titleEn}</h4>
+                    <p className="text-sm text-gray-400 leading-relaxed">{lang === 'el' ? bodyEl : bodyEn}</p>
+                  </div>
+                ))}
+              </div>
+            </ScrollReveal>
 
             <div className="mt-12">
               <div className="text-center mb-14">
@@ -248,7 +291,7 @@ export default function WebsiteCreation() {
                   {[
                     {
                       icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>,
-                      titleEl: 'Κανένα Κόστος Προκαταβολικά', titleEn: 'No Upfront Cost',
+                      titleEl: 'Καμία Προκαταβολή', titleEn: 'No Upfront Payment',
                       bodyEl: 'Δεν πληρώνετε τίποτα για να ξεκινήσουμε. Η ετήσια συνδρομή φιλοξενίας εξοφλείται μόλις παραδοθεί το πρώτο draft — και συνεχίζουμε με απεριόριστες αλλαγές μέχρι την ολοκλήρωση.',
                       bodyEn: 'You pay nothing to get started. The annual hosting subscription is settled once the first draft is delivered — and we keep going with unlimited changes until completion.',
                     },
