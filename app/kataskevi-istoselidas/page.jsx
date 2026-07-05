@@ -129,29 +129,157 @@ export default function WebsiteCreation() {
             </div>
 
             <div className="mt-12">
-              <h3 className="text-3xl font-bold text-white mb-4 font-display text-center">
-                {lang === 'el' ? 'Πανεύκολη Διαδικασία Κατασκευής' : 'Super Easy Creation Process'}
-              </h3>
-              <p className="text-center text-gray-400 mb-10 text-base">
-                {lang === 'el' ? 'Για να μειώσουμε τον χρόνο επένδυσης σας στην κατασκευή, χρειαζόμαστε από εσάς μόνο:' : 'To minimize your time investment, we only need from you:'}
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[
-                  { num: '1', titleEl: 'Φωτογραφίες', titleEn: 'Photos', bodyEl: 'Δική σας επαγγελματική, του χώρου ή/και του προσωπικού.', bodyEn: 'Your own professional photo, your space, and/or staff.' },
-                  { num: '2', titleEl: 'Βασικά Κείμενα', titleEn: 'Basic Texts', bodyEl: 'Μικρά κείμενα για την επιχείρηση. Εμείς αναλαμβάνουμε την τελική κειμενογραφία.', bodyEn: 'Short texts about the business. We handle the final copywriting.' },
-                  { num: '3', titleEl: 'Υπηρεσίες', titleEn: 'Services', bodyEl: 'Λίστα με τις υπηρεσίες σας επιγραμματικά.', bodyEn: 'A bulleted list of your services.' },
-                  { num: '4', titleEl: 'Στοιχεία Επικοινωνίας', titleEn: 'Contact Details', bodyEl: 'Τηλέφωνο, email, διεύθυνση, και ωράριο λειτουργίας.', bodyEn: 'Phone, email, address, and operating hours.' },
-                  { num: '5', titleEl: 'Λογότυπο', titleEn: 'Logo', bodyEl: 'Ένα λογότυπο αν έχετε, αλλιώς δημιουργούμε εμείς ένα εντελώς δωρεάν για εσάς.', bodyEn: 'A logo if you have one, otherwise we will design one for free.' },
-                ].map(({ num, titleEl, titleEn, bodyEl, bodyEn }) => (
-                  <div key={num} className="bg-white/4 border border-white/8 p-6 rounded-2xl hover:bg-white/8 hover:border-electric-cyan/25 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.5),0_0_24px_rgba(71,200,245,0.08)] transition-all duration-300 group">
-                    <div className="w-10 h-10 bg-electric-cyan/15 rounded-full flex items-center justify-center text-electric-cyan font-black mb-4 group-hover:bg-electric-cyan group-hover:text-[#050a0e] transition-all duration-300 text-sm">
-                      {num}
-                    </div>
-                    <h4 className="text-white font-bold mb-2">{lang === 'el' ? titleEl : titleEn}</h4>
-                    <p className="text-sm text-gray-400 leading-relaxed">{lang === 'el' ? bodyEl : bodyEn}</p>
-                  </div>
-                ))}
+              <div className="text-center mb-14">
+                <span className="section-label">{lang === 'el' ? 'Βήμα - Βήμα' : 'Step by Step'}</span>
+                <h3 className="text-3xl md:text-4xl font-black text-white mb-4 font-display tracking-tight">
+                  {lang === 'el' ? 'Πανεύκολη Διαδικασία Κατασκευής' : 'Super Easy Creation Process'}
+                </h3>
+                <p className="text-gray-400 text-base max-w-2xl mx-auto">
+                  {lang === 'el'
+                    ? 'Για να σας εξοικονομήσουμε χρόνο, το μόνο που χρειαζόμαστε από εσάς είναι λίγα απλά πράγματα — από εκεί και πέρα, αναλαμβάνουμε εμείς.'
+                    : 'To save you time, all we need from you is a few simple things — from there, we take over.'}
+                </p>
               </div>
+
+              {/* Roadmap / journey timeline */}
+              <div className="relative">
+                <div aria-hidden="true" className="roadmap-line absolute top-2 bottom-2 left-[23px] md:left-1/2 md:-translate-x-1/2 w-[2px]" />
+
+                {[
+                  {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>,
+                    titleEl: 'Φωτογραφίες', titleEn: 'Photos',
+                    bodyEl: 'Δική σας επαγγελματική φωτογραφία, του χώρου ή/και του προσωπικού σας.',
+                    bodyEn: 'A professional photo of you, your space and/or your team.',
+                  },
+                  {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>,
+                    titleEl: 'Βασικά Κείμενα', titleEn: 'Basic Texts',
+                    bodyEl: 'Λίγα, μικρά κείμενα για την επιχείρησή σας. Την τελική κειμενογραφία την αναλαμβάνουμε εμείς.',
+                    bodyEn: 'A few short texts about your business. We take care of the final copywriting.',
+                  },
+                  {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>,
+                    titleEl: 'Υπηρεσίες', titleEn: 'Services',
+                    bodyEl: 'Μια λίστα με τις υπηρεσίες σας, επιγραμματικά.',
+                    bodyEn: 'A simple bullet-point list of your services.',
+                  },
+                  {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
+                    titleEl: 'Στοιχεία Επικοινωνίας', titleEn: 'Contact Details',
+                    bodyEl: 'Τηλέφωνο, email, διεύθυνση και ωράριο λειτουργίας.',
+                    bodyEn: 'Phone, email, address and opening hours.',
+                  },
+                  {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>,
+                    titleEl: 'Λογότυπο', titleEn: 'Logo',
+                    bodyEl: 'Αν έχετε λογότυπο, μας το στέλνετε. Αν όχι, σχεδιάζουμε εμείς ένα για εσάς — εντελώς δωρεάν.',
+                    bodyEn: 'If you have a logo, send it over. If not, we design one for you — completely free.',
+                  },
+                  {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+                    titleEl: 'Πρώτο Draft σε 7–14 Ημέρες', titleEn: 'First Draft in 7–14 Days',
+                    bodyEl: 'Μόλις λάβουμε το υλικό σας, παραδίδουμε το πρώτο draft της ιστοσελίδας σας μέσα σε 7–14 ημέρες.',
+                    bodyEn: 'As soon as we receive your material, we deliver the first draft of your website within 7–14 days.',
+                  },
+                  {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.33-6 4Z"/></svg>,
+                    titleEl: 'Απεριόριστες Αλλαγές μέχρι την Τελειότητα', titleEn: 'Unlimited Changes Until It\'s Perfect',
+                    bodyEl: 'Κάνουμε όσες αλλαγές και αναθεωρήσεις χρειαστούν — όλες δωρεάν — μέχρι η ιστοσελίδα να είναι ακριβώς όπως την είχατε στο μυαλό σας και να σας ενθουσιάζει.',
+                    bodyEn: 'We make as many changes and revisions as needed — all free — until your website is exactly how you imagined it and you absolutely love it.',
+                  },
+                  {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>,
+                    titleEl: 'Online!', titleEn: 'Online!',
+                    bodyEl: 'Αγοράζουμε το domain name, ολοκληρώνουμε τις τελευταίες λεπτομέρειες και η ιστοσελίδα σας βγαίνει στον αέρα.',
+                    bodyEn: 'We purchase your domain name, wrap up the final touches, and your website goes live.',
+                    final: true,
+                  },
+                ].map(({ icon, titleEl, titleEn, bodyEl, bodyEn, final }, i) => {
+                  const onLeft = i % 2 === 0;
+                  return (
+                    <ScrollReveal key={titleEn} direction={onLeft ? 'left' : 'right'} delay={80} threshold={0.3}>
+                      <div className={`relative pl-16 pb-10 last:pb-0 md:pl-0 md:py-5 md:flex ${onLeft ? 'md:justify-start' : 'md:justify-end'}`}>
+                        {/* Milestone node */}
+                        <div
+                          className={`absolute left-0 top-0 md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2 z-10 w-12 h-12 rounded-full flex items-center justify-center font-black text-base border-2 transition-all duration-300 ${
+                            final
+                              ? 'bg-electric-cyan text-[#050a0e] border-electric-cyan shadow-[0_0_30px_rgba(71,200,245,0.65)]'
+                              : 'bg-[#0a1418] text-electric-cyan border-electric-cyan/50 shadow-[0_0_18px_rgba(71,200,245,0.25)]'
+                          }`}
+                        >
+                          {i + 1}
+                        </div>
+                        {/* Connector to card (desktop) */}
+                        <div
+                          aria-hidden="true"
+                          className={`hidden md:block absolute top-1/2 h-px w-10 ${
+                            onLeft
+                              ? 'right-1/2 mr-[26px] bg-gradient-to-l from-electric-cyan/50 to-transparent'
+                              : 'left-1/2 ml-[26px] bg-gradient-to-r from-electric-cyan/50 to-transparent'
+                          }`}
+                        />
+                        {/* Step card */}
+                        <div
+                          className={`group bg-white/4 border p-6 rounded-2xl md:w-[calc(50%-4.5rem)] transition-all duration-300 hover:bg-white/8 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,0,0.5),0_0_24px_rgba(71,200,245,0.1)] ${
+                            final ? 'border-electric-cyan/40 hover:border-electric-cyan/60' : 'border-white/8 hover:border-electric-cyan/30'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="w-10 h-10 rounded-xl bg-electric-cyan/10 border border-electric-cyan/20 flex items-center justify-center text-electric-cyan shrink-0 group-hover:bg-electric-cyan/18 transition-colors duration-300">
+                              {icon}
+                            </div>
+                            <h4 className="text-white font-bold text-lg leading-tight">{lang === 'el' ? titleEl : titleEn}</h4>
+                          </div>
+                          <p className="text-sm text-gray-400 leading-relaxed">{lang === 'el' ? bodyEl : bodyEn}</p>
+                        </div>
+                      </div>
+                    </ScrollReveal>
+                  );
+                })}
+              </div>
+
+              {/* Zero-risk guarantees */}
+              <ScrollReveal delay={80} className="mt-16">
+                <div className="text-center mb-8">
+                  <span className="section-label">{lang === 'el' ? 'Μηδενικό Ρίσκο' : 'Zero Risk'}</span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {[
+                    {
+                      icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>,
+                      titleEl: 'Κανένα Κόστος Προκαταβολικά', titleEn: 'No Upfront Cost',
+                      bodyEl: 'Δεν πληρώνετε τίποτα για να ξεκινήσουμε. Η ετήσια συνδρομή φιλοξενίας εξοφλείται μόλις παραδοθεί το πρώτο draft — και συνεχίζουμε με απεριόριστες αλλαγές μέχρι την ολοκλήρωση.',
+                      bodyEn: 'You pay nothing to get started. The annual hosting subscription is settled once the first draft is delivered — and we keep going with unlimited changes until completion.',
+                    },
+                    {
+                      icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.33-6 4Z"/></svg>,
+                      titleEl: 'Απεριόριστες Αλλαγές Δωρεάν', titleEn: 'Unlimited Free Changes',
+                      bodyEl: 'Όσες αλλαγές και αναθεωρήσεις χρειαστούν, χωρίς καμία χρέωση — μέχρι η ιστοσελίδα να είναι ακριβώς όπως τη θέλετε.',
+                      bodyEn: 'As many changes and revisions as it takes, at no charge — until your website is exactly how you want it.',
+                    },
+                    {
+                      icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>,
+                      titleEl: 'Οι 365 Ημέρες Ξεκινούν όταν Βγείτε Online', titleEn: 'Your 365 Days Start When You Go Online',
+                      bodyEl: 'Ο χρόνος της ετήσιας συνδρομής μετράει από την ημέρα που αγοράζουμε το domain name, έχουν ολοκληρωθεί όλες οι αλλαγές και η ιστοσελίδα σας είναι στον αέρα. Όχι νωρίτερα.',
+                      bodyEn: 'Your annual subscription clock starts the day we purchase your domain name, every change is complete and your website is live. Not a day sooner.',
+                    },
+                  ].map(({ icon, titleEl, titleEn, bodyEl, bodyEn }) => (
+                    <div
+                      key={titleEn}
+                      className="relative overflow-hidden rounded-2xl border border-electric-cyan/35 bg-gradient-to-b from-electric-cyan/10 via-electric-cyan/4 to-transparent p-7 shadow-[0_0_30px_rgba(71,200,245,0.08)] glow-border-hover badge-scan"
+                    >
+                      <div className="w-12 h-12 rounded-xl bg-electric-cyan/15 border border-electric-cyan/30 flex items-center justify-center text-electric-cyan mb-4 icon-glow">
+                        {icon}
+                      </div>
+                      <h4 className="text-white font-black text-sm uppercase tracking-wider mb-3 leading-snug">
+                        {lang === 'el' ? titleEl : titleEn}
+                      </h4>
+                      <p className="text-gray-400 text-sm leading-relaxed">{lang === 'el' ? bodyEl : bodyEn}</p>
+                    </div>
+                  ))}
+                </div>
+              </ScrollReveal>
             </div>
           </div>
         </ScrollReveal>

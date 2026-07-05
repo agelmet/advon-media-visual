@@ -413,6 +413,32 @@
   .btn-premium:active {
     filter: brightness(1.15) saturate(1.1);
   }
+
+  /* ─── Roadmap Path (process timeline) ─── */
+  .roadmap-line {
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(71, 200, 245, 0.45) 6%,
+      rgba(71, 200, 245, 0.45) 72%,
+      rgba(201, 255, 0, 0.4) 95%,
+      transparent
+    );
+  }
+  .roadmap-line::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -12%;
+    width: 5px;
+    height: 110px;
+    border-radius: 999px;
+    background: linear-gradient(to bottom, transparent, rgba(71, 200, 245, 0.95), transparent);
+    box-shadow: 0 0 14px rgba(71, 200, 245, 0.7);
+    animation: roadmapTravel 6s ease-in-out infinite;
+    pointer-events: none;
+  }
 }
 
 /* ─── Scrollbar ─── */
@@ -469,6 +495,12 @@
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+@keyframes roadmapTravel {
+  0%   { top: -12%; opacity: 0; }
+  8%   { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { top: 104%; opacity: 0; }
+}
 
 /* ─── Reduced motion: calm, minimal-motion version ─── */
 @media (prefers-reduced-motion: reduce) {
@@ -494,7 +526,8 @@
   .badge-scan::after,
   .btn-premium::after,
   .btn-shine-effect,
-  .img-shine::before {
+  .img-shine::before,
+  .roadmap-line::after {
     animation: none !important;
     display: none !important;
   }
