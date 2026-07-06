@@ -69,12 +69,17 @@ export default function WebsiteCreation() {
                   {lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE'}
                 </span>
               </div>
-              <p className="text-lg md:text-xl text-gray-300 mb-8">
+              <p className="text-lg md:text-xl text-gray-300 mb-3">
                 {lang === 'el' ? (
                   <>Μόνο <span className="text-white font-black">10.83€/μήνα</span> — όλα περιλαμβάνονται</>
                 ) : (
                   <>Only <span className="text-white font-black">10.83€/month</span> — everything included</>
                 )}
+              </p>
+              <p className="text-sm text-gray-500 leading-relaxed max-w-2xl mx-auto mb-8">
+                {lang === 'el'
+                  ? 'Η κατασκευή είναι πραγματικά δωρεάν — το ποσό αυτό καλύπτει αποκλειστικά τα απαραίτητα λειτουργικά που χρειάζεται κάθε ιστοσελίδα για να είναι online, όσα θα πληρώνατε ούτως ή άλλως, όπου κι αν την φτιάχνατε. Εδώ, τα έχετε όλα σε ένα, χωρίς τίποτα επιπλέον.'
+                  : "The build itself is genuinely free — this amount covers only the essential running services every website needs to stay online, what you would pay anyway, wherever you had it built. Here, it's all in one, with nothing extra on top."}
               </p>
               {/* Included-items chips */}
               <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-3xl mx-auto">

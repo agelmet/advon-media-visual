@@ -105,16 +105,20 @@ export default function Contact() {
           <div className="glass-panel p-8 md:p-10 rounded-3xl text-left flex flex-col h-full overflow-hidden">
              <h3 className="text-2xl md:text-3xl font-black mb-6 text-white font-display">{lang === 'el' ? 'Κλείστε Ραντεβού' : 'Book Appointment'}</h3>
              <p className="text-gray-400 mb-8">{lang === 'el' ? 'Επιλέξτε την ημέρα και ώρα που σας εξυπηρετεί για μια δωρεάν συμβουλευτική κλήση.' : 'Choose the day and time that suits you for a free consultation call.'}</p>
-             <div className="w-full flex-grow rounded-xl bg-white relative min-h-[500px]">
-                <div 
-                  className="embedded-booking absolute inset-0 w-full h-full" 
-                  data-url="https://advonmedia.trafft.com" 
-                  data-query="&t=s&uuid=1003c403-d56e-439b-876a-c563b3127470" 
-                  data-employee="aggelos-metrides" 
-                  data-lang={lang} 
-                  data-autoresize="1" 
-                  data-showsidebar="0" 
-                  data-showservices="0" 
+             {/* autoresize must stay off: with it on, Trafft grows the iframe to
+                 full content height inside this fixed, clipped box, leaving nothing
+                 scrollable — wheel/touch over the calendar then does nothing.
+                 At a fixed height the iframe scrolls its own content natively. */}
+             <div className="w-full flex-grow rounded-xl bg-white relative min-h-[600px] overflow-hidden">
+                <div
+                  className="embedded-booking absolute inset-0 w-full h-full"
+                  data-url="https://advonmedia.trafft.com"
+                  data-query="&t=s&uuid=1003c403-d56e-439b-876a-c563b3127470"
+                  data-employee="aggelos-metrides"
+                  data-lang={lang}
+                  data-autoresize="0"
+                  data-showsidebar="0"
+                  data-showservices="0"
                   style={{width: '100%', height: '100%'}}>
                 </div>
              </div>

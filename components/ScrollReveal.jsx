@@ -20,12 +20,29 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
 
     el.classList.add('sr', dirMap[direction] || 'sr-up');
 
+    // Once revealed, .sr keeps will-change + an active filter on the element
+    // forever; on an ancestor of a cross-origin iframe (booking calendar)
+    // those compositing hints break wheel scrolling, so strip everything
+    // after the reveal transition finishes.
+    let releaseTimer;
+    const release = (e) => {
+      if (e && e.target !== el) return; // ignore transitionend bubbling from children
+      el.classList.remove('sr', 'sr-up', 'sr-left', 'sr-right', 'sr-scale', 'sr-fade', 'sr-visible');
+      el.style.transitionDelay = '';
+      el.removeEventListener('transitionend', release);
+      clearTimeout(releaseTimer);
+    };
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           el.style.transitionDelay = `${delay}ms`;
           el.classList.add('sr-visible');
-          if (once) observer.unobserve(el);
+          if (once) {
+            observer.unobserve(el);
+            el.addEventListener('transitionend', release);
+            releaseTimer = setTimeout(release, 1000 + delay); // fallback if transitionend never fires
+          }
         } else if (!once) {
           el.classList.remove('sr-visible');
         }
@@ -34,7 +51,11 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      clearTimeout(releaseTimer);
+      el.removeEventListener('transitionend', release);
+    };
   }, [delay, direction, threshold, once]);
 
   return (
