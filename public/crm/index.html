@@ -24,7 +24,24 @@
   --radius:16px;
   --shadow:0 1px 2px rgba(24,49,92,.05), 0 8px 26px rgba(24,49,92,.08);
   --shadow-lg:0 10px 44px rgba(24,49,92,.18);
+  --card:#FFFFFF; --soft-shade:.11;
 }
+body.dark{
+  --bg:#0C1018; --surface:#161C28; --card:#161C28; --ink:#E9EDF5; --muted:#8A94A8; --line:#232C3C;
+  --green-soft:#0E2A20; --yellow-soft:#2E2708; --red-soft:#2E1418; --blue-soft:#0E2038;
+  --violet-soft:#1C1638; --pink-soft:#2E1220; --orange-soft:#2E1E08; --coral-soft:#2E1610; --cyan-soft:#0A2830;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 26px rgba(0,0,0,.5);
+  --shadow-lg:0 10px 44px rgba(0,0,0,.6);
+  --soft-shade:.20;
+}
+body.dark .topbar{background:rgba(22,28,40,.92);}
+body.dark .card,body.dark .col,body.dark .panel,body.dark .stat-pill,body.dark .ycard,body.dark .lane,
+body.dark .tray,body.dark .day-col,body.dark .mcell,body.dark .modal,body.dark .quickadd,body.dark .month-nav,
+body.dark .seg,body.dark .export-menu,body.dark .tabs,body.dark .booked-tray{background:var(--surface);}
+body.dark .btn-ghost{background:var(--surface); color:var(--ink);}
+body.dark input,body.dark select,body.dark textarea{background:var(--bg); color:var(--ink);}
+body.dark .brand small,body.dark .stat-pill .k{color:var(--muted);}
+body.dark .login-card{background:var(--surface);}
 *{box-sizing:border-box; margin:0; padding:0;}
 body{font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var(--ink); font-size:14px; -webkit-font-smoothing:antialiased;}
 h1,h2,h3{font-family:'Sora',sans-serif;}
@@ -49,6 +66,20 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .tab:hover{color:var(--ink);}
 .tab.active{background:var(--grad); color:#fff; box-shadow:0 3px 12px rgba(47,127,224,.35);}
 .topbar-right{margin-left:auto; display:flex; align-items:center; gap:10px;}
+.search-wrap{position:relative;}
+.search-wrap input{border:1px solid var(--line); border-radius:11px; padding:9px 13px; background:var(--bg); width:200px; transition:width .15s;}
+.search-wrap input:focus{width:250px; background:var(--surface);}
+.search-results{position:absolute; right:0; top:calc(100% + 8px); background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow-lg); width:340px; max-height:60vh; overflow-y:auto; padding:6px; display:none; z-index:70;}
+.search-results.open{display:block;}
+.sr-item{display:flex; align-items:center; gap:10px; padding:9px 11px; border-radius:10px; cursor:pointer;}
+.sr-item:hover,.sr-item.sel{background:var(--bg);}
+.sr-dot{width:9px; height:9px; border-radius:99px; flex-shrink:0;}
+.sr-main{flex:1; min-width:0;}
+.sr-name{font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.sr-meta{font-size:11px; color:var(--muted);}
+.sr-tag{font-size:10px; font-weight:700; padding:2px 7px; border-radius:6px; background:var(--bg); color:var(--muted); white-space:nowrap;}
+.sr-empty{padding:16px; text-align:center; color:var(--muted); font-size:12.5px;}
+.sr-group{font-size:10px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); padding:8px 11px 4px;}
 .btn{display:inline-flex; align-items:center; gap:7px; padding:9px 16px; border-radius:11px; font-weight:600; font-size:13.5px; transition:transform .12s, box-shadow .12s; white-space:nowrap;}
 .btn:active{transform:scale(.97);}
 .btn-dark{background:var(--ink); color:#fff;}
@@ -113,6 +144,9 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .card:hover{box-shadow:0 6px 20px -6px var(--c), var(--shadow); transform:translateY(-1px);}
 .card.dragging{opacity:.45;}
 .card .c-name{font-weight:700; font-size:13px; margin-bottom:5px; padding-right:20px; word-break:break-word;}
+.card .c-added{font-family:'Inter'; font-weight:600; font-size:10px; color:var(--muted); margin-left:6px; opacity:.75; white-space:nowrap;}
+.chip.contact{cursor:pointer; text-decoration:none; padding:3px 6px;}
+.chip.contact:hover{background:var(--blue-soft);}
 .card .c-meta{display:flex; gap:5px; flex-wrap:wrap; align-items:center;}
 .chip{font-size:10.5px; font-weight:600; padding:3px 7px; border-radius:7px; background:var(--bg); color:var(--muted); font-variant-numeric:tabular-nums;}
 .chip.money{background:var(--green-soft); color:var(--deep); font-weight:700;}
@@ -341,6 +375,35 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 @keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
 body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-select:none;}
 
+/* ---------- Home / dashboard ---------- */
+.home-hero{background:linear-gradient(120deg,#10141F 15%,#1B3A6B 65%,#2F7FE0 130%); color:#fff; border-radius:var(--radius); padding:24px 28px; margin-bottom:18px; box-shadow:var(--shadow-lg);}
+.home-hero h2{font-size:23px; font-weight:800; letter-spacing:-.02em; margin-bottom:4px;}
+.home-hero p{font-size:13px; color:rgba(255,255,255,.72); font-weight:500;}
+.home-hero .hero-stats{display:flex; gap:28px; flex-wrap:wrap; margin-top:16px;}
+.home-hero .hs .k{font-size:10px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:rgba(255,255,255,.55);}
+.home-hero .hs .v{font-family:'Sora'; font-weight:800; font-size:24px; letter-spacing:-.02em; font-variant-numeric:tabular-nums;}
+.home-hero .hs .v.g{color:#4BE8A0;} .home-hero .hs .v.c{color:#FFB39F;} .home-hero .hs .v.b{color:#7FD9F5;}
+.home-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media(max-width:1000px){.home-grid{grid-template-columns:1fr;}}
+.home-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
+.home-card.wide{grid-column:1 / -1;}
+.home-card-head{display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid var(--line);}
+.hc-ico{width:32px; height:32px; border-radius:9px; display:grid; place-items:center; font-size:15px;}
+.home-card-head h3{font-size:14px; font-weight:700; flex:1;}
+.hc-link{font-size:11.5px; font-weight:700; color:var(--brand); padding:5px 9px; border-radius:8px;}
+.hc-link:hover{background:var(--blue-soft);}
+.home-card-body{padding:10px 12px 14px; max-height:340px; overflow-y:auto;}
+.home-row{display:flex; align-items:center; gap:10px; padding:9px 11px; border-radius:11px; margin-bottom:5px; background:var(--bg); cursor:pointer;}
+.home-row:hover{box-shadow:var(--shadow);}
+.home-row .hr-day{font-family:'Sora'; font-weight:800; font-size:11px; color:var(--brand); min-width:52px;}
+.home-row .hr-name{font-weight:700; font-size:13px; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.home-row .hr-val{font-size:12px; font-weight:700; color:var(--deep); font-variant-numeric:tabular-nums;}
+.home-row.warn{background:var(--coral-soft);} .home-row.warn .hr-val{color:var(--coral);}
+.home-row .hr-sub{font-size:11px; color:var(--muted);}
+.home-empty{padding:20px 12px; text-align:center; color:var(--muted); font-size:12.5px;}
+.home-mini{display:flex; justify-content:space-between; align-items:center; padding:8px 11px; border-radius:10px; margin-bottom:4px;}
+.home-mini .mm-name{font-weight:600; font-size:12.5px;} .home-mini .mm-val{font-weight:800; font-size:12.5px; color:var(--coral); font-variant-numeric:tabular-nums;}
+
 /* ---------- Modal ---------- */
 .overlay{position:fixed; inset:0; background:rgba(10,18,34,.5); backdrop-filter:blur(3px); display:none; place-items:center; z-index:100; padding:20px;}
 .overlay.open{display:grid;}
@@ -380,10 +443,17 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 }
 @media(max-width:900px){
   .tray-row{grid-template-columns:1fr;}
+  .rn-item{flex-wrap:wrap;}
+  .rn-item .w-name{flex:1 1 100%;}
+  .search-wrap{flex:1;}
+  .search-wrap input,.search-wrap input:focus{width:100%;}
+  .search-results{width:calc(100vw - 28px); right:auto; left:0;}
+  .home-hero .hero-stats{gap:18px;}
   .topbar-inner{padding:12px 14px; gap:12px;}
   .strip,.view,.storage-warn{padding-left:14px; padding-right:14px;}
   .stat-pills{margin-left:0; width:100%;}
-  .tabs{order:3; width:100%; overflow-x:auto;}
+  .tabs{order:3; width:100%; max-width:100%; overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch;}
+  .tab{flex:0 0 auto;}
   .col{min-width:230px; flex:0 0 auto;}
   .week-grid{grid-template-columns:1fr; gap:10px;}
   .day-col{min-height:auto;}
@@ -419,8 +489,9 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
       </div>
     </div>
     <nav class="tabs" role="tablist">
+      <button class="tab active" data-view="home">Home</button>
       <button class="tab" data-view="quicklog">Quick Log</button>
-      <button class="tab active" data-view="board">Board</button>
+      <button class="tab" data-view="board">Board</button>
       <button class="tab" data-view="calendar">Calendar</button>
       <button class="tab" data-view="todo">To Do</button>
       <button class="tab" data-view="callbacks">Callbacks</button>
@@ -429,6 +500,11 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
       <button class="tab" data-view="year">Year</button>
     </nav>
     <div class="topbar-right">
+      <div class="search-wrap">
+        <input id="globalSearch" placeholder="🔍 Search clients…" autocomplete="off">
+        <div class="search-results" id="searchResults"></div>
+      </div>
+      <button class="btn btn-ghost" id="themeBtn" title="Toggle dark mode">🌙</button>
       <button class="btn btn-ghost" id="logoutBtn" title="Lock the CRM">🔒</button>
       <div class="export-wrap">
         <button class="btn btn-ghost" id="exportBtn">⬇ Export</button>
@@ -470,8 +546,35 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
   </div>
 </div>
 
+<!-- HOME -->
+<main class="view active" id="view-home">
+  <div class="home-hero" id="homeHero"></div>
+  <div class="home-grid">
+    <section class="home-card">
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft)">📅</span><h3>This week's meetings</h3><button class="hc-link" data-goto="calendar">Open calendar →</button></div>
+      <div class="home-card-body" id="homeWeek"></div>
+    </section>
+    <section class="home-card">
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--coral-soft)">💰</span><h3>Remaining to collect</h3><button class="hc-link" data-goto="year">Year view →</button></div>
+      <div class="home-card-body" id="homeCollect"></div>
+    </section>
+    <section class="home-card">
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--cyan-soft)">🔁</span><h3>Overdue renewals</h3><button class="hc-link" data-goto="renewals">Renewals →</button></div>
+      <div class="home-card-body" id="homeRenew"></div>
+    </section>
+    <section class="home-card">
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--green-soft)">📆</span><h3>Subscriptions due this week</h3><button class="hc-link" data-goto="monthly">Monthly →</button></div>
+      <div class="home-card-body" id="homeSubs"></div>
+    </section>
+    <section class="home-card wide">
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft)">🔴</span><h3>High-priority notes</h3><button class="hc-link" data-goto="todo">To Do →</button></div>
+      <div class="home-card-body" id="homeNotes"></div>
+    </section>
+  </div>
+</main>
+
 <!-- BOARD -->
-<main class="view active" id="view-board">
+<main class="view" id="view-board">
   <div class="quickadd">
     <span class="qa-title">＋ New booked client</span>
     <input id="qaName" placeholder="Name — e.g. Papadopoulos dentist">
@@ -688,6 +791,11 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
         <div class="field"><label>Time</label><input id="mTime" type="time"></div>
       </div>
       <div class="field"><label>Month board</label><input id="mMonth" type="month"></div>
+      <div class="field-row">
+        <div class="field"><label>Phone <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label><input id="mPhone" type="tel" placeholder="69…"></div>
+        <div class="field"><label>Viber <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label><input id="mViber" type="tel" placeholder="Viber number"></div>
+      </div>
+      <div class="field"><label>Email <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label><input id="mEmail" type="email" placeholder="name@email.gr"></div>
       <div class="field"><label>Notes</label><textarea id="mNotes" placeholder="Viber, needs images, waiting for logo…"></textarea></div>
       <div class="field"><label>Card color</label><div class="swatches" id="mColors"></div>
         <label class="remember" style="margin:10px 0 0;display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);font-weight:500;cursor:pointer;"><input type="checkbox" id="mFill"> Fill the whole card with a light shade</label>
@@ -889,15 +997,20 @@ function cardEl(c,st){
   el.className='card'; el.draggable=true;
   const cc=c.color||'';
   el.style.setProperty('--c', cc||st.c); el.style.setProperty('--cs', cc? tint(cc,.14) : st.cs);
-  if(c.fill) el.style.background=tint(cc||st.hex,.11);
+  if(c.fill) el.style.background=tint(cc||st.hex, getComputedStyle(document.body).getPropertyValue('--soft-shade')||.11);
   const idx=STAGES.findIndex(s=>s.id===c.stage);
   const nextName= idx<STAGES.length-1 ? STAGES[idx+1].name : null;
+  const added= c.created ? new Date(c.created) : null;
+  const addedTxt= added ? pad(added.getDate())+'/'+pad(added.getMonth()+1) : '';
   el.innerHTML=`
-    <div class="c-name">${esc(c.name)}</div>
+    <div class="c-name">${esc(c.name)}${addedTxt?`<span class="c-added" title="Added ${addedTxt}">${addedTxt}</span>`:''}</div>
     <div class="c-meta">
       ${c.value?`<span class="chip money">${fmtMoney(c.value)}</span>`:''}
       ${c.day?`<span class="chip">📅 ${fmtDay(c.day)}</span>`:''}
       ${c.time?`<span class="chip">🕐 ${c.time}</span>`:''}
+      ${c.phone?`<a class="chip contact" href="tel:${esc(c.phone)}" title="${esc(c.phone)}" onclick="event.stopPropagation()">📞</a>`:''}
+      ${c.viber?`<span class="chip contact" title="Viber: ${esc(c.viber)}">🟣</span>`:''}
+      ${c.email?`<a class="chip contact" href="mailto:${esc(c.email)}" title="${esc(c.email)}" onclick="event.stopPropagation()">✉️</a>`:''}
     </div>
     ${c.notes?`<div class="c-notes">${esc(c.notes)}</div>`:''}
     ${nextName?`<button class="c-next" title="Move to ${nextName}">→</button>`:''}`;
@@ -1354,6 +1467,112 @@ $('#subName').addEventListener('keydown',e=>{if(e.key==='Enter')$('#subAdd').cli
 $('#subPrevY').addEventListener('click',()=>{subYear--; renderMonthly();});
 $('#subNextY').addEventListener('click',()=>{subYear++; renderMonthly();});
 
+/* ---------- home dashboard ---------- */
+function renderHome(){
+  if(!state) return;
+  const today=new Date(); const todayI=todayIso();
+  const hr=today.getHours();
+  const greet= hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
+  const ws=mondayOf(new Date()), we=new Date(ws); we.setDate(we.getDate()+6);
+  const weekEndI=isoDate(we);
+  const weekMeetings=state.clients.filter(c=>c.day && c.day>=isoDate(ws) && c.day<=weekEndI).sort((a,b)=>(a.day+(a.time||''))<(b.day+(b.time||''))?-1:1);
+  // this-month collect
+  const mc=state.clients.filter(c=>c.month===curMonth);
+  const mTotal=mc.reduce((a,c)=>a+(+c.value||0),0), mPaid=mc.filter(c=>c.stage==='paid').reduce((a,c)=>a+(+c.value||0),0);
+  const overdue=state.renewals.filter(r=>r.date && r.date<todayI).sort((a,b)=>a.date<b.date?-1:1);
+  const in7=isoDate(new Date(Date.now()+7*864e5));
+  const subsDue=state.subs.filter(s=>{
+    if(!s.renewDay) return false;
+    const d=new Date(today.getFullYear(),today.getMonth(),s.renewDay);
+    const di=isoDate(d);
+    return di>=todayI && di<=in7 && !(s.paid && s.paid[curMonth]);
+  });
+  const hiNotes=state.todos.filter(n=>!n.done && (n.prio||'medium')==='high');
+  // hero
+  const rem=mTotal-mPaid;
+  $('#homeHero').innerHTML=`
+    <h2>${greet}, Agelo 👋</h2>
+    <p>${today.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · here's your day at a glance</p>
+    <div class="hero-stats">
+      <div class="hs"><div class="k">Meetings this week</div><div class="v b">${weekMeetings.length}</div></div>
+      <div class="hs"><div class="k">${fmtMonth(curMonth)} to collect</div><div class="v c">${fmtMoney2(rem)}</div></div>
+      <div class="hs"><div class="k">Overdue renewals</div><div class="v ${overdue.length?'c':'g'}">${overdue.length}</div></div>
+      <div class="hs"><div class="k">High-priority notes</div><div class="v ${hiNotes.length?'c':'g'}">${hiNotes.length}</div></div>
+    </div>`;
+  // week
+  const hw=$('#homeWeek');
+  if(!weekMeetings.length) hw.innerHTML='<div class="home-empty">No meetings booked this week.</div>';
+  else hw.innerHTML=weekMeetings.map(c=>{
+    const d=new Date(c.day+'T00:00'); const dn=DOW[(d.getDay()+6)%7];
+    return `<div class="home-row" data-open="${c.id}"><span class="hr-day">${dn} ${d.getDate()}</span><span class="hr-name">${esc(c.name)}${c.time?` · ${c.time}`:''}</span>${c.value?`<span class="hr-val">${fmtMoney(c.value)}</span>`:''}</div>`;
+  }).join('');
+  // collect per month (only months with remaining)
+  const hc=$('#homeCollect');
+  const rows=[];
+  for(let m=1;m<=12;m++){ const key=curYear+'-'+pad(m);
+    const it=state.clients.filter(c=>c.month===key);
+    const t=it.reduce((a,c)=>a+(+c.value||0),0), pd=it.filter(c=>c.stage==='paid').reduce((a,c)=>a+(+c.value||0),0);
+    if(t-pd>0) rows.push(`<div class="home-mini"><span class="mm-name">${MONTHS[m-1]} ${curYear}</span><span class="mm-val">${fmtMoney2(t-pd)}</span></div>`);
+  }
+  hc.innerHTML= rows.length? rows.join('') : '<div class="home-empty">Everything collected this year. 🎉</div>';
+  // overdue renewals
+  const hrn=$('#homeRenew');
+  hrn.innerHTML= overdue.length? overdue.slice(0,12).map(r=>`<div class="home-row warn" data-goto="renewals"><span class="hr-name">${esc(r.name)}</span><span class="hr-sub">${fmtDate(r.date)}</span><span class="hr-val">${fmtMoney2(r.value)}</span></div>`).join('') : '<div class="home-empty">No overdue renewals. 👌</div>';
+  // subs due this week
+  const hs=$('#homeSubs');
+  hs.innerHTML= subsDue.length? subsDue.map(s=>`<div class="home-row" data-goto="monthly"><span class="hr-name">${esc(s.name)}</span><span class="hr-sub">day ${s.renewDay}</span><span class="hr-val">${fmtMoney2(s.value)}</span></div>`).join('') : '<div class="home-empty">No subscriptions due in the next 7 days.</div>';
+  // high-priority notes
+  const hn=$('#homeNotes');
+  hn.innerHTML= hiNotes.length? hiNotes.map(n=>`<div class="home-row" data-goto="todo"><span class="hr-name">🔴 ${esc(n.text)}</span></div>`).join('') : '<div class="home-empty">No high-priority notes right now.</div>';
+  // wire
+  $('#view-home').querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click',()=>openModal(el.dataset.open)));
+  $('#view-home').querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>switchView(el.dataset.goto)));
+}
+
+/* ---------- global search ---------- */
+function runSearch(q){
+  const box=$('#searchResults'); q=q.trim().toLowerCase();
+  if(!q){ box.classList.remove('open'); box.innerHTML=''; return; }
+  const hit=s=>String(s||'').toLowerCase().includes(q);
+  let html='';
+  const cl=state.clients.filter(c=>hit(c.name)||hit(c.notes)||hit(c.phone)||hit(c.email)||hit(c.viber)).slice(0,8);
+  if(cl.length){
+    html+='<div class="sr-group">Clients</div>';
+    cl.forEach(c=>{ const st=stageById(c.stage);
+      html+=`<div class="sr-item" data-open="${c.id}"><span class="sr-dot" style="background:${c.color||st.hex}"></span><div class="sr-main"><div class="sr-name">${esc(c.name)}</div><div class="sr-meta">${fmtMonth(c.month)}${c.value?' · '+fmtMoney(c.value):''}${c.phone?' · '+esc(c.phone):''}</div></div><span class="sr-tag">${st.name}</span></div>`;
+    });
+  }
+  const rn=state.renewals.filter(r=>hit(r.name)).slice(0,4);
+  if(rn.length){ html+='<div class="sr-group">Renewals</div>';
+    rn.forEach(r=> html+=`<div class="sr-item" data-goto="renewals"><span class="sr-dot" style="background:var(--cyan)"></span><div class="sr-main"><div class="sr-name">${esc(r.name)}</div><div class="sr-meta">${r.date?fmtDate(r.date):'no date'} · ${fmtMoney2(r.value)}</div></div></div>`);
+  }
+  const sb=state.subs.filter(s=>hit(s.name)).slice(0,4);
+  if(sb.length){ html+='<div class="sr-group">Monthly</div>';
+    sb.forEach(s=> html+=`<div class="sr-item" data-goto="monthly"><span class="sr-dot" style="background:var(--green)"></span><div class="sr-main"><div class="sr-name">${esc(s.name)}</div><div class="sr-meta">${fmtMoney2(s.value)}/month</div></div></div>`);
+  }
+  const wm=state.warm.filter(w=>hit(w.name)||hit(w.note)).slice(0,4);
+  if(wm.length){ html+='<div class="sr-group">Warm leads</div>';
+    wm.forEach(w=> html+=`<div class="sr-item" data-goto="callbacks"><span class="sr-dot" style="background:var(--orange)"></span><div class="sr-main"><div class="sr-name">${esc(w.name)}</div><div class="sr-meta">${esc(w.note||'')}</div></div></div>`);
+  }
+  box.innerHTML= html || '<div class="sr-empty">No matches for "'+esc(q)+'"</div>';
+  box.classList.add('open');
+  box.querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click',()=>{ closeSearch(); openModal(el.dataset.open); }));
+  box.querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>{ closeSearch(); switchView(el.dataset.goto); }));
+}
+function closeSearch(){ $('#searchResults').classList.remove('open'); $('#globalSearch').value=''; }
+$('#globalSearch').addEventListener('input',e=>runSearch(e.target.value));
+$('#globalSearch').addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeSearch(); e.target.blur(); } });
+document.addEventListener('click',e=>{ if(!e.target.closest('.search-wrap')) $('#searchResults').classList.remove('open'); });
+
+/* ---------- dark mode ---------- */
+function applyTheme(dark){
+  document.body.classList.toggle('dark',dark);
+  $('#themeBtn').textContent= dark?'☀️':'🌙';
+  try{ localStorage.setItem('advon_crm_theme', dark?'dark':'light'); }catch(e){}
+}
+$('#themeBtn').addEventListener('click',()=>{ applyTheme(!document.body.classList.contains('dark')); renderAll(); });
+(function initTheme(){ let t='light'; try{ t=localStorage.getItem('advon_crm_theme')||'light'; }catch(e){} applyTheme(t==='dark'); })();
+
 /* ---------- modal (edit + create) ---------- */
 let editingId=null;
 let modalColor='';
@@ -1373,6 +1592,7 @@ function openModal(id, presetDay){
   $('#mDay').value=c?(c.day||''):(presetDay||''); $('#mTime').value=c?(c.time||''):'';
   $('#mMonth').value=c?c.month:(presetDay?presetDay.slice(0,7):curMonth);
   $('#mNotes').value=c?(c.notes||''):'';
+  $('#mPhone').value=c?(c.phone||''):''; $('#mViber').value=c?(c.viber||''):''; $('#mEmail').value=c?(c.email||''):'';
   const sel=$('#mStage'); sel.innerHTML=STAGES.map(s=>`<option value="${s.id}" ${c&&s.id===c.stage?'selected':''}>${s.name}</option>`).join('');
   modalColor = c ? (c.color||'') : '';
   $('#mFill').checked = c ? !!c.fill : false;
@@ -1386,6 +1606,7 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
 $('#mSave').addEventListener('click',()=>{
   const name=$('#mName').value.trim(); if(!name){ $('#mName').focus(); return; }
   const data={ name, value:+$('#mValue').value||0, day:$('#mDay').value, time:$('#mTime').value, color:modalColor, fill:$('#mFill').checked,
+    phone:$('#mPhone').value.trim(), viber:$('#mViber').value.trim(), email:$('#mEmail').value.trim(),
     stage:$('#mStage').value, month:$('#mMonth').value|| ($('#mDay').value? $('#mDay').value.slice(0,7):curMonth), notes:$('#mNotes').value.trim() };
   if(editingId){ Object.assign(state.clients.find(x=>x.id===editingId)||{}, data); }
   else state.clients.push({id:uid(), ...data, created:Date.now()});
@@ -1415,14 +1636,14 @@ function switchView(v){
   curView=v;
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
   document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el.id==='view-'+v));
-  $('#strip').style.display = (v==='year'||v==='renewals'||v==='calendar'||v==='todo'||v==='monthly') ? 'none' : 'flex';
+  $('#strip').style.display = (v==='year'||v==='renewals'||v==='calendar'||v==='todo'||v==='monthly'||v==='home') ? 'none' : 'flex';
   renderAll();
 }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchView(t.dataset.view)));
 
 function renderAll(){
   if(!state) return;
-  renderStats(); renderBoard(); renderCalendar(); renderYear(); renderLogs(); renderWarm(); renderSched(); renderRenewals(); renderTodo(); renderMonthly();
+  renderHome(); renderStats(); renderBoard(); renderCalendar(); renderYear(); renderLogs(); renderWarm(); renderSched(); renderRenewals(); renderTodo(); renderMonthly();
 }
 
 /* ---------- export ---------- */
