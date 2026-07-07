@@ -36,7 +36,8 @@ function avatarColor(name) {
 
 function ReviewCard({ review, lang }) {
   const [expanded, setExpanded] = useState(false);
-  const { name, text } = review;
+  const { name } = review;
+  const text = lang === 'el' ? review.text : review.textEn;
   const isLong = text.length > CLAMP_CHARS;
   const shown = isLong && !expanded ? text.slice(0, CLAMP_CHARS).trimEnd() + '…' : text;
 
@@ -111,7 +112,7 @@ export default function Reviews() {
                 {[1, 2, 3, 4, 5].map((s) => <GoogleStar key={s} className="w-6 h-6" />)}
               </div>
               <span className="text-[#5f6368] font-medium text-sm">
-                {total} {lang === 'el' ? 'αξιολογήσεις στη Google' : 'reviews on Google'}
+                100+ {lang === 'el' ? 'αξιολογήσεις στη Google' : 'reviews on Google'}
               </span>
             </div>
           </div>
@@ -146,7 +147,6 @@ export default function Reviews() {
                 className="btn-premium inline-flex items-center gap-2.5 px-8 py-3.5 bg-white text-[#202124] rounded-full font-bold text-sm shadow-[0_4px_20px_rgba(0,0,0,0.4)] hover:shadow-[0_6px_28px_rgba(0,0,0,0.55)] transition-all duration-300"
               >
                 {lang === 'el' ? 'Περισσότερες αξιολογήσεις' : 'More reviews'}
-                <span className="text-[#5f6368] font-medium">(+{Math.min(LOAD_STEP, remaining)})</span>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="m6 9 6 6 6-6" /></svg>
               </button>
             ) : (
@@ -161,9 +161,9 @@ export default function Reviews() {
               </a>
             )}
             <span className="text-gray-500 text-xs">
-              {lang === 'el'
-                ? `Εμφανίζονται ${Math.min(visible, total)} από ${total} αξιολογήσεις`
-                : `Showing ${Math.min(visible, total)} of ${total} reviews`}
+              {visible >= total
+                ? (lang === 'el' ? 'Εμφανίζονται και οι 100+ αξιολογήσεις' : 'Showing all 100+ reviews')
+                : (lang === 'el' ? `Εμφανίζονται ${visible} από 100+ αξιολογήσεις` : `Showing ${visible} of 100+ reviews`)}
             </span>
           </div>
         </ScrollReveal>
