@@ -288,6 +288,8 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .sub-name{font-weight:700; font-size:13px; word-break:break-word;}
 .sub-price{font-size:11px; font-weight:700; color:var(--deep); cursor:pointer;}
 .sub-price:hover{text-decoration:underline;}
+.sub-day{color:var(--brand); font-weight:600; cursor:pointer;}
+.sub-day:hover{text-decoration:underline;}
 .sub-cell{height:30px; border-radius:8px; display:grid; place-items:center; font-size:11px; font-weight:800; cursor:pointer; background:var(--bg); color:#C0C6D4; border:1px solid var(--line); user-select:none;}
 .sub-cell:hover{border-color:var(--brand);}
 .sub-cell.paid{background:var(--green); color:#fff; border-color:var(--green);}
@@ -301,7 +303,15 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .todo-item{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; margin-bottom:6px; background:var(--pink-soft); border:1px solid #F8CFE1;}
 .todo-done-btn{background:var(--green); color:#fff; font-size:10.5px; font-weight:700; border-radius:7px; padding:5px 9px; opacity:0; white-space:nowrap;}
 .todo-item:hover .todo-done-btn{opacity:1;}
-.note-item{display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:12px; margin-bottom:6px; background:var(--bg); border:1px solid var(--line); font-weight:600; font-size:13px;}
+.note-item{display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:12px; margin-bottom:6px; background:var(--bg); border:1px solid var(--line); font-weight:600; font-size:13px; border-left:4px solid var(--line);}
+.note-item.p-high{border-left-color:var(--red);}
+.note-item.p-medium{border-left-color:var(--yellow);}
+.note-item.p-low{border-left-color:var(--green);}
+.prio-head{font-family:'Sora'; font-size:11.5px; font-weight:700; margin:10px 4px 8px; display:flex; align-items:center; gap:8px; letter-spacing:.02em;}
+.prio-head .count{border-radius:99px; padding:2px 9px; font-size:11px;}
+.prio-head.p-high{color:var(--red);} .prio-head.p-high .count{background:var(--red-soft); color:var(--red);}
+.prio-head.p-medium{color:#B58A00;} .prio-head.p-medium .count{background:var(--yellow-soft); color:#B58A00;}
+.prio-head.p-low{color:var(--deep);} .prio-head.p-low .count{background:var(--green-soft); color:var(--deep);}
 .note-item.done{opacity:.55;}
 .note-item.done span{text-decoration:line-through;}
 .note-item:hover .item-x{opacity:1;}
@@ -557,19 +567,30 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
   <div class="todo-grid">
     <section class="panel">
       <div class="panel-head">
-        <div class="ico" style="background:var(--pink-soft);">🛠</div>
-        <div><h3>Changes to make</h3><p>Every client sitting in "Making changes" — across all months</p></div>
+        <div class="ico" id="todoIco" style="background:var(--pink-soft);">🛠</div>
+        <div style="flex:1;"><h3 id="todoTitle">Changes to make</h3><p id="todoSub">Every client sitting in "Making changes" — across all months</p></div>
         <span class="todo-cnt" id="todoCnt">0</span>
       </div>
-      <div class="panel-body" id="todoClients" style="max-height:70vh;"></div>
+      <div class="panel-form" style="border-bottom:1px solid var(--line);">
+        <div class="seg" style="box-shadow:none;">
+          <button class="active" data-todo="changes">🛠 Changes to make</button>
+          <button data-todo="building">🔨 In building</button>
+        </div>
+      </div>
+      <div class="panel-body" id="todoClients" style="max-height:66vh;"></div>
     </section>
     <section class="panel">
       <div class="panel-head">
         <div class="ico" style="background:var(--blue-soft);">📝</div>
-        <div><h3>My notes</h3><p>Reminders, tasks, anything on your mind</p></div>
+        <div><h3>My notes</h3><p>Reminders and tasks — set a priority for each</p></div>
       </div>
       <div class="panel-form">
         <input class="grow" id="noteText" placeholder="e.g. buy domain for all-smiles.gr">
+        <select id="notePrio" style="border:1px solid var(--line); border-radius:10px; padding:9px 12px; background:var(--bg); width:130px;">
+          <option value="high">🔴 High</option>
+          <option value="medium" selected>🟡 Medium</option>
+          <option value="low">🟢 Low</option>
+        </select>
         <button id="noteAdd">Add</button>
       </div>
       <div class="panel-body" id="noteList"></div>
@@ -616,7 +637,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
     <div class="panel-form" style="border-bottom:none;">
       <span style="font-family:'Sora';font-weight:700;font-size:12.5px;align-self:center;white-space:nowrap;">＋ Add subscription</span>
       <input class="grow" id="subName" placeholder="Client name">
-      <input id="subVal" type="number" placeholder="€ / month" min="0" style="width:120px;">
+      <input id="subVal" type="number" step="0.01" placeholder="€ / month (e.g. 11.5)" min="0" style="width:150px;">
       <button id="subAdd">Add</button>
     </div>
   </section>
@@ -748,6 +769,7 @@ const pad=n=>String(n).padStart(2,'0');
 const isoDate=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const todayIso=()=>isoDate(new Date());
 const fmtMoney=n=>'€'+(Number(n)||0).toLocaleString('en-US');
+const fmtMoney2=n=>'€'+(Number(n)||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});
 const fmtMonth=m=>{ const [y,mm]=m.split('-'); return MONTHS[+mm-1]+' '+y; };
 const fmtDate=d=>{ if(!d) return ''; const [y,m,dd]=d.split('-'); return dd+'/'+m+'/'+y; };
 const fmtDay=d=>{ if(!d) return ''; const [y,m,dd]=d.split('-'); return dd+'/'+m; };
@@ -992,13 +1014,17 @@ function renderYear(){
     grid.appendChild(card);
   }
   const rTotal=state.renewals.filter(r=>r.date&&r.date.startsWith(String(curYear))).reduce((a,r)=>a+(+r.value||0),0);
+  const subCollected=state.subs.reduce((a,s)=>{
+    let n=0; for(let m=1;m<=12;m++){ if(s.paid && s.paid[curYear+'-'+pad(m)]) n++; }
+    return a+n*(+s.value||0);
+  },0);
+  const ytd=yPaid+subCollected;
   $('#yearBanner').innerHTML=`
-    <div class="cell"><div class="k">${curYear} total booked</div><div class="big">${fmtMoney(yTotal)}</div></div>
-    <div class="cell paid"><div class="k">Collected</div><div class="big">${fmtMoney(yPaid)}</div></div>
-    <div class="cell"><div class="k">To collect</div><div class="big" style="color:#FFB39F;">${fmtMoney(yTotal-yPaid)}</div></div>
+    <div class="cell"><div class="k">${curYear} total booked</div><div class="big">${fmtMoney2(yTotal)}</div></div>
+    <div class="cell paid"><div class="k">Money made ${curYear}</div><div class="big">${fmtMoney2(ytd)}</div><div class="k" style="margin-top:2px;">${fmtMoney2(yPaid)} projects + ${fmtMoney2(subCollected)} monthly</div></div>
+    <div class="cell"><div class="k">To collect</div><div class="big" style="color:#FFB39F;">${fmtMoney2(yTotal-yPaid)}</div></div>
     <div class="cell"><div class="k">Clients</div><div class="big">${yCount}</div></div>
-    <div class="cell"><div class="k">Avg / client</div><div class="big">${yCount? fmtMoney(Math.round(yTotal/yCount)):'€0'}</div></div>
-    <div class="cell renew"><div class="k">Renewals due ${curYear}</div><div class="big">${fmtMoney(rTotal)}</div></div>`;
+    <div class="cell renew"><div class="k">Renewals due ${curYear}</div><div class="big">${fmtMoney2(rTotal)}</div></div>`;
 }
 
 /* ---------- quick log ---------- */
@@ -1186,45 +1212,72 @@ $('#rnAdd').addEventListener('click',()=>{
 $('#rnName').addEventListener('keydown',e=>{if(e.key==='Enter')$('#rnAdd').click();});
 
 /* ---------- to do ---------- */
+let todoMode='changes';
 function renderTodo(){
   const el=$('#todoClients'); el.innerHTML='';
-  const items=state.clients.filter(c=>c.stage==='changes');
+  const isBuild=todoMode==='building';
+  const stageId=isBuild?'building':'changes';
+  const st=stageById(stageId);
+  $('#todoTitle').textContent=isBuild?'In building':'Changes to make';
+  $('#todoSub').textContent=isBuild?'Every client sitting in "Building" — across all months':'Every client sitting in "Making changes" — across all months';
+  $('#todoIco').textContent=isBuild?'🔨':'🛠';
+  $('#todoIco').style.background=isBuild?'var(--blue-soft)':'var(--pink-soft)';
+  const items=state.clients.filter(c=>c.stage===stageId);
   $('#todoCnt').textContent=items.length;
-  if(!items.length){ el.innerHTML='<div class="empty-note">No clients in Making changes right now. Clean plate. 🎉</div>'; }
+  if(!items.length){ el.innerHTML='<div class="empty-note">'+(isBuild?'Nothing in Building right now.':'No clients in Making changes right now. Clean plate. 🎉')+'</div>'; }
   else{
     const groups={};
     items.forEach(c=>{ (groups[c.month] ||= []).push(c); });
     Object.keys(groups).sort().forEach(m=>{
       const g=document.createElement('div'); g.className='month-group';
       const gsum=groups[m].reduce((a,c)=>a+(+c.value||0),0);
-      g.innerHTML=`<h4>${fmtMonth(m)} <span class="count" style="background:var(--pink-soft);color:var(--pink);">${groups[m].length}</span><span class="gsum">${gsum?fmtMoney(gsum):''}</span></h4>`;
+      g.innerHTML=`<h4>${fmtMonth(m)} <span class="count" style="background:${st.cs};color:${st.hex};">${groups[m].length}</span><span class="gsum">${gsum?fmtMoney2(gsum):''}</span></h4>`;
       groups[m].forEach(c=>{
         const row=document.createElement('div'); row.className='todo-item';
+        if(isBuild) row.style.cssText='background:var(--blue-soft);border-color:#BEDcFA;';
+        const btnLabel=isBuild?'✓ Built → Review':'✓ Done → Payment';
+        const nextStage=isBuild?'review':'pay';
+        const nextName=isBuild?'Draft · Review':'Waiting payment';
         row.innerHTML=`<div style="flex:1;cursor:pointer;"><div class="w-name">${esc(c.name)}</div>${c.notes?`<div class="w-note">${esc(c.notes)}</div>`:''}</div>
-          ${c.value?`<span class="rn-val">${fmtMoney(c.value)}</span>`:''}
-          <button class="todo-done-btn" title="Changes done — move to Waiting payment">✓ Done → Payment</button>`;
+          ${c.value?`<span class="rn-val">${fmtMoney2(c.value)}</span>`:''}
+          <button class="todo-done-btn" title="Move to ${nextName}">${btnLabel}</button>`;
         row.querySelector('div').addEventListener('click',()=>openModal(c.id));
-        row.querySelector('.todo-done-btn').addEventListener('click',()=>{ c.stage='pay'; save(); renderAll(); toast(c.name+' → Waiting payment'); });
+        row.querySelector('.todo-done-btn').addEventListener('click',()=>{ c.stage=nextStage; save(); renderAll(); toast(c.name+' → '+nextName); });
         g.appendChild(row);
       });
       el.appendChild(g);
     });
   }
+  renderNotes();
+}
+function renderNotes(){
   const nl=$('#noteList'); nl.innerHTML='';
-  const notes=[...state.todos].sort((a,b)=>(a.done-b.done)||b.created-a.created);
-  if(!notes.length){ nl.innerHTML='<div class="empty-note">No notes yet — add reminders, domains to buy, anything.</div>'; }
-  notes.forEach(n=>{
-    const row=document.createElement('div'); row.className='note-item'+(n.done?' done':'');
-    row.innerHTML=`<button class="n-check" title="Done">${n.done?'✓':''}</button><span style="flex:1">${esc(n.text)}</span><button class="item-x" title="Remove">✕</button>`;
-    row.querySelector('.n-check').addEventListener('click',()=>{ n.done=!n.done; save(); renderTodo(); });
-    row.querySelector('.item-x').addEventListener('click',()=>{ state.todos=state.todos.filter(x=>x.id!==n.id); save(); renderTodo(); });
-    nl.appendChild(row);
+  if(!state.todos.length){ nl.innerHTML='<div class="empty-note">No notes yet — add reminders, domains to buy, anything.</div>'; return; }
+  const order={high:0,medium:1,low:2}, labels={high:'🔴 High priority',medium:'🟡 Medium priority',low:'🟢 Low priority'};
+  ['high','medium','low'].forEach(prio=>{
+    const list=state.todos.filter(n=>(n.prio||'medium')===prio).sort((a,b)=>(a.done-b.done)||b.created-a.created);
+    if(!list.length) return;
+    const head=document.createElement('div'); head.className='prio-head p-'+prio;
+    head.innerHTML=`${labels[prio]} <span class="count">${list.filter(n=>!n.done).length}</span>`;
+    nl.appendChild(head);
+    list.forEach(n=>{
+      const row=document.createElement('div'); row.className='note-item p-'+(n.prio||'medium')+(n.done?' done':'');
+      row.innerHTML=`<button class="n-check" title="Done">${n.done?'✓':''}</button><span style="flex:1">${esc(n.text)}</span><button class="item-x" title="Remove">✕</button>`;
+      row.querySelector('.n-check').addEventListener('click',()=>{ n.done=!n.done; save(); renderNotes(); });
+      row.querySelector('.item-x').addEventListener('click',()=>{ state.todos=state.todos.filter(x=>x.id!==n.id); save(); renderNotes(); });
+      nl.appendChild(row);
+    });
   });
 }
+document.querySelectorAll('[data-todo]').forEach(btn=>btn.addEventListener('click',()=>{
+  todoMode=btn.dataset.todo;
+  document.querySelectorAll('[data-todo]').forEach(x=>x.classList.toggle('active',x===btn));
+  renderTodo();
+}));
 $('#noteAdd').addEventListener('click',()=>{
   const t=$('#noteText').value.trim(); if(!t){ $('#noteText').focus(); return; }
-  state.todos.push({id:uid(), text:t, done:false, created:Date.now()});
-  $('#noteText').value=''; save(); renderTodo(); $('#noteText').focus();
+  state.todos.push({id:uid(), text:t, prio:$('#notePrio').value, done:false, created:Date.now()});
+  $('#noteText').value=''; save(); renderNotes(); $('#noteText').focus();
 });
 $('#noteText').addEventListener('keydown',e=>{if(e.key==='Enter')$('#noteAdd').click();});
 
@@ -1241,10 +1294,10 @@ function renderMonthly(){
     return a+n*(+s.value||0);
   },0);
   $('#subBanner').innerHTML=`
-    <div class="cell hot"><div class="k">Monthly recurring</div><div class="big">${fmtMoney(mrr)}</div><div class="k" style="margin-top:2px;">${state.subs.length} subscriptions</div></div>
+    <div class="cell hot"><div class="k">Monthly recurring</div><div class="big">${fmtMoney2(mrr)}</div><div class="k" style="margin-top:2px;">${state.subs.length} subscriptions</div></div>
     <div class="cell paid"><div class="k">Paid this month</div><div class="big">${paidThis}/${state.subs.length}</div></div>
-    <div class="cell"><div class="k">Collected ${subYear}</div><div class="big" style="color:#4BE8A0;">${fmtMoney(collectedYear)}</div></div>
-    <div class="cell"><div class="k">Full-year potential</div><div class="big">${fmtMoney(mrr*12)}</div></div>`;
+    <div class="cell"><div class="k">Collected ${subYear}</div><div class="big" style="color:#4BE8A0;">${fmtMoney2(collectedYear)}</div></div>
+    <div class="cell"><div class="k">Full-year potential</div><div class="big">${fmtMoney2(mrr*12)}</div></div>`;
   if(!state.subs.length){ list.innerHTML='<div class="empty-note">No monthly clients yet — add the first one above.</div>'; return; }
   const head=document.createElement('div'); head.className='sub-grid-head';
   head.innerHTML='<span style="text-align:left;">Client</span>'+MONTHS.map(m=>`<span>${m.slice(0,3)}</span>`).join('')+'<span>Paid</span><span></span>';
@@ -1260,19 +1313,30 @@ function renderMonthly(){
       const due=!isPaid && key===nowKey;
       cells+=`<div class="sub-cell ${isPaid?'paid':due?'due':''}${future?' future':''}" data-k="${key}" title="${MONTHS[m-1]} ${subYear}${isPaid?' — paid ✓':due?' — due now':''}">${isPaid?'✓':due?'€':'·'}</div>`;
     }
-    row.innerHTML=`<div><div class="sub-name">${esc(s.name)}</div><div class="sub-price" title="Click to edit €/month">${fmtMoney(s.value)}/m</div></div>
-      ${cells}<div class="sub-tot">${fmtMoney(paidCount*(+s.value||0))}</div><button class="item-x" title="Remove">✕</button>`;
+    row.innerHTML=`<div><div class="sub-name">${esc(s.name)}</div><div class="sub-price" title="Click to edit exact €/month">${fmtMoney2(s.value)}/m${s.renewDay?` · <span class="sub-day" title="Renewal day of month — click to edit">📅 ${s.renewDay}${s.renewDay==1?'st':s.renewDay==2?'nd':s.renewDay==3?'rd':'th'}</span>`:` · <span class="sub-day" title="Set renewal day">＋ day</span>`}</div></div>
+      ${cells}<div class="sub-tot">${fmtMoney2(paidCount*(+s.value||0))}</div><button class="item-x" title="Remove">✕</button>`;
     row.querySelectorAll('.sub-cell').forEach(cell=>cell.addEventListener('click',()=>{
       const k=cell.dataset.k;
       if(s.paid[k]) delete s.paid[k]; else s.paid[k]=true;
-      save(); renderMonthly();
+      save(); renderMonthly(); renderYear();
     }));
-    row.querySelector('.sub-price').addEventListener('click',()=>{
-      const nv=prompt('€ per month for '+s.name+':', s.value||0);
+    row.querySelector('.sub-price').addEventListener('click',e=>{
+      if(e.target.closest('.sub-day')) return;
+      const nv=prompt('Exact € per month for '+s.name+' (e.g. 11.5):', s.value||0);
       if(nv===null) return;
       const n=parseFloat(String(nv).replace(',','.'));
-      if(!isNaN(n)&&n>=0){ s.value=Math.round(n); save(); renderMonthly(); toast(s.name+' — '+fmtMoney(s.value)+'/month'); }
-      else toast('Enter a number, e.g. 70');
+      if(!isNaN(n)&&n>=0){ s.value=Math.round(n*100)/100; save(); renderMonthly(); renderYear(); toast(s.name+' — '+fmtMoney2(s.value)+'/month'); }
+      else toast('Enter a number, e.g. 11.5');
+    });
+    const dayEl=row.querySelector('.sub-day');
+    if(dayEl) dayEl.addEventListener('click',e=>{
+      e.stopPropagation();
+      const nv=prompt('Day of the month '+s.name+' is paid on (1–31):', s.renewDay||'');
+      if(nv===null) return;
+      const d=parseInt(nv,10);
+      if(!isNaN(d)&&d>=1&&d<=31){ s.renewDay=d; save(); renderMonthly(); toast(s.name+' — paid on day '+d); }
+      else if(nv.trim()===''){ delete s.renewDay; save(); renderMonthly(); }
+      else toast('Enter a day from 1 to 31');
     });
     row.querySelector('.item-x').addEventListener('click',()=>{
       if(confirm('Remove subscription for "'+s.name+'"?')){ state.subs=state.subs.filter(x=>x.id!==s.id); save(); renderMonthly(); }
@@ -1282,9 +1346,9 @@ function renderMonthly(){
 }
 $('#subAdd').addEventListener('click',()=>{
   const n=$('#subName').value.trim(); if(!n){ $('#subName').focus(); return; }
-  state.subs.push({id:uid(), name:n, value:+$('#subVal').value||0, paid:{}, created:Date.now()});
+  state.subs.push({id:uid(), name:n, value:Math.round((+$('#subVal').value||0)*100)/100, paid:{}, created:Date.now()});
   $('#subName').value=''; $('#subVal').value='';
-  save(); renderMonthly(); toast('Subscription added'); $('#subName').focus();
+  save(); renderMonthly(); renderYear(); toast('Subscription added'); $('#subName').focus();
 });
 $('#subName').addEventListener('keydown',e=>{if(e.key==='Enter')$('#subAdd').click();});
 $('#subPrevY').addEventListener('click',()=>{subYear--; renderMonthly();});
