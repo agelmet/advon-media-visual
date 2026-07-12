@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useLangStore } from '@/store/langStore';
 import { ChevronDown } from 'lucide-react';
-import Contact from '@/components/Contact';
 import ScrollReveal from '@/components/ScrollReveal';
 
 export default function FAQ() {
@@ -14,32 +13,32 @@ export default function FAQ() {
     {
       qEl: 'Τι είναι η Advon Media;',
       qEn: 'What is Advon Media?',
-      aEl: 'Είμαστε ένα ψηφιακό marketing agency που ειδικεύεται σε στρατηγική, social media και περιεχόμενο. Δουλεύουμε κυρίως με τοπικές επιχειρήσεις και ελεύθερους επαγγελματίες — ψυχολόγους, θεραπευτές, οδοντίατρους, παιδίατρους, φυσικοθεραπευτές, coaches και κάθε επαγγελματία που θέλει να χτίσει αξιόπιστη ψηφιακή παρουσία και να προσελκύσει νέους πελάτες online.',
-      aEn: 'We are a digital marketing agency specializing in strategy, social media, and content. We primarily work with local businesses and freelancers — psychologists, therapists, dentists, pediatricians, physiotherapists, coaches, and any professional wanting to build a reliable digital presence and attract new clients online.'
+      aEl: 'Φτιάχνουμε ιστοσελίδες & ψηφιακά εργαλεία για ελληνικές επιχειρήσεις. Δουλεύουμε κυρίως με τοπικές επιχειρήσεις και ελεύθερους επαγγελματίες — ψυχολόγους, θεραπευτές, γιατρούς, κομμωτήρια, καταλύματα, εστίαση — και κάθε επαγγελματία που θέλει να τον βρίσκουν, να τον εμπιστεύονται και να κλείνει δουλειές online.',
+      aEn: 'We build websites & digital tools for Greek businesses. We primarily work with local businesses and freelancers — psychologists, therapists, doctors, hair salons, accommodations, restaurants — and any professional who wants to be found, trusted, and booked online.'
     },
     {
       qEl: 'Ποιες υπηρεσίες προσφέρετε;',
       qEn: 'What services do you offer?',
-      aEl: 'Προσφέρουμε τρεις βασικές υπηρεσίες:<br><br>1. <strong>Κατασκευή Ιστοσελίδας</strong> — Επαγγελματική, SEO-βελτιστοποιημένη ιστοσελίδα.<br>2. <strong>Βάση Αξιολογήσεων (NFC)</strong> — Σύστημα που βοηθά την επιχείρησή σου να συλλέγει 50+ νέες αξιολογήσεις Google κάθε μήνα.<br>3. <strong>Διαχείριση Social Media</strong> — Επαγγελματικά posts, έρευνα hashtag, copywriting και μηνιαίες αναφορές.',
-      aEn: 'We offer three core services:<br><br>1. <strong>Website Creation</strong> — Professional, SEO-optimized website.<br>2. <strong>Reviews Base (NFC)</strong> — System helping your business collect 50+ new Google reviews monthly.<br>3. <strong>Social Media Management</strong> — Professional posts, hashtag research, copywriting, and monthly reports.'
+      aEl: 'Οι βασικές μας υπηρεσίες:<br><br>1. <strong>Κατασκευή Ιστοσελίδων</strong> — δίγλωσση, γρήγορη σελίδα χωρίς προκαταβολή.<br>2. <strong>Παρουσία στο Google</strong> — NFC stand για κριτικές και πλήρες στήσιμο του προφίλ σας στο Google Maps.<br>3. <strong>Online Ραντεβού</strong> — δική σας σελίδα κρατήσεων με αυτόματες υπενθυμίσεις.<br>4. <strong>AI Βοηθός Ιστοσελίδας</strong> — απαντά στους επισκέπτες σας όλο το 24ωρο.<br>5. <strong>Direct Booking για Τουρισμό</strong> — κρατήσεις χωρίς προμήθειες.<br>6. <strong>Ψηφιακό Μενού QR</strong> — δίγλωσσος κατάλογος χωρίς επανεκτυπώσεις.<br>7. <strong>Custom Μικρό Λογισμικό</strong> — πρόγραμμα φτιαγμένο για τον δικό σας τρόπο δουλειάς.<br><br>Ακόμη: ιστοσελίδες γάμου & βάπτισης, υπολογιστές κόστους και διαχείριση social media.',
+      aEn: 'Our core services:<br><br>1. <strong>Website Creation</strong> — a bilingual, fast website with no deposit.<br>2. <strong>Google Presence</strong> — an NFC review stand plus full Google Maps profile setup.<br>3. <strong>Online Appointments</strong> — your own booking page with automatic reminders.<br>4. <strong>Website AI Assistant</strong> — answers your visitors around the clock.<br>5. <strong>Direct Booking for Tourism</strong> — commission-free bookings.<br>6. <strong>QR Digital Menu</strong> — a bilingual menu with no reprints.<br>7. <strong>Custom Small Software</strong> — built around the way you work.<br><br>Also: wedding & christening websites, cost calculators and social media management.'
     },
     {
       qEl: 'Γιατί η κατασκευή ιστοσελίδας είναι δωρεάν; Ποιο είναι το catch;',
       qEn: "Why is the website creation free? What's the catch?",
-      aEl: 'Δεν υπάρχει catch. Πιστεύουμε ότι κάθε επαγγελματίας αξίζει να έχει αξιόπιστη online παρουσία — ανεξάρτητα από προϋπολογισμό. Ο στόχος μας είναι να βοηθήσουμε να είσαι ορατός στο διαδίκτυο, χωρίς να επενδύσεις χιλιάδες ευρώ στην κατασκευή.<br><br>Χτίζουμε την ιστοσελίδα χωρίς κόστος κατασκευής. Το μόνο που χρειάζεται να πληρώσεις είναι το hosting — <strong>€10,83 τον μήνα</strong>. Δεν υπάρχουν κρυφές χρεώσεις και δεν υπάρχει «δέσμευση» συμβολαίου.',
-      aEn: 'There is no catch. We believe every professional deserves a reliable online presence — regardless of budget. Our goal is to help you become visible online without investing thousands in web development.<br><br>We build the website with no construction fees. You only pay for the hosting — <strong>€10.83 per month</strong>. There are no hidden fees and no lock-in contracts.'
+      aEl: 'Δεν υπάρχει catch. Πιστεύουμε ότι κάθε επαγγελματίας αξίζει να έχει αξιόπιστη online παρουσία — ανεξάρτητα από προϋπολογισμό.<br><br>Χτίζουμε την ιστοσελίδα χωρίς κόστος κατασκευής και χωρίς προκαταβολή. Το μόνο που πληρώνετε είναι η φιλοξενία — και αυτή, μόνο όταν παραδοθεί το πρώτο δείγμα της σελίδας σας. Δεν υπάρχουν κρυφές χρεώσεις.',
+      aEn: 'There is no catch. We believe every professional deserves a reliable online presence — regardless of budget.<br><br>We build the website with no construction fee and no deposit. The only thing you pay is the hosting — and only once the first draft of your website is delivered. There are no hidden fees.'
     },
     {
-      qEl: 'Τι σημαίνει «hosting» και γιατί κοστίζει €10,83/μήνα;',
-      qEn: 'What does "hosting" mean and why does it cost €10.83/mo?',
-      aEl: 'Το hosting είναι το «ενοίκιο» που πληρώνεις για τον χώρο στον server όπου φιλοξενείται η ιστοσελίδα σου. Χωρίς αυτό η σελίδα δεν είναι ορατή στο διαδίκτυο. Τα €10,83/μήνα καλύπτουν τον server, την ασφάλεια, τα backups και τη συνεχή λειτουργία της. Μπορείς να σταματήσεις οποιαδήποτε στιγμή.',
-      aEn: 'Hosting is the "rent" you pay for space on a server where your website lives. Without it, your site isn\'t visible on the internet. The €10.83/month covers the server, security, backups, and uptime. You can cancel at any time.'
+      qEl: 'Τι σημαίνει «φιλοξενία» (hosting);',
+      qEn: 'What does "hosting" mean?',
+      aEl: 'Η φιλοξενία είναι το «ενοίκιο» για τον χώρο στον server όπου ζει η ιστοσελίδα σας — χωρίς αυτήν, η σελίδα δεν είναι ορατή στο διαδίκτυο. Καλύπτει τον server, το domain, την ασφάλεια, τα backups και τη συνεχή λειτουργία της σελίδας.',
+      aEn: 'Hosting is the "rent" for the server space where your website lives — without it, the site isn\'t visible on the internet. It covers the server, the domain, security, backups, and keeping your site online.'
     },
     {
       qEl: 'Πόσο διαρκεί η παράδοση μιας ιστοσελίδας;',
       qEn: 'How long does website delivery take?',
-      aEl: 'Από τη στιγμή που έχουμε λάβει όλο το υλικό — φωτογραφίες, κείμενα, λογότυπο, και ό,τι άλλο χρειαστεί — μπορούμε να ολοκληρώσουμε την κατασκευή σε <strong>5–10 εργάσιμες ημέρες</strong>.',
-      aEn: 'Once we have received all the necessary material — photos, text, logo, etc. — we can complete the website construction in <strong>5–10 business days</strong>.'
+      aEl: 'Από τη στιγμή που έχουμε λάβει όλο το υλικό — φωτογραφίες, κείμενα, λογότυπο, και ό,τι άλλο χρειαστεί — παραδίδουμε το πρώτο δείγμα σε <strong>7–14 ημέρες</strong>. Από εκεί, κάνουμε όσες αλλαγές χρειαστούν μέχρι να είναι ακριβώς όπως τη θέλετε.',
+      aEn: 'Once we have received all the material — photos, texts, logo, and anything else needed — we deliver the first draft within <strong>7–14 days</strong>. From there, we make as many changes as needed until it\'s exactly how you want it.'
     },
     {
       qEl: 'Πώς μπορώ να επικοινωνήσω μαζί σας;',
@@ -94,7 +93,6 @@ export default function FAQ() {
           </div>
         </div>
       </section>
-      <Contact />
     </div>
   );
 }

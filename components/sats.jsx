@@ -43,7 +43,7 @@ export default function Stats() {
 
   const stats = [
     { end: 3,   suffix: '+', labelEl: 'ΧΡΟΝΙΑ ΕΜΠΕΙΡΙΑΣ', labelEn: 'YEARS EXPERIENCE' },
-    { end: 175, suffix: '+', labelEl: 'ΠΕΛΑΤΕΣ',           labelEn: 'CLIENTS' },
+    { end: 200, suffix: '+', labelEl: 'ΙΣΤΟΣΕΛΙΔΕΣ',       labelEn: 'WEBSITES' },
     { end: 100, suffix: '%', labelEl: 'ΕΠΙΤΥΧΙΑ',          labelEn: 'SUCCESS' },
     { end: 100, suffix: '+', labelEl: 'ΑΞΙΟΛΟΓΗΣΕΙΣ',      labelEn: '5-STAR REVIEWS' },
   ];

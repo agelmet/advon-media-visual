@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLangStore } from '@/store/langStore';
+import { services } from '@/lib/services';
 
 export default function Header() {
   const { lang, toggleLang } = useLangStore();
@@ -95,17 +96,13 @@ export default function Header() {
             </div>
             <div className="absolute top-full left-[-20px] hidden group-hover:block z-[100] pt-2">
               <div className="bg-[rgba(5,10,14,0.97)] min-w-[250px] rounded-2xl border border-electric-cyan/20 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(71,200,245,0.05)] py-2 overflow-hidden">
-                {[
-                  { href: '/kataskevi-istoselidas', el: 'Κατασκευή Ιστοσελίδας', en: 'Website Creation' },
-                  { href: '/google-reviews-nfc',    el: 'Βάση Αξιολογήσεων',    en: 'Reviews Base' },
-                  { href: '/diaxeirisi-social-media', el: 'Διαχείριση Social Media', en: 'Social Media Management' },
-                ].map((item) => (
+                {services.map((service) => (
                   <Link
-                    key={item.href}
-                    href={item.href}
+                    key={service.slug}
+                    href={`/${service.slug}`}
                     className="block text-[#d1d5db] px-5 py-3 text-[0.875rem] hover:bg-electric-cyan/8 hover:text-electric-cyan border-l-2 border-transparent hover:border-electric-cyan transition-all duration-200"
                   >
-                    {lang === 'el' ? item.el : item.en}
+                    {service.nav[lang]}
                   </Link>
                 ))}
               </div>
@@ -163,15 +160,17 @@ export default function Header() {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden bg-[#050a0e]/97 backdrop-blur-xl border-b border-electric-cyan/15 overflow-hidden transition-all duration-400 ${isMobileMenuOpen ? 'max-h-[520px] opacity-100' : 'max-h-0 opacity-0'}`}
+        className={`md:hidden bg-[#050a0e]/97 backdrop-blur-xl border-b border-electric-cyan/15 transition-all duration-400 ${isMobileMenuOpen ? 'max-h-[calc(100vh-7rem)] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0 overflow-hidden'}`}
       >
         <nav className="flex flex-col p-6 gap-4 text-lg font-medium text-electric-cyan">
           <Link href="/"                        onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Αρχική' : 'Home'}</Link>
           <div className="pl-4 border-l border-electric-cyan/20 flex flex-col gap-3 my-1">
             <span className="text-xs text-gray-500 uppercase font-black tracking-widest">{lang === 'el' ? 'Υπηρεσίες' : 'Services'}</span>
-            <Link href="/kataskevi-istoselidas"    onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Κατασκευή Ιστοσελίδας' : 'Website Creation'}</Link>
-            <Link href="/google-reviews-nfc"       onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Βάση Αξιολογήσεων' : 'Reviews Base'}</Link>
-            <Link href="/diaxeirisi-social-media"  onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Διαχείριση Social Media' : 'Social Media Management'}</Link>
+            {services.map((service) => (
+              <Link key={service.slug} href={`/${service.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors text-base">
+                {service.nav[lang]}
+              </Link>
+            ))}
           </div>
           <Link href="/kataskevi-istoselidas#portfolio" onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Πορτφόλιο' : 'Portfolio'}</Link>
           <Link href="/#reviews"                onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Αξιολογήσεις' : 'Reviews'}</Link>

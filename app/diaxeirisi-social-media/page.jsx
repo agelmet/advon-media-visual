@@ -54,12 +54,11 @@ export default function SocialMedia() {
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-black font-display mb-8 text-white tracking-tight">
           {lang === 'el' ? 'Διαχείριση Social Media' : 'Social Media Management'}
         </h1>
-        <div className="inline-flex items-end gap-3 bg-electric-cyan/8 border border-electric-cyan/30 px-6 py-3 rounded-full badge-scan">
-          <span className="text-3xl font-black text-white">87€</span>
-          <span className="text-electric-cyan font-bold mb-1 uppercase tracking-widest text-sm">
-            {lang === 'el' ? '/ΜΗΝΑ' : '/MONTH'}
-          </span>
-        </div>
+        <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          {lang === 'el'
+            ? 'Επαγγελματικά posts και συνέπεια στα προφίλ σας — χωρίς να χρειάζεται να το σκέφτεστε εσείς.'
+            : 'Professional posts and consistency on your profiles — without you having to think about it.'}
+        </p>
       </ScrollReveal>
 
       {/* Main Panel */}
@@ -128,7 +127,7 @@ export default function SocialMedia() {
             <div className="p-8 rounded-2xl bg-gradient-to-r from-electric-cyan/10 to-transparent border-l-4 border-electric-cyan text-left flex flex-col md:flex-row items-center justify-between gap-8">
               <div>
                 <h3 className="text-xl font-black text-white mb-2">{lang === 'el' ? 'Αποτέλεσμα: Περισσότεροι Πελάτες' : 'Result: More Clients'}</h3>
-                <p className="text-gray-300 text-sm">{lang === 'el' ? 'Δείτε αυξημένη αλληλεπίδραση και ένα προφίλ που δημιουργεί εμπιστοσύνη με 87€/μήνα.' : 'See increased interaction and a profile that builds trust for 87€/month.'}</p>
+                <p className="text-gray-300 text-sm">{lang === 'el' ? 'Δείτε αυξημένη αλληλεπίδραση και ένα προφίλ που δημιουργεί εμπιστοσύνη.' : 'See increased interaction and a profile that builds trust.'}</p>
               </div>
               <a href="mailto:angelos@advonmedia.com" className="btn-premium px-8 py-3.5 bg-electric-cyan text-[#050a0e] font-bold rounded-xl whitespace-nowrap hover:bg-white transition-colors text-sm uppercase tracking-wide">
                 {lang === 'el' ? 'Στείλτε Email' : 'Send Email'}

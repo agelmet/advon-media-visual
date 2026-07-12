@@ -7,13 +7,16 @@ import Contact from '@/components/Contact';
 import CustomCursor from '@/components/CustomCursor';
 
 export const metadata = {
-  title: 'Κατασκευή Ιστοσελίδων | Web Design & SEO - Advon Media',
-  description: 'Κορυφαία κατασκευή ιστοσελίδων στην Ελλάδα. Επαγγελματικό Web Design, ταχύτατη φόρτωση, Mobile Responsive και πλήρης SEO βελτιστοποίηση. Ανεβείτε στην 1η σελίδα της Google.',
+  metadataBase: new URL('https://advonmedia.com'),
+  title: 'Κατασκευή Ιστοσελίδων & Ψηφιακά Εργαλεία | Advon Media',
+  description:
+    'Ιστοσελίδες & ψηφιακά εργαλεία για ελληνικές επιχειρήσεις: κατασκευή ιστοσελίδων χωρίς προκαταβολή, κριτικές Google, online ραντεβού, direct booking, AI βοηθός.',
   icons: {
     icon: 'https://raw.githubusercontent.com/agelmet/Advon-Media/refs/heads/main/logo.png',
     apple: 'https://raw.githubusercontent.com/agelmet/Advon-Media/refs/heads/main/logo.png',
   },
   openGraph: {
+    siteName: 'Advon Media',
     images: ['https://raw.githubusercontent.com/agelmet/Advon-Media/refs/heads/main/logo.png'],
   },
 };
@@ -30,6 +33,8 @@ export default function RootLayout({ children }) {
         </main>
         <Contact />
         <Footer />
+        {/* Advon AI assistant — live demo, embedded site-wide */}
+        <script src="https://advon-services.vercel.app/widget.js" data-site-id="advon" defer></script>
       </body>
     </html>
   );
