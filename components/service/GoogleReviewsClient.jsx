@@ -73,7 +73,7 @@ export default function GoogleReviewsClient() {
       <IncludesSection service={service} />
       <ProofStrip />
       <FaqSection service={service} />
-      <CtaBand service={service} />
+      <CtaBand />
     </>
   );
 }

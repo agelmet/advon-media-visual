@@ -27,7 +27,7 @@ export default function ServicePageClient({ slug }) {
       <IncludesSection service={service} />
       <ProofStrip />
       <FaqSection service={service} />
-      <CtaBand service={service} />
+      <CtaBand />
     </>
   );
 }

@@ -286,42 +286,76 @@ export default function HomeClient() {
             </p>
           </ScrollReveal>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service, i) => (
-              <ScrollReveal
-                key={service.slug}
-                delay={(i % 3) * 120}
-                direction={i % 3 === 0 ? 'left' : i % 3 === 2 ? 'right' : 'up'}
-                className={`h-full ${i === services.length - 1 ? 'lg:col-start-2' : ''}`}
-              >
-                <TiltCard className="h-full">
-                  <div className="glass-panel service-card card-sweep rounded-3xl p-8 flex flex-col h-full group">
-                    <div className="w-14 h-14 rounded-2xl bg-electric-cyan/10 border border-electric-cyan/20 flex items-center justify-center mb-6 text-electric-cyan group-hover:bg-electric-cyan/20 group-hover:scale-110 transition-all duration-300">
-                      {ICONS[service.icon]('w-7 h-7')}
+          {/* 3 + 4 symmetric grid: three anchor services on row one (span 4/12),
+              four on row two (span 3/12); tablet gets a full-width 7th card. */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 items-stretch">
+            {services.map((service, i) => {
+              const isKataskevi = service.slug === 'kataskevi-istoselidas';
+              const span = i < 3 ? 'lg:col-span-4' : 'lg:col-span-3';
+              const tabletFix = i === services.length - 1 ? 'md:col-span-2 lg:col-span-3' : '';
+              return (
+                <ScrollReveal
+                  key={service.slug}
+                  delay={(i % 4) * 100}
+                  direction="up"
+                  className={`h-full ${span} ${tabletFix}`}
+                >
+                  <TiltCard className="h-full">
+                    <div className="glass-panel service-card card-sweep rounded-3xl p-8 flex flex-col h-full group">
+                      <div className="w-14 h-14 rounded-2xl bg-electric-cyan/10 border border-electric-cyan/20 flex items-center justify-center mb-6 text-electric-cyan group-hover:bg-electric-cyan/20 group-hover:scale-110 transition-all duration-300">
+                        {ICONS[service.icon]('w-7 h-7')}
+                      </div>
+                      {isKataskevi && (
+                        <div className="flex items-baseline gap-2 mb-4">
+                          <span className="text-3xl font-black price-gradient">{lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE'}</span>
+                          <span className="text-sm text-gray-500">{lang === 'el' ? '(10.83€/μήνα hosting)' : '(10.83€/mo hosting)'}</span>
+                        </div>
+                      )}
+                      <h3 className="text-xl font-bold mb-4 font-display text-white">{service.nav[lang]}</h3>
+                      {isKataskevi ? (
+                        <>
+                          <p className="text-gray-400 mb-5 leading-relaxed text-sm">
+                            {lang === 'el' ? 'Επαγγελματική ιστοσελίδα που κατακτά υψηλές θέσεις στη Google.' : 'Professional website that conquers high rankings on Google.'}
+                          </p>
+                          <ul className="space-y-2.5 mb-5">
+                            {[
+                              { el: 'Επαγγελματικός σχεδιασμός', en: 'Professional design' },
+                              { el: 'SEO βελτιστοποίηση', en: 'SEO optimization' },
+                              { el: 'Mobile responsive', en: 'Mobile responsive' },
+                              { el: 'Απεριόριστες αλλαγές μέχρι την τελειότητα', en: 'Unlimited changes until perfection' },
+                            ].map((item) => (
+                              <li key={item.en} className="flex items-start gap-3 text-sm text-gray-400 leading-relaxed">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5 icon-glow"><polyline points="20 6 9 17 4 12"/></svg>
+                                {item[lang]}
+                              </li>
+                            ))}
+                          </ul>
+                        </>
+                      ) : (
+                        <ul className="space-y-2.5 mb-5">
+                          {service.card.points.map((pi) => (
+                            <li key={pi} className="flex items-start gap-3 text-sm text-gray-400 leading-relaxed">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5 icon-glow"><polyline points="20 6 9 17 4 12"/></svg>
+                              {service.includes[pi][lang]}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      <div className="mb-7 flex-grow">
+                        <PitchQuote compact>{service.pitch[lang]}</PitchQuote>
+                      </div>
+                      <Link
+                        href={`/${service.slug}`}
+                        className="btn-premium flex items-center justify-center gap-2 w-full py-3.5 bg-electric-cyan text-[#050a0e] font-bold rounded-xl hover:bg-white transition-colors uppercase text-sm tracking-wide mt-auto"
+                      >
+                        {service.card.cta[lang]}
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                      </Link>
                     </div>
-                    <h3 className="text-xl font-bold mb-4 font-display text-white">{service.nav[lang]}</h3>
-                    <ul className="space-y-2.5 mb-5">
-                      {service.card.points.map((pi) => (
-                        <li key={pi} className="flex items-start gap-3 text-sm text-gray-400 leading-relaxed">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5 icon-glow"><polyline points="20 6 9 17 4 12"/></svg>
-                          {service.includes[pi][lang]}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mb-7 flex-grow">
-                      <PitchQuote compact>{service.pitch[lang]}</PitchQuote>
-                    </div>
-                    <Link
-                      href={`/${service.slug}`}
-                      className="btn-premium flex items-center justify-center gap-2 w-full py-3.5 bg-electric-cyan text-[#050a0e] font-bold rounded-xl hover:bg-white transition-colors uppercase text-sm tracking-wide mt-auto"
-                    >
-                      {service.card.cta[lang]}
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                    </Link>
-                  </div>
-                </TiltCard>
-              </ScrollReveal>
-            ))}
+                  </TiltCard>
+                </ScrollReveal>
+              );
+            })}
           </div>
 
           {/* ── «Ακόμη» strip ── */}

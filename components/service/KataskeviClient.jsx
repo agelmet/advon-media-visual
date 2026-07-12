@@ -9,8 +9,8 @@ import { useLangStore } from '@/store/langStore';
 import { portfolioData } from '@/lib/data';
 import { getService } from '@/lib/services';
 import ScrollReveal from '@/components/ScrollReveal';
+import PitchQuote from '@/components/PitchQuote';
 import {
-  ServiceHero,
   PainSection,
   StepsSection,
   IncludesSection,
@@ -25,7 +25,110 @@ export default function KataskeviClient() {
 
   return (
     <>
-      <ServiceHero service={service} />
+      {/* ─── HERO — the original «ΔΩΡΕΑΝ» treatment, restored ─── */}
+      <section className="pt-16 pb-16 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[560px] bg-[radial-gradient(ellipse,rgba(71,200,245,0.09)_0%,transparent_65%)] blur-[80px]" />
+          <div
+            className="absolute inset-x-0 top-0 h-[460px]"
+            style={{
+              backgroundImage:
+                'linear-gradient(rgba(71,200,245,0.05) 1px, transparent 1px),' +
+                'linear-gradient(90deg, rgba(71,200,245,0.05) 1px, transparent 1px)',
+              backgroundSize: '64px 64px',
+              maskImage: 'radial-gradient(ellipse 80% 90% at 50% 0%, black 10%, transparent 70%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 80% 90% at 50% 0%, black 10%, transparent 70%)',
+            }}
+          />
+        </div>
+        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+          <ScrollReveal>
+            <span className="section-label">{lang === 'el' ? 'Υπηρεσία' : 'Service'}</span>
+            <h1
+              className="font-black font-display mb-10 text-white tracking-tight leading-[1.06]"
+              style={{ fontSize: 'clamp(2.6rem, 6vw, 4.5rem)' }}
+            >
+              {service.h1[lang]}
+            </h1>
+          </ScrollReveal>
+
+          {/* ── ΤΙΜΗ ΚΑΤΑΣΚΕΥΗΣ — anchor price struck out, ΔΩΡΕΑΝ centerpiece ── */}
+          <ScrollReveal delay={100}>
+            <span className="text-electric-cyan text-xs font-bold tracking-widest uppercase mb-6 block">
+              {lang === 'el' ? 'ΤΙΜΗ ΚΑΤΑΣΚΕΥΗΣ' : 'CREATION PRICE'}
+            </span>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-8 mb-5">
+              {/* Anchor / original price — crossed out with hand-drawn SVG line */}
+              <div className="relative inline-block">
+                <span className="text-2xl md:text-3xl font-bold text-gray-400/75 tracking-tight whitespace-nowrap select-none">
+                  700€ – 5.000€
+                </span>
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 210 40"
+                  fill="none"
+                  className="absolute inset-0 w-full h-full pointer-events-none"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    d="M6,32 C45,25 95,16 140,10 C168,6 190,4 204,2"
+                    stroke="#ef4444"
+                    strokeWidth="3.8"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M4,34 C48,28 99,19 144,13 C171,9 192,6 206,4"
+                    stroke="#ef4444"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    opacity="0.45"
+                  />
+                </svg>
+              </div>
+              <span className="free-pulse text-7xl md:text-8xl font-black text-white tracking-tight leading-none">
+                {lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE'}
+              </span>
+            </div>
+            <p className="text-lg md:text-xl text-gray-300 mb-3">
+              {lang === 'el' ? (
+                <>Μόνο <span className="text-white font-black">10.83€/μήνα</span> — όλα περιλαμβάνονται</>
+              ) : (
+                <>Only <span className="text-white font-black">10.83€/month</span> — everything included</>
+              )}
+            </p>
+            <p className="text-sm text-gray-500 leading-relaxed max-w-2xl mx-auto mb-8">
+              {lang === 'el'
+                ? 'Η κατασκευή είναι πραγματικά δωρεάν — το ποσό αυτό καλύπτει αποκλειστικά τα απαραίτητα λειτουργικά που χρειάζεται κάθε ιστοσελίδα για να είναι online, όσα θα πληρώνατε ούτως ή άλλως, όπου κι αν την φτιάχνατε. Εδώ, τα έχετε όλα σε ένα, χωρίς τίποτα επιπλέον.'
+                : "The build itself is genuinely free — this amount covers only the essential running services every website needs to stay online, what you would pay anyway, wherever you had it built. Here, it's all in one, with nothing extra on top."}
+            </p>
+            {/* Included-items chips */}
+            <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-3xl mx-auto">
+              {[
+                { el: 'Φιλοξενία (hosting)', en: 'Hosting' },
+                { el: 'Domain name της επιλογής σας', en: 'Domain name of your choice' },
+                { el: 'Ασφάλεια', en: 'Security' },
+                { el: 'Αυτόματα backups', en: 'Automatic backups' },
+              ].map(({ el, en }) => (
+                <span
+                  key={en}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-electric-cyan/8 border border-electric-cyan/25 text-sm font-semibold text-gray-200 whitespace-nowrap"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 text-electric-cyan shrink-0"><polyline points="20 6 9 17 4 12"/></svg>
+                  {lang === 'el' ? el : en}
+                </span>
+              ))}
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/4 border border-white/12 text-sm font-semibold text-gray-400 whitespace-nowrap">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 shrink-0"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                {lang === 'el' ? 'και άλλα' : 'and more'}
+              </span>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={160} direction="scale">
+            <PitchQuote className="text-left mt-12 max-w-3xl mx-auto">{service.pitch[lang]}</PitchQuote>
+          </ScrollReveal>
+        </div>
+      </section>
       <PainSection service={service} />
       <StepsSection service={service} />
       <IncludesSection service={service} />
@@ -86,7 +189,7 @@ export default function KataskeviClient() {
       </section>
 
       <FaqSection service={service} />
-      <CtaBand service={service} />
+      <CtaBand />
     </>
   );
 }
