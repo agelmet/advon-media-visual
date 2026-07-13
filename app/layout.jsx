@@ -1,5 +1,6 @@
 // app/layout.jsx
 import './globals.css';
+import Script from 'next/script';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Background from '@/components/Background';
@@ -33,8 +34,14 @@ export default function RootLayout({ children }) {
         </main>
         <Contact />
         <Footer />
-        {/* Advon AI assistant — live demo, embedded site-wide */}
-        <script src="https://advon-services.vercel.app/widget.js" data-site-id="advon" defer></script>
+        {/* Advon AI assistant — live demo, embedded site-wide.
+            next/script (afterInteractive) so the loader runs reliably on
+            every route, independent of hydration order. */}
+        <Script
+          src="https://advon-services.vercel.app/widget.js"
+          data-site-id="advon"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

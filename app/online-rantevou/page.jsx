@@ -1,7 +1,7 @@
 // app/online-rantevou/page.jsx
 import { getService } from '@/lib/services';
 import { serviceMetadata, ServiceSchema } from '@/lib/schema';
-import ServicePageClient from '@/components/service/ServicePageClient';
+import RantevouClient from '@/components/service/RantevouClient';
 
 const service = getService('online-rantevou');
 
@@ -11,7 +11,7 @@ export default function Page() {
   return (
     <>
       <ServiceSchema service={service} />
-      <ServicePageClient slug="online-rantevou" />
+      <RantevouClient />
     </>
   );
 }

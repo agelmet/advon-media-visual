@@ -1,7 +1,7 @@
 // app/direct-booking/page.jsx
 import { getService } from '@/lib/services';
 import { serviceMetadata, ServiceSchema } from '@/lib/schema';
-import ServicePageClient from '@/components/service/ServicePageClient';
+import DirectBookingClient from '@/components/service/DirectBookingClient';
 
 const service = getService('direct-booking');
 
@@ -11,7 +11,7 @@ export default function Page() {
   return (
     <>
       <ServiceSchema service={service} />
-      <ServicePageClient slug="direct-booking" />
+      <DirectBookingClient />
     </>
   );
 }

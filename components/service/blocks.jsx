@@ -1,7 +1,7 @@
 // components/service/blocks.jsx
-// Shared building blocks for dedicated service pages. Composed by
-// ServicePageClient (standard pages) and by the custom rebuilt pages
-// (kataskevi-istoselidas, google-reviews-nfc).
+// Shared building blocks for dedicated service pages. Each page has its
+// own client component (KataskeviClient, RantevouClient, …) that composes
+// these blocks around its signature visual element.
 'use client';
 
 import { useState } from 'react';
@@ -55,7 +55,73 @@ export const ICONS = {
   check: (cls = 'w-5 h-5') => (
     <svg {...iconProps} strokeWidth="2.5" className={cls}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
   ),
+  smartphone: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+  ),
+  refresh: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+  ),
+  bell: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+  ),
+  users: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  ),
+  message: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+  ),
+  clock: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+  ),
+  send: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+  ),
+  chart: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+  ),
+  sparkles: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/></svg>
+  ),
+  pen: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+  ),
+  printer: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+  ),
+  monitor: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+  ),
+  database: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
+  ),
+  layout: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg>
+  ),
+  zap: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+  ),
+  shield: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+  ),
 };
+
+/* ─── highlight(): wrap given substrings of a copy string in cyan.
+       Copy itself stays verbatim — this is typography only. ─── */
+export function highlight(text, marks = []) {
+  let parts = [text];
+  for (const m of marks) {
+    parts = parts.flatMap((part) => {
+      if (typeof part !== 'string' || !part.includes(m)) return [part];
+      const out = [];
+      part.split(m).forEach((seg, i) => {
+        if (i > 0) out.push(<span key={`${m}-${i}`} className="text-electric-cyan">{m}</span>);
+        if (seg) out.push(seg);
+      });
+      return out;
+    });
+  }
+  return parts;
+}
 
 /* ─── Hero: label + oversized H1 + pitch quote (+ optional subline) ─── */
 export function ServiceHero({ service, children }) {
@@ -180,10 +246,14 @@ export function StepsSection({ service }) {
   );
 }
 
-/* ─── «Τι περιλαμβάνει» — icon + short-line grid ─── */
-export function IncludesSection({ service }) {
+/* ─── «Τι περιλαμβάνει» — icon + short-line grid.
+       `icons`: optional array of ICONS keys, one per item (default: check).
+       `items`: optional override when a page pulls an item out of the grid
+       to art-direct it elsewhere (copy unchanged, placement only). ─── */
+export function IncludesSection({ service, icons, items }) {
   const { lang } = useLangStore();
-  const twoCol = service.includes.length !== 3;
+  const list = items || service.includes;
+  const twoCol = list.length !== 3;
   return (
     <section className="py-24">
       <div className="max-w-5xl mx-auto px-6">
@@ -194,16 +264,16 @@ export function IncludesSection({ service }) {
           </h2>
         </ScrollReveal>
         <div className={`grid gap-5 ${twoCol ? 'sm:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-3'}`}>
-          {service.includes.map((item, i) => (
+          {list.map((item, i) => (
             <ScrollReveal
               key={i}
               delay={(i % 2) * 90 + Math.floor(i / 2) * 50}
               direction={i % 2 === 0 ? 'left' : 'right'}
-              className={`h-full ${twoCol && service.includes.length % 2 === 1 && i === service.includes.length - 1 ? 'sm:col-span-2' : ''}`}
+              className={`h-full ${twoCol && list.length % 2 === 1 && i === list.length - 1 ? 'sm:col-span-2' : ''}`}
             >
               <div className="glass-panel card-sweep rounded-2xl p-6 flex items-start gap-4 h-full group">
                 <div className="w-11 h-11 rounded-xl bg-electric-cyan/10 border border-electric-cyan/20 flex items-center justify-center text-electric-cyan shrink-0 icon-glow group-hover:bg-electric-cyan/20 transition-colors duration-300">
-                  {ICONS.check('w-5 h-5')}
+                  {(icons && ICONS[icons[i]] ? ICONS[icons[i]] : ICONS.check)('w-5 h-5')}
                 </div>
                 <p className="text-gray-200 text-[0.95rem] leading-relaxed pt-1">{item[lang]}</p>
               </div>

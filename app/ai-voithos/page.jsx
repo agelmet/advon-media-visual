@@ -1,7 +1,7 @@
 // app/ai-voithos/page.jsx
 import { getService } from '@/lib/services';
 import { serviceMetadata, ServiceSchema } from '@/lib/schema';
-import ServicePageClient from '@/components/service/ServicePageClient';
+import AiVoithosClient from '@/components/service/AiVoithosClient';
 
 const service = getService('ai-voithos');
 
@@ -11,7 +11,7 @@ export default function Page() {
   return (
     <>
       <ServiceSchema service={service} />
-      <ServicePageClient slug="ai-voithos" />
+      <AiVoithosClient />
     </>
   );
 }
