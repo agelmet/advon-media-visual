@@ -1,5 +1,6 @@
 // app/sitemap.js
 import { services, SITE_URL } from '@/lib/services';
+import { posts } from '@/lib/blog';
 
 export default function sitemap() {
   const now = new Date();
@@ -7,7 +8,7 @@ export default function sitemap() {
   const staticPages = [
     { url: `${SITE_URL}/`, priority: 1 },
     { url: `${SITE_URL}/faq`, priority: 0.5 },
-    { url: `${SITE_URL}/blog`, priority: 0.5 },
+    { url: `${SITE_URL}/blog`, priority: 0.6 },
     { url: `${SITE_URL}/diaxeirisi-social-media`, priority: 0.6 },
     { url: `${SITE_URL}/privacy-policy`, priority: 0.2 },
     { url: `${SITE_URL}/terms`, priority: 0.2 },
@@ -18,7 +19,12 @@ export default function sitemap() {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...servicePages].map((page) => ({
+  const blogPosts = posts.map((post) => ({
+    url: `${SITE_URL}/blog/${post.slug}`,
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...servicePages, ...blogPosts].map((page) => ({
     ...page,
     lastModified: now,
     changeFrequency: 'monthly',

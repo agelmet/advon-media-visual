@@ -6,7 +6,55 @@
 import { useLangStore } from '@/store/langStore';
 import ScrollReveal from '@/components/ScrollReveal';
 import TiltCard from '@/components/TiltCard';
-import { CtaBand } from '@/components/service/blocks';
+import { CtaBand, FaqSection } from '@/components/service/blocks';
+
+const SOCIAL_FAQS = [
+  {
+    q: { el: 'Τι χρειάζεται να ετοιμάζω εγώ κάθε μήνα;', en: 'What do I need to prepare each month?' },
+    a: {
+      el: 'Μόνο φωτογραφίες από τη δουλειά και τον χώρο σας. Τα υπόλοιπα — εικαστικά, κείμενα, hashtags, προγραμματισμός και δημοσίευση — είναι δική μας δουλειά.',
+      en: 'Only photos of your work and your space. Everything else — visuals, copy, hashtags, scheduling and publishing — is on us.',
+    },
+  },
+  {
+    q: { el: 'Σε ποια δίκτυα δημοσιεύετε;', en: 'Which networks do you post on?' },
+    a: {
+      el: 'Στα προφίλ που έχει ήδη η επιχείρησή σας — συνήθως Instagram και Facebook. Αν δεν υπάρχουν ακόμα, τα στήνουμε σωστά από την αρχή, μαζί με βελτιστοποίηση του βιογραφικού (bio).',
+      en: 'On the profiles your business already has — usually Instagram and Facebook. If they don\'t exist yet, we set them up properly from scratch, including bio optimization.',
+    },
+  },
+  {
+    q: { el: 'Πώς ξέρω ότι δουλεύει;', en: 'How do I know it\'s working?' },
+    a: {
+      el: 'Κάθε μήνα λαμβάνετε αναφορά με την ανάπτυξη των ακολούθων και την αλληλεπίδραση — βλέπετε με αριθμούς τι απέδωσε, όχι με εντυπώσεις.',
+      en: 'Every month you receive a report with follower growth and engagement — you see what performed in numbers, not impressions.',
+    },
+  },
+  {
+    q: { el: 'Δεσμεύομαι με συμβόλαιο;', en: 'Am I locked into a contract?' },
+    a: {
+      el: 'Όχι. Δεν υπάρχουν μακροχρόνια συμβόλαια — σταματάτε όποτε θέλετε. Υπάρχει και εγγύηση επιστροφής χρημάτων αν δεν μείνετε 100% ικανοποιημένοι.',
+      en: 'No. There are no long-term contracts — you can stop anytime. There is also a money-back guarantee if you are not 100% satisfied.',
+    },
+  },
+  {
+    q: { el: 'Πώς λειτουργεί η δωρεάν δοκιμή 7 ημερών;', en: 'How does the 7-day free trial work?' },
+    a: {
+      el: 'Δοκιμάζετε την υπηρεσία κανονικά για 7 ημέρες — βλέπετε τα πρώτα posts και τον τρόπο δουλειάς μας. Αν δεν σας πείσει το αποτέλεσμα, δεν πληρώνετε τίποτα και δεν συνεχίζετε.',
+      en: 'You try the service normally for 7 days — you see the first posts and how we work. If the result doesn\'t convince you, you pay nothing and simply don\'t continue.',
+    },
+  },
+];
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: SOCIAL_FAQS.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q.el,
+    acceptedAnswer: { '@type': 'Answer', text: a.el },
+  })),
+};
 
 export default function SocialMedia() {
   const { lang } = useLangStore();
@@ -59,6 +107,10 @@ export default function SocialMedia() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       {/* ─── HERO — split: oversized H1 + intro | profile phone ─── */}
       <section className="pt-16 pb-20 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -189,6 +241,7 @@ export default function SocialMedia() {
         </div>
       </section>
 
+      <FaqSection faqs={SOCIAL_FAQS} />
       <CtaBand />
     </>
   );

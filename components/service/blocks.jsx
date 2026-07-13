@@ -331,10 +331,11 @@ export function ProofStrip() {
   );
 }
 
-/* ─── FAQ accordion ─── */
-export function FaqSection({ service }) {
+/* ─── FAQ accordion — `faqs` overrides service.faqs (homepage, social) ─── */
+export function FaqSection({ service, faqs }) {
   const { lang } = useLangStore();
   const [openFaq, setOpenFaq] = useState(null);
+  const list = faqs || service.faqs;
   return (
     <section className="py-24">
       <div className="max-w-3xl mx-auto px-6">
@@ -345,7 +346,7 @@ export function FaqSection({ service }) {
           </h2>
         </ScrollReveal>
         <div className="space-y-3">
-          {service.faqs.map(({ q, a }, i) => (
+          {list.map(({ q, a }, i) => (
             <ScrollReveal key={i} delay={i * 60}>
               <div className="glass-panel rounded-2xl overflow-hidden border border-white/8 hover:border-electric-cyan/25 transition-colors duration-300">
                 <button

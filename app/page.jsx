@@ -1,5 +1,6 @@
 // app/page.jsx
 import HomeClient from '@/components/HomeClient';
+import { HOME_FAQS } from '@/lib/services';
 
 export const metadata = {
   title: 'Κατασκευή Ιστοσελίδων & Ψηφιακά Εργαλεία | Advon Media',
@@ -8,6 +9,24 @@ export const metadata = {
   alternates: { canonical: '/' },
 };
 
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: HOME_FAQS.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q.el,
+    acceptedAnswer: { '@type': 'Answer', text: a.el },
+  })),
+};
+
 export default function Home() {
-  return <HomeClient />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <HomeClient />
+    </>
+  );
 }

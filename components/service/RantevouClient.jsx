@@ -4,6 +4,7 @@
 // actually arrive. Copy comes verbatim from lib/services.js.
 'use client';
 
+import { useState } from 'react';
 import { useLangStore } from '@/store/langStore';
 import { getService } from '@/lib/services';
 import ScrollReveal from '@/components/ScrollReveal';
@@ -21,10 +22,9 @@ import {
 export default function RantevouClient() {
   const { lang } = useLangStore();
   const service = getService('online-rantevou');
-  // Last includes line is the pricing — art-directed below as big numbers.
-  // Its two halves (split on «·») become the captions, copy verbatim.
+  // Last includes line is the pricing — rendered below as the same
+  // toggle-card comparison used for hosting on the kataskevi page.
   const gridItems = service.includes.slice(0, 4);
-  const priceCaptions = service.includes[4][lang].split(' · ');
 
   return (
     <>
@@ -82,31 +82,135 @@ export default function RantevouClient() {
       <StepsSection service={service} />
       <IncludesSection service={service} items={gridItems} icons={['smartphone', 'refresh', 'bell', 'users']} />
 
-      {/* ─── PRICING — the price line as big numbers, not a bullet ─── */}
-      <section className="pb-24 relative overflow-hidden">
-        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-          <ScrollReveal>
-            <div className="flex flex-col md:flex-row items-stretch justify-center gap-8 md:gap-0">
-              {['5€', '15–35€'].map((num, i) => (
-                <div key={num} className={`flex-1 max-w-xs mx-auto md:mx-0 ${i === 1 ? 'md:border-l md:border-electric-cyan/15 md:pl-8 md:ml-8' : 'md:pr-8'}`}>
-                  <div
-                    className="font-black font-display price-gradient mb-2 leading-none"
-                    style={{ fontSize: 'clamp(3rem, 6vw, 4.5rem)', filter: 'drop-shadow(0 0 24px rgba(71,200,245,0.25))' }}
-                  >
-                    {num}
-                  </div>
-                  <div className="text-sm text-gray-400 leading-relaxed">{priceCaptions[i]}</div>
-                </div>
-              ))}
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
+      {/* ─── PRICING — same toggle-card design as the hosting pricing ─── */}
+      <BookingPricing lang={lang} />
 
       <ProofStrip />
       <FaqSection service={service} />
       <CtaBand />
     </>
+  );
+}
+
+/* ─── Pricing — the exact toggle-card design of the hosting pricing on
+       the kataskevi page (same structure, emphasis and rhythm). ─── */
+function BookingPricing({ lang }) {
+  const [solo, setSolo] = useState(true);
+
+  const rowIcons = {
+    calendar: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>,
+    check: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0"><polyline points="20 6 9 17 4 12"/></svg>,
+  };
+
+  return (
+    <section className="pb-24">
+      <div className="max-w-6xl mx-auto px-6">
+        <ScrollReveal delay={60} direction="scale" className="mt-4">
+          <div className="text-center mb-10">
+            <span className="section-label">{lang === 'el' ? 'Τιμές' : 'Pricing'}</span>
+            <h2 className="text-3xl md:text-4xl font-black font-display mb-3 text-white tracking-tight">
+              {lang === 'el' ? 'Τιμολόγηση Online Ραντεβού' : 'Online Booking Pricing'}
+            </h2>
+            <p className="text-gray-500 text-base max-w-xl mx-auto">
+              {lang === 'el' ? 'Επιλέξτε το σχήμα που ταιριάζει στη δουλειά σας.' : 'Choose the plan that fits how you work.'}
+            </p>
+
+            {/* Toggle */}
+            <div className="inline-flex items-center gap-2 mt-6 p-1.5 rounded-full bg-white/5 border border-white/12">
+              <button
+                onClick={() => setSolo(true)}
+                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${solo ? 'bg-electric-cyan text-[#050a0e] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
+              >
+                {lang === 'el' ? 'Ένας επαγγελματίας' : 'One professional'}
+              </button>
+              <button
+                onClick={() => setSolo(false)}
+                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${!solo ? 'bg-electric-cyan text-[#050a0e] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
+              >
+                {lang === 'el' ? 'Ομάδα' : 'Team'}
+              </button>
+            </div>
+          </div>
+
+          {/* Single card — swaps on toggle */}
+          <div className="max-w-md mx-auto">
+            {solo ? (
+              /* One professional */
+              <div key="solo" className="pricing-swap-in pricing-featured glass-panel rounded-2xl p-8 border-2 border-electric-cyan/60 relative shadow-[0_0_50px_rgba(71,200,245,0.18)]">
+                <div className="text-electric-cyan text-xs font-black uppercase tracking-widest mb-4 mt-1">
+                  {lang === 'el' ? 'Ένας Επαγγελματίας' : 'One Professional'}
+                </div>
+                <div className="flex items-end gap-2 mb-0.5">
+                  <span className="text-5xl font-black text-white">5€</span>
+                  <span className="text-gray-500 mb-1.5 text-sm">{lang === 'el' ? '/μήνα' : '/month'}</span>
+                </div>
+                <p className="text-gray-400 text-sm mb-5 mt-1">
+                  {lang === 'el' ? 'Όλο το σύστημα, για εσάς' : 'The whole system, for you'}
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 bg-electric-cyan/8 border border-electric-cyan/25 rounded-xl px-4 py-3">
+                    {rowIcons.calendar}
+                    <span className="text-electric-cyan font-bold text-sm">
+                      {lang === 'el' ? 'Δική σας σελίδα κρατήσεων — οι υπηρεσίες σας σε λίστα' : 'Your own booking page — your services in a list'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
+                    {rowIcons.check}
+                    <span className="text-gray-300 text-sm font-semibold">
+                      {lang === 'el' ? 'Ημερολόγιο συγχρονισμένο με το δικό σας' : 'Calendar synced with your own'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
+                    {rowIcons.check}
+                    <span className="text-gray-400 text-sm">
+                      {lang === 'el' ? 'Αυτόματες υπενθυμίσεις στους πελάτες σας' : 'Automatic reminders to your clients'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Team */
+              <div key="team" className="pricing-swap-in glass-panel rounded-2xl p-8 border-2 border-electric-cyan/60 relative shadow-[0_0_50px_rgba(71,200,245,0.18)]">
+                <div className="text-gray-300 text-xs font-black uppercase tracking-widest mb-4">
+                  {lang === 'el' ? 'Ομάδα' : 'Team'}
+                </div>
+                <div className="flex items-end gap-2 mb-0.5">
+                  <span className="text-5xl font-black text-white">15–25€</span>
+                  <span className="text-gray-500 mb-1.5 text-sm">{lang === 'el' ? '/μήνα' : '/month'}</span>
+                </div>
+                <p className="text-gray-400 text-sm mb-5 mt-1">
+                  {lang === 'el' ? 'Ανάλογα με τα άτομα της ομάδας' : 'Depending on team size'}
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 bg-electric-cyan/8 border border-electric-cyan/25 rounded-xl px-4 py-3">
+                    {rowIcons.calendar}
+                    <span className="text-electric-cyan font-bold text-sm">
+                      {lang === 'el' ? 'Κάθε πελάτης κλείνει στον δικό του επαγγελματία' : 'Every client books with their own professional'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
+                    {rowIcons.check}
+                    <span className="text-gray-300 text-sm font-semibold">
+                      {lang === 'el' ? 'Ο καθένας βλέπει το δικό του πρόγραμμα' : 'Each of you sees your own schedule'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
+                    {rowIcons.check}
+                    <span className="text-gray-400 text-sm">
+                      {lang === 'el' ? 'Για κομμωτήρια, barbershops, ιατρεία' : 'For hair salons, barbershops, clinics'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <p className="text-center text-gray-600 text-xs mt-5">
+            {lang === 'el' ? 'Χωρίς κρυφές χρεώσεις · Χωρίς κόστος εγκατάστασης' : 'No hidden fees · No setup cost'}
+          </p>
+        </ScrollReveal>
+      </div>
+    </section>
   );
 }
 

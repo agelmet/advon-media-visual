@@ -8,8 +8,8 @@ import Stats from '@/components/sats';
 import ScrollReveal from '@/components/ScrollReveal';
 import TiltCard from '@/components/TiltCard';
 import PitchQuote from '@/components/PitchQuote';
-import { services, extras } from '@/lib/services';
-import { ICONS } from '@/components/service/blocks';
+import { services, extras, HOME_FAQS } from '@/lib/services';
+import { ICONS, FaqSection } from '@/components/service/blocks';
 
 const marqueeItems = [
   'Κατασκευή Ιστοσελίδων',
@@ -412,6 +412,9 @@ export default function HomeClient() {
 
       {/* ─── REVIEWS ─── */}
       <Reviews />
+
+      {/* ─── FAQ — the most common objections, answered plainly ─── */}
+      <FaqSection faqs={HOME_FAQS} />
     </>
   );
 }

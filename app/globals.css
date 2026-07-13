@@ -89,8 +89,6 @@
     background-color: #050a0e;
     color: white;
   }
-  * { cursor: none; }
-  a, button, input, textarea, select, [role="button"], .cursor-pointer { cursor: none; }
 }
 
 @layer components {
