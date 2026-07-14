@@ -59,6 +59,20 @@ export default function RantevouClient() {
                   )}
                 </p>
               </ScrollReveal>
+
+              {/* Reminders — the #1 pain, stated up front */}
+              <ScrollReveal delay={220}>
+                <div className="mt-8 inline-flex items-start gap-3 rounded-2xl border border-electric-cyan/30 bg-electric-cyan/6 px-5 py-4">
+                  <span className="text-electric-cyan icon-glow shrink-0 mt-0.5">{ICONS.bell('w-5 h-5')}</span>
+                  <p className="text-gray-200 text-sm md:text-base leading-relaxed font-semibold">
+                    {lang === 'el' ? (
+                      <>Αυτόματη υπενθύμιση με email πριν από κάθε ραντεβού — <span className="text-electric-cyan">λιγότερες ακυρώσεις, λιγότερα κενά στο πρόγραμμα</span>.</>
+                    ) : (
+                      <>Automatic email reminder before every appointment — <span className="text-electric-cyan">fewer cancellations, fewer gaps in your schedule</span>.</>
+                    )}
+                  </p>
+                </div>
+              </ScrollReveal>
             </div>
 
             {/* Booking page, phone-framed. A slot has just booked itself. */}
@@ -80,7 +94,7 @@ export default function RantevouClient() {
 
       <PainSection service={service} />
       <StepsSection service={service} />
-      <IncludesSection service={service} items={gridItems} icons={['smartphone', 'refresh', 'bell', 'users']} />
+      <IncludesSection service={service} items={gridItems} icons={['bell', 'smartphone', 'refresh', 'users']} />
 
       {/* ─── PRICING — same toggle-card design as the hosting pricing ─── */}
       <BookingPricing lang={lang} />

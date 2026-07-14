@@ -160,21 +160,15 @@ export default function HomeClient() {
           >
             <span className="reveal-word !block" style={{ animationDelay: '0.15s' }}>
               <span className="bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-200 to-gray-500">
-                {lang === 'el' ? 'Φτιάχνουμε την' : 'We build your'}
+                {lang === 'el' ? 'Η ιστοσελίδα σας.' : 'Your website.'}
               </span>
             </span>
-            <span className="reveal-word inline-block" style={{ animationDelay: '0.35s' }}>
-              <span className="bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-200 to-gray-500">
-                {lang === 'el' ? 'ιστοσελίδα σας' : 'website'}
-              </span>
-            </span>
-            {' '}
-            <span className="reveal-word inline-block" style={{ animationDelay: '0.55s' }}>
+            <span className="reveal-word inline-block" style={{ animationDelay: '0.4s' }}>
               <span
                 className="text-shimmer"
                 style={{ filter: 'drop-shadow(0 0 45px rgba(71,200,245,0.6))' }}
               >
-                {lang === 'el' ? 'δωρεάν.' : 'for free.'}
+                {lang === 'el' ? 'Δωρεάν.' : 'Free.'}
               </span>
             </span>
           </h1>
@@ -185,22 +179,15 @@ export default function HomeClient() {
             style={{ fontSize: 'clamp(1rem, 2.2vw, 1.25rem)' }}
           >
             {lang === 'el'
-              ? 'Χωρίς προκαταβολή: πληρώνετε μόνο τη φιλοξενία, όταν παραδοθεί το πρώτο δείγμα της σελίδας σας. Και από εκεί, κάνουμε όσες αλλαγές χρειαστούν — μέχρι να είναι ακριβώς όπως την έχετε στο μυαλό σας.'
-              : "No deposit: you pay only the hosting, once the first draft of your website is delivered. From there, we make as many changes as it takes — until it's exactly how you imagined it."}
+              ? 'Χωρίς προκαταβολή. Τη βλέπετε πρώτα έτοιμη — και μετά αποφασίζετε. Πληρώνετε μόνο τη φιλοξενία.'
+              : 'No deposit. You see it finished first — then you decide. You pay only for the hosting.'}
           </p>
 
           {/* Proof line */}
-          <p className="reveal-item delay-5 text-electric-cyan/90 text-sm md:text-base font-bold tracking-wide mb-6">
+          <p className="reveal-item delay-5 text-electric-cyan/90 text-sm md:text-base font-bold tracking-wide mb-12">
             {lang === 'el'
-              ? '200+ ιστοσελίδες για ελληνικές επιχειρήσεις · 100+ κριτικές 5★ στο Google'
-              : '200+ websites for Greek businesses · 100+ 5★ reviews on Google'}
-          </p>
-
-          {/* Bridge sentence */}
-          <p className="reveal-item delay-5 text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed text-sm md:text-base">
-            {lang === 'el'
-              ? 'Και δεν σταματάμε στη σελίδα. Τη βάζουμε να δουλεύει για εσάς: κριτικές στο Google, online ραντεβού, κρατήσεις χωρίς προμήθειες, AI βοηθός που απαντά όταν εσείς δεν μπορείτε.'
-              : "And we don't stop at the website. We put it to work for you: Google reviews, online appointments, commission-free bookings, an AI assistant that answers when you can't."}
+              ? '200+ ιστοσελίδες · 100+ κριτικές 5★ στο Google'
+              : '200+ websites · 100+ 5★ reviews on Google'}
           </p>
 
           {/* CTA Buttons */}
@@ -238,6 +225,13 @@ export default function HomeClient() {
               {lang === 'el' ? 'ΕΠΙΚΟΙΝΩΝΙΑ' : 'CONTACT'}
             </Link>
           </div>
+
+          {/* One-line services teaser */}
+          <p className="reveal-item delay-6 text-gray-500 text-xs md:text-sm tracking-wide mt-8">
+            {lang === 'el'
+              ? 'Κριτικές Google · Online ραντεβού · Κρατήσεις χωρίς προμήθειες · AI βοηθός'
+              : 'Google reviews · Online appointments · Commission-free bookings · AI assistant'}
+          </p>
 
           {/* Scroll indicator */}
           <div className="reveal-item delay-6 flex justify-center mt-16">

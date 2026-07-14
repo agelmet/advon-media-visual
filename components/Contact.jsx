@@ -76,22 +76,22 @@ export default function Contact() {
             <form action="https://formspree.io/f/xkopgoaj" method="POST" onSubmit={handleSubmit} className="space-y-6 flex-grow flex flex-col">
               <div>
                 <label className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Όνομα / Επωνυμία' : 'Name / Company'}</label>
-                <input type="text" name="name" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors cursor-none" />
+                <input type="text" name="name" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors" />
               </div>
               <div>
                 <label className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">Email</label>
-                <input type="email" name="email" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors cursor-none" />
+                <input type="email" name="email" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors" />
               </div>
               <div>
                 <label className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Τηλέφωνο' : 'Phone Number'}</label>
-                <input type="tel" name="phone" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors cursor-none" />
+                <input type="tel" name="phone" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors" />
               </div>
               <div className="flex-grow">
                 <label className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Μήνυμα / Υπηρεσία που σας ενδιαφέρει' : 'Message / Service of Interest'}</label>
-                <textarea name="message" rows="4" required className="w-full h-full min-h-[120px] bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors resize-none cursor-none"></textarea>
+                <textarea name="message" rows="4" required className="w-full h-full min-h-[120px] bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors resize-none"></textarea>
               </div>
               <div className="mt-auto">
-                <button type="submit" className="w-full py-4 bg-electric-cyan text-[#050a0e] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-[0_0_20px_rgba(71,200,245,0.3)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)] cursor-none">
+                <button type="submit" className="w-full py-4 bg-electric-cyan text-[#050a0e] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-[0_0_20px_rgba(71,200,245,0.3)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)]">
                   {lang === 'el' ? 'Αποστολή' : 'Send'}
                 </button>
                 {status && <p className="mt-4 text-center text-electric-cyan font-bold">{status}</p>}
@@ -129,7 +129,7 @@ export default function Contact() {
         {/* Contact Tiles */}
         <div className="grid md:grid-cols-2 gap-8">
           <ScrollReveal direction="up" className="h-full">
-          <a href="mailto:angelos@advonmedia.com" className="group glass-panel card-sweep p-8 rounded-3xl h-full block transition-all duration-300 hover:bg-electric-cyan/5 cursor-none">
+          <a href="mailto:angelos@advonmedia.com" className="group glass-panel card-sweep p-8 rounded-3xl h-full block transition-all duration-300 hover:bg-electric-cyan/5">
             <div className="w-16 h-16 bg-electric-cyan/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-electric-cyan group-hover:bg-electric-cyan group-hover:text-[#050a0e] transition-all">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8"><rect width="24" height="16" x="0" y="4" rx="2" ry="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             </div>
@@ -138,7 +138,7 @@ export default function Contact() {
           </a>
           </ScrollReveal>
           <ScrollReveal direction="up" delay={120} className="h-full">
-          <a href="https://www.instagram.com/advon_media" target="_blank" rel="noopener noreferrer" className="group glass-panel card-sweep p-8 rounded-3xl h-full block transition-all duration-300 hover:bg-electric-cyan/5 cursor-none">
+          <a href="https://www.instagram.com/advon_media" target="_blank" rel="noopener noreferrer" className="group glass-panel card-sweep p-8 rounded-3xl h-full block transition-all duration-300 hover:bg-electric-cyan/5">
             <div className="w-16 h-16 bg-electric-cyan/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-electric-cyan group-hover:bg-electric-cyan group-hover:text-[#050a0e] transition-all">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
             </div>

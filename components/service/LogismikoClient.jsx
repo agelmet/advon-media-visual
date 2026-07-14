@@ -127,7 +127,7 @@ export default function LogismikoClient() {
             >
               {highlight(
                 halfTimeLine[lang],
-                lang === 'el' ? ['στο μισό χρόνο'] : ['half the time']
+                lang === 'el' ? ['στον μισό χρόνο'] : ['half the time']
               )}
             </p>
           </ScrollReveal>

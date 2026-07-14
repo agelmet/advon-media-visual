@@ -510,6 +510,19 @@
   100% { top: 104%; opacity: 0; }
 }
 
+/* ─── Advon chat widget (external script) — guard against Tailwind preflight.
+   Preflight makes form controls inherit the page color (white) on a
+   transparent background, which rendered the chat input white-on-white
+   (invisible text + invisible caret) on desktop. Pin readable colors. ─── */
+.advon-chat-input {
+  color: #111 !important;
+  background-color: #fff !important;
+  caret-color: #111 !important;
+}
+.advon-chat-input::placeholder {
+  color: #9aa0a6;
+}
+
 /* ─── Reviews vertical marquee (auto-scrolling columns) ─── */
 @keyframes reviewsScrollUp {
   from { transform: translateY(0); }

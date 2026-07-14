@@ -64,8 +64,10 @@ export default function KataskeviPricing() {
                   <span className="text-gray-500 mb-1.5 text-sm">{lang === 'el' ? '/μήνα' : '/month'}</span>
                 </div>
                 <p className="text-gray-500 text-xs mb-1">{lang === 'el' ? '(+ΦΠΑ)' : '(+VAT)'}</p>
-                <p className="text-gray-400 text-sm mb-5">
-                  {lang === 'el' ? 'Τιμολογείται ως 130€/χρόνο' : 'Billed as €130/year'}
+                <p className="text-gray-500 text-xs leading-relaxed mb-5">
+                  {lang === 'el'
+                    ? 'Τιμολογείται ως 130€/χρόνο, με την παράδοση του πρώτου δείγματος της σελίδας σας.'
+                    : 'Billed as €130/year, upon delivery of the first draft of your website.'}
                 </p>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 bg-electric-cyan/8 border border-electric-cyan/25 rounded-xl px-4 py-3">
