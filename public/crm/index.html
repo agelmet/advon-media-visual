@@ -337,20 +337,38 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .todo-item{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; margin-bottom:6px; background:var(--pink-soft); border:1px solid #F8CFE1;}
 .todo-done-btn{background:var(--green); color:#fff; font-size:10.5px; font-weight:700; border-radius:7px; padding:5px 9px; opacity:0; white-space:nowrap;}
 .todo-item:hover .todo-done-btn{opacity:1;}
-.note-item{display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:12px; margin-bottom:6px; background:var(--bg); border:1px solid var(--line); font-weight:600; font-size:13px; border-left:4px solid var(--line);}
-.note-item.p-high{border-left-color:var(--red);}
-.note-item.p-medium{border-left-color:var(--yellow);}
-.note-item.p-low{border-left-color:var(--green);}
-.prio-head{font-family:'Sora'; font-size:11.5px; font-weight:700; margin:10px 4px 8px; display:flex; align-items:center; gap:8px; letter-spacing:.02em;}
-.prio-head .count{border-radius:99px; padding:2px 9px; font-size:11px;}
-.prio-head.p-high{color:var(--red);} .prio-head.p-high .count{background:var(--red-soft); color:var(--red);}
-.prio-head.p-medium{color:#B58A00;} .prio-head.p-medium .count{background:var(--yellow-soft); color:#B58A00;}
-.prio-head.p-low{color:var(--deep);} .prio-head.p-low .count{background:var(--green-soft); color:var(--deep);}
-.note-item.done{opacity:.55;}
-.note-item.done span{text-decoration:line-through;}
-.note-item:hover .item-x{opacity:1;}
-.n-check{width:20px; height:20px; border-radius:7px; border:2px solid var(--brand); flex-shrink:0; display:grid; place-items:center; color:#fff; font-size:11px; font-weight:800;}
-.note-item.done .n-check{background:var(--green); border-color:var(--green);}
+/* categorized notes */
+.cat-add-btn{font-size:12px; font-weight:700; color:var(--brand); background:var(--blue-soft); border-radius:9px; padding:7px 12px; white-space:nowrap;}
+.cat-add-btn:hover{filter:brightness(.97);}
+.cat-sec{margin-bottom:16px;}
+.cat-head{font-family:'Sora'; font-size:12px; font-weight:700; margin:6px 4px 8px; display:flex; align-items:center; gap:8px;}
+.cat-head .cat-name{cursor:pointer;}
+.cat-head .cat-name:hover{color:var(--brand);}
+.cat-head .count{background:var(--blue-soft); color:var(--brand); border-radius:99px; padding:2px 9px; font-size:11px; font-variant-numeric:tabular-nums;}
+.cat-head .cat-x{margin-left:auto; opacity:0; font-size:12px; color:var(--muted); padding:2px 7px; border-radius:6px; flex-shrink:0;}
+.cat-sec:hover .cat-x{opacity:1;}
+.cat-x:hover{background:rgba(0,0,0,.07); color:var(--ink);}
+.task-item{display:flex; align-items:flex-start; gap:9px; padding:9px 11px; border-radius:12px; margin-bottom:6px; background:var(--bg); border:1px solid var(--line); border-left:4px solid var(--line); transition:background .12s;}
+.task-item.p-high{border-left-color:var(--red); background:var(--red-soft);}
+.task-item.p-medium{border-left-color:var(--yellow); background:var(--yellow-soft);}
+.task-item.p-low{border-left-color:var(--green); background:var(--green-soft);}
+.task-item.done{opacity:.5;}
+.task-item.done .task-text{text-decoration:line-through;}
+.prio-dot{width:22px; height:22px; border-radius:99px; flex-shrink:0; display:grid; place-items:center; font-size:12px; line-height:1; border:2px dashed var(--line); background:transparent; margin-top:1px;}
+.prio-dot.set{border:none;}
+.prio-dot:hover{border-color:var(--brand);}
+.n-check{width:20px; height:20px; border-radius:7px; border:2px solid var(--brand); flex-shrink:0; display:grid; place-items:center; color:#fff; font-size:11px; font-weight:800; margin-top:1px;}
+.task-item.done .n-check{background:var(--green); border-color:var(--green);}
+.task-body{flex:1; min-width:0; display:flex; gap:8px; align-items:baseline; flex-wrap:wrap;}
+.task-text{font-weight:600; font-size:13px; word-break:break-word;}
+.task-note{font-size:11.5px; color:var(--muted); font-weight:500; word-break:break-word;}
+.task-edit{opacity:.5; font-size:12px; color:var(--muted); padding:3px 6px; border-radius:6px; flex-shrink:0;}
+.task-edit:hover{opacity:1; background:rgba(0,0,0,.07); color:var(--ink);}
+.task-item .item-x{opacity:0;}
+.task-item:hover .item-x{opacity:1;}
+.task-add{margin:2px 0 2px;}
+.task-add input{width:100%; border:1px dashed var(--line); border-radius:10px; padding:8px 11px; background:transparent; font-size:13px; color:var(--ink);}
+.task-add input:focus{background:var(--surface); border-style:solid;}
 .todo-cnt{margin-left:auto; background:var(--pink-soft); color:var(--pink); border-radius:99px; padding:3px 10px; font-weight:700; font-size:12px;}
 
 /* ---------- Card color swatches ---------- */
@@ -685,18 +703,10 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
     <section class="panel">
       <div class="panel-head">
         <div class="ico" style="background:var(--blue-soft);">📝</div>
-        <div><h3>My notes</h3><p>Reminders and tasks — set a priority for each</p></div>
+        <div style="flex:1;"><h3>My notes</h3><p>Tasks by category — tap the dot to set priority</p></div>
+        <button class="cat-add-btn" id="catAdd">+ Add category</button>
       </div>
-      <div class="panel-form">
-        <input class="grow" id="noteText" placeholder="e.g. buy domain for all-smiles.gr">
-        <select id="notePrio" style="border:1px solid var(--line); border-radius:10px; padding:9px 12px; background:var(--bg); width:130px;">
-          <option value="high">🔴 High</option>
-          <option value="medium" selected>🟡 Medium</option>
-          <option value="low">🟢 Low</option>
-        </select>
-        <button id="noteAdd">Add</button>
-      </div>
-      <div class="panel-body" id="noteList"></div>
+      <div class="panel-body" id="noteList" style="max-height:70vh;"></div>
     </section>
   </div>
 </main>
@@ -1363,36 +1373,104 @@ function renderTodo(){
   }
   renderNotes();
 }
-function renderNotes(){
-  const nl=$('#noteList'); nl.innerHTML='';
-  if(!state.todos.length){ nl.innerHTML='<div class="empty-note">No notes yet — add reminders, domains to buy, anything.</div>'; return; }
-  const order={high:0,medium:1,low:2}, labels={high:'🔴 High priority',medium:'🟡 Medium priority',low:'🟢 Low priority'};
-  ['high','medium','low'].forEach(prio=>{
-    const list=state.todos.filter(n=>(n.prio||'medium')===prio).sort((a,b)=>(a.done-b.done)||b.created-a.created);
-    if(!list.length) return;
-    const head=document.createElement('div'); head.className='prio-head p-'+prio;
-    head.innerHTML=`${labels[prio]} <span class="count">${list.filter(n=>!n.done).length}</span>`;
-    nl.appendChild(head);
-    list.forEach(n=>{
-      const row=document.createElement('div'); row.className='note-item p-'+(n.prio||'medium')+(n.done?' done':'');
-      row.innerHTML=`<button class="n-check" title="Done">${n.done?'✓':''}</button><span style="flex:1">${esc(n.text)}</span><button class="item-x" title="Remove">✕</button>`;
-      row.querySelector('.n-check').addEventListener('click',()=>{ n.done=!n.done; save(); renderNotes(); });
-      row.querySelector('.item-x').addEventListener('click',()=>{ state.todos=state.todos.filter(x=>x.id!==n.id); save(); renderNotes(); });
-      nl.appendChild(row);
-    });
+const PRIO_RANK={high:0,medium:1,low:2,none:3};
+const PRIO_CYCLE={none:'high',high:'medium',medium:'low',low:'none'};
+const PRIO_EMOJI={high:'🔴',medium:'🟡',low:'🟢'};
+const DEFAULT_NOTE_CATS=['General','Changes','Build','Pay now','Contact many'];
+let pendingFocusCat=null;
+function ensureNoteCats(){
+  if(!Array.isArray(state.noteCats)||!state.noteCats.length) state.noteCats=DEFAULT_NOTE_CATS.slice();
+  if(!state.noteCats.includes('General')) state.noteCats.unshift('General');
+  state.todos.forEach(n=>{
+    if(!n.cat || !state.noteCats.includes(n.cat)) n.cat='General';
+    if(n.prio===undefined) n.prio='none';
+    if(!n.created) n.created=Date.now();
   });
+}
+function renderNotes(){
+  ensureNoteCats();
+  const nl=$('#noteList'); nl.innerHTML='';
+  state.noteCats.forEach(cat=>{
+    const tasks=state.todos.filter(n=>n.cat===cat).sort((a,b)=>
+      (a.done-b.done) ||
+      (PRIO_RANK[a.prio||'none']-PRIO_RANK[b.prio||'none']) ||
+      ((b.updated||b.created||0)-(a.updated||a.created||0)));
+    const sec=document.createElement('div'); sec.className='cat-sec';
+    const open=tasks.filter(t=>!t.done).length;
+    const head=document.createElement('div'); head.className='cat-head';
+    head.innerHTML=`<span class="cat-name">${esc(cat)}</span><span class="count">${open}</span><button class="cat-x" title="Delete category">✕</button>`;
+    head.querySelector('.cat-name').addEventListener('click',()=>renameNoteCat(cat));
+    head.querySelector('.cat-x').addEventListener('click',()=>deleteNoteCat(cat));
+    sec.appendChild(head);
+    tasks.forEach(n=>{
+      const p=n.prio||'none';
+      const row=document.createElement('div'); row.className='task-item p-'+p+(n.done?' done':'');
+      const dot = p==='none'
+        ? `<button class="prio-dot" title="Set priority"></button>`
+        : `<button class="prio-dot set" title="Priority: ${p}">${PRIO_EMOJI[p]}</button>`;
+      row.innerHTML=dot+
+        `<button class="n-check" title="Done">${n.done?'✓':''}</button>`+
+        `<div class="task-body"><span class="task-text">${esc(n.text)}</span>${n.note?`<span class="task-note">${esc(n.note)}</span>`:''}</div>`+
+        `<button class="task-edit" title="Side note">✎</button>`+
+        `<button class="item-x" title="Remove">✕</button>`;
+      row.querySelector('.prio-dot').addEventListener('click',()=>{ n.prio=PRIO_CYCLE[p]; n.updated=Date.now(); save(); renderNotes(); });
+      row.querySelector('.n-check').addEventListener('click',()=>{ n.done=!n.done; n.updated=Date.now(); save(); renderNotes(); });
+      row.querySelector('.task-edit').addEventListener('click',()=>{
+        const v=prompt('Side note for "'+n.text+'":', n.note||''); if(v===null) return;
+        n.note=v.trim(); n.updated=Date.now(); save(); renderNotes();
+      });
+      row.querySelector('.item-x').addEventListener('click',()=>{ state.todos=state.todos.filter(x=>x.id!==n.id); save(); renderNotes(); });
+      sec.appendChild(row);
+    });
+    const add=document.createElement('div'); add.className='task-add';
+    add.innerHTML=`<input placeholder="+ Add task…" maxlength="200">`;
+    const inp=add.querySelector('input'); inp.dataset.cat=cat;
+    inp.addEventListener('keydown',e=>{
+      if(e.key!=='Enter') return;
+      const t=inp.value.trim(); if(!t){ return; }
+      const now=Date.now();
+      state.todos.push({id:uid(), text:t, note:'', cat:cat, prio:'none', done:false, created:now, updated:now});
+      pendingFocusCat=cat; save(); renderNotes();
+    });
+    sec.appendChild(add);
+    nl.appendChild(sec);
+  });
+  if(pendingFocusCat){
+    const el=nl.querySelector('.task-add input[data-cat="'+CSS.escape(pendingFocusCat)+'"]');
+    if(el) el.focus();
+    pendingFocusCat=null;
+  }
+}
+function renameNoteCat(oldName){
+  const v=prompt('Rename category', oldName); if(v===null) return;
+  const name=v.trim(); if(!name || name===oldName) return;
+  if(state.noteCats.includes(name)){ toast('Category already exists'); return; }
+  const i=state.noteCats.indexOf(oldName); if(i<0) return;
+  state.noteCats[i]=name; const now=Date.now();
+  state.todos.forEach(n=>{ if(n.cat===oldName){ n.cat=name; n.updated=now; } });
+  save(); renderNotes();
+}
+function deleteNoteCat(name){
+  if(name==='General'){ toast('General can’t be deleted'); return; }
+  const cnt=state.todos.filter(n=>n.cat===name).length;
+  if(!confirm('Delete category “'+name+'”?'+(cnt?' Its '+cnt+' task'+(cnt>1?'s':'')+' will move to General.':''))) return;
+  const now=Date.now();
+  state.todos.forEach(n=>{ if(n.cat===name){ n.cat='General'; n.updated=now; } });
+  state.noteCats=state.noteCats.filter(c=>c!==name);
+  save(); renderNotes();
 }
 document.querySelectorAll('[data-todo]').forEach(btn=>btn.addEventListener('click',()=>{
   todoMode=btn.dataset.todo;
   document.querySelectorAll('[data-todo]').forEach(x=>x.classList.toggle('active',x===btn));
   renderTodo();
 }));
-$('#noteAdd').addEventListener('click',()=>{
-  const t=$('#noteText').value.trim(); if(!t){ $('#noteText').focus(); return; }
-  state.todos.push({id:uid(), text:t, prio:$('#notePrio').value, done:false, created:Date.now()});
-  $('#noteText').value=''; save(); renderNotes(); $('#noteText').focus();
+$('#catAdd').addEventListener('click',()=>{
+  const v=prompt('New category name'); if(v===null) return;
+  const name=v.trim(); if(!name) return;
+  ensureNoteCats();
+  if(state.noteCats.includes(name)){ toast('Category already exists'); return; }
+  state.noteCats.push(name); save(); renderNotes();
 });
-$('#noteText').addEventListener('keydown',e=>{if(e.key==='Enter')$('#noteAdd').click();});
 
 /* ---------- monthly subscriptions ---------- */
 let subYear=now.getFullYear();
