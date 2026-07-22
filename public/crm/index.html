@@ -341,7 +341,8 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .cat-add-btn{font-size:12px; font-weight:700; color:var(--brand); background:var(--blue-soft); border-radius:9px; padding:7px 12px; white-space:nowrap;}
 .cat-add-btn:hover{filter:brightness(.97);}
 .cat-sec{margin-bottom:16px;}
-.cat-head{font-family:'Sora'; font-size:12px; font-weight:700; margin:6px 4px 8px; display:flex; align-items:center; gap:8px;}
+.cat-head{font-family:'Sora'; font-size:13px; font-weight:700; margin:8px 2px 10px; display:flex; align-items:center; gap:9px;}
+.cat-ico{width:26px; height:26px; border-radius:8px; display:grid; place-items:center; font-size:14px; background:var(--bg); flex-shrink:0;}
 .cat-head .cat-name{cursor:pointer;}
 .cat-head .cat-name:hover{color:var(--brand);}
 .cat-head .count{background:var(--blue-soft); color:var(--brand); border-radius:99px; padding:2px 9px; font-size:11px; font-variant-numeric:tabular-nums;}
@@ -371,6 +372,24 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .task-add{margin:2px 0 2px;}
 .task-add input{width:100%; border:1px dashed var(--line); border-radius:10px; padding:8px 11px; background:transparent; font-size:13px; color:var(--ink);}
 .task-add input:focus{background:var(--surface); border-style:solid;}
+/* unified To Do board */
+.todo-wrap{max-width:880px; margin:0 auto;}
+.todo-board{padding:16px 18px 30px; max-height:none;}
+.board-div{display:flex; align-items:center; gap:12px; margin:26px 2px 14px; font-family:'Sora'; font-size:10.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; color:var(--muted);}
+.board-div:first-child{margin-top:4px;}
+.board-div::before,.board-div::after{content:''; height:1px; background:var(--line); flex:1;}
+.cat-title{font-family:'Sora'; font-weight:700;}
+.live-badge{margin-left:auto; font-size:9px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--brand); background:var(--blue-soft); border-radius:6px; padding:2px 7px;}
+.cat-empty{font-size:12px; color:var(--muted); padding:4px 4px 8px; opacity:.85;}
+.cli-item{display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:12px; margin-bottom:6px; background:var(--bg); border:1px solid var(--line); border-left:4px solid var(--c,var(--line)); transition:box-shadow .12s;}
+.cli-item:hover{box-shadow:var(--shadow);}
+.cli-main{flex:1; min-width:0; cursor:pointer;}
+.cli-name{font-weight:700; font-size:13.5px; word-break:break-word;}
+.cli-meta{font-size:11.5px; color:var(--muted); margin-top:2px; word-break:break-word;}
+.cli-val{font-weight:700; font-size:12.5px; color:var(--deep); white-space:nowrap; font-variant-numeric:tabular-nums;}
+.cli-adv{background:var(--green); color:#fff; font-size:10.5px; font-weight:700; border-radius:8px; padding:6px 11px; white-space:nowrap; opacity:0; flex-shrink:0;}
+.cli-item:hover .cli-adv{opacity:1;}
+@media(max-width:560px){.cli-adv{opacity:1;}}
 .todo-cnt{margin-left:auto; background:var(--pink-soft); color:var(--pink); border-radius:99px; padding:3px 10px; font-weight:700; font-size:12px;}
 
 /* ---------- Card color swatches ---------- */
@@ -687,28 +706,14 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 
 <!-- TO DO -->
 <main class="view" id="view-todo">
-  <div class="todo-grid">
-    <section class="panel">
-      <div class="panel-head">
-        <div class="ico" id="todoIco" style="background:var(--pink-soft);">🛠</div>
-        <div style="flex:1;"><h3 id="todoTitle">Changes to make</h3><p id="todoSub">Every client sitting in "Making changes" — across all months</p></div>
-        <span class="todo-cnt" id="todoCnt">0</span>
-      </div>
-      <div class="panel-form" style="border-bottom:1px solid var(--line);">
-        <div class="seg" style="box-shadow:none;">
-          <button class="active" data-todo="changes">🛠 Changes to make</button>
-          <button data-todo="building">🔨 In building</button>
-        </div>
-      </div>
-      <div class="panel-body" id="todoClients" style="max-height:66vh;"></div>
-    </section>
-    <section class="panel">
-      <div class="panel-head">
-        <div class="ico" style="background:var(--blue-soft);">📝</div>
-        <div style="flex:1;"><h3>My notes</h3><p>Tasks by category — tap the dot to set priority</p></div>
+  <div class="todo-wrap">
+    <section class="panel todo-panel">
+      <div class="panel-head todo-head">
+        <div class="ico" style="background:var(--blue-soft);">✅</div>
+        <div style="flex:1;"><h3>To Do</h3><p>Client work and your notes — everything in one board</p></div>
         <button class="cat-add-btn" id="catAdd">+ Add category</button>
       </div>
-      <div class="panel-body" id="noteList" style="max-height:70vh;"></div>
+      <div class="panel-body todo-board" id="noteList"></div>
     </section>
   </div>
 </main>
@@ -1337,43 +1342,30 @@ $('#rnAdd').addEventListener('click',()=>{
 $('#rnName').addEventListener('keydown',e=>{if(e.key==='Enter')$('#rnAdd').click();});
 
 /* ---------- to do ---------- */
-let todoMode='changes';
-function renderTodo(){
-  const el=$('#todoClients'); el.innerHTML='';
-  const isBuild=todoMode==='building';
-  const stageId=isBuild?'building':'changes';
-  const st=stageById(stageId);
-  $('#todoTitle').textContent=isBuild?'In building':'Changes to make';
-  $('#todoSub').textContent=isBuild?'Every client sitting in "Building" — across all months':'Every client sitting in "Making changes" — across all months';
-  $('#todoIco').textContent=isBuild?'🔨':'🛠';
-  $('#todoIco').style.background=isBuild?'var(--blue-soft)':'var(--pink-soft)';
-  const items=state.clients.filter(c=>c.stage===stageId);
-  $('#todoCnt').textContent=items.length;
-  if(!items.length){ el.innerHTML='<div class="empty-note">'+(isBuild?'Nothing in Building right now.':'No clients in Making changes right now. Clean plate. 🎉')+'</div>'; }
-  else{
-    const groups={};
-    items.forEach(c=>{ (groups[c.month] ||= []).push(c); });
-    Object.keys(groups).sort().forEach(m=>{
-      const g=document.createElement('div'); g.className='month-group';
-      const gsum=groups[m].reduce((a,c)=>a+(+c.value||0),0);
-      g.innerHTML=`<h4>${fmtMonth(m)} <span class="count" style="background:${st.cs};color:${st.hex};">${groups[m].length}</span><span class="gsum">${gsum?fmtMoney2(gsum):''}</span></h4>`;
-      groups[m].forEach(c=>{
-        const row=document.createElement('div'); row.className='todo-item';
-        if(isBuild) row.style.cssText='background:var(--blue-soft);border-color:#BEDcFA;';
-        const btnLabel=isBuild?'✓ Built → Review':'✓ Done → Payment';
-        const nextStage=isBuild?'review':'pay';
-        const nextName=isBuild?'Draft · Review':'Waiting payment';
-        row.innerHTML=`<div style="flex:1;cursor:pointer;"><div class="w-name">${esc(c.name)}</div>${c.notes?`<div class="w-note">${esc(c.notes)}</div>`:''}</div>
-          ${c.value?`<span class="rn-val">${fmtMoney2(c.value)}</span>`:''}
-          <button class="todo-done-btn" title="Move to ${nextName}">${btnLabel}</button>`;
-        row.querySelector('div').addEventListener('click',()=>openModal(c.id));
-        row.querySelector('.todo-done-btn').addEventListener('click',()=>{ c.stage=nextStage; save(); renderAll(); toast(c.name+' → '+nextName); });
-        g.appendChild(row);
-      });
-      el.appendChild(g);
-    });
-  }
-  renderNotes();
+const TODO_LIVE=[
+  {stage:'changes',  icon:'🛠', label:'Changes to make', accent:'var(--pink)', next:'pay',    nextName:'Waiting payment', btn:'✓ Done → Payment'},
+  {stage:'building', icon:'🔨', label:'In building',     accent:'var(--blue)', next:'review', nextName:'Draft · Review',   btn:'✓ Built → Review'}
+];
+function renderTodo(){ renderNotes(); }
+function renderClientSection(nl, cfg){
+  const items=state.clients.filter(c=>c.stage===cfg.stage).sort((a,b)=>(a.month||'').localeCompare(b.month||''));
+  const sec=document.createElement('div'); sec.className='cat-sec live';
+  const head=document.createElement('div'); head.className='cat-head';
+  head.innerHTML=`<span class="cat-ico">${cfg.icon}</span><span class="cat-title">${cfg.label}</span><span class="count">${items.length}</span><span class="live-badge">Synced</span>`;
+  sec.appendChild(head);
+  if(!items.length){
+    const e=document.createElement('div'); e.className='cat-empty'; e.textContent='All clear here. 🎉';
+    sec.appendChild(e);
+  } else items.forEach(c=>{
+    const row=document.createElement('div'); row.className='cli-item'; row.style.setProperty('--c',cfg.accent);
+    row.innerHTML=`<div class="cli-main"><div class="cli-name">${esc(c.name)}</div><div class="cli-meta">${fmtMonth(c.month)}${c.notes?' · '+esc(c.notes):''}</div></div>`+
+      `${c.value?`<span class="cli-val">${fmtMoney2(c.value)}</span>`:''}`+
+      `<button class="cli-adv" title="Move to ${cfg.nextName}">${cfg.btn}</button>`;
+    row.querySelector('.cli-main').addEventListener('click',()=>openModal(c.id));
+    row.querySelector('.cli-adv').addEventListener('click',()=>{ c.stage=cfg.next; save(); renderAll(); toast(c.name+' → '+cfg.nextName); });
+    sec.appendChild(row);
+  });
+  nl.appendChild(sec);
 }
 const PRIO_RANK={high:0,medium:1,low:2,none:3};
 const PRIO_CYCLE={none:'high',high:'medium',medium:'low',low:'none'};
@@ -1392,6 +1384,9 @@ function ensureNoteCats(){
 function renderNotes(){
   ensureNoteCats();
   const nl=$('#noteList'); nl.innerHTML='';
+  const div1=document.createElement('div'); div1.className='board-div'; div1.innerHTML='<span>Client work</span>'; nl.appendChild(div1);
+  TODO_LIVE.forEach(cfg=>renderClientSection(nl,cfg));
+  const div2=document.createElement('div'); div2.className='board-div'; div2.innerHTML='<span>My notes</span>'; nl.appendChild(div2);
   state.noteCats.forEach(cat=>{
     const tasks=state.todos.filter(n=>n.cat===cat).sort((a,b)=>
       (a.done-b.done) ||
@@ -1472,11 +1467,6 @@ function deleteNoteCat(name){
   state.noteCats=state.noteCats.filter(c=>c!==name);
   save(); renderNotes();
 }
-document.querySelectorAll('[data-todo]').forEach(btn=>btn.addEventListener('click',()=>{
-  todoMode=btn.dataset.todo;
-  document.querySelectorAll('[data-todo]').forEach(x=>x.classList.toggle('active',x===btn));
-  renderTodo();
-}));
 $('#catAdd').addEventListener('click',()=>{
   const v=prompt('New category name'); if(v===null) return;
   const name=v.trim(); if(!name) return;
