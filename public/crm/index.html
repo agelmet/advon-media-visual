@@ -348,7 +348,9 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .cat-head .cat-x{margin-left:auto; opacity:0; font-size:12px; color:var(--muted); padding:2px 7px; border-radius:6px; flex-shrink:0;}
 .cat-sec:hover .cat-x{opacity:1;}
 .cat-x:hover{background:rgba(0,0,0,.07); color:var(--ink);}
-.task-item{display:flex; align-items:flex-start; gap:9px; padding:9px 11px; border-radius:12px; margin-bottom:6px; background:var(--bg); border:1px solid var(--line); border-left:4px solid var(--line); transition:background .12s;}
+.task-item{display:flex; align-items:flex-start; gap:9px; padding:9px 11px; border-radius:12px; margin-bottom:6px; background:var(--bg); border:1px solid var(--line); border-left:4px solid var(--line); transition:background .12s; cursor:grab;}
+.task-item.dragging{opacity:.4; cursor:grabbing;}
+.cat-sec.drop-target{outline:2px dashed var(--brand); outline-offset:3px; border-radius:12px; background:var(--blue-soft);}
 .task-item.p-high{border-left-color:var(--red); background:var(--red-soft);}
 .task-item.p-medium{border-left-color:var(--yellow); background:var(--yellow-soft);}
 .task-item.p-low{border-left-color:var(--green); background:var(--green-soft);}
@@ -1377,7 +1379,7 @@ const PRIO_RANK={high:0,medium:1,low:2,none:3};
 const PRIO_CYCLE={none:'high',high:'medium',medium:'low',low:'none'};
 const PRIO_EMOJI={high:'🔴',medium:'🟡',low:'🟢'};
 const DEFAULT_NOTE_CATS=['General','Changes','Build','Pay now','Contact many'];
-let pendingFocusCat=null;
+let pendingFocusCat=null, dragTaskId=null;
 function ensureNoteCats(){
   if(!Array.isArray(state.noteCats)||!state.noteCats.length) state.noteCats=DEFAULT_NOTE_CATS.slice();
   if(!state.noteCats.includes('General')) state.noteCats.unshift('General');
@@ -1396,6 +1398,14 @@ function renderNotes(){
       (PRIO_RANK[a.prio||'none']-PRIO_RANK[b.prio||'none']) ||
       ((b.updated||b.created||0)-(a.updated||a.created||0)));
     const sec=document.createElement('div'); sec.className='cat-sec';
+    sec.addEventListener('dragover',e=>{ if(dragTaskId){ e.preventDefault(); e.dataTransfer.dropEffect='move'; sec.classList.add('drop-target'); } });
+    sec.addEventListener('dragleave',e=>{ if(!sec.contains(e.relatedTarget)) sec.classList.remove('drop-target'); });
+    sec.addEventListener('drop',e=>{
+      e.preventDefault(); sec.classList.remove('drop-target');
+      const id=dragTaskId; dragTaskId=null; if(!id) return;
+      const t=state.todos.find(x=>x.id===id);
+      if(t && t.cat!==cat){ t.cat=cat; t.updated=Date.now(); save(); renderNotes(); }
+    });
     const open=tasks.filter(t=>!t.done).length;
     const head=document.createElement('div'); head.className='cat-head';
     head.innerHTML=`<span class="cat-name">${esc(cat)}</span><span class="count">${open}</span><button class="cat-x" title="Delete category">✕</button>`;
@@ -1405,6 +1415,9 @@ function renderNotes(){
     tasks.forEach(n=>{
       const p=n.prio||'none';
       const row=document.createElement('div'); row.className='task-item p-'+p+(n.done?' done':'');
+      row.draggable=true; row.dataset.id=n.id;
+      row.addEventListener('dragstart',e=>{ dragTaskId=n.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',n.id); });
+      row.addEventListener('dragend',()=>{ dragTaskId=null; row.classList.remove('dragging'); nl.querySelectorAll('.drop-target').forEach(s=>s.classList.remove('drop-target')); });
       const dot = p==='none'
         ? `<button class="prio-dot" title="Set priority"></button>`
         : `<button class="prio-dot set" title="Priority: ${p}">${PRIO_EMOJI[p]}</button>`;
