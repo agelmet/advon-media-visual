@@ -144,6 +144,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .card:hover{box-shadow:0 6px 20px -6px var(--c), var(--shadow); transform:translateY(-1px);}
 .card.dragging{opacity:.45;}
 .card .c-name{font-weight:700; font-size:13px; margin-bottom:5px; padding-right:20px; word-break:break-word;}
+.card .c-prio{display:inline-block; width:8px; height:8px; border-radius:99px; margin-right:6px; vertical-align:middle; flex-shrink:0;}
 .card .c-added{font-family:'Inter'; font-weight:600; font-size:10px; color:var(--muted); margin-left:6px; opacity:.75; white-space:nowrap;}
 .chip.contact{cursor:pointer; text-decoration:none; padding:3px 6px;}
 .chip.contact:hover{background:var(--blue-soft);}
@@ -602,7 +603,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
       <div class="home-card-body" id="homeSubs"></div>
     </section>
     <section class="home-card wide">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft)">🔴</span><h3>High-priority notes</h3><button class="hc-link" data-goto="todo">To Do →</button></div>
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft)">🔴</span><h3>High priority</h3><button class="hc-link" data-goto="todo">To Do →</button></div>
       <div class="home-card-body" id="homeNotes"></div>
     </section>
   </div>
@@ -1012,7 +1013,7 @@ function cardEl(c,st){
   const added= c.created ? new Date(c.created) : null;
   const addedTxt= added ? pad(added.getDate())+'/'+pad(added.getMonth()+1) : '';
   el.innerHTML=`
-    <div class="c-name">${esc(c.name)}${addedTxt?`<span class="c-added" title="Added ${addedTxt}">${addedTxt}</span>`:''}</div>
+    <div class="c-name">${c.prio&&PRIO_COLOR[c.prio]?`<span class="c-prio" style="background:${PRIO_COLOR[c.prio].c}" title="Priority: ${c.prio}"></span>`:''}${esc(c.name)}${addedTxt?`<span class="c-added" title="Added ${addedTxt}">${addedTxt}</span>`:''}</div>
     <div class="c-meta">
       ${c.value?`<span class="chip money">${fmtMoney(c.value)}</span>`:''}
       ${c.day?`<span class="chip">📅 ${fmtDay(c.day)}</span>`:''}
@@ -1337,6 +1338,7 @@ $('#rnName').addEventListener('keydown',e=>{if(e.key==='Enter')$('#rnAdd').click
 const PRIO_RANK={high:0,medium:1,low:2,none:3};
 const PRIO_CYCLE={none:'high',high:'medium',medium:'low',low:'none'};
 const PRIO_EMOJI={high:'🔴',medium:'🟡',low:'🟢'};
+const PRIO_COLOR={high:{c:'var(--red)',soft:'var(--red-soft)'},medium:{c:'var(--yellow)',soft:'var(--yellow-soft)'},low:{c:'var(--green)',soft:'var(--green-soft)'}};
 const DEFAULT_TODO_CATS=['Changes','Build','Pay now','Contact','General'];
 const TODO_PAL={
   pink:  {grad:'linear-gradient(120deg,#F45B9A,#D8437E)', hex:'#F45B9A', soft:'var(--pink-soft)'},
@@ -1396,11 +1398,14 @@ function renderTodo(){
         .sort((a,b)=>(a.month||'').localeCompare(b.month||''))
         .forEach(c=>clients.push({c,h}));
     });
-    const tasks=state.todos.filter(n=>n.cat===cat).sort((a,b)=>
-      (a.done-b.done) ||
-      (PRIO_RANK[a.prio||'none']-PRIO_RANK[b.prio||'none']) ||
-      ((a.sort||0)-(b.sort||0)));
-    const openCount=clients.length + tasks.filter(t=>!t.done).length;
+    /* one unified list: client + manual rows interleaved purely by priority.
+       Stable sort keeps clients (month order) and tasks (sort order) tidy within a band. */
+    const taskList=state.todos.filter(n=>n.cat===cat).sort((a,b)=>(a.sort||0)-(b.sort||0));
+    const entries=[
+      ...clients.map(({c,h})=>({kind:'client', c, h, prio:c.prio||'none', done:0})),
+      ...taskList.map(n=>({kind:'task', n, prio:n.prio||'none', done:n.done?1:0})),
+    ].sort((a,b)=> (a.done-b.done) || (PRIO_RANK[a.prio]-PRIO_RANK[b.prio]));
+    const openCount=clients.length + taskList.filter(t=>!t.done).length;
 
     const lane=document.createElement('div'); lane.className='todo-lane';
     lane.style.setProperty('--dropc', pal.hex);
@@ -1438,12 +1443,11 @@ function renderTodo(){
       if(dragCliId){ handleClientDrop(cat); return; }
       if(dragTaskId){ handleTaskDrop(cat, body, e.clientY); return; }
     });
-    if(!clients.length && !tasks.length){
+    if(!entries.length){
       const em=document.createElement('div'); em.className='todo-lane-empty'; em.textContent='Nothing here yet';
       body.appendChild(em);
     }
-    clients.forEach(({c,h})=>body.appendChild(clientRow(c,h,pal)));
-    tasks.forEach(n=>body.appendChild(taskRow(n)));
+    entries.forEach(e=> body.appendChild(e.kind==='client' ? clientRow(e.c,e.h,pal) : taskRow(e.n)));
     lane.appendChild(body);
     wrap.appendChild(lane);
   });
@@ -1454,8 +1458,12 @@ function renderTodo(){
   }
 }
 function clientRow(c,h,pal){
+  const p=c.prio||'none';
   const row=document.createElement('div'); row.className='task-item client';
-  row.style.setProperty('--c',pal.hex); row.style.background=pal.soft;
+  /* prioritized rows take the matching priority border + tint, exactly like manual tasks;
+     unprioritized rows keep the lane's own colour tint */
+  const pc = p==='none' ? {c:pal.hex, soft:pal.soft} : PRIO_COLOR[p];
+  row.style.setProperty('--c',pc.c); row.style.background=pc.soft;
   row.draggable=true;
   row.addEventListener('dragstart',e=>{ dragCliId=c.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain','cli:'+c.id); });
   row.addEventListener('dragend',()=>{ dragCliId=null; row.classList.remove('dragging'); document.querySelectorAll('.todo-lane-body.dragover').forEach(b=>b.classList.remove('dragover')); });
@@ -1463,12 +1471,22 @@ function clientRow(c,h,pal){
   if(c.month) bits.push(esc(fmtMonth(c.month)));
   if(c.notes) bits.push(esc(c.notes));
   if(c.value) bits.push(fmtMoney2(c.value));
-  row.innerHTML=
+  const dot = p==='none'
+    ? `<button class="prio-dot" title="Set priority"></button>`
+    : `<button class="prio-dot set" title="Priority: ${p}">${PRIO_EMOJI[p]}</button>`;
+  row.innerHTML=dot+
     `<span class="cli-avatar" title="Open client">👤</span>`+
     `<div class="task-body cli-body"><span class="task-text">${esc(c.name)}</span>${bits.length?`<span class="task-note">${bits.join(' · ')}</span>`:''}</div>`+
+    `<button class="task-edit" title="Edit client note">✎</button>`+
     `<button class="cli-adv" title="Move to ${h.nextName}">${h.btn}</button>`;
-  row.querySelector('.cli-body').addEventListener('click',()=>openModal(c.id));
+  row.querySelector('.prio-dot').addEventListener('click',e=>{ e.stopPropagation(); const np=PRIO_CYCLE[p]; c.prio = np==='none'?undefined:np; c.updated=Date.now(); save(); renderAll(); });
   row.querySelector('.cli-avatar').addEventListener('click',()=>openModal(c.id));
+  row.querySelector('.cli-body').addEventListener('click',()=>openModal(c.id));
+  row.querySelector('.task-edit').addEventListener('click',e=>{
+    e.stopPropagation();
+    const v=prompt('Note for '+c.name+' (shows on the client card too):', c.notes||''); if(v===null) return;
+    c.notes=v.trim(); c.updated=Date.now(); save(); renderAll();
+  });
   row.querySelector('.cli-adv').addEventListener('click',e=>{ e.stopPropagation(); c.stage=h.next; save(); renderAll(); toast(c.name+' → '+h.nextName); });
   return row;
 }
@@ -1648,6 +1666,8 @@ function renderHome(){
     return di>=todayI && di<=in7 && !(s.paid && s.paid[curMonth]);
   });
   const hiNotes=state.todos.filter(n=>!n.done && (n.prio||'medium')==='high');
+  const hiClients=state.clients.filter(c=>c.prio==='high');
+  const hiCount=hiNotes.length + hiClients.length;
   // hero
   const rem=mTotal-mPaid;
   $('#homeHero').innerHTML=`
@@ -1657,7 +1677,7 @@ function renderHome(){
       <div class="hs"><div class="k">Meetings this week</div><div class="v b">${weekMeetings.length}</div></div>
       <div class="hs"><div class="k">${fmtMonth(curMonth)} to collect</div><div class="v c">${fmtMoney2(rem)}</div></div>
       <div class="hs"><div class="k">Overdue renewals</div><div class="v ${overdue.length?'c':'g'}">${overdue.length}</div></div>
-      <div class="hs"><div class="k">High-priority notes</div><div class="v ${hiNotes.length?'c':'g'}">${hiNotes.length}</div></div>
+      <div class="hs"><div class="k">High priority</div><div class="v ${hiCount?'c':'g'}">${hiCount}</div></div>
     </div>`;
   // week
   const hw=$('#homeWeek');
@@ -1683,7 +1703,11 @@ function renderHome(){
   hs.innerHTML= subsDue.length? subsDue.map(s=>`<div class="home-row" data-goto="monthly"><span class="hr-name">${esc(s.name)}</span><span class="hr-sub">day ${s.renewDay}</span><span class="hr-val">${fmtMoney2(s.value)}</span></div>`).join('') : '<div class="home-empty">No subscriptions due in the next 7 days.</div>';
   // high-priority notes
   const hn=$('#homeNotes');
-  hn.innerHTML= hiNotes.length? hiNotes.map(n=>`<div class="home-row" data-goto="todo"><span class="hr-name">🔴 ${esc(n.text)}</span></div>`).join('') : '<div class="home-empty">No high-priority notes right now.</div>';
+  const hiRows=[
+    ...hiClients.map(c=>`<div class="home-row" data-open="${c.id}"><span class="hr-name">👤 ${esc(c.name)}</span></div>`),
+    ...hiNotes.map(n=>`<div class="home-row" data-goto="todo"><span class="hr-name">🔴 ${esc(n.text)}</span></div>`),
+  ];
+  hn.innerHTML= hiRows.length? hiRows.join('') : '<div class="home-empty">Nothing flagged high priority right now.</div>';
   // wire
   $('#view-home').querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click',()=>openModal(el.dataset.open)));
   $('#view-home').querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>switchView(el.dataset.goto)));
