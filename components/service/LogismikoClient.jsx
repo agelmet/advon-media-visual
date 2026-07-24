@@ -61,10 +61,27 @@ export default function LogismikoClient() {
               {highlight(
                 service.pitch[lang],
                 lang === 'el'
-                  ? ['όπως σκέφτεστε εσείς', 'στον μισό χρόνο']
-                  : ['the way you think', 'in half the time']
+                  ? ['το πραγματικό σύστημα', 'τον δικό σας τρόπο δουλειάς']
+                  : ['the real system', 'the way you actually work']
               )}
             </p>
+          </ScrollReveal>
+          <ScrollReveal delay={240}>
+            <div className="mt-10 flex flex-col items-center gap-3">
+              <a
+                href="/crm-demo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-premium inline-flex items-center gap-3 px-9 py-4 bg-electric-cyan text-[#050a0e] font-black text-base rounded-xl hover:bg-white transition-all duration-300 hover:scale-105"
+                style={{ boxShadow: '0 0 30px rgba(71,200,245,0.4), 0 4px 20px rgba(0,0,0,0.4)' }}
+              >
+                {lang === 'el' ? 'Δείτε το CRM που φτιάξαμε για εμάς' : 'See the CRM we built for ourselves'}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+              </a>
+              <span className="text-xs font-semibold tracking-wide text-gray-500">
+                {lang === 'el' ? 'Ζωντανό demo με δείγμα δεδομένων · χωρίς εγγραφή' : 'Live demo with sample data · no signup'}
+              </span>
+            </div>
           </ScrollReveal>
         </div>
       </section>
