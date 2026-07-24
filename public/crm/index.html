@@ -331,27 +331,37 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .sub-cell.future{opacity:.4;}
 .sub-tot{font-size:11.5px; font-weight:700; color:var(--deep); text-align:right; font-variant-numeric:tabular-nums;}
 
-/* ---------- To Do ---------- */
-.todo-grid{display:grid; grid-template-columns:1.25fr .75fr; gap:16px; align-items:start;}
-@media(max-width:1000px){.todo-grid{grid-template-columns:1fr;}}
-.todo-item{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; margin-bottom:6px; background:var(--pink-soft); border:1px solid #F8CFE1;}
-.todo-done-btn{background:var(--green); color:#fff; font-size:10.5px; font-weight:700; border-radius:7px; padding:5px 9px; opacity:0; white-space:nowrap;}
-.todo-item:hover .todo-done-btn{opacity:1;}
-/* categorized notes */
-.cat-add-btn{font-size:12px; font-weight:700; color:var(--brand); background:var(--blue-soft); border-radius:9px; padding:7px 12px; white-space:nowrap;}
+/* ---------- To Do (lanes) ---------- */
+.todo-head-bar{display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap;}
+.thb-ico{width:38px; height:38px; border-radius:11px; display:grid; place-items:center; font-size:18px; background:var(--blue-soft); flex-shrink:0;}
+.thb-txt{flex:1; min-width:150px;}
+.thb-txt h3{font-size:16px; font-weight:800; letter-spacing:-.01em;}
+.thb-txt p{font-size:12px; color:var(--muted); font-weight:500;}
+.cat-add-btn{font-size:12.5px; font-weight:700; color:var(--brand); background:var(--blue-soft); border-radius:10px; padding:9px 14px; white-space:nowrap;}
 .cat-add-btn:hover{filter:brightness(.97);}
-.cat-sec{margin-bottom:16px;}
-.cat-head{font-family:'Sora'; font-size:13px; font-weight:700; margin:8px 2px 10px; display:flex; align-items:center; gap:9px;}
-.cat-ico{width:26px; height:26px; border-radius:8px; display:grid; place-items:center; font-size:14px; background:var(--bg); flex-shrink:0;}
-.cat-head .cat-name{cursor:pointer;}
-.cat-head .cat-name:hover{color:var(--brand);}
-.cat-head .count{background:var(--blue-soft); color:var(--brand); border-radius:99px; padding:2px 9px; font-size:11px; font-variant-numeric:tabular-nums;}
-.cat-head .cat-x{margin-left:auto; opacity:0; font-size:12px; color:var(--muted); padding:2px 7px; border-radius:6px; flex-shrink:0;}
-.cat-sec:hover .cat-x{opacity:1;}
-.cat-x:hover{background:rgba(0,0,0,.07); color:var(--ink);}
-.task-item{display:flex; align-items:flex-start; gap:9px; padding:9px 11px; border-radius:12px; margin-bottom:6px; background:var(--bg); border:1px solid var(--line); border-left:4px solid var(--line); transition:background .12s; cursor:grab;}
+.todo-lanes{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; align-items:start;}
+@media(max-width:1100px){.todo-lanes{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:720px){.todo-lanes{grid-template-columns:1fr;}}
+.todo-lane{border-radius:var(--radius); border:1px solid var(--line); background:var(--surface); box-shadow:var(--shadow); display:flex; flex-direction:column; overflow:hidden; min-width:0;}
+.todo-lane-head{padding:14px 15px 12px; color:#fff; display:flex; align-items:center; gap:8px;}
+.todo-lane-head .tl-title{font-family:'Sora'; font-size:14px; font-weight:700; cursor:pointer; word-break:break-word; letter-spacing:-.01em;}
+.todo-lane-head .tl-title:hover{text-decoration:underline; text-underline-offset:3px;}
+.todo-lane-head .tl-count{margin-left:auto; background:rgba(255,255,255,.28); border-radius:99px; padding:2px 10px; font-size:12px; font-weight:700; font-variant-numeric:tabular-nums;}
+.todo-lane-head .tl-x{opacity:.75; font-size:12px; padding:2px 6px; border-radius:6px; color:#fff; flex-shrink:0;}
+.todo-lane-head .tl-x:hover{opacity:1; background:rgba(255,255,255,.22);}
+.todo-lane-head.dark{color:#4A3B00;}
+.todo-lane-head.dark .tl-count{background:rgba(74,59,0,.16); color:#4A3B00;}
+.todo-lane-head.dark .tl-x{color:#4A3B00;}
+.todo-lane-head.dark .tl-x:hover{background:rgba(74,59,0,.14);}
+.todo-lane-add{padding:10px 11px; border-bottom:1px solid var(--line);}
+.todo-lane-add input{width:100%; border:1px solid var(--line); border-radius:10px; padding:8px 11px; background:var(--bg); font-size:13px; color:var(--ink);}
+.todo-lane-add input:focus{background:var(--surface);}
+.todo-lane-body{padding:10px 11px 12px; display:flex; flex-direction:column; gap:7px; min-height:48px;}
+.todo-lane-body.dragover{background:var(--bg); box-shadow:inset 0 0 0 2px var(--dropc,var(--brand)); border-radius:0 0 var(--radius) var(--radius);}
+.todo-lane-empty{font-size:11.5px; color:#B4BAC8; text-align:center; padding:14px 6px;}
+/* task rows (manual + client) */
+.task-item{display:flex; align-items:flex-start; gap:9px; padding:9px 11px; border-radius:12px; background:var(--bg); border:1px solid var(--line); border-left:4px solid var(--line); transition:background .12s, box-shadow .12s; cursor:grab;}
 .task-item.dragging{opacity:.4; cursor:grabbing;}
-.cat-sec.drop-target{outline:2px dashed var(--brand); outline-offset:3px; border-radius:12px; background:var(--blue-soft);}
 .task-item.p-high{border-left-color:var(--red); background:var(--red-soft);}
 .task-item.p-medium{border-left-color:var(--yellow); background:var(--yellow-soft);}
 .task-item.p-low{border-left-color:var(--green); background:var(--green-soft);}
@@ -369,28 +379,14 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .task-edit:hover{opacity:1; background:rgba(0,0,0,.07); color:var(--ink);}
 .task-item .item-x{opacity:0;}
 .task-item:hover .item-x{opacity:1;}
-.task-add{margin:2px 0 2px;}
-.task-add input{width:100%; border:1px dashed var(--line); border-radius:10px; padding:8px 11px; background:transparent; font-size:13px; color:var(--ink);}
-.task-add input:focus{background:var(--surface); border-style:solid;}
-/* unified To Do board */
-.todo-wrap{max-width:880px; margin:0 auto;}
-.todo-board{padding:16px 18px 30px; max-height:none;}
-.board-div{display:flex; align-items:center; gap:12px; margin:26px 2px 14px; font-family:'Sora'; font-size:10.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; color:var(--muted);}
-.board-div:first-child{margin-top:4px;}
-.board-div::before,.board-div::after{content:''; height:1px; background:var(--line); flex:1;}
-.cat-title{font-family:'Sora'; font-weight:700;}
-.live-badge{margin-left:auto; font-size:9px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--brand); background:var(--blue-soft); border-radius:6px; padding:2px 7px;}
-.cat-empty{font-size:12px; color:var(--muted); padding:4px 4px 8px; opacity:.85;}
-.cli-item{display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:12px; margin-bottom:6px; background:var(--bg); border:1px solid var(--line); border-left:4px solid var(--c,var(--line)); transition:box-shadow .12s;}
-.cli-item:hover{box-shadow:var(--shadow);}
-.cli-main{flex:1; min-width:0; cursor:pointer;}
-.cli-name{font-weight:700; font-size:13.5px; word-break:break-word;}
-.cli-meta{font-size:11.5px; color:var(--muted); margin-top:2px; word-break:break-word;}
-.cli-val{font-weight:700; font-size:12.5px; color:var(--deep); white-space:nowrap; font-variant-numeric:tabular-nums;}
-.cli-adv{background:var(--green); color:#fff; font-size:10.5px; font-weight:700; border-radius:8px; padding:6px 11px; white-space:nowrap; opacity:0; flex-shrink:0;}
-.cli-item:hover .cli-adv{opacity:1;}
+/* auto-pulled client rows */
+.task-item.client{cursor:grab; align-items:center; border-left-color:var(--c,var(--blue));}
+.task-item.client .cli-body{cursor:pointer; align-items:baseline;}
+.cli-avatar{width:24px; height:24px; border-radius:99px; display:grid; place-items:center; font-size:13px; background:rgba(0,0,0,.06); flex-shrink:0; cursor:pointer;}
+.cli-adv{background:var(--green); color:#fff; font-size:10.5px; font-weight:700; border-radius:8px; padding:6px 10px; white-space:nowrap; opacity:0; flex-shrink:0; align-self:center;}
+.task-item.client:hover .cli-adv{opacity:1;}
 @media(max-width:560px){.cli-adv{opacity:1;}}
-.todo-cnt{margin-left:auto; background:var(--pink-soft); color:var(--pink); border-radius:99px; padding:3px 10px; font-weight:700; font-size:12px;}
+body.dark .cli-avatar{background:rgba(255,255,255,.09);}
 
 /* ---------- Card color swatches ---------- */
 .swatches{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
@@ -706,16 +702,12 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 
 <!-- TO DO -->
 <main class="view" id="view-todo">
-  <div class="todo-wrap">
-    <section class="panel todo-panel">
-      <div class="panel-head todo-head">
-        <div class="ico" style="background:var(--blue-soft);">✅</div>
-        <div style="flex:1;"><h3>To Do</h3><p>Client work and your notes — everything in one board</p></div>
-        <button class="cat-add-btn" id="catAdd">+ Add category</button>
-      </div>
-      <div class="panel-body todo-board" id="noteList"></div>
-    </section>
+  <div class="todo-head-bar">
+    <div class="thb-ico">✅</div>
+    <div class="thb-txt"><h3>To Do</h3><p>Client work and your notes — one board of lanes</p></div>
+    <button class="cat-add-btn" id="catAdd">+ New category</button>
   </div>
+  <div class="todo-lanes" id="todoLanes"></div>
 </main>
 
 <!-- CALLBACKS -->
@@ -1341,138 +1333,225 @@ $('#rnAdd').addEventListener('click',()=>{
 });
 $('#rnName').addEventListener('keydown',e=>{if(e.key==='Enter')$('#rnAdd').click();});
 
-/* ---------- to do ---------- */
-const TODO_LIVE=[
-  {stage:'changes',  icon:'🛠', label:'Changes to make', accent:'var(--pink)', next:'pay',    nextName:'Waiting payment', btn:'✓ Done → Payment'},
-  {stage:'building', icon:'🔨', label:'In building',     accent:'var(--blue)', next:'review', nextName:'Draft · Review',   btn:'✓ Built → Review'}
-];
-function renderTodo(){ renderNotes(); }
-function renderClientSection(nl, cfg){
-  const items=state.clients.filter(c=>c.stage===cfg.stage).sort((a,b)=>(a.month||'').localeCompare(b.month||''));
-  const sec=document.createElement('div'); sec.className='cat-sec live';
-  const head=document.createElement('div'); head.className='cat-head';
-  head.innerHTML=`<span class="cat-ico">${cfg.icon}</span><span class="cat-title">${cfg.label}</span><span class="count">${items.length}</span><span class="live-badge">Synced</span>`;
-  sec.appendChild(head);
-  if(!items.length){
-    const e=document.createElement('div'); e.className='cat-empty'; e.textContent='All clear here. 🎉';
-    sec.appendChild(e);
-  } else items.forEach(c=>{
-    const row=document.createElement('div'); row.className='cli-item'; row.style.setProperty('--c',cfg.accent);
-    row.innerHTML=`<div class="cli-main"><div class="cli-name">${esc(c.name)}</div><div class="cli-meta">${fmtMonth(c.month)}${c.notes?' · '+esc(c.notes):''}</div></div>`+
-      `${c.value?`<span class="cli-val">${fmtMoney2(c.value)}</span>`:''}`+
-      `<button class="cli-adv" title="Move to ${cfg.nextName}">${cfg.btn}</button>`;
-    row.querySelector('.cli-main').addEventListener('click',()=>openModal(c.id));
-    row.querySelector('.cli-adv').addEventListener('click',()=>{ c.stage=cfg.next; save(); renderAll(); toast(c.name+' → '+cfg.nextName); });
-    sec.appendChild(row);
-  });
-  nl.appendChild(sec);
-}
+/* ---------- to do (lanes) ---------- */
 const PRIO_RANK={high:0,medium:1,low:2,none:3};
 const PRIO_CYCLE={none:'high',high:'medium',medium:'low',low:'none'};
 const PRIO_EMOJI={high:'🔴',medium:'🟡',low:'🟢'};
-const DEFAULT_NOTE_CATS=['General','Changes','Build','Pay now','Contact many'];
-let pendingFocusCat=null, dragTaskId=null;
-function ensureNoteCats(){
-  if(!Array.isArray(state.noteCats)||!state.noteCats.length) state.noteCats=DEFAULT_NOTE_CATS.slice();
-  if(!state.noteCats.includes('General')) state.noteCats.unshift('General');
+const DEFAULT_TODO_CATS=['Changes','Build','Pay now','Contact','General'];
+const TODO_PAL={
+  pink:  {grad:'linear-gradient(120deg,#F45B9A,#D8437E)', hex:'#F45B9A', soft:'var(--pink-soft)'},
+  blue:  {grad:'linear-gradient(120deg,#2F7FE0,#1E5FB0)', hex:'#2F7FE0', soft:'var(--blue-soft)'},
+  coral: {grad:'linear-gradient(120deg,#FF6B57,#E74730)', hex:'#FF6B57', soft:'var(--coral-soft)'},
+  violet:{grad:'linear-gradient(120deg,#7C5CFC,#5E3FD6)', hex:'#7C5CFC', soft:'var(--violet-soft)'},
+  green: {grad:'linear-gradient(120deg,#0EC673,#0AA55F)', hex:'#0EC673', soft:'var(--green-soft)'},
+  cyan:  {grad:'linear-gradient(120deg,#35C7E9,#1FAFD0)', hex:'#35C7E9', soft:'var(--cyan-soft)'},
+  orange:{grad:'linear-gradient(120deg,#FF8A00,#E67700)', hex:'#FF8A00', soft:'var(--orange-soft)'},
+  yellow:{grad:'linear-gradient(120deg,#FFC400,#F5A700)', hex:'#F5A700', soft:'var(--yellow-soft)', dark:true},
+};
+const TODO_NAMED={'Changes':'pink','Build':'blue','Pay now':'coral','Contact':'violet','General':'green'};
+const TODO_CYCLE=['cyan','orange','yellow','violet','pink','blue','coral','green'];
+/* auto-pulled client lanes: which board stage feeds which lane, and its advance target */
+const TODO_HOSTS=[
+  {stage:'changes',  next:'pay',    nextName:'Waiting payment', btn:'✓ Done → Pay'},
+  {stage:'building', next:'review', nextName:'Draft · Review',  btn:'✓ Built → Review'},
+];
+let pendingFocusCat=null, dragTaskId=null, dragCliId=null;
+
+function ensureTodo(){
+  if(!Array.isArray(state.noteCats)||!state.noteCats.length) state.noteCats=DEFAULT_TODO_CATS.slice();
+  if(!state.noteCats.includes('General')) state.noteCats.push('General');
+  if(!state.todoHosts||typeof state.todoHosts!=='object'){
+    state.todoHosts={
+      changes: state.noteCats.includes('Changes')?'Changes':'General',
+      building: state.noteCats.includes('Build')?'Build':'General',
+    };
+  }
+  let maxSort=0;
   state.todos.forEach(n=>{
     if(!n.cat || !state.noteCats.includes(n.cat)) n.cat='General';
     if(n.prio===undefined) n.prio='none';
     if(!n.created) n.created=Date.now();
+    if(typeof n.sort!=='number') n.sort=maxSort++;
+    else if(n.sort>=maxSort) maxSort=n.sort+1;
   });
 }
-function renderNotes(){
-  ensureNoteCats();
-  const nl=$('#noteList'); nl.innerHTML='';
-  const div1=document.createElement('div'); div1.className='board-div'; div1.innerHTML='<span>Client work</span>'; nl.appendChild(div1);
-  TODO_LIVE.forEach(cfg=>renderClientSection(nl,cfg));
-  const div2=document.createElement('div'); div2.className='board-div'; div2.innerHTML='<span>My notes</span>'; nl.appendChild(div2);
+function todoColor(cat){
+  let key=TODO_NAMED[cat];
+  if(!key){
+    const others=state.noteCats.filter(c=>!TODO_NAMED[c]);
+    const i=others.indexOf(cat);
+    key=TODO_CYCLE[(i<0?0:i)%TODO_CYCLE.length];
+  }
+  return TODO_PAL[key]||TODO_PAL.green;
+}
+function renderTodo(){
+  ensureTodo();
+  const wrap=$('#todoLanes'); wrap.innerHTML='';
   state.noteCats.forEach(cat=>{
+    const pal=todoColor(cat);
+    /* client work auto-pulled into whichever lane hosts each stage */
+    const clients=[];
+    TODO_HOSTS.filter(h=>state.todoHosts[h.stage]===cat).forEach(h=>{
+      state.clients.filter(c=>c.stage===h.stage)
+        .sort((a,b)=>(a.month||'').localeCompare(b.month||''))
+        .forEach(c=>clients.push({c,h}));
+    });
     const tasks=state.todos.filter(n=>n.cat===cat).sort((a,b)=>
       (a.done-b.done) ||
       (PRIO_RANK[a.prio||'none']-PRIO_RANK[b.prio||'none']) ||
-      ((b.updated||b.created||0)-(a.updated||a.created||0)));
-    const sec=document.createElement('div'); sec.className='cat-sec';
-    sec.addEventListener('dragover',e=>{ if(dragTaskId){ e.preventDefault(); e.dataTransfer.dropEffect='move'; sec.classList.add('drop-target'); } });
-    sec.addEventListener('dragleave',e=>{ if(!sec.contains(e.relatedTarget)) sec.classList.remove('drop-target'); });
-    sec.addEventListener('drop',e=>{
-      e.preventDefault(); sec.classList.remove('drop-target');
-      const id=dragTaskId; dragTaskId=null; if(!id) return;
-      const t=state.todos.find(x=>x.id===id);
-      if(t && t.cat!==cat){ t.cat=cat; t.updated=Date.now(); save(); renderNotes(); }
-    });
-    const open=tasks.filter(t=>!t.done).length;
-    const head=document.createElement('div'); head.className='cat-head';
-    head.innerHTML=`<span class="cat-name">${esc(cat)}</span><span class="count">${open}</span><button class="cat-x" title="Delete category">✕</button>`;
-    head.querySelector('.cat-name').addEventListener('click',()=>renameNoteCat(cat));
-    head.querySelector('.cat-x').addEventListener('click',()=>deleteNoteCat(cat));
-    sec.appendChild(head);
-    tasks.forEach(n=>{
-      const p=n.prio||'none';
-      const row=document.createElement('div'); row.className='task-item p-'+p+(n.done?' done':'');
-      row.draggable=true; row.dataset.id=n.id;
-      row.addEventListener('dragstart',e=>{ dragTaskId=n.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',n.id); });
-      row.addEventListener('dragend',()=>{ dragTaskId=null; row.classList.remove('dragging'); nl.querySelectorAll('.drop-target').forEach(s=>s.classList.remove('drop-target')); });
-      const dot = p==='none'
-        ? `<button class="prio-dot" title="Set priority"></button>`
-        : `<button class="prio-dot set" title="Priority: ${p}">${PRIO_EMOJI[p]}</button>`;
-      row.innerHTML=dot+
-        `<button class="n-check" title="Done">${n.done?'✓':''}</button>`+
-        `<div class="task-body"><span class="task-text">${esc(n.text)}</span>${n.note?`<span class="task-note">${esc(n.note)}</span>`:''}</div>`+
-        `<button class="task-edit" title="Side note">✎</button>`+
-        `<button class="item-x" title="Remove">✕</button>`;
-      row.querySelector('.prio-dot').addEventListener('click',()=>{ n.prio=PRIO_CYCLE[p]; n.updated=Date.now(); save(); renderNotes(); });
-      row.querySelector('.n-check').addEventListener('click',()=>{ n.done=!n.done; n.updated=Date.now(); save(); renderNotes(); });
-      row.querySelector('.task-edit').addEventListener('click',()=>{
-        const v=prompt('Side note for "'+n.text+'":', n.note||''); if(v===null) return;
-        n.note=v.trim(); n.updated=Date.now(); save(); renderNotes();
-      });
-      row.querySelector('.item-x').addEventListener('click',()=>{ state.todos=state.todos.filter(x=>x.id!==n.id); save(); renderNotes(); });
-      sec.appendChild(row);
-    });
-    const add=document.createElement('div'); add.className='task-add';
-    add.innerHTML=`<input placeholder="+ Add task…" maxlength="200">`;
-    const inp=add.querySelector('input'); inp.dataset.cat=cat;
+      ((a.sort||0)-(b.sort||0)));
+    const openCount=clients.length + tasks.filter(t=>!t.done).length;
+
+    const lane=document.createElement('div'); lane.className='todo-lane';
+    lane.style.setProperty('--dropc', pal.hex);
+
+    const head=document.createElement('div');
+    head.className='todo-lane-head'+(pal.dark?' dark':'');
+    head.style.background=pal.grad;
+    const delBtn = cat==='General' ? '' : `<button class="tl-x" title="Delete category">✕</button>`;
+    head.innerHTML=`<span class="tl-title" title="Rename">${esc(cat)}</span><span class="tl-count">${openCount}</span>${delBtn}`;
+    head.querySelector('.tl-title').addEventListener('click',()=>renameTodoCat(cat));
+    const dx=head.querySelector('.tl-x'); if(dx) dx.addEventListener('click',()=>deleteTodoCat(cat));
+    lane.appendChild(head);
+
+    const addWrap=document.createElement('div'); addWrap.className='todo-lane-add';
+    addWrap.innerHTML=`<input placeholder="+ Add task…" maxlength="200">`;
+    const inp=addWrap.querySelector('input'); inp.dataset.cat=cat;
     inp.addEventListener('keydown',e=>{
       if(e.key!=='Enter') return;
-      const t=inp.value.trim(); if(!t){ return; }
+      const t=inp.value.trim(); if(!t) return;
       const now=Date.now();
-      state.todos.push({id:uid(), text:t, note:'', cat:cat, prio:'none', done:false, created:now, updated:now});
-      pendingFocusCat=cat; save(); renderNotes();
+      const minSort=Math.min(0,...state.todos.filter(n=>n.cat===cat).map(n=>n.sort||0));
+      state.todos.push({id:uid(), text:t, note:'', cat, prio:'none', done:false, sort:minSort-1, created:now, updated:now});
+      pendingFocusCat=cat; save(); renderTodo();
     });
-    sec.appendChild(add);
-    nl.appendChild(sec);
+    lane.appendChild(addWrap);
+
+    const body=document.createElement('div'); body.className='todo-lane-body';
+    body.addEventListener('dragover',e=>{
+      if(!dragTaskId && !dragCliId) return;
+      e.preventDefault(); e.dataTransfer.dropEffect='move'; body.classList.add('dragover');
+    });
+    body.addEventListener('dragleave',e=>{ if(!body.contains(e.relatedTarget)) body.classList.remove('dragover'); });
+    body.addEventListener('drop',e=>{
+      e.preventDefault(); body.classList.remove('dragover');
+      if(dragCliId){ handleClientDrop(cat); return; }
+      if(dragTaskId){ handleTaskDrop(cat, body, e.clientY); return; }
+    });
+    if(!clients.length && !tasks.length){
+      const em=document.createElement('div'); em.className='todo-lane-empty'; em.textContent='Nothing here yet';
+      body.appendChild(em);
+    }
+    clients.forEach(({c,h})=>body.appendChild(clientRow(c,h,pal)));
+    tasks.forEach(n=>body.appendChild(taskRow(n)));
+    lane.appendChild(body);
+    wrap.appendChild(lane);
   });
   if(pendingFocusCat){
-    const el=nl.querySelector('.task-add input[data-cat="'+CSS.escape(pendingFocusCat)+'"]');
+    const el=wrap.querySelector('.todo-lane-add input[data-cat="'+CSS.escape(pendingFocusCat)+'"]');
     if(el) el.focus();
     pendingFocusCat=null;
   }
 }
-function renameNoteCat(oldName){
+function clientRow(c,h,pal){
+  const row=document.createElement('div'); row.className='task-item client';
+  row.style.setProperty('--c',pal.hex); row.style.background=pal.soft;
+  row.draggable=true;
+  row.addEventListener('dragstart',e=>{ dragCliId=c.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain','cli:'+c.id); });
+  row.addEventListener('dragend',()=>{ dragCliId=null; row.classList.remove('dragging'); document.querySelectorAll('.todo-lane-body.dragover').forEach(b=>b.classList.remove('dragover')); });
+  const bits=[];
+  if(c.month) bits.push(esc(fmtMonth(c.month)));
+  if(c.notes) bits.push(esc(c.notes));
+  if(c.value) bits.push(fmtMoney2(c.value));
+  row.innerHTML=
+    `<span class="cli-avatar" title="Open client">👤</span>`+
+    `<div class="task-body cli-body"><span class="task-text">${esc(c.name)}</span>${bits.length?`<span class="task-note">${bits.join(' · ')}</span>`:''}</div>`+
+    `<button class="cli-adv" title="Move to ${h.nextName}">${h.btn}</button>`;
+  row.querySelector('.cli-body').addEventListener('click',()=>openModal(c.id));
+  row.querySelector('.cli-avatar').addEventListener('click',()=>openModal(c.id));
+  row.querySelector('.cli-adv').addEventListener('click',e=>{ e.stopPropagation(); c.stage=h.next; save(); renderAll(); toast(c.name+' → '+h.nextName); });
+  return row;
+}
+function taskRow(n){
+  const p=n.prio||'none';
+  const row=document.createElement('div'); row.className='task-item p-'+p+(n.done?' done':'');
+  row.draggable=true; row.dataset.id=n.id;
+  row.addEventListener('dragstart',e=>{ dragTaskId=n.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',n.id); });
+  row.addEventListener('dragend',()=>{ dragTaskId=null; row.classList.remove('dragging'); document.querySelectorAll('.todo-lane-body.dragover').forEach(b=>b.classList.remove('dragover')); });
+  const dot = p==='none'
+    ? `<button class="prio-dot" title="Set priority"></button>`
+    : `<button class="prio-dot set" title="Priority: ${p}">${PRIO_EMOJI[p]}</button>`;
+  row.innerHTML=dot+
+    `<button class="n-check" title="Done">${n.done?'✓':''}</button>`+
+    `<div class="task-body"><span class="task-text">${esc(n.text)}</span>${n.note?`<span class="task-note">${esc(n.note)}</span>`:''}</div>`+
+    `<button class="task-edit" title="Side note">✎</button>`+
+    `<button class="item-x" title="Remove">✕</button>`;
+  row.querySelector('.prio-dot').addEventListener('click',()=>{ n.prio=PRIO_CYCLE[p]; n.updated=Date.now(); save(); renderTodo(); });
+  row.querySelector('.n-check').addEventListener('click',()=>{ n.done=!n.done; n.updated=Date.now(); save(); renderTodo(); });
+  row.querySelector('.task-edit').addEventListener('click',()=>{
+    const v=prompt('Side note for "'+n.text+'":', n.note||''); if(v===null) return;
+    n.note=v.trim(); n.updated=Date.now(); save(); renderTodo();
+  });
+  row.querySelector('.item-x').addEventListener('click',()=>{ state.todos=state.todos.filter(x=>x.id!==n.id); save(); renderTodo(); });
+  return row;
+}
+function todoAfterElement(body, y){
+  const els=[...body.querySelectorAll('.task-item[data-id]:not(.dragging)')];
+  let closest=null, closestOffset=-Infinity;
+  els.forEach(el=>{
+    const box=el.getBoundingClientRect();
+    const offset=y-box.top-box.height/2;
+    if(offset<0 && offset>closestOffset){ closestOffset=offset; closest=el; }
+  });
+  return closest;
+}
+function handleTaskDrop(cat, body, y){
+  const id=dragTaskId; dragTaskId=null; if(!id) return;
+  const t=state.todos.find(x=>x.id===id); if(!t) return;
+  t.cat=cat; t.updated=Date.now();
+  const after=todoAfterElement(body, y);
+  const ids=[...body.querySelectorAll('.task-item[data-id]')].map(el=>el.dataset.id).filter(x=>x!==id);
+  let idx = after ? ids.indexOf(after.dataset.id) : ids.length;
+  if(idx<0) idx=ids.length;
+  ids.splice(idx,0,id);
+  ids.forEach((tid,i)=>{ const tt=state.todos.find(x=>x.id===tid); if(tt) tt.sort=i; });
+  save(); renderTodo();
+}
+function handleClientDrop(cat){
+  const id=dragCliId; dragCliId=null; if(!id) return;
+  const c=state.clients.find(x=>x.id===id); if(!c){ renderTodo(); return; }
+  const host=TODO_HOSTS.find(h=>state.todoHosts[h.stage]===cat);
+  if(host && c.stage!==host.stage){
+    c.stage=host.stage; save(); renderAll(); toast(c.name+' → '+stageById(host.stage).name);
+  } else renderTodo();
+}
+function renameTodoCat(oldName){
   const v=prompt('Rename category', oldName); if(v===null) return;
   const name=v.trim(); if(!name || name===oldName) return;
   if(state.noteCats.includes(name)){ toast('Category already exists'); return; }
   const i=state.noteCats.indexOf(oldName); if(i<0) return;
   state.noteCats[i]=name; const now=Date.now();
   state.todos.forEach(n=>{ if(n.cat===oldName){ n.cat=name; n.updated=now; } });
-  save(); renderNotes();
+  Object.keys(state.todoHosts).forEach(k=>{ if(state.todoHosts[k]===oldName) state.todoHosts[k]=name; });
+  save(); renderTodo();
 }
-function deleteNoteCat(name){
+function deleteTodoCat(name){
   if(name==='General'){ toast('General can’t be deleted'); return; }
   const cnt=state.todos.filter(n=>n.cat===name).length;
   if(!confirm('Delete category “'+name+'”?'+(cnt?' Its '+cnt+' task'+(cnt>1?'s':'')+' will move to General.':''))) return;
   const now=Date.now();
   state.todos.forEach(n=>{ if(n.cat===name){ n.cat='General'; n.updated=now; } });
   state.noteCats=state.noteCats.filter(c=>c!==name);
-  save(); renderNotes();
+  if(!state.noteCats.includes('General')) state.noteCats.push('General');
+  Object.keys(state.todoHosts).forEach(k=>{ if(state.todoHosts[k]===name) state.todoHosts[k]='General'; });
+  save(); renderTodo();
 }
 $('#catAdd').addEventListener('click',()=>{
   const v=prompt('New category name'); if(v===null) return;
   const name=v.trim(); if(!name) return;
-  ensureNoteCats();
+  ensureTodo();
   if(state.noteCats.includes(name)){ toast('Category already exists'); return; }
-  state.noteCats.push(name); save(); renderNotes();
+  state.noteCats.push(name); save(); renderTodo();
 });
 
 /* ---------- monthly subscriptions ---------- */
