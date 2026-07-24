@@ -410,6 +410,93 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 @media(max-width:560px){.cli-adv{opacity:1;}}
 body.dark .cli-avatar{background:rgba(255,255,255,.09);}
 
+/* ---------- Inline SVG icons (replace emojis) ---------- */
+.ic{width:1em; height:1em; display:inline-block; vertical-align:-.14em; flex-shrink:0;}
+.hc-ico .ic,.thb-ico .ic,.panel-head .ico .ic{width:1.05em; height:1.05em;}
+.btn .ic{width:1.05em; height:1.05em;}
+.chip .ic{width:1.15em; height:1.15em; vertical-align:-.22em;}
+
+/* ---------- Lost / Δεν προχώρησε tray ---------- */
+.lost-tray{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); margin-top:14px; overflow:hidden;}
+.lost-head{display:flex; align-items:center; gap:9px; padding:11px 15px; cursor:pointer; user-select:none;}
+.lost-head .ico{width:30px; height:30px; border-radius:9px; display:grid; place-items:center; background:var(--bg); color:var(--muted); flex-shrink:0;}
+.lost-head .name{font-family:'Sora'; font-weight:700; font-size:12.5px;}
+.lost-head .count{background:var(--bg); color:var(--muted); font-weight:700; font-size:11px; border-radius:99px; padding:3px 9px; font-variant-numeric:tabular-nums;}
+.lost-head .lost-sum{margin-left:auto; font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums;}
+.lost-head .chev{transition:transform .18s; color:var(--muted); display:grid;}
+.lost-tray.open .lost-head .chev{transform:rotate(90deg);}
+.lost-body{display:none; gap:8px; overflow-x:auto; padding:6px 14px 14px; align-items:stretch;}
+.lost-tray.open .lost-body{display:flex;}
+.lost-body.dragover{background:var(--bg); box-shadow:inset 0 0 0 2px var(--muted);}
+.lost-body .card{min-width:200px; max-width:250px; flex:0 0 auto; opacity:.82;}
+.lost-body .card .c-reason{font-size:11px; color:var(--coral); font-weight:600; margin-top:6px;}
+.lost-empty{font-size:11.5px; color:#B4BAC8; padding:10px 4px;}
+.card .c-lost{position:absolute; top:7px; right:34px; width:24px; height:24px; border-radius:8px; display:grid; place-items:center; color:var(--muted); font-size:13px; opacity:0; transition:opacity .12s;}
+.card:hover .c-lost{opacity:1;}
+.card .c-lost:hover{background:var(--coral-soft); color:var(--coral);}
+
+/* ---------- Quick Log — daily call tracker ---------- */
+.ql-add{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:13px 15px; display:flex; gap:9px; align-items:center; flex-wrap:wrap; margin-bottom:16px; border-left:5px solid var(--brand);}
+.ql-add .qa-title{font-family:'Sora'; font-weight:700; font-size:12.5px; white-space:nowrap;}
+.ql-add input,.ql-add select{border:1px solid var(--line); border-radius:10px; padding:9px 11px; background:var(--bg); color:var(--ink);}
+.ql-add input:focus,.ql-add select:focus{background:var(--surface);}
+.ql-add .qn{flex:1; min-width:150px;} .ql-add .qv{width:96px;} .ql-add .qd{width:150px;}
+.ql-stats{margin-bottom:18px;}
+.ql-stat-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; margin-bottom:12px;}
+.qs-pill{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:11px 15px; box-shadow:var(--shadow);}
+.qs-pill .k{font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); display:flex; align-items:center; gap:5px;}
+.qs-pill .v{font-family:'Sora'; font-weight:800; font-size:22px; letter-spacing:-.02em; font-variant-numeric:tabular-nums; margin-top:3px;}
+.qs-pill .sub{font-size:10.5px; color:var(--muted); font-weight:600; margin-top:1px;}
+.qs-pill.accent{background:var(--grad); border:none; color:#fff;}
+.qs-pill.accent .k{color:rgba(255,255,255,.85);} .qs-pill.accent .sub{color:rgba(255,255,255,.8);}
+.qs-pill .tgt-bar{margin-top:8px;}
+.day-log{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:14px; overflow:hidden;}
+.daylog-head{display:flex; align-items:center; gap:10px; padding:12px 15px; border-bottom:1px solid var(--line); flex-wrap:wrap;}
+.daylog-head .dl-date{font-family:'Sora'; font-weight:800; font-size:14px; letter-spacing:-.01em;}
+.daylog-head .dl-dow{font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;}
+.daylog-head.today .dl-date{color:var(--brand);}
+.daylog-counts{display:flex; gap:6px; margin-left:auto; flex-wrap:wrap;}
+.dl-badge{font-size:10.5px; font-weight:700; border-radius:8px; padding:4px 9px; background:var(--bg); color:var(--muted); font-variant-numeric:tabular-nums; display:flex; align-items:center; gap:4px; white-space:nowrap;}
+.dl-badge.calls{background:var(--blue-soft); color:var(--blue);}
+.dl-badge.g{background:var(--green-soft); color:var(--deep);}
+.dl-badge.y{background:var(--yellow-soft); color:#8A6D00;}
+.dl-badge.r{background:var(--red-soft); color:#B02231;}
+.dl-badge.rate{background:var(--violet-soft); color:var(--violet);}
+.daylog-lanes{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:12px 14px 14px;}
+@media(max-width:760px){.daylog-lanes{grid-template-columns:1fr;}}
+.dl-lane{border:1px solid var(--line); border-radius:12px; background:var(--bg); display:flex; flex-direction:column; min-width:0;}
+.dl-lane-head{display:flex; align-items:center; gap:6px; padding:8px 11px; font-size:11px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; border-bottom:1px solid var(--line);}
+.dl-lane.g .dl-lane-head{color:var(--deep);} .dl-lane.y .dl-lane-head{color:#8A6D00;} .dl-lane.r .dl-lane-head{color:#B02231;}
+.dl-lane-head .c{margin-left:auto; font-variant-numeric:tabular-nums; opacity:.8;}
+.dl-lane-body{padding:8px; display:flex; flex-direction:column; gap:6px; min-height:44px;}
+.dl-lane-body.dragover{background:var(--blue-soft); border-radius:0 0 12px 12px; box-shadow:inset 0 0 0 2px var(--brand);}
+.dl-empty{font-size:11px; color:#B4BAC8; text-align:center; padding:8px 4px;}
+.log-entry{display:flex; align-items:center; gap:7px; padding:8px 9px; border-radius:10px; background:var(--surface); border:1px solid var(--line); cursor:grab; font-size:12.5px; flex-wrap:wrap;}
+.log-entry.dragging{opacity:.4; cursor:grabbing;}
+.log-entry .le-name{font-weight:700; word-break:break-word; flex:1; min-width:0;}
+.log-entry .le-val{font-size:10.5px; font-weight:800; color:var(--deep); background:var(--green-soft); border-radius:6px; padding:2px 6px; white-space:nowrap;}
+.log-entry .le-note{font-size:11px; color:var(--muted); font-weight:500; width:100%; word-break:break-word;}
+.log-entry .le-edit,.log-entry .le-x{opacity:0; color:var(--muted); padding:2px 4px; border-radius:6px; display:grid;}
+.log-entry:hover .le-edit,.log-entry:hover .le-x{opacity:.65;}
+.log-entry .le-edit:hover,.log-entry .le-x:hover{opacity:1; background:rgba(0,0,0,.07); color:var(--ink);}
+body.dark .log-entry .le-edit:hover,body.dark .log-entry .le-x:hover{background:rgba(255,255,255,.1);}
+.src-chip{font-size:9.5px; font-weight:700; border-radius:6px; padding:2px 6px; display:inline-flex; align-items:center; gap:3px; white-space:nowrap; text-transform:uppercase; letter-spacing:.03em;}
+.src-chip.cold{background:var(--blue-soft); color:var(--blue);}
+.src-chip.referral{background:var(--violet-soft); color:var(--violet);}
+.src-chip.form{background:var(--cyan-soft); color:var(--cyan);}
+.src-chip.other{background:var(--bg); color:var(--muted);}
+.ql-mv{background:var(--green); color:#fff; font-size:10px; font-weight:700; border-radius:6px; padding:3px 6px; opacity:0; white-space:nowrap;}
+.log-entry:hover .ql-mv{opacity:1;}
+@media(max-width:760px){ .log-entry .le-edit,.log-entry .le-x,.log-entry .ql-mv{opacity:.7;} }
+.qlc-wrap{background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); padding:14px 15px;}
+.qlc-title{font-size:11px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); margin-bottom:10px;}
+.qlc-grid{display:grid; grid-template-columns:repeat(12,1fr); gap:5px; align-items:end;}
+.qlc-col{display:flex; flex-direction:column; align-items:center; gap:5px; min-width:0;}
+.qlc-bar{width:100%; height:70px; background:var(--bg); border-radius:6px; display:flex; align-items:flex-end; overflow:hidden;}
+.qlc-bar>i{width:100%; background:var(--grad); border-radius:6px; min-height:0;}
+.qlc-lbl{font-size:9.5px; font-weight:700; color:var(--muted);}
+
+
 /* ---------- Card color swatches ---------- */
 .swatches{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
 .swatch{width:26px; height:26px; border-radius:9px; cursor:pointer; border:2px solid transparent;}
@@ -522,8 +609,8 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 <body>
 
 <div class="demo-banner" id="demoBanner">
-  <span>🧪 Demo — δείγμα δεδομένων. Οι αλλαγές σας δεν αποθηκεύονται. <a href="/custom-logismiko">Δείτε την υπηρεσία →</a></span>
-  <button class="demo-x" id="demoBannerX" aria-label="Κλείσιμο">✕</button>
+  <span>Demo — δείγμα δεδομένων. Οι αλλαγές σας δεν αποθηκεύονται. <a href="/custom-logismiko">Δείτε την υπηρεσία →</a></span>
+  <button class="demo-x" id="demoBannerX" aria-label="Κλείσιμο" data-ic="x"></button>
 </div>
 
 </div>
@@ -552,24 +639,24 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
     </nav>
     <div class="topbar-right">
       <div class="search-wrap">
-        <input id="globalSearch" placeholder="🔍 Search clients…" autocomplete="off">
+        <input id="globalSearch" placeholder="Search clients…" autocomplete="off">
         <div class="search-results" id="searchResults"></div>
       </div>
-      <button class="btn btn-ghost" id="themeBtn" title="Toggle dark mode">🌙</button>
+      <button class="btn btn-ghost" id="themeBtn" title="Toggle dark mode" aria-label="Toggle dark mode"></button>
       <div class="export-wrap">
-        <button class="btn btn-ghost" id="exportBtn">⬇ Export</button>
+        <button class="btn btn-ghost" id="exportBtn"></button>
         <div class="export-menu" id="exportMenu">
           <div class="lbl">Current month</div>
-          <button data-x="csv-month">📊 Excel / CSV — month</button>
-          <button data-x="pdf-month">📄 PDF — month report</button>
+          <button data-x="csv-month" data-ic="sheet">Excel / CSV — month</button>
+          <button data-x="pdf-month" data-ic="file">PDF — month report</button>
           <div class="lbl">Whole year</div>
-          <button data-x="csv-year">📊 Excel / CSV — year</button>
-          <button data-x="pdf-year">📄 PDF — year report</button>
+          <button data-x="csv-year" data-ic="sheet">Excel / CSV — year</button>
+          <button data-x="pdf-year" data-ic="file">PDF — year report</button>
           <div class="sep"></div>
-          <button data-x="csv-renewals">📊 Excel / CSV — renewals</button>
+          <button data-x="csv-renewals" data-ic="sheet">Excel / CSV — renewals</button>
           <div class="sep"></div>
-          <button data-x="backup">💾 Backup everything (JSON)</button>
-          <button data-x="restore">📂 Restore from backup</button>
+          <button data-x="backup" data-ic="save">Backup everything (JSON)</button>
+          <button data-x="restore" data-ic="folder">Restore from backup</button>
           <input type="file" id="restoreFile" accept=".json" style="display:none">
         </div>
       </div>
@@ -602,23 +689,23 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
   <div class="home-hero" id="homeHero"></div>
   <div class="home-grid">
     <section class="home-card">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft)">📅</span><h3>This week's meetings</h3><button class="hc-link" data-goto="calendar">Open calendar →</button></div>
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--blue)" data-ic="calendar"></span><h3>This week's meetings</h3><button class="hc-link" data-goto="calendar">Open calendar</button></div>
       <div class="home-card-body" id="homeWeek"></div>
     </section>
     <section class="home-card">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--coral-soft)">💰</span><h3>Remaining to collect</h3><button class="hc-link" data-goto="year">Year view →</button></div>
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--coral-soft);color:var(--coral)" data-ic="euro"></span><h3>Remaining to collect</h3><button class="hc-link" data-goto="year">Year view</button></div>
       <div class="home-card-body" id="homeCollect"></div>
     </section>
     <section class="home-card">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--cyan-soft)">🔁</span><h3>Overdue renewals</h3><button class="hc-link" data-goto="renewals">Renewals →</button></div>
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--cyan-soft);color:var(--cyan)" data-ic="repeat"></span><h3>Overdue renewals</h3><button class="hc-link" data-goto="renewals">Renewals</button></div>
       <div class="home-card-body" id="homeRenew"></div>
     </section>
     <section class="home-card">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--green-soft)">📆</span><h3>Subscriptions due this week</h3><button class="hc-link" data-goto="monthly">Monthly →</button></div>
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--green-soft);color:var(--deep)" data-ic="calendar"></span><h3>Subscriptions due this week</h3><button class="hc-link" data-goto="monthly">Monthly</button></div>
       <div class="home-card-body" id="homeSubs"></div>
     </section>
     <section class="home-card wide">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft)">🔴</span><h3>High priority</h3><button class="hc-link" data-goto="todo">To Do →</button></div>
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft);color:var(--red)" data-ic="flag"></span><h3>High priority</h3><button class="hc-link" data-goto="todo">To Do</button></div>
       <div class="home-card-body" id="homeNotes"></div>
     </section>
   </div>
@@ -639,6 +726,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
     <div class="tray" id="changesTray" style="--tc:var(--pink)"></div>
   </div>
   <div class="board" id="board"></div>
+  <div class="lost-tray" id="lostTray"></div>
 </main>
 
 <!-- CALENDAR -->
@@ -671,55 +759,34 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
   <div class="year-grid" id="yearGrid"></div>
 </main>
 
-<!-- QUICK LOG -->
+<!-- QUICK LOG — daily call tracker -->
 <main class="view" id="view-quicklog">
-  <div class="lanes">
-    <section class="lane g">
-      <div class="lane-head">
-        <div><h3>✓ Booked</h3><p>Closed on the phone — goes to the board & calendar</p></div>
-        <span class="lcount" id="cntG">0</span>
-      </div>
-      <div class="lane-input">
-        <input class="nm" id="logG" placeholder="Name">
-        <input class="val" id="logGVal" type="number" placeholder="€" min="0">
-        <input class="dt" id="logGDay" type="date" title="Meeting day">
-        <input class="tm" id="logGTime" type="time" title="Meeting time">
-        <button id="addG" aria-label="Add booked">＋</button>
-      </div>
-      <div class="lane-body" id="laneG"></div>
-      <div class="lane-hint">Name + € + day + time, press Enter. It lands here, on the Booked column <b>and</b> in the Calendar.</div>
-    </section>
-    <section class="lane y">
-      <div class="lane-head">
-        <div><h3>✉ SMS / Email sent</h3><p>Waiting to hear back</p></div>
-        <span class="lcount" id="cntY">0</span>
-      </div>
-      <div class="lane-input">
-        <input class="nm" id="logY" placeholder="Name">
-        <button id="addY" aria-label="Add contacted">＋</button>
-      </div>
-      <div class="lane-body" id="laneY"></div>
-      <div class="lane-hint">Hover an entry to mark it ✓ Booked or remove it.</div>
-    </section>
-    <section class="lane r">
-      <div class="lane-head">
-        <div><h3>✕ Said no</h3><p>Negative answers — keep for the record</p></div>
-        <span class="lcount" id="cntR">0</span>
-      </div>
-      <div class="lane-input">
-        <input class="nm" id="logR" placeholder="Name">
-        <button id="addR" aria-label="Add negative">＋</button>
-      </div>
-      <div class="lane-body" id="laneR"></div>
-      <div class="lane-hint">Logged per month, so you can check who said no and when.</div>
-    </section>
+  <div class="ql-add">
+    <span class="qa-title">＋ Log</span>
+    <input class="qn" id="qlName" placeholder="Name — who you contacted">
+    <input class="qv" id="qlVal" type="number" placeholder="€ value" min="0" title="Deal value — used when booked">
+    <select id="qlType" title="Outcome">
+      <option value="g">Booked</option>
+      <option value="y">SMS / Email sent</option>
+      <option value="r">Said no</option>
+    </select>
+    <select id="qlSource" title="Where this lead came from">
+      <option value="cold">Cold call</option>
+      <option value="referral">Referral</option>
+      <option value="form">Form</option>
+      <option value="other">Other</option>
+    </select>
+    <input class="qd" id="qlDate" type="date" title="Day (defaults to today)">
+    <button class="btn btn-green" id="qlAdd">Log entry</button>
   </div>
+  <div class="ql-stats" id="qlStats"></div>
+  <div id="qlDays"></div>
 </main>
 
 <!-- TO DO -->
 <main class="view" id="view-todo">
   <div class="todo-head-bar">
-    <div class="thb-ico">✅</div>
+    <div class="thb-ico" style="color:var(--brand)" data-ic="check2"></div>
     <div class="thb-txt"><h3>To Do</h3><p>Client work and your notes — one board of lanes</p></div>
     <button class="cat-add-btn" id="catAdd">+ New category</button>
   </div>
@@ -731,7 +798,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
   <div class="cb-grid">
     <section class="panel">
       <div class="panel-head">
-        <div class="ico" style="background:var(--orange-soft);">🔥</div>
+        <div class="ico" style="background:var(--orange-soft);color:var(--orange)" data-ic="fire"></div>
         <div><h3>Warm leads — call back</h3><p>Interested people to chase soon</p></div>
       </div>
       <div class="panel-form">
@@ -744,7 +811,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
     </section>
     <section class="panel">
       <div class="panel-head">
-        <div class="ico" style="background:var(--violet-soft);">📅</div>
+        <div class="ico" style="background:var(--violet-soft);color:var(--violet)" data-ic="calendar"></div>
         <div><h3>Scheduled callbacks</h3><p>"Call me in September" — grouped by month</p></div>
       </div>
       <div class="panel-form">
@@ -771,7 +838,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
   </section>
   <section class="panel">
     <div class="panel-head">
-      <div class="ico" style="background:var(--cyan-soft);">🔁</div>
+      <div class="ico" style="background:var(--cyan-soft);color:var(--cyan)" data-ic="repeat"></div>
       <div><h3>Monthly subscriptions</h3><p>Click a month cell to mark it paid — red € means due now</p></div>
       <div class="month-nav" style="margin-left:auto;box-shadow:none;border:none;">
         <button id="subPrevY" aria-label="Previous year">‹</button>
@@ -803,7 +870,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
   <div class="modal">
     <div class="modal-head">
       <h3 id="modalTitle">Edit client</h3>
-      <button class="modal-close" id="modalClose">✕</button>
+      <button class="modal-close" id="modalClose" aria-label="Close"></button>
     </div>
     <div class="modal-body">
       <div class="field"><label>Name</label><input id="mName"></div>
@@ -828,6 +895,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
     </div>
     <div class="modal-foot">
       <button class="btn btn-danger" id="mDelete">Delete</button>
+      <button class="btn btn-ghost" id="mLost">Didn't convert</button>
       <button class="btn btn-brand" id="mSave">Save</button>
     </div>
   </div>
@@ -858,9 +926,15 @@ const STAGES = [
   {id:'review',   name:'Draft · Review',  c:'var(--violet)', cs:'var(--violet-soft)', hex:'#7C5CFC'},
   {id:'changes',  name:'Making changes',  c:'var(--pink)',   cs:'var(--pink-soft)',   hex:'#F45B9A'},
   {id:'pay',      name:'Waiting payment', c:'var(--coral)',  cs:'var(--coral-soft)',  hex:'#FF6B57'},
-  {id:'paid',     name:'Paid ✓',          c:'var(--deep)',   cs:'var(--green-soft)',  hex:'#0B9E5C'},
+  {id:'paid',     name:'Paid',            c:'var(--deep)',   cs:'var(--green-soft)',  hex:'#0B9E5C'},
+  {id:'lost',     name:'Lost',            c:'var(--muted)',  cs:'var(--bg)',          hex:'#8A94A8'},
 ];
+/* FLOW = the linear working pipeline; 'lost' sits outside it (its own tray) */
+const FLOW = STAGES.filter(s=>s.id!=='lost');
 const stageById = id => STAGES.find(s=>s.id===id) || STAGES[0];
+/* revenue predicates — 'lost' clients never count toward any money figure */
+const notLost = c => c.stage!=='lost';
+const PAYING_STAGES = ['pay','paid'];   /* "reached a paying stage" for conversion stats */
 const OLD_STAGE_MAP = {remind:'needinfo', draft:'review', review1:'review', review2:'changes'};
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DOW = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
@@ -879,6 +953,48 @@ const fmtDay=d=>{ if(!d) return ''; const [y,m,dd]=d.split('-'); return dd+'/'+m
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tint=(hex,a)=>{ const n=parseInt(hex.slice(1),16); return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'; };
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
+
+/* ---------- inline SVG icons (professional, no emojis) ---------- */
+const SVG=(p,sw)=>`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw||2}" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const IC={
+  search:SVG('<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>'),
+  moon:SVG('<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>'),
+  sun:SVG('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
+  lock:SVG('<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),
+  download:SVG('<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>'),
+  sheet:SVG('<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/>'),
+  file:SVG('<path d="M14 3v5h5"/><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>'),
+  save:SVG('<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/>'),
+  folder:SVG('<path d="M4 20a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2Z"/>'),
+  calendar:SVG('<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'),
+  clock:SVG('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),
+  euro:SVG('<path d="M18 7a6 6 0 1 0 0 10"/><path d="M4 11h9M4 15h7"/>'),
+  refresh:SVG('<path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/>'),
+  repeat:SVG('<path d="m17 2 4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>'),
+  flag:SVG('<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V4s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/>'),
+  check:SVG('<path d="M20 6 9 17l-5-5"/>',2.4),
+  x:SVG('<path d="M18 6 6 18M6 6l12 12"/>',2.2),
+  edit:SVG('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),
+  arrowRight:SVG('<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>'),
+  arrowDown:SVG('<path d="M12 5v14"/><path d="m5 12 7 7 7-7"/>'),
+  chevRight:SVG('<path d="m9 6 6 6-6 6"/>'),
+  user:SVG('<path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/>'),
+  users:SVG('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/>'),
+  phone:SVG('<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/>'),
+  mail:SVG('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/>'),
+  message:SVG('<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/>'),
+  ban:SVG('<circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/>'),
+  clipboard:SVG('<rect x="8" y="3" width="8" height="4" rx="1"/><path d="M16 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/>'),
+  bulb:SVG('<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.6.6 1 1.3 1 2.1V16h6v-.4c0-.8.4-1.5 1-2.1A6 6 0 0 0 12 3Z"/>'),
+  receipt:SVG('<path d="M4 3v18l2-1 2 1 2-1 2 1 2-1 2 1 2-1V3l-2 1-2-1-2 1-2-1-2 1-2-1Z"/><path d="M8 8h8M8 12h8M8 16h5"/>'),
+  fire:SVG('<path d="M12 2s5 4 5 9a5 5 0 0 1-10 0c0-1 .3-2 .8-2.8C8 9 9 8 9 8s0 2 1.5 2S12 6 12 6s0 2 1 3 2 1 2 2"/>'),
+  target:SVG('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>'),
+  bars:SVG('<path d="M4 20V10M10 20V4M16 20v-8M22 20h-2M2 20h20"/>'),
+  briefcase:SVG('<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>'),
+  check2:SVG('<circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/>'),
+};
+function prioDotSvg(p){ const col=PRIO_COLOR[p]?PRIO_COLOR[p].c:'var(--muted)'; return `<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="${col}"/></svg>`; }
+
 
 /* ---------- storage (DEMO — in-memory only; nothing is written to the browser) ---------- */
 let state=null;
@@ -912,7 +1028,7 @@ function collectedForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=collectedFo
    + monthly-subscription income recorded for that month. This is what the TARGET is
    measured against — separate from "Collected". */
 function generatedForMonth(key){
-  const booked=state.clients.filter(c=>c.month===key).reduce((a,c)=>a+(+c.value||0),0);
+  const booked=state.clients.filter(c=>c.month===key && notLost(c)).reduce((a,c)=>a+(+c.value||0),0);
   const subs=state.subs.reduce((a,s)=>a+((s.paid && s.paid[key])?(+s.value||0):0),0);
   return booked+subs;
 }
@@ -952,7 +1068,7 @@ function editYearTarget(y){
 
 function renderStats(){
   $('#monthLabel').textContent=fmtMonth(curMonth);
-  const mc=state.clients.filter(c=>c.month===curMonth);
+  const mc=state.clients.filter(c=>c.month===curMonth && notLost(c));
   $('#statCount').textContent=mc.length;
   const tot=mc.reduce((a,c)=>a+(+c.value||0),0);
   const paid=mc.filter(c=>c.stage==='paid').reduce((a,c)=>a+(+c.value||0),0);
@@ -988,11 +1104,16 @@ function dropHandlers(el, stageId){
     e.preventDefault(); el.classList.remove('dragover');
     const id=e.dataTransfer.getData('text/plain');
     const cl=state.clients.find(x=>x.id===id);
-    if(cl && cl.stage!==stageId){ cl.stage=stageId; save(); renderAll(); toast(cl.name+' → '+stageById(stageId).name); }
+    if(cl && cl.stage!==stageId){
+      cl.stage=stageId; cl.updated=Date.now();
+      if(stageId==='lost'){ cl.lostAt=Date.now(); lostOpen=true; }
+      else { delete cl.lostReason; cl.lostAt=null; }
+      save(); renderAll(); toast(cl.name+' → '+stageById(stageId).name);
+    }
   });
 }
 function renderBoard(){
-  const mc=state.clients.filter(c=>c.month===curMonth);
+  const mc=state.clients.filter(c=>c.month===curMonth && notLost(c));
   /* Two horizontal trays: Booked (new) and Making changes (quick fixes) */
   const tray=(sel,stageId,label,hint)=>{
     const st=stageById(stageId);
@@ -1010,11 +1131,11 @@ function renderBoard(){
     items.forEach(c=>body.appendChild(cardEl(c,st)));
     dropHandlers(body,stageId);
   };
-  tray('#bookedTray','booked','Booked — drag into the pipeline ↓','Empty — new booked clients land here.');
+  tray('#bookedTray','booked',`Booked — drag into the pipeline ${IC.arrowDown}`,'Empty — new booked clients land here.');
   tray('#changesTray','changes','Making changes — quick fixes','Empty — drop cards here while you fix them.');
-  /* The 5 remaining stages as columns */
+  /* The working pipeline columns (booked/changes are trays, lost is its own drawer) */
   const board=$('#board'); board.innerHTML='';
-  STAGES.filter(s=>s.id!=='booked'&&s.id!=='changes').forEach(st=>{
+  FLOW.filter(s=>s.id!=='booked'&&s.id!=='changes').forEach(st=>{
     const items=mc.filter(c=>c.stage===st.id).sort((a,b)=>(a.day||'9')<(b.day||'9')?-1:1);
     const sum=items.reduce((a,c)=>a+(+c.value||0),0);
     const col=document.createElement('div');
@@ -1031,6 +1152,28 @@ function renderBoard(){
     dropHandlers(body,st.id);
     board.appendChild(col);
   });
+  renderLostTray();
+}
+let lostOpen=false;
+function renderLostTray(){
+  const st=stageById('lost');
+  const lost=state.clients.filter(c=>c.month===curMonth && c.stage==='lost')
+    .sort((a,b)=>(b.lostAt||0)-(a.lostAt||0));
+  const el=$('#lostTray'); if(!el) return;
+  el.classList.toggle('open', lostOpen);
+  el.innerHTML=`
+    <div class="lost-head">
+      <span class="ico">${IC.ban}</span>
+      <span class="name">Lost · Δεν προχώρησε</span>
+      <span class="count">${lost.length}</span>
+      <span class="lost-sum">${lost.length?'drag a card back into the board to revive it':''}</span>
+      <span class="chev">${IC.chevRight}</span>
+    </div>
+    <div class="lost-body">${lost.length?'':'<div class="lost-empty">No lost clients this month.</div>'}</div>`;
+  el.querySelector('.lost-head').addEventListener('click',()=>{ lostOpen=!lostOpen; renderLostTray(); });
+  const body=el.querySelector('.lost-body');
+  lost.forEach(c=>body.appendChild(cardEl(c,st)));
+  dropHandlers(body,'lost');
 }
 function cardEl(c,st){
   const el=document.createElement('div');
@@ -1038,28 +1181,46 @@ function cardEl(c,st){
   const cc=c.color||'';
   el.style.setProperty('--c', cc||st.c); el.style.setProperty('--cs', cc? tint(cc,.14) : st.cs);
   if(c.fill) el.style.background=tint(cc||st.hex, getComputedStyle(document.body).getPropertyValue('--soft-shade')||.11);
-  const idx=STAGES.findIndex(s=>s.id===c.stage);
-  const nextName= idx<STAGES.length-1 ? STAGES[idx+1].name : null;
+  const isLost=c.stage==='lost';
+  const idx=FLOW.findIndex(s=>s.id===c.stage);
+  const nextName= (!isLost && idx>=0 && idx<FLOW.length-1) ? FLOW[idx+1].name : null;
   const added= c.created ? new Date(c.created) : null;
   const addedTxt= added ? pad(added.getDate())+'/'+pad(added.getMonth()+1) : '';
   el.innerHTML=`
     <div class="c-name">${c.prio&&PRIO_COLOR[c.prio]?`<span class="c-prio" style="background:${PRIO_COLOR[c.prio].c}" title="Priority: ${c.prio}"></span>`:''}${esc(c.name)}${addedTxt?`<span class="c-added" title="Added ${addedTxt}">${addedTxt}</span>`:''}</div>
     <div class="c-meta">
       ${c.value?`<span class="chip money">${fmtMoney(c.value)}</span>`:''}
-      ${c.day?`<span class="chip">📅 ${fmtDay(c.day)}</span>`:''}
-      ${c.time?`<span class="chip">🕐 ${c.time}</span>`:''}
-      ${c.phone?`<a class="chip contact" href="tel:${esc(c.phone)}" title="${esc(c.phone)}" onclick="event.stopPropagation()">📞</a>`:''}
-      ${c.viber?`<span class="chip contact" title="Viber: ${esc(c.viber)}">🟣</span>`:''}
-      ${c.email?`<a class="chip contact" href="mailto:${esc(c.email)}" title="${esc(c.email)}" onclick="event.stopPropagation()">✉️</a>`:''}
+      ${c.day?`<span class="chip">${IC.calendar} ${fmtDay(c.day)}</span>`:''}
+      ${c.time?`<span class="chip">${IC.clock} ${c.time}</span>`:''}
+      ${c.phone?`<a class="chip contact" href="tel:${esc(c.phone)}" title="${esc(c.phone)}" onclick="event.stopPropagation()">${IC.phone}</a>`:''}
+      ${c.viber?`<span class="chip contact" title="Viber: ${esc(c.viber)}">${IC.message}</span>`:''}
+      ${c.email?`<a class="chip contact" href="mailto:${esc(c.email)}" title="${esc(c.email)}" onclick="event.stopPropagation()">${IC.mail}</a>`:''}
     </div>
     ${c.notes?`<div class="c-notes">${esc(c.notes)}</div>`:''}
-    ${nextName?`<button class="c-next" title="Move to ${nextName}">→</button>`:''}`;
+    ${isLost&&c.lostReason?`<div class="c-reason" title="Reason">${IC.ban} ${esc(c.lostReason)}</div>`:''}
+    ${!isLost?`<button class="c-lost" title="Didn't convert — move to Lost">${IC.ban}</button>`:''}
+    ${nextName?`<button class="c-next" title="Move to ${nextName}">${IC.arrowRight}</button>`:''}`;
   el.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain',c.id); el.classList.add('dragging'); });
   el.addEventListener('dragend',()=>el.classList.remove('dragging'));
-  el.addEventListener('click',e=>{ if(e.target.closest('.c-next')) return; openModal(c.id); });
+  el.addEventListener('click',e=>{ if(e.target.closest('.c-next')||e.target.closest('.c-lost')) return; openModal(c.id); });
   const nx=el.querySelector('.c-next');
-  if(nx) nx.addEventListener('click',()=>{ c.stage=STAGES[idx+1].id; save(); renderAll(); toast(c.name+' → '+STAGES[idx+1].name); });
+  if(nx) nx.addEventListener('click',()=>{ c.stage=FLOW[idx+1].id; c.updated=Date.now(); save(); renderAll(); toast(c.name+' → '+FLOW[idx+1].name); });
+  const lx=el.querySelector('.c-lost');
+  if(lx) lx.addEventListener('click',e=>{ e.stopPropagation(); markLost(c.id); });
   return el;
+}
+function markLost(id){
+  const c=state.clients.find(x=>x.id===id); if(!c) return;
+  const reason=prompt('Didn’t convert — short reason for "'+c.name+'" (optional):', c.lostReason||'');
+  if(reason===null) return;
+  c.stage='lost'; c.lostReason=reason.trim(); c.lostAt=Date.now(); c.updated=Date.now();
+  lostOpen=true;
+  save(); renderAll(); toast(c.name+' → Lost');
+}
+function reviveClient(id, toStage){
+  const c=state.clients.find(x=>x.id===id); if(!c) return;
+  c.stage=toStage||'booked'; delete c.lostReason; c.lostAt=null; c.updated=Date.now();
+  save(); renderAll(); toast(c.name+' → '+stageById(c.stage).name);
 }
 function qaSubmit(){
   const name=$('#qaName').value.trim(); if(!name){ $('#qaName').focus(); return; }
@@ -1146,7 +1307,7 @@ function renderYear(){
   let yTotal=0,yPaid=0,yCount=0;
   for(let m=1;m<=12;m++){
     const key=curYear+'-'+pad(m);
-    const items=state.clients.filter(c=>c.month===key);
+    const items=state.clients.filter(c=>c.month===key && notLost(c));
     const total=items.reduce((a,c)=>a+(+c.value||0),0);
     const paid=items.filter(c=>c.stage==='paid').reduce((a,c)=>a+(+c.value||0),0);
     yTotal+=total; yPaid+=paid; yCount+=items.length;
@@ -1193,68 +1354,238 @@ function renderYear(){
   const ytc=$('#yearTargetCell'); if(ytc) ytc.addEventListener('click',()=>editYearTarget(curYear));
 }
 
-/* ---------- quick log ---------- */
-function renderLogs(){
-  const types={g:'#laneG',y:'#laneY',r:'#laneR'};
-  const mLogs=state.logs.filter(l=>l.month===curMonth);
-  for(const [t,sel] of Object.entries(types)){
-    const list=mLogs.filter(l=>l.type===t).sort((a,b)=>b.created-a.created);
-    const el=$(sel); el.innerHTML='';
-    $('#cnt'+t.toUpperCase()).textContent=list.length;
-    if(!list.length){ el.innerHTML='<div class="empty-note">Nothing here for '+fmtMonth(curMonth)+'</div>'; continue; }
-    list.forEach(l=>{
-      const row=document.createElement('div'); row.className='log-item';
-      row.innerHTML=`<span>${esc(l.name)}</span>
-        ${t==='g'&&l.value?`<span class="chip money">${fmtMoney(l.value)}</span>`:''}
-        ${t==='y'?`<button class="mv" title="They booked!">✓ Booked</button>`:''}
-        <span class="d">${l.date}</span>
-        <button class="x" title="Remove">✕</button>`;
-      row.querySelector('.x').addEventListener('click',()=>{ state.logs=state.logs.filter(x=>x.id!==l.id); save(); renderLogs(); });
-      const mv=row.querySelector('.mv');
-      if(mv) mv.addEventListener('click',()=>{
-        l.type='g';
-        state.clients.push({id:uid(), name:l.name, value:0, day:'', time:'', stage:'booked', month:curMonth, notes:'', created:Date.now()});
-        save(); renderAll(); toast(l.name+' moved to Booked 🎉');
-      });
-      el.appendChild(row);
+/* ---------- quick log — daily cold-calling tracker ---------- */
+const LOG_TYPES=[['g','Booked'],['y','SMS sent'],['r','Said no']];
+const SRC_META={
+  cold:{name:'Cold call', short:'Cold', icon:IC.phone},
+  referral:{name:'Referral', short:'Ref', icon:IC.users},
+  form:{name:'Form', short:'Form', icon:IC.clipboard},
+  other:{name:'Other', short:'Other', icon:'<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>'},
+};
+const srcMeta=s=>SRC_META[s]||SRC_META.cold;
+let dragLogId=null;
+function ensureLogs(){
+  if(!Array.isArray(state.logs)) state.logs=[];
+  if(!state.workdays || typeof state.workdays!=='object') state.workdays={};
+  state.logs.forEach(l=>{
+    if(!l.created) l.created=Date.now();
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(l.date||'')){ l.date=isoDate(l.created? new Date(l.created): new Date()); }
+    if(!l.source) l.source='cold';
+    if(l.note===undefined) l.note='';
+    if(!l.updated) l.updated=l.created;
+    delete l.month; /* month is now derived from the date */
+  });
+}
+/* stats — call volume counts COLD entries only; booking/revenue count ALL sources */
+function logsForMonth(key){ return state.logs.filter(l=>(l.date||'').slice(0,7)===key); }
+function dayStats(iso){
+  const day=state.logs.filter(l=>l.date===iso);
+  const cold=day.filter(l=>(l.source||'cold')==='cold');
+  const coldBooked=cold.filter(l=>l.type==='g').length;
+  return { calls:cold.length, booked:day.filter(l=>l.type==='g').length, sms:day.filter(l=>l.type==='y').length, nos:day.filter(l=>l.type==='r').length, coldBooked, rate: cold.length? coldBooked/cold.length : 0 };
+}
+function monthLogStats(key){
+  const logs=logsForMonth(key);
+  const cold=logs.filter(l=>(l.source||'cold')==='cold');
+  const coldBooked=cold.filter(l=>l.type==='g').length;
+  const daysWith=new Set(logs.map(l=>l.date)).size;
+  const ov=(state.workdays&&state.workdays[key]!=null)?+state.workdays[key]:null;
+  const workingDays= ov!=null? ov : daysWith;
+  const meetClients=state.clients.filter(c=>c.month===key);  /* every client had a booked meeting */
+  const converted=meetClients.filter(c=>PAYING_STAGES.includes(c.stage)).length;  /* lost ⇒ not counted */
+  const revenue=generatedForMonth(key);  /* already excludes lost */
+  return { calls:cold.length, booked:logs.filter(l=>l.type==='g').length, sms:logs.filter(l=>l.type==='y').length, nos:logs.filter(l=>l.type==='r').length,
+    coldBooked, callConv: cold.length? coldBooked/cold.length : 0,
+    daysWith, workingDays, avgCalls: workingDays? cold.length/workingDays : 0,
+    meetClients:meetClients.length, converted, meetConv: meetClients.length? converted/meetClients.length : 0,
+    revenue, avgRevPerDay: workingDays? revenue/workingDays : 0 };
+}
+function yearLogStats(year){
+  const months=[]; let calls=0,booked=0,sms=0,nos=0,coldBooked=0,workingDays=0,meetC=0,conv=0,revenue=0;
+  for(let m=1;m<=12;m++){ const s=monthLogStats(year+'-'+pad(m)); months.push(s);
+    calls+=s.calls; booked+=s.booked; sms+=s.sms; nos+=s.nos; coldBooked+=s.coldBooked; workingDays+=s.workingDays; meetC+=s.meetClients; conv+=s.converted; revenue+=s.revenue; }
+  return { months, calls, booked, sms, nos, coldBooked, callConv: calls? coldBooked/calls : 0, workingDays, avgCalls: workingDays? calls/workingDays : 0, meetClients:meetC, converted:conv, meetConv: meetC? conv/meetC : 0, revenue, avgRevPerDay: workingDays? revenue/workingDays : 0 };
+}
+function monthStatsHtml(m,key){
+  const callConv=Math.round(m.callConv*100), meetConv=Math.round(m.meetConv*100);
+  const wdIsOverride=(state.workdays&&state.workdays[key]!=null);
+  return `
+  <div class="month-group"><h4>${IC.bars} ${fmtMonth(key)} — call tracker <span class="count">${m.calls} calls</span></h4></div>
+  <div class="ql-stat-grid">
+    <div class="qs-pill"><div class="k">${IC.phone} Cold calls</div><div class="v">${m.calls}</div><div class="sub">call volume · cold only</div></div>
+    <div class="qs-pill"><div class="k">${IC.check} Booked</div><div class="v">${m.booked}</div><div class="sub">all sources</div></div>
+    <div class="qs-pill"><div class="k">${IC.message} SMS sent</div><div class="v">${m.sms}</div><div class="sub">all sources</div></div>
+    <div class="qs-pill"><div class="k">${IC.x} No's</div><div class="v">${m.nos}</div><div class="sub">all sources</div></div>
+    <div class="qs-pill accent"><div class="k">${IC.target} Call → booking</div><div class="v">${callConv}%</div><div class="sub">cold booked ÷ cold calls</div><div class="tgt-bar on-dark"><i class="${progClass(callConv)}" style="width:${Math.min(100,callConv)}%"></i></div></div>
+    <div class="qs-pill"><div class="k">${IC.check2} Meeting → client</div><div class="v">${meetConv}%</div><div class="sub">${m.converted}/${m.meetClients} paid · lost = fail</div><div class="tgt-bar"><i class="${progClass(meetConv)}" style="width:${Math.min(100,meetConv)}%"></i></div></div>
+    <div class="qs-pill" id="wdOverride" style="cursor:pointer" title="Click to override the working-day count"><div class="k">${IC.calendar} Working days</div><div class="v">${m.workingDays}${wdIsOverride?' *':''}</div><div class="sub">${wdIsOverride?'manual · auto '+m.daysWith:'auto from logs'} · edit ${IC.edit}</div></div>
+    <div class="qs-pill"><div class="k">${IC.phone} Avg calls / day</div><div class="v">${m.avgCalls.toFixed(1)}</div><div class="sub">over ${m.workingDays} working day${m.workingDays===1?'':'s'}</div></div>
+    <div class="qs-pill"><div class="k">${IC.euro} Revenue generated</div><div class="v">${fmtMoney(Math.round(m.revenue))}</div><div class="sub">excludes lost</div></div>
+    <div class="qs-pill"><div class="k">${IC.euro} Avg € / working day</div><div class="v">${fmtMoney(Math.round(m.avgRevPerDay))}</div><div class="sub">generated ÷ working days</div></div>
+  </div>`;
+}
+function yearStatsHtml(y,year){
+  const callConv=Math.round(y.callConv*100), meetConv=Math.round(y.meetConv*100);
+  const maxCalls=Math.max(1,...y.months.map(mm=>mm.calls));
+  const bars=y.months.map((mm,i)=>{
+    const h=Math.round(mm.calls/maxCalls*100);
+    return `<div class="qlc-col" title="${MONTHS[i]} ${year}: ${mm.calls} calls · ${mm.booked} booked · ${fmtMoney(Math.round(mm.revenue))} generated"><div class="qlc-bar"><i style="height:${Math.max(mm.calls?6:0,h)}%"></i></div><span class="qlc-lbl">${MONTHS[i][0]}</span></div>`;
+  }).join('');
+  return `
+  <div class="month-group" style="margin-top:6px;"><h4>${IC.bars} ${year} — year totals <span class="count">${y.calls} calls</span></h4></div>
+  <div class="ql-stat-grid">
+    <div class="qs-pill"><div class="k">${IC.phone} Cold calls</div><div class="v">${y.calls}</div></div>
+    <div class="qs-pill"><div class="k">${IC.check} Booked</div><div class="v">${y.booked}</div></div>
+    <div class="qs-pill"><div class="k">${IC.message} SMS</div><div class="v">${y.sms}</div></div>
+    <div class="qs-pill"><div class="k">${IC.x} No's</div><div class="v">${y.nos}</div></div>
+    <div class="qs-pill accent"><div class="k">${IC.target} Call → booking</div><div class="v">${callConv}%</div><div class="tgt-bar on-dark"><i class="${progClass(callConv)}" style="width:${Math.min(100,callConv)}%"></i></div></div>
+    <div class="qs-pill"><div class="k">${IC.check2} Meeting → client</div><div class="v">${meetConv}%</div><div class="sub">${y.converted}/${y.meetClients} paid</div></div>
+    <div class="qs-pill"><div class="k">${IC.calendar} Working days</div><div class="v">${y.workingDays}</div></div>
+    <div class="qs-pill"><div class="k">${IC.phone} Avg calls / day</div><div class="v">${y.avgCalls.toFixed(1)}</div></div>
+    <div class="qs-pill"><div class="k">${IC.euro} Revenue</div><div class="v">${fmtMoney(Math.round(y.revenue))}</div></div>
+    <div class="qs-pill"><div class="k">${IC.euro} Avg € / working day</div><div class="v">${fmtMoney(Math.round(y.avgRevPerDay))}</div></div>
+  </div>
+  <div class="qlc-wrap"><div class="qlc-title">Calls by month · ${year}</div><div class="qlc-grid">${bars}</div></div>`;
+}
+function renderQLStats(){
+  const el=$('#qlStats'); if(!el) return;
+  el.innerHTML = monthStatsHtml(monthLogStats(curMonth),curMonth) + yearStatsHtml(yearLogStats(curYear),curYear);
+  const wd=el.querySelector('#wdOverride'); if(wd) wd.addEventListener('click',()=>editWorkdays(curMonth));
+}
+function renderQuickLog(){
+  ensureLogs();
+  renderQLStats();
+  const wrap=$('#qlDays'); if(!wrap) return; wrap.innerHTML='';
+  const byDate={};
+  logsForMonth(curMonth).forEach(l=>{ (byDate[l.date] ||= []).push(l); });
+  const dates=Object.keys(byDate).sort().reverse();
+  if(!dates.length){ wrap.innerHTML='<div class="empty-note">No calls logged for '+fmtMonth(curMonth)+' yet — add your first above.</div>'; return; }
+  dates.forEach(iso=>{
+    const ds=dayStats(iso);
+    const d=new Date(iso+'T00:00'); const dow=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][(d.getDay()+6)%7];
+    const isToday=iso===todayIso();
+    const sec=document.createElement('div'); sec.className='day-log';
+    sec.innerHTML=`
+      <div class="daylog-head${isToday?' today':''}">
+        <span class="dl-date">${fmtDate(iso)}</span>
+        <span class="dl-dow">${dow}${isToday?' · today':''}</span>
+        <div class="daylog-counts">
+          <span class="dl-badge calls" title="Cold calls made">${IC.phone}${ds.calls} calls</span>
+          <span class="dl-badge g" title="Booked">${ds.booked} booked</span>
+          <span class="dl-badge y" title="SMS / Email sent">${ds.sms} SMS</span>
+          <span class="dl-badge r" title="Said no">${ds.nos} no</span>
+          <span class="dl-badge rate" title="Booking rate — cold booked ÷ cold calls">${Math.round(ds.rate*100)}% rate</span>
+        </div>
+      </div>
+      <div class="daylog-lanes"></div>`;
+    const lanesEl=sec.querySelector('.daylog-lanes');
+    LOG_TYPES.forEach(([type,label])=>{
+      const items=byDate[iso].filter(l=>l.type===type).sort((a,b)=>b.created-a.created);
+      const lane=document.createElement('div'); lane.className='dl-lane '+type;
+      lane.innerHTML=`<div class="dl-lane-head">${label}<span class="c">${items.length}</span></div><div class="dl-lane-body" data-date="${iso}" data-type="${type}">${items.length?'':'<div class="dl-empty">—</div>'}</div>`;
+      const body=lane.querySelector('.dl-lane-body');
+      items.forEach(l=>body.appendChild(logEntryEl(l)));
+      logDropHandlers(body, iso, type);
+      lanesEl.appendChild(lane);
     });
-  }
+    wrap.appendChild(sec);
+  });
 }
-function addLog(type){
-  const inp=$('#log'+type.toUpperCase());
-  const name=inp.value.trim(); if(!name){ inp.focus(); return; }
-  const val= type==='g' ? (+$('#logGVal').value||0) : 0;
-  const day= type==='g' ? $('#logGDay').value : '';
-  const time= type==='g' ? $('#logGTime').value : '';
-  const month= day ? day.slice(0,7) : curMonth;
-  const d=new Date();
-  state.logs.push({id:uid(), type, name, value:val, month:curMonth, date:d.getDate()+'/'+(d.getMonth()+1), created:Date.now()});
-  if(type==='g'){
-    state.clients.push({id:uid(), name, value:val, day, time, stage:'booked', month, notes:'', created:Date.now()});
-    $('#logGVal').value=''; $('#logGDay').value=''; $('#logGTime').value='';
-  }
-  inp.value=''; save(); renderAll(); inp.focus();
-  toast(type==='g'?'Booked! On the board + calendar 🎉': type==='y'?'Logged: message sent':'Logged as negative');
+function logEntryEl(l){
+  const sm=srcMeta(l.source);
+  const row=document.createElement('div'); row.className='log-entry'; row.draggable=true; row.dataset.id=l.id;
+  row.addEventListener('dragstart',e=>{ dragLogId=l.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',l.id); });
+  row.addEventListener('dragend',()=>{ dragLogId=null; row.classList.remove('dragging'); document.querySelectorAll('.dl-lane-body.dragover').forEach(b=>b.classList.remove('dragover')); });
+  row.innerHTML=`
+    <span class="le-name">${esc(l.name)}</span>
+    ${l.value?`<span class="le-val">${fmtMoney(l.value)}</span>`:''}
+    <span class="src-chip ${l.source||'cold'}" title="Source: ${sm.name}">${sm.icon}${sm.short}</span>
+    ${l.type!=='g'?`<button class="ql-mv" title="They booked — move to Booked & add to the Board">${IC.check}Booked</button>`:''}
+    <button class="le-edit" title="Edit name, value, note, source, date">${IC.edit}</button>
+    <button class="le-x" title="Remove">${IC.x}</button>
+    ${l.note?`<span class="le-note">${esc(l.note)}</span>`:''}`;
+  row.querySelector('.le-x').addEventListener('click',()=>{ state.logs=state.logs.filter(x=>x.id!==l.id); save(); renderAll(); });
+  row.querySelector('.le-edit').addEventListener('click',()=>editLogEntry(l.id));
+  const mv=row.querySelector('.ql-mv'); if(mv) mv.addEventListener('click',()=>convertToBooked(l.id));
+  return row;
 }
-$('#addG').addEventListener('click',()=>addLog('g'));
-$('#addY').addEventListener('click',()=>addLog('y'));
-$('#addR').addEventListener('click',()=>addLog('r'));
-['logG','logGVal','logGDay','logGTime'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')addLog('g');}));
-$('#logY').addEventListener('keydown',e=>{if(e.key==='Enter')addLog('y');});
-$('#logR').addEventListener('keydown',e=>{if(e.key==='Enter')addLog('r');});
+function linkClientForLog(l){
+  if(l.clientId && state.clients.find(c=>c.id===l.clientId)) return;
+  const month=(l.date||todayIso()).slice(0,7);
+  const c={id:uid(), name:l.name, value:+l.value||0, day:'', time:'', stage:'booked', month, notes:'', created:Date.now(), updated:Date.now()};
+  state.clients.push(c); l.clientId=c.id;
+}
+function convertToBooked(id){
+  const l=state.logs.find(x=>x.id===id); if(!l) return;
+  l.type='g'; l.updated=Date.now(); linkClientForLog(l);
+  save(); renderAll(); toast(l.name+' → Booked · added to the Board');
+}
+function editLogEntry(id){
+  const l=state.logs.find(x=>x.id===id); if(!l) return;
+  const name=prompt('Name:', l.name); if(name===null) return; if(name.trim()) l.name=name.trim();
+  const v=prompt('Deal value (€) — used when booked, 0 otherwise:', l.value||0);
+  if(v!==null){ const n=parseFloat(String(v).replace(',','.')); if(!isNaN(n)&&n>=0) l.value=Math.round(n); }
+  const note=prompt('Note (optional):', l.note||''); if(note!==null) l.note=note.trim();
+  const src=prompt('Source — cold / referral / form / other:', l.source||'cold');
+  if(src!==null){ const s=src.trim().toLowerCase(); if(SRC_META[s]) l.source=s; }
+  const date=prompt('Date (YYYY-MM-DD) — change it to move this entry to another day:', l.date);
+  if(date!==null && /^\d{4}-\d{2}-\d{2}$/.test(date.trim())) l.date=date.trim();
+  l.updated=Date.now();
+  if(l.clientId){ const c=state.clients.find(x=>x.id===l.clientId); if(c){ c.name=l.name; if(l.type==='g') c.value=+l.value||0; c.updated=Date.now(); } }
+  save(); renderAll();
+}
+function logDropHandlers(body, date, type){
+  body.addEventListener('dragover',e=>{ if(!dragLogId) return; e.preventDefault(); e.dataTransfer.dropEffect='move'; body.classList.add('dragover'); });
+  body.addEventListener('dragleave',e=>{ if(!body.contains(e.relatedTarget)) body.classList.remove('dragover'); });
+  body.addEventListener('drop',e=>{
+    e.preventDefault(); body.classList.remove('dragover');
+    const id=dragLogId; dragLogId=null; if(!id) return;
+    const l=state.logs.find(x=>x.id===id); if(!l) return;
+    const wasG=l.type==='g';
+    l.date=date; l.type=type; l.updated=Date.now();
+    if(type==='g' && !wasG){ linkClientForLog(l); }
+    save(); renderAll();
+    if(type==='g' && !wasG) toast(l.name+' → Booked · added to the Board');
+  });
+}
+function editWorkdays(key){
+  const auto=new Set(logsForMonth(key).map(l=>l.date)).size;
+  const cur=(state.workdays&&state.workdays[key]!=null)?state.workdays[key]:'';
+  const v=prompt('Working days in '+fmtMonth(key)+' — days you actually worked.\nAuto-detected from logs: '+auto+'.\nLeave empty to use the auto count:', cur);
+  if(v===null) return;
+  const t=String(v).trim(); state.workdays=state.workdays||{};
+  if(t===''){ delete state.workdays[key]; }
+  else { const n=parseInt(t,10); if(isNaN(n)||n<0){ toast('Enter a whole number, e.g. 20'); return; } state.workdays[key]=n; }
+  save(); renderAll(); toast('Working days updated');
+}
+function qlAddEntry(){
+  const name=$('#qlName').value.trim(); if(!name){ $('#qlName').focus(); return; }
+  const type=$('#qlType').value, source=$('#qlSource').value;
+  const date=$('#qlDate').value || todayIso();
+  const value= type==='g' ? (+$('#qlVal').value||0) : 0;
+  const l={id:uid(), type, name, value, source, note:'', date, created:Date.now(), updated:Date.now()};
+  state.logs.push(l);
+  if(type==='g') linkClientForLog(l);
+  $('#qlName').value=''; $('#qlVal').value='';
+  if(date.slice(0,7)!==curMonth) curMonth=date.slice(0,7);
+  save(); renderAll(); $('#qlName').focus();
+  toast(type==='g'?'Booked · added to the Board':'Logged');
+}
+$('#qlAdd').addEventListener('click',qlAddEntry);
+['qlName','qlVal'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')qlAddEntry();}));
 
 /* ---------- callbacks ---------- */
 function renderWarm(){
   const el=$('#warmList'); el.innerHTML='';
   const list=[...state.warm].sort((a,b)=> (a.done-b.done) || b.created-a.created);
-  if(!list.length){ el.innerHTML='<div class="empty-note">No warm leads waiting. Nice and clean. 🔥</div>'; return; }
+  if(!list.length){ el.innerHTML='<div class="empty-note">No warm leads waiting. Nice and clean.</div>'; return; }
   list.forEach(w=>{
     const row=document.createElement('div'); row.className='warm-item'+(w.done?' done':'');
-    row.innerHTML=`<button class="w-check" title="Mark called">${w.done?'✓':''}</button>
+    row.innerHTML=`<button class="w-check" title="Mark called">${w.done?IC.check:''}</button>
       <div><div class="w-name">${esc(w.name)}</div>
       ${w.note?`<div class="w-note">${esc(w.note)}</div>`:''}</div>
       ${w.phone?`<a class="w-phone" href="tel:${esc(w.phone)}">${esc(w.phone)}</a>`:''}
-      <button class="item-x" title="Remove">✕</button>`;
+      <button class="item-x" title="Remove">${IC.x}</button>`;
     row.querySelector('.w-check').addEventListener('click',()=>{ w.done=!w.done; save(); renderWarm(); });
     row.querySelector('.item-x').addEventListener('click',()=>{ state.warm=state.warm.filter(x=>x.id!==w.id); save(); renderWarm(); });
     el.appendChild(row);
@@ -1279,7 +1610,7 @@ function renderSched(){
     groups[m].forEach(s=>{
       const row=document.createElement('div'); row.className='sched-item';
       row.innerHTML=`<div><div class="w-name">${esc(s.name)}</div>${s.note?`<div class="w-note">${esc(s.note)}</div>`:''}</div>
-        <button class="item-x" title="Remove">✕</button>`;
+        <button class="item-x" title="Remove">${IC.x}</button>`;
       row.querySelector('.item-x').addEventListener('click',()=>{ state.sched=state.sched.filter(x=>x.id!==s.id); save(); renderSched(); });
       g.appendChild(row);
     });
@@ -1340,13 +1671,13 @@ function rnItem(r,today,in90){
   row.className='rn-item'+cls;
   row.innerHTML=`<div class="w-name">${esc(r.name)}</div>
     <span class="rn-val">${fmtMoney(r.value)}</span>
-    <span class="rn-date">${r.date? (cls===' overdue'?'⚠ ':'')+fmtDate(r.date) : 'set date'}</span>
-    <button class="rn-done" title="Paid — move one year ahead">✓ Renewed +1y</button>
-    <button class="item-x" title="Remove">✕</button>`;
+    <span class="rn-date">${r.date? fmtDate(r.date) : 'set date'}</span>
+    <button class="rn-done" title="Paid — move one year ahead">${IC.check} Renewed +1y</button>
+    <button class="item-x" title="Remove">${IC.x}</button>`;
   row.querySelector('.rn-done').addEventListener('click',()=>{
     if(r.date){ const [y,m,d]=r.date.split('-'); r.date=(+y+1)+'-'+m+'-'+d; }
     else r.date=isoDate(new Date(Date.now()+365*864e5));
-    save(); renderRenewals(); toast(r.name+' renewed — next: '+fmtDate(r.date)+' 🎉');
+    save(); renderRenewals(); toast(r.name+' renewed — next: '+fmtDate(r.date));
   });
   const rv=row.querySelector('.rn-val');
   rv.style.cursor='pointer'; rv.title='Click to edit the amount';
@@ -1380,7 +1711,6 @@ $('#rnName').addEventListener('keydown',e=>{if(e.key==='Enter')$('#rnAdd').click
 /* ---------- to do (lanes) ---------- */
 const PRIO_RANK={high:0,medium:1,low:2,none:3};
 const PRIO_CYCLE={none:'high',high:'medium',medium:'low',low:'none'};
-const PRIO_EMOJI={high:'🔴',medium:'🟡',low:'🟢'};
 const PRIO_COLOR={high:{c:'var(--red)',soft:'var(--red-soft)'},medium:{c:'var(--yellow)',soft:'var(--yellow-soft)'},low:{c:'var(--green)',soft:'var(--green-soft)'}};
 const DEFAULT_TODO_CATS=['Changes','Build','Pay now','Contact','General'];
 const TODO_PAL={
@@ -1397,8 +1727,8 @@ const TODO_NAMED={'Changes':'pink','Build':'blue','Pay now':'coral','Contact':'v
 const TODO_CYCLE=['cyan','orange','yellow','violet','pink','blue','coral','green'];
 /* auto-pulled client lanes: which board stage feeds which lane, and its advance target */
 const TODO_HOSTS=[
-  {stage:'changes',  next:'pay',    nextName:'Waiting payment', btn:'✓ Done → Pay'},
-  {stage:'building', next:'review', nextName:'Draft · Review',  btn:'✓ Built → Review'},
+  {stage:'changes',  next:'pay',    nextName:'Waiting payment', btn:IC.check+' Done → Pay'},
+  {stage:'building', next:'review', nextName:'Draft · Review',  btn:IC.check+' Built → Review'},
 ];
 let pendingFocusCat=null, dragTaskId=null, dragCliId=null;
 
@@ -1456,7 +1786,7 @@ function renderTodo(){
     const head=document.createElement('div');
     head.className='todo-lane-head'+(pal.dark?' dark':'');
     head.style.background=pal.grad;
-    const delBtn = cat==='General' ? '' : `<button class="tl-x" title="Delete category">✕</button>`;
+    const delBtn = cat==='General' ? '' : `<button class="tl-x" title="Delete category">${IC.x}</button>`;
     head.innerHTML=`<span class="tl-title" title="Rename">${esc(cat)}</span><span class="tl-count">${openCount}</span>${delBtn}`;
     head.querySelector('.tl-title').addEventListener('click',()=>renameTodoCat(cat));
     const dx=head.querySelector('.tl-x'); if(dx) dx.addEventListener('click',()=>deleteTodoCat(cat));
@@ -1516,11 +1846,11 @@ function clientRow(c,h,pal){
   if(c.value) bits.push(fmtMoney2(c.value));
   const dot = p==='none'
     ? `<button class="prio-dot" title="Set priority"></button>`
-    : `<button class="prio-dot set" title="Priority: ${p}">${PRIO_EMOJI[p]}</button>`;
+    : `<button class="prio-dot set" title="Priority: ${p}">${prioDotSvg(p)}</button>`;
   row.innerHTML=dot+
-    `<span class="cli-avatar" title="Open client">👤</span>`+
+    `<span class="cli-avatar" title="Open client">${IC.user}</span>`+
     `<div class="task-body cli-body"><span class="task-text">${esc(c.name)}</span>${bits.length?`<span class="task-note">${bits.join(' · ')}</span>`:''}</div>`+
-    `<button class="task-edit" title="Edit client note">✎</button>`+
+    `<button class="task-edit" title="Edit client note">${IC.edit}</button>`+
     `<button class="cli-adv" title="Move to ${h.nextName}">${h.btn}</button>`;
   row.querySelector('.prio-dot').addEventListener('click',e=>{ e.stopPropagation(); const np=PRIO_CYCLE[p]; c.prio = np==='none'?undefined:np; c.updated=Date.now(); save(); renderAll(); });
   row.querySelector('.cli-avatar').addEventListener('click',()=>openModal(c.id));
@@ -1541,12 +1871,12 @@ function taskRow(n){
   row.addEventListener('dragend',()=>{ dragTaskId=null; row.classList.remove('dragging'); document.querySelectorAll('.todo-lane-body.dragover').forEach(b=>b.classList.remove('dragover')); });
   const dot = p==='none'
     ? `<button class="prio-dot" title="Set priority"></button>`
-    : `<button class="prio-dot set" title="Priority: ${p}">${PRIO_EMOJI[p]}</button>`;
+    : `<button class="prio-dot set" title="Priority: ${p}">${prioDotSvg(p)}</button>`;
   row.innerHTML=dot+
-    `<button class="n-check" title="Done">${n.done?'✓':''}</button>`+
+    `<button class="n-check" title="Done">${n.done?IC.check:''}</button>`+
     `<div class="task-body"><span class="task-text">${esc(n.text)}</span>${n.note?`<span class="task-note">${esc(n.note)}</span>`:''}</div>`+
-    `<button class="task-edit" title="Side note">✎</button>`+
-    `<button class="item-x" title="Remove">✕</button>`;
+    `<button class="task-edit" title="Side note">${IC.edit}</button>`+
+    `<button class="item-x" title="Remove">${IC.x}</button>`;
   row.querySelector('.prio-dot').addEventListener('click',()=>{ n.prio=PRIO_CYCLE[p]; n.updated=Date.now(); save(); renderTodo(); });
   row.querySelector('.n-check').addEventListener('click',()=>{ n.done=!n.done; n.updated=Date.now(); save(); renderTodo(); });
   row.querySelector('.task-edit').addEventListener('click',()=>{
@@ -1645,10 +1975,10 @@ function renderMonthly(){
       const isPaid=!!s.paid[key]; if(isPaid) paidCount++;
       const future=key>nowKey;
       const due=!isPaid && key===nowKey;
-      cells+=`<div class="sub-cell ${isPaid?'paid':due?'due':''}${future?' future':''}" data-k="${key}" title="${MONTHS[m-1]} ${subYear}${isPaid?' — paid ✓':due?' — due now':''}">${isPaid?'✓':due?'€':'·'}</div>`;
+      cells+=`<div class="sub-cell ${isPaid?'paid':due?'due':''}${future?' future':''}" data-k="${key}" title="${MONTHS[m-1]} ${subYear}${isPaid?' — paid':due?' — due now':''}">${isPaid?IC.check:due?'€':'·'}</div>`;
     }
-    row.innerHTML=`<div><div class="sub-name">${esc(s.name)}</div><div class="sub-price" title="Click to edit exact €/month">${fmtMoney2(s.value)}/m${s.renewDay?` · <span class="sub-day" title="Renewal day of month — click to edit">📅 ${s.renewDay}${s.renewDay==1?'st':s.renewDay==2?'nd':s.renewDay==3?'rd':'th'}</span>`:` · <span class="sub-day" title="Set renewal day">＋ day</span>`}</div></div>
-      ${cells}<div class="sub-tot">${fmtMoney2(paidCount*(+s.value||0))}</div><button class="item-x" title="Remove">✕</button>`;
+    row.innerHTML=`<div><div class="sub-name">${esc(s.name)}</div><div class="sub-price" title="Click to edit exact €/month">${fmtMoney2(s.value)}/m${s.renewDay?` · <span class="sub-day" title="Renewal day of month — click to edit">${IC.calendar} ${s.renewDay}${s.renewDay==1?'st':s.renewDay==2?'nd':s.renewDay==3?'rd':'th'}</span>`:` · <span class="sub-day" title="Set renewal day">＋ day</span>`}</div></div>
+      ${cells}<div class="sub-tot">${fmtMoney2(paidCount*(+s.value||0))}</div><button class="item-x" title="Remove">${IC.x}</button>`;
     row.querySelectorAll('.sub-cell').forEach(cell=>cell.addEventListener('click',()=>{
       const k=cell.dataset.k;
       if(s.paid[k]) delete s.paid[k]; else s.paid[k]=true;
@@ -1698,7 +2028,7 @@ function renderHome(){
   const weekEndI=isoDate(we);
   const weekMeetings=state.clients.filter(c=>c.day && c.day>=isoDate(ws) && c.day<=weekEndI).sort((a,b)=>(a.day+(a.time||''))<(b.day+(b.time||''))?-1:1);
   // this-month collect
-  const mc=state.clients.filter(c=>c.month===curMonth);
+  const mc=state.clients.filter(c=>c.month===curMonth && notLost(c));
   const mTotal=mc.reduce((a,c)=>a+(+c.value||0),0), mPaid=mc.filter(c=>c.stage==='paid').reduce((a,c)=>a+(+c.value||0),0);
   const overdue=state.renewals.filter(r=>r.date && r.date<todayI).sort((a,b)=>a.date<b.date?-1:1);
   const in7=isoDate(new Date(Date.now()+7*864e5));
@@ -1716,15 +2046,20 @@ function renderHome(){
   const mGenerated=generatedForMonth(curMonth), mt=monthTarget(curMonth);
   const tpct=progPct(mGenerated,mt.value), tcls=progClass(tpct);
   const monthName=MONTHS[+curMonth.slice(5,7)-1];
+  const todayCalls=dayStats(todayI), mStats=monthLogStats(curMonth);
+  const callConv=Math.round(mStats.callConv*100);
   const targetHs = mt.value>0
     ? `<div class="hs"><div class="k">Target ${monthName} · gen.${mt.implied?' (auto)':''}</div><div class="v ${tcls}">${tpct}%</div>
          <div class="tgt-sub">${fmtMoney2(mGenerated)} / ${fmtMoney2(Math.round(mt.value))}</div>
          <div class="tgt-bar on-dark" style="max-width:150px; margin-top:6px;"><i class="${tcls}" style="width:${Math.min(100,tpct)}%"></i></div></div>`
     : `<div class="hs"><div class="k">Target ${monthName} · gen.</div><div class="v" style="color:rgba(255,255,255,.5);">—</div><div class="tgt-sub">set it in the month strip</div></div>`;
   $('#homeHero').innerHTML=`
-    <h2>${greet}, Agelo 👋</h2>
+    <h2>${greet}, Angelo</h2>
     <p>${today.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · here's your day at a glance</p>
     <div class="hero-stats">
+      <div class="hs"><div class="k">Cold calls today</div><div class="v b">${todayCalls.calls}</div></div>
+      <div class="hs"><div class="k">${monthName} cold calls</div><div class="v b">${mStats.calls}</div></div>
+      <div class="hs"><div class="k">Call → booking</div><div class="v ${callConv>=40?'g':callConv>=20?'':'c'}">${callConv}%</div></div>
       <div class="hs"><div class="k">Meetings this week</div><div class="v b">${weekMeetings.length}</div></div>
       <div class="hs"><div class="k">${fmtMonth(curMonth)} to collect</div><div class="v c">${fmtMoney2(rem)}</div></div>
       ${targetHs}
@@ -1742,22 +2077,22 @@ function renderHome(){
   const hc=$('#homeCollect');
   const rows=[];
   for(let m=1;m<=12;m++){ const key=curYear+'-'+pad(m);
-    const it=state.clients.filter(c=>c.month===key);
+    const it=state.clients.filter(c=>c.month===key && notLost(c));
     const t=it.reduce((a,c)=>a+(+c.value||0),0), pd=it.filter(c=>c.stage==='paid').reduce((a,c)=>a+(+c.value||0),0);
     if(t-pd>0) rows.push(`<div class="home-mini"><span class="mm-name">${MONTHS[m-1]} ${curYear}</span><span class="mm-val">${fmtMoney2(t-pd)}</span></div>`);
   }
-  hc.innerHTML= rows.length? rows.join('') : '<div class="home-empty">Everything collected this year. 🎉</div>';
+  hc.innerHTML= rows.length? rows.join('') : '<div class="home-empty">Everything collected this year.</div>';
   // overdue renewals
   const hrn=$('#homeRenew');
-  hrn.innerHTML= overdue.length? overdue.slice(0,12).map(r=>`<div class="home-row warn" data-goto="renewals"><span class="hr-name">${esc(r.name)}</span><span class="hr-sub">${fmtDate(r.date)}</span><span class="hr-val">${fmtMoney2(r.value)}</span></div>`).join('') : '<div class="home-empty">No overdue renewals. 👌</div>';
+  hrn.innerHTML= overdue.length? overdue.slice(0,12).map(r=>`<div class="home-row warn" data-goto="renewals"><span class="hr-name">${esc(r.name)}</span><span class="hr-sub">${fmtDate(r.date)}</span><span class="hr-val">${fmtMoney2(r.value)}</span></div>`).join('') : '<div class="home-empty">No overdue renewals.</div>';
   // subs due this week
   const hs=$('#homeSubs');
   hs.innerHTML= subsDue.length? subsDue.map(s=>`<div class="home-row" data-goto="monthly"><span class="hr-name">${esc(s.name)}</span><span class="hr-sub">day ${s.renewDay}</span><span class="hr-val">${fmtMoney2(s.value)}</span></div>`).join('') : '<div class="home-empty">No subscriptions due in the next 7 days.</div>';
   // high-priority notes
   const hn=$('#homeNotes');
   const hiRows=[
-    ...hiClients.map(c=>`<div class="home-row" data-open="${c.id}"><span class="hr-name">👤 ${esc(c.name)}</span></div>`),
-    ...hiNotes.map(n=>`<div class="home-row" data-goto="todo"><span class="hr-name">🔴 ${esc(n.text)}</span></div>`),
+    ...hiClients.map(c=>`<div class="home-row" data-open="${c.id}"><span class="hr-name">${IC.user} ${esc(c.name)}</span></div>`),
+    ...hiNotes.map(n=>`<div class="home-row" data-goto="todo"><span class="hr-name">${IC.flag} ${esc(n.text)}</span></div>`),
   ];
   hn.innerHTML= hiRows.length? hiRows.join('') : '<div class="home-empty">Nothing flagged high priority right now.</div>';
   // wire
@@ -1803,9 +2138,17 @@ document.addEventListener('click',e=>{ if(!e.target.closest('.search-wrap')) $('
 /* ---------- dark mode ---------- */
 function applyTheme(dark){
   document.body.classList.toggle('dark',dark);
-  $('#themeBtn').textContent= dark?'☀️':'🌙';
+  $('#themeBtn').innerHTML= dark?IC.sun:IC.moon;
 }
 $('#themeBtn').addEventListener('click',()=>{ applyTheme(!document.body.classList.contains('dark')); renderAll(); });
+/* inject professional SVG icons into the static chrome (replaces emojis) */
+function injectStaticIcons(){
+  const eb=$('#exportBtn'); if(eb) eb.innerHTML=IC.download+' Export';
+  const mc=$('#modalClose'); if(mc) mc.innerHTML=IC.x;
+  document.querySelectorAll('.export-menu button[data-ic]').forEach(b=>{ b.innerHTML=IC[b.dataset.ic]+' '+b.textContent.trim(); });
+  document.querySelectorAll('[data-ic]').forEach(el=>{ if(!el.closest('.export-menu') && IC[el.dataset.ic]) el.innerHTML=IC[el.dataset.ic]; });
+}
+injectStaticIcons();
 applyTheme(false); /* demo starts light; toggle still works in-session */
 
 /* ---------- modal (edit + create) ---------- */
@@ -1823,6 +2166,9 @@ function openModal(id, presetDay){
   const c= id ? state.clients.find(x=>x.id===id) : null;
   $('#modalTitle').textContent= c ? 'Edit client' : 'New booked client';
   $('#mDelete').style.display= c ? '' : 'none';
+  const mLost=$('#mLost');
+  mLost.style.display= c ? '' : 'none';
+  if(c) mLost.textContent = c.stage==='lost' ? 'Bring back' : "Didn't convert";
   $('#mName').value=c?c.name:''; $('#mValue').value=c?(c.value||''):'';
   $('#mDay').value=c?(c.day||''):(presetDay||''); $('#mTime').value=c?(c.time||''):'';
   $('#mMonth').value=c?c.month:(presetDay?presetDay.slice(0,7):curMonth);
@@ -1843,9 +2189,21 @@ $('#mSave').addEventListener('click',()=>{
   const data={ name, value:+$('#mValue').value||0, day:$('#mDay').value, time:$('#mTime').value, color:modalColor, fill:$('#mFill').checked,
     phone:$('#mPhone').value.trim(), viber:$('#mViber').value.trim(), email:$('#mEmail').value.trim(),
     stage:$('#mStage').value, month:$('#mMonth').value|| ($('#mDay').value? $('#mDay').value.slice(0,7):curMonth), notes:$('#mNotes').value.trim() };
-  if(editingId){ Object.assign(state.clients.find(x=>x.id===editingId)||{}, data); }
-  else state.clients.push({id:uid(), ...data, created:Date.now()});
+  if(editingId){
+    const tgt=state.clients.find(x=>x.id===editingId)||{};
+    const wasLost=tgt.stage==='lost';
+    Object.assign(tgt, data, {updated:Date.now()});
+    if(data.stage==='lost' && !wasLost){ tgt.lostAt=Date.now(); }
+    else if(data.stage!=='lost' && wasLost){ delete tgt.lostReason; tgt.lostAt=null; }
+  }
+  else state.clients.push({id:uid(), ...data, created:Date.now(), updated:Date.now()});
   save(); renderAll(); closeModal(); toast('Saved');
+});
+$('#mLost').addEventListener('click',()=>{
+  const c=state.clients.find(x=>x.id===editingId); if(!c) return;
+  if(c.stage==='lost'){ reviveClient(c.id); }
+  else { markLost(c.id); }
+  closeModal();
 });
 $('#mDelete').addEventListener('click',()=>{
   const c=state.clients.find(x=>x.id===editingId);
@@ -1878,7 +2236,7 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>swit
 
 function renderAll(){
   if(!state) return;
-  renderHome(); renderStats(); renderBoard(); renderCalendar(); renderYear(); renderLogs(); renderWarm(); renderSched(); renderRenewals(); renderTodo(); renderMonthly();
+  renderHome(); renderStats(); renderBoard(); renderCalendar(); renderYear(); renderQuickLog(); renderWarm(); renderSched(); renderRenewals(); renderTodo(); renderMonthly();
 }
 
 /* ---------- export ---------- */
@@ -1897,9 +2255,10 @@ $('#exportMenu').addEventListener('click',e=>{
   $('#exportMenu').classList.remove('open');
 });
 function scopeClients(scope){
-  return scope==='month'
+  return (scope==='month'
     ? state.clients.filter(c=>c.month===curMonth)
-    : state.clients.filter(c=>c.month && c.month.startsWith(String(curYear)));
+    : state.clients.filter(c=>c.month && c.month.startsWith(String(curYear)))
+  ).filter(notLost);
 }
 function download(filename, blob){
   const a=document.createElement('a');
@@ -1935,7 +2294,7 @@ function exportPDF(scope){
   const monthsToShow = scope==='month' ? [curMonth] : Array.from({length:12},(_,i)=>curYear+'-'+pad(i+1));
   let grand=0, grandPaid=0;
   monthsToShow.forEach(m=>{
-    const items=state.clients.filter(c=>c.month===m);
+    const items=state.clients.filter(c=>c.month===m && notLost(c));
     if(!items.length && scope==='year') return;
     const total=items.reduce((a,c)=>a+(+c.value||0),0);
     const paid=items.filter(c=>c.stage==='paid').reduce((a,c)=>a+(+c.value||0),0);
@@ -1984,9 +2343,9 @@ $('#restoreFile').addEventListener('change',e=>{
       const data=JSON.parse(r.result);
       if(!data.clients) throw 0;
       if(confirm('Replace everything with this backup? Current data will be overwritten.')){
-        state=data; state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={};
+        state=data; state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={}; state.workdays||={}; ensureLogs();
         state.clients.forEach(c=>{ if(OLD_STAGE_MAP[c.stage]) c.stage=OLD_STAGE_MAP[c.stage]; });
-        save(); renderAll(); toast('Backup restored ✓');
+        save(); renderAll(); toast('Backup restored');
       }
     }catch{ toast('That file is not a valid Advon CRM backup'); }
     e.target.value='';
@@ -1994,10 +2353,62 @@ $('#restoreFile').addEventListener('change',e=>{
   r.readAsText(f);
 });
 
+/* ---------- demo tracker seed — realistic fake cold-calling data ---------- */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function seedTrackerDemo(){
+  if(Array.isArray(state.logs) && state.logs.length) return;
+  state.logs=[];
+  const rnd=mulberry32(20260724);
+  const ri=(a,b)=>Math.floor(rnd()*(b-a+1))+a;
+  const pick=arr=>arr[Math.floor(rnd()*arr.length)];
+  const shuffle=a=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(rnd()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+  const first=['Γιώργος','Μαρία','Νίκος','Ελένη','Δημήτρης','Κατερίνα','Κώστας','Σοφία','Θανάσης','Αναστασία','Παναγιώτης','Χριστίνα','Βασίλης','Ιωάννα','Αντώνης','Δέσποινα','Στέλιος','Ραφαέλα','Μανώλης','Φωτεινή','Πέτρος','Ευαγγελία'];
+  const last=['Παπαδόπουλος','Γεωργίου','Νικολάου','Οικονόμου','Παππάς','Βασιλείου','Αντωνίου','Δημητρίου','Καραγιάννης','Μακρής','Αθανασίου','Ιωαννίδης','Κωνσταντίνου','Πετρίδης','Σαμαράς','Τσάκας','Βλάχος'];
+  const biz=['Κομμωτήριο','Ζαχαροπλαστείο','Ταβέρνα','Συνεργείο','Φαρμακείο','Δικηγορικό','Λογιστικό','Γυμναστήριο','Κρεοπωλείο','Ανθοπωλείο','Φούρνος','Καφετέρια','Οδοντιατρείο','Ξενοδοχείο','Μεσιτικό','Σχολή οδηγών','Παιδότοπος','Κτηνιατρείο','Οπτικά','Κοσμηματοπωλείο'];
+  const noNotes=['Δεν ενδιαφέρεται','Έχει ήδη σελίδα','Το βρήκε ακριβό','Θα το σκεφτεί','Έκλεισε το τηλέφωνο','Δεν έχει χρόνο τώρα','Ρώτα ξανά του χρόνου'];
+  const smsNotes=['Έστειλα προσφορά','Περιμένω απάντηση','Ζήτησε δείγματα','Θα με πάρει την άλλη βδομάδα','Έστειλα link','Ενδιαφέρθηκε — στέλνω email'];
+  const lostReasons=['Βρήκε φθηνότερη προσφορά','Άλλαξε γνώμη','Δεν είχε μπάτζετ','Πήγε σε ανταγωνιστή','Σταμάτησε να απαντάει','Ακύρωσε το ραντεβού','Το ανέβαλε επ’ αόριστον'];
+  const nonCold=['referral','form','other'];
+  const contactName=()=> rnd()<0.5 ? pick(first)+' '+pick(last) : pick(biz)+' — '+pick(first);
+  const today=todayIso();
+  const weekdaysOf=key=>{ const [y,m]=key.split('-').map(Number); const out=[]; const dim=new Date(y,m,0).getDate();
+    for(let d=1;d<=dim;d++){ const dt=new Date(y,m-1,d); const wd=dt.getDay(); if(wd>=1&&wd<=5) out.push(isoDate(dt)); } return out; };
+  const randomWeekday=key=>{ const ds=weekdaysOf(key).filter(d=>d<=today); return ds.length? ds[Math.floor(rnd()*ds.length)] : (key+'-15'); };
+  const ts=iso=>Date.parse(iso+'T09:00:00')+ri(0,32000000);
+  /* 1) every seeded client came from a booked meeting — log it, linked to the client */
+  state.clients.forEach(c=>{
+    if(!c.month) return; const iso=randomWeekday(c.month); if(iso>today) return;
+    const src = rnd()<0.72 ? 'cold' : pick(nonCold);
+    state.logs.push({id:uid(), type:'g', name:c.name, value:c.value||0, source:src, note:'', date:iso, created:ts(iso), updated:Date.now(), clientId:c.id});
+  });
+  /* 2) fill each month's working days with realistic call volume (SMS + no's) */
+  const months=[...new Set(state.clients.map(c=>c.month).filter(Boolean))].sort();
+  months.forEach(key=>{
+    const days=shuffle(weekdaysOf(key).filter(d=>d<=today));
+    const wdays=days.slice(0, Math.min(days.length, ri(16,22)));
+    wdays.forEach(iso=>{
+      const n=ri(5,13);
+      for(let i=0;i<n;i++){
+        const type = rnd()<0.6 ? 'r' : 'y';
+        const src = rnd()<0.82 ? 'cold' : pick(nonCold);
+        const note = type==='r' ? (rnd()<0.5?pick(noNotes):'') : (rnd()<0.55?pick(smsNotes):'');
+        state.logs.push({id:uid(), type, name:contactName(), value:0, source:src, note, date:iso, created:ts(iso), updated:Date.now()});
+      }
+    });
+  });
+  /* 3) some booked clients turned it down at the meeting — mark them lost with a reason */
+  state.clients.forEach(c=>{
+    if(c.stage!=='paid' && c.stage!=='lost' && rnd()<0.13){
+      c.stage='lost'; c.lostReason=pick(lostReasons); c.lostAt=Date.parse((c.month||'2025-01')+'-15T12:00:00'); c.updated=Date.now();
+    }
+  });
+}
+
 /* ---------- init (DEMO — opens straight into the app, no login) ---------- */
-function boot(){ $('#schedMonth').value=curMonth; renderAll(); }
+function boot(){ $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); renderAll(); }
 state=freshState();
-state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={};
+seedTrackerDemo();
+state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={}; state.workdays||={}; ensureLogs();
 state.clients.forEach(c=>{ if(OLD_STAGE_MAP[c.stage]) c.stage=OLD_STAGE_MAP[c.stage]; });
 boot();
 var _db=document.getElementById('demoBannerX'); if(_db) _db.addEventListener('click',function(){ var b=document.getElementById('demoBanner'); if(b) b.remove(); });
