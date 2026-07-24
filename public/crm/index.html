@@ -217,6 +217,8 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .ycard .m-count{font-size:12px; color:var(--muted); font-weight:500; margin-bottom:12px;}
 .ycard .m-total{font-family:'Sora'; font-weight:800; font-size:26px; letter-spacing:-.03em; color:var(--deep); font-variant-numeric:tabular-nums; margin-bottom:12px;}
 .ycard .m-total.zero{color:#C6CBD8;}
+.ycard .m-net{font-size:11.5px; font-weight:600; color:var(--muted); margin:-6px 0 10px; font-variant-numeric:tabular-nums;}
+.ycard .m-net b.pos{color:var(--deep);} .ycard .m-net b.neg{color:var(--coral);}
 .stagebar{display:flex; height:8px; border-radius:99px; overflow:hidden; background:var(--bg); margin-bottom:10px;}
 .stagebar div{height:100%;}
 .m-legend{display:flex; flex-wrap:wrap; gap:5px;}
@@ -404,6 +406,28 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 @media(max-width:560px){.cli-adv{opacity:1;}}
 body.dark .cli-avatar{background:rgba(255,255,255,.09);}
 
+/* ---------- Ideas board ---------- */
+.ideas-lanes{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; align-items:start;}
+@media(max-width:1100px){.ideas-lanes{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:720px){.ideas-lanes{grid-template-columns:1fr;}}
+.idea-item .task-body{flex-direction:column; align-items:stretch; gap:2px;}
+.idea-detail{font-size:11.5px; color:var(--muted); font-weight:500; word-break:break-word; line-height:1.45; width:100%;}
+
+/* ---------- Expenses ---------- */
+.exp-row{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; margin-bottom:6px; background:var(--bg); border:1px solid var(--line);}
+.exp-row .exp-name{font-weight:700; font-size:13.5px; flex:1; min-width:0; word-break:break-word;}
+.exp-row .exp-sub{font-size:11px; color:var(--muted); font-weight:500;}
+.exp-row .exp-amt{font-weight:800; font-size:13px; color:var(--coral); font-variant-numeric:tabular-nums; cursor:pointer; white-space:nowrap;}
+.exp-row .exp-amt:hover{text-decoration:underline;}
+.exp-row.total{background:var(--coral-soft); border-color:#FFD1C9;}
+.exp-row.total .exp-amt{cursor:default;}
+.exp-row.total .exp-amt:hover{text-decoration:none;}
+.exp-row .item-x{opacity:0; font-size:12px; color:var(--muted); padding:3px 6px; border-radius:6px; flex-shrink:0;}
+.exp-row:hover .item-x{opacity:1;}
+.exp-row .item-x:hover{background:rgba(0,0,0,.07); color:var(--ink);}
+body.dark .exp-row .item-x:hover{background:rgba(255,255,255,.1);}
+.exp-hint{font-size:11.5px; color:var(--muted); padding:2px 4px 8px;}
+
 /* ---------- Card color swatches ---------- */
 .swatches{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
 .swatch{width:26px; height:26px; border-radius:9px; cursor:pointer; border:2px solid transparent;}
@@ -545,6 +569,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
       <button class="tab" data-view="board">Board</button>
       <button class="tab" data-view="calendar">Calendar</button>
       <button class="tab" data-view="todo">To Do</button>
+      <button class="tab" data-view="ideas">Ideas</button>
       <button class="tab" data-view="callbacks">Callbacks</button>
       <button class="tab" data-view="monthly">Monthly</button>
       <button class="tab" data-view="renewals">Renewals</button>
@@ -595,7 +620,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
     <div class="stat-pill paid-pill"><div class="k">Collected</div><div class="v" id="statPaid">€0</div></div>
     <div class="stat-pill"><div class="k">To collect</div><div class="v" id="statRem" style="color:var(--coral);">€0</div></div>
     <div class="stat-pill target-pill" id="statTargetPill" title="Click to set this month's target">
-      <div class="k">Target <span class="tgt-meta" id="statTargetMeta"></span></div>
+      <div class="k">Target · generated <span class="tgt-meta" id="statTargetMeta"></span></div>
       <div class="v" id="statTarget">Set →</div>
       <div class="tgt-bar"><i id="statTargetBar"></i></div>
     </div>
@@ -731,6 +756,15 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
   <div class="todo-lanes" id="todoLanes"></div>
 </main>
 
+<!-- IDEAS -->
+<main class="view" id="view-ideas">
+  <div class="todo-head-bar">
+    <div class="thb-ico" style="background:var(--violet-soft);">💡</div>
+    <div class="thb-txt"><h3>Ideas</h3><p>Things you want to work on — drag across the lanes as they move</p></div>
+  </div>
+  <div class="ideas-lanes" id="ideaLanes"></div>
+</main>
+
 <!-- CALLBACKS -->
 <main class="view" id="view-callbacks">
   <div class="cb-grid">
@@ -785,6 +819,19 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
       </div>
     </div>
     <div class="subs-scroll"><div id="subList"></div></div>
+  </section>
+  <section class="panel" id="expensePanel" style="margin-top:16px;">
+    <div class="panel-head">
+      <div class="ico" style="background:var(--coral-soft);">💸</div>
+      <div><h3>Expenses</h3><p>Per-website domain cost + fixed monthly costs — used for net profit</p></div>
+    </div>
+    <div class="panel-form" style="border-bottom:none;">
+      <span style="font-family:'Sora';font-weight:700;font-size:12.5px;align-self:center;white-space:nowrap;">＋ Add monthly cost</span>
+      <input class="grow" id="expName" placeholder="Name — e.g. Hosting">
+      <input id="expAmt" type="number" step="0.01" placeholder="€ / month" min="0" style="width:130px;">
+      <button id="expAdd">Add</button>
+    </div>
+    <div class="panel-body" id="expenseBody"></div>
   </section>
 </main>
 
@@ -934,7 +981,7 @@ async function loadDecrypted(){
     if(legacy && legacy.clients){ state=legacy; try{localStorage.removeItem('advon_crm_v3');}catch(e){} }
     else state=JSON.parse(await aesDec(CUR_KEY, VAULT.iv, VAULT.ct));
   }
-  state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={};
+  state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={}; state.ideas||=[]; ensureExpenses();
   state.clients.forEach(c=>{ if(OLD_STAGE_MAP[c.stage]) c.stage=OLD_STAGE_MAP[c.stage]; });
   await saveNow();
   if(!canPersist) $('#storageWarn').classList.add('show');
@@ -972,6 +1019,29 @@ function collectedForMonth(key){
   return paid+subs;
 }
 function collectedForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=collectedForMonth(y+'-'+pad(m)); return sum; }
+/* "Generated" = total booked value of every client that month (any payment stage)
+   + monthly-subscription income recorded for that month. This is what the TARGET is
+   measured against — separate from "Collected". */
+function generatedForMonth(key){
+  const booked=state.clients.filter(c=>c.month===key).reduce((a,c)=>a+(+c.value||0),0);
+  const subs=state.subs.reduce((a,s)=>a+((s.paid && s.paid[key])?(+s.value||0):0),0);
+  return booked+subs;
+}
+function generatedForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=generatedForMonth(y+'-'+pad(m)); return sum; }
+/* ---------- expenses ---------- */
+function ensureExpenses(){
+  if(!state.expenses || typeof state.expenses!=='object') state.expenses={};
+  if(typeof state.expenses.perWebsite!=='number') state.expenses.perWebsite=9.30;
+  if(!Array.isArray(state.expenses.recurring)) state.expenses.recurring=[
+    {id:uid(), name:'Claude', amount:23},
+    {id:uid(), name:'Ασφάλιση / Insurance', amount:160},
+  ];
+}
+function recurringMonthly(){ ensureExpenses(); return state.expenses.recurring.reduce((a,r)=>a+(+r.amount||0),0); }
+/* websites sold in a period = clients that reached the 'paid' stage that month */
+function websitesSold(key){ return state.clients.filter(c=>c.month===key && c.stage==='paid').length; }
+function expensesForMonth(key){ ensureExpenses(); return websitesSold(key)*(+state.expenses.perWebsite||0) + recurringMonthly(); }
+function expensesForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=expensesForMonth(y+'-'+pad(m)); return sum; }
 function monthTarget(key){ /* {value, implied} — implied = yearly ÷ 12 fallback */
   ensureTargets();
   if(state.targets.monthly[key]!=null) return {value:+state.targets.monthly[key], implied:false};
@@ -1014,17 +1084,17 @@ function renderStats(){
   $('#statTotal').textContent=fmtMoney(tot);
   $('#statPaid').textContent=fmtMoney(paid);
   $('#statRem').textContent=fmtMoney(tot-paid);
-  // target pill
-  const collected=collectedForMonth(curMonth);
+  // target pill — measured against GENERATED income (booked value + subs), not collected
+  const generated=generatedForMonth(curMonth);
   const mt=monthTarget(curMonth);
   const pill=$('#statTargetPill'), bar=$('#statTargetBar');
   if(mt.value>0){
-    const pct=progPct(collected,mt.value), cls=progClass(pct);
+    const pct=progPct(generated,mt.value), cls=progClass(pct);
     pill.classList.toggle('implied', mt.implied);
     $('#statTarget').textContent=fmtMoney(Math.round(mt.value));
     $('#statTargetMeta').textContent=(mt.implied?'auto · ':'')+pct+'%';
     bar.className=cls; bar.style.width=Math.min(100,pct)+'%';
-    pill.title=fmtMoney(collected)+' of '+fmtMoney(Math.round(mt.value))+' collected — click to change';
+    pill.title=fmtMoney(generated)+' generated of '+fmtMoney(Math.round(mt.value))+' target — click to change';
   } else {
     pill.classList.remove('implied');
     $('#statTarget').textContent='Set →';
@@ -1213,12 +1283,15 @@ function renderYear(){
       if(n){ bar+=`<div style="flex:${n};background:${st.hex}" title="${st.name}: ${n}"></div>`;
              legend+=`<span class="chip" style="background:${st.cs};color:${st.hex}">${st.name} ${n}</span>`; }
     });
-    const mCollected=collectedForMonth(key), mt=monthTarget(key), mpct=progPct(mCollected,mt.value);
-    const mprog = mt.value>0 ? `<div class="tgt-bar m-progress" title="${fmtMoney(mCollected)} of ${fmtMoney(Math.round(mt.value))} target (${mpct}%)${mt.implied?' · auto':''}"><i class="${progClass(mpct)}" style="width:${Math.min(100,mpct)}%"></i></div>` : '';
+    const mGenerated=generatedForMonth(key), mt=monthTarget(key), mpct=progPct(mGenerated,mt.value);
+    const mprog = mt.value>0 ? `<div class="tgt-bar m-progress" title="${fmtMoney(mGenerated)} generated of ${fmtMoney(Math.round(mt.value))} target (${mpct}%)${mt.implied?' · auto':''}"><i class="${progClass(mpct)}" style="width:${Math.min(100,mpct)}%"></i></div>` : '';
+    const mExp=expensesForMonth(key), mNet=mGenerated-mExp;
+    const mNetLine = items.length ? `<div class="m-net">− ${fmtMoney(Math.round(mExp))} costs · <b class="${mNet>=0?'pos':'neg'}">${fmtMoney(Math.round(mNet))} net</b></div>` : '';
     card.innerHTML=`
       <h3>${MONTHS[m-1]}</h3>
       <div class="m-count">${items.length} client${items.length===1?'':'s'}${paid?` · ${fmtMoney(paid)} collected`:''}${(total-paid)>0?` · <b style="color:var(--coral)">${fmtMoney(total-paid)} to collect</b>`:''}</div>
       <div class="m-total ${total?'':'zero'}">${fmtMoney(total)}</div>
+      ${mNetLine}
       ${mprog}
       ${bar?`<div class="stagebar">${bar}</div><div class="m-legend">${legend}</div>`:'<div class="empty-note" style="padding:6px 0;text-align:left;">Nothing booked yet</div>'}`;
     card.addEventListener('click',()=>{ curMonth=key; switchView('board'); });
@@ -1230,18 +1303,21 @@ function renderYear(){
     return a+n*(+s.value||0);
   },0);
   const ytd=yPaid+subCollected;
-  const ytVal=yearTarget(curYear), ypct=progPct(ytd,ytVal), ycls=progClass(ypct);
+  const yGenerated=generatedForYear(curYear), yExp=expensesForYear(curYear), yNet=yGenerated-yExp;
+  const ytVal=yearTarget(curYear), ypct=progPct(yGenerated,ytVal), ycls=progClass(ypct);
   const targetCell=`<div class="cell target" id="yearTargetCell" title="Click to set ${curYear} target">
-      <div class="k">Target ${curYear}</div>
+      <div class="k">Target ${curYear} · generated</div>
       <div class="big">${ytVal? fmtMoney2(ytVal) : 'Set →'}</div>
       ${ytVal? `<div class="tgt-bar on-dark" style="margin-top:8px; max-width:230px;"><i class="${ycls}" style="width:${Math.min(100,ypct)}%"></i></div>
-        <div class="k" style="margin-top:5px; color:rgba(255,255,255,.78);">${ypct}% reached · ${fmtMoney2(Math.max(0,ytVal-ytd))} to go</div>` : `<div class="k" style="margin-top:5px; color:rgba(255,255,255,.5);">no target set</div>`}
+        <div class="k" style="margin-top:5px; color:rgba(255,255,255,.78);">${ypct}% reached · ${fmtMoney2(Math.max(0,ytVal-yGenerated))} to go</div>` : `<div class="k" style="margin-top:5px; color:rgba(255,255,255,.5);">no target set</div>`}
     </div>`;
   $('#yearBanner').innerHTML=`
     <div class="cell"><div class="k">${curYear} total booked</div><div class="big">${fmtMoney2(yTotal)}</div></div>
     <div class="cell paid"><div class="k">Money made ${curYear}</div><div class="big">${fmtMoney2(ytd)}</div><div class="k" style="margin-top:2px;">${fmtMoney2(yPaid)} projects + ${fmtMoney2(subCollected)} monthly</div></div>
     ${targetCell}
     <div class="cell"><div class="k">To collect</div><div class="big" style="color:#FFB39F;">${fmtMoney2(yTotal-yPaid)}</div></div>
+    <div class="cell"><div class="k">Expenses ${curYear}</div><div class="big" style="color:#FFB39F;">${fmtMoney2(Math.round(yExp))}</div></div>
+    <div class="cell"><div class="k">Net profit ${curYear}</div><div class="big" style="color:${yNet>=0?'#4BE8A0':'#FF9C8F'};">${fmtMoney2(Math.round(yNet))}</div><div class="k" style="margin-top:2px;">generated − expenses</div></div>
     <div class="cell"><div class="k">Clients</div><div class="big">${yCount}</div></div>
     <div class="cell renew"><div class="k">Renewals due ${curYear}</div><div class="big">${fmtMoney2(rTotal)}</div></div>`;
   const ytc=$('#yearTargetCell'); if(ytc) ytc.addEventListener('click',()=>editYearTarget(curYear));
@@ -1669,6 +1745,107 @@ $('#catAdd').addEventListener('click',()=>{
   state.noteCats.push(name); save(); renderTodo();
 });
 
+/* ---------- ideas board ---------- */
+const IDEA_LANES=[
+  {status:'someday', name:'Someday',  pal:'violet'},
+  {status:'next',    name:'Next up',  pal:'blue'},
+  {status:'doing',   name:'Doing',    pal:'orange'},
+  {status:'done',    name:'Done',     pal:'green'},
+];
+const IDEA_STATUSES=IDEA_LANES.map(l=>l.status);
+let dragIdeaId=null, pendingFocusIdea=null;
+function ensureIdeas(){
+  if(!Array.isArray(state.ideas)) state.ideas=[];
+  state.ideas.forEach(i=>{
+    if(!IDEA_STATUSES.includes(i.status)) i.status='someday';
+    if(i.prio===undefined) i.prio='none';
+    if(!i.created) i.created=Date.now();
+    if(!i.updated) i.updated=i.created;
+  });
+}
+function renderIdeas(){
+  ensureIdeas();
+  const wrap=$('#ideaLanes'); if(!wrap) return; wrap.innerHTML='';
+  IDEA_LANES.forEach(laneDef=>{
+    const pal=TODO_PAL[laneDef.pal];
+    const items=state.ideas.filter(i=>i.status===laneDef.status)
+      .sort((a,b)=>(PRIO_RANK[a.prio||'none']-PRIO_RANK[b.prio||'none']) || (b.created-a.created));
+
+    const lane=document.createElement('div'); lane.className='todo-lane';
+    lane.style.setProperty('--dropc', pal.hex);
+
+    const head=document.createElement('div');
+    head.className='todo-lane-head'+(pal.dark?' dark':'');
+    head.style.background=pal.grad;
+    head.innerHTML=`<span class="tl-title" style="cursor:default;">${laneDef.name}</span><span class="tl-count">${items.length}</span>`;
+    lane.appendChild(head);
+
+    const addWrap=document.createElement('div'); addWrap.className='todo-lane-add';
+    addWrap.innerHTML=`<input placeholder="+ Add idea…" maxlength="200">`;
+    const inp=addWrap.querySelector('input'); inp.dataset.status=laneDef.status;
+    inp.addEventListener('keydown',e=>{
+      if(e.key!=='Enter') return;
+      const t=inp.value.trim(); if(!t) return;
+      const now=Date.now();
+      state.ideas.push({id:uid(), title:t, detail:'', status:laneDef.status, prio:'none', created:now, updated:now});
+      pendingFocusIdea=laneDef.status; save(); renderIdeas();
+    });
+    lane.appendChild(addWrap);
+
+    const body=document.createElement('div'); body.className='todo-lane-body';
+    body.addEventListener('dragover',e=>{
+      if(!dragIdeaId) return;
+      e.preventDefault(); e.dataTransfer.dropEffect='move'; body.classList.add('dragover');
+    });
+    body.addEventListener('dragleave',e=>{ if(!body.contains(e.relatedTarget)) body.classList.remove('dragover'); });
+    body.addEventListener('drop',e=>{
+      e.preventDefault(); body.classList.remove('dragover');
+      handleIdeaDrop(laneDef.status);
+    });
+    if(!items.length){
+      const em=document.createElement('div'); em.className='todo-lane-empty'; em.textContent='Nothing here yet';
+      body.appendChild(em);
+    }
+    items.forEach(i=>body.appendChild(ideaRow(i)));
+    lane.appendChild(body);
+    wrap.appendChild(lane);
+  });
+  if(pendingFocusIdea){
+    const el=wrap.querySelector('.todo-lane-add input[data-status="'+pendingFocusIdea+'"]');
+    if(el) el.focus();
+    pendingFocusIdea=null;
+  }
+}
+function ideaRow(i){
+  const p=i.prio||'none';
+  const row=document.createElement('div'); row.className='task-item idea-item p-'+p;
+  row.draggable=true; row.dataset.id=i.id;
+  row.addEventListener('dragstart',e=>{ dragIdeaId=i.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',i.id); });
+  row.addEventListener('dragend',()=>{ dragIdeaId=null; row.classList.remove('dragging'); document.querySelectorAll('.todo-lane-body.dragover').forEach(b=>b.classList.remove('dragover')); });
+  const dot = p==='none'
+    ? `<button class="prio-dot" title="Set priority"></button>`
+    : `<button class="prio-dot set" title="Priority: ${p}">${PRIO_EMOJI[p]}</button>`;
+  row.innerHTML=dot+
+    `<div class="task-body"><span class="task-text">${esc(i.title)}</span>${i.detail?`<span class="idea-detail">${esc(i.detail)}</span>`:''}</div>`+
+    `<button class="task-edit" title="Add detail">✎</button>`+
+    `<button class="item-x" title="Remove">✕</button>`;
+  row.querySelector('.prio-dot').addEventListener('click',()=>{ i.prio=PRIO_CYCLE[p]; i.updated=Date.now(); save(); renderIdeas(); });
+  row.querySelector('.task-edit').addEventListener('click',()=>{
+    const v=prompt('Detail for "'+i.title+'":', i.detail||''); if(v===null) return;
+    i.detail=v.trim(); i.updated=Date.now(); save(); renderIdeas();
+  });
+  row.querySelector('.item-x').addEventListener('click',()=>{
+    if(confirm('Delete idea "'+i.title+'"?')){ state.ideas=state.ideas.filter(x=>x.id!==i.id); save(); renderIdeas(); }
+  });
+  return row;
+}
+function handleIdeaDrop(status){
+  const id=dragIdeaId; dragIdeaId=null; if(!id) return;
+  const i=state.ideas.find(x=>x.id===id); if(!i){ renderIdeas(); return; }
+  if(i.status!==status){ i.status=status; i.updated=Date.now(); save(); renderIdeas(); }
+  else renderIdeas();
+}
+
 /* ---------- monthly subscriptions ---------- */
 let subYear=now.getFullYear();
 function renderMonthly(){
@@ -1742,6 +1919,67 @@ $('#subName').addEventListener('keydown',e=>{if(e.key==='Enter')$('#subAdd').cli
 $('#subPrevY').addEventListener('click',()=>{subYear--; renderMonthly();});
 $('#subNextY').addEventListener('click',()=>{subYear++; renderMonthly();});
 
+/* ---------- expenses ---------- */
+function renderExpenses(){
+  ensureExpenses();
+  const body=$('#expenseBody'); if(!body) return;
+  const rate=+state.expenses.perWebsite||0;
+  const soldThis=websitesSold(curMonth);
+  const rec=recurringMonthly();
+  const monthTot=expensesForMonth(curMonth);
+  let html=`<div class="exp-hint">Costs for <b>${fmtMonth(curMonth)}</b> — change the month in another tab's strip to see other months.</div>`;
+  html+=`<div class="exp-row" data-edit="rate">
+      <div><div class="exp-name">Domain per website</div><div class="exp-sub">${soldThis} website${soldThis===1?'':'s'} sold (paid) this month · ${fmtMoney2(rate)} each</div></div>
+      <span class="exp-amt" title="Click to edit the per-website rate">${fmtMoney2(rate)}</span>
+      <button class="exp-edit" title="Edit rate">✎</button>
+    </div>`;
+  state.expenses.recurring.forEach(r=>{
+    html+=`<div class="exp-row" data-id="${r.id}">
+      <div class="exp-name">${esc(r.name)}<span class="exp-sub" style="display:block;">recurring monthly</span></div>
+      <span class="exp-amt" title="Click to edit">${fmtMoney2(+r.amount||0)}/m</span>
+      <button class="item-x" title="Remove">✕</button>
+    </div>`;
+  });
+  html+=`<div class="exp-row total">
+      <div class="exp-name">Total this month<span class="exp-sub" style="display:block;">${fmtMoney2(soldThis*rate)} domains + ${fmtMoney2(rec)} recurring</span></div>
+      <span class="exp-amt">${fmtMoney2(Math.round(monthTot))}</span>
+    </div>`;
+  body.innerHTML=html;
+  const rateRow=body.querySelector('[data-edit="rate"]');
+  rateRow.querySelectorAll('.exp-amt,.exp-edit').forEach(el=>el.addEventListener('click',editWebsiteRate));
+  body.querySelectorAll('.exp-row[data-id]').forEach(row=>{
+    const r=state.expenses.recurring.find(x=>x.id===row.dataset.id); if(!r) return;
+    row.querySelector('.exp-amt').addEventListener('click',()=>{
+      const nv=prompt('Monthly amount (€) for '+r.name+':', r.amount||0);
+      if(nv===null) return;
+      const n=parseFloat(String(nv).replace(',','.'));
+      if(!isNaN(n)&&n>=0){ r.amount=Math.round(n*100)/100; state.expenses.updated=Date.now(); save(); renderAll(); toast(r.name+' — '+fmtMoney2(r.amount)+'/month'); }
+      else toast('Enter a number, e.g. 23');
+    });
+    row.querySelector('.item-x').addEventListener('click',()=>{
+      if(confirm('Remove monthly cost "'+r.name+'"?')){ state.expenses.recurring=state.expenses.recurring.filter(x=>x.id!==r.id); state.expenses.updated=Date.now(); save(); renderAll(); }
+    });
+  });
+}
+function editWebsiteRate(){
+  ensureExpenses();
+  const nv=prompt('Cost of the domain you buy per website (€):', state.expenses.perWebsite);
+  if(nv===null) return;
+  const n=parseFloat(String(nv).replace(',','.'));
+  if(!isNaN(n)&&n>=0){ state.expenses.perWebsite=Math.round(n*100)/100; state.expenses.updated=Date.now(); save(); renderAll(); toast('Per-website cost — '+fmtMoney2(state.expenses.perWebsite)); }
+  else toast('Enter a number, e.g. 9.30');
+}
+$('#expAdd').addEventListener('click',()=>{
+  ensureExpenses();
+  const name=$('#expName').value.trim(); if(!name){ $('#expName').focus(); return; }
+  const amt=parseFloat(String($('#expAmt').value).replace(',','.'));
+  state.expenses.recurring.push({id:uid(), name, amount:isNaN(amt)?0:Math.round(amt*100)/100});
+  state.expenses.updated=Date.now();
+  $('#expName').value=''; $('#expAmt').value='';
+  save(); renderAll(); toast('Monthly cost added'); $('#expName').focus();
+});
+['expName','expAmt'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#expAdd').click();}));
+
 /* ---------- home dashboard ---------- */
 function renderHome(){
   if(!state) return;
@@ -1767,14 +2005,15 @@ function renderHome(){
   const hiCount=hiNotes.length + hiClients.length;
   // hero
   const rem=mTotal-mPaid;
-  const mCollected=collectedForMonth(curMonth), mt=monthTarget(curMonth);
-  const tpct=progPct(mCollected,mt.value), tcls=progClass(tpct);
+  const mGenerated=generatedForMonth(curMonth), mt=monthTarget(curMonth);
+  const tpct=progPct(mGenerated,mt.value), tcls=progClass(tpct);
   const monthName=MONTHS[+curMonth.slice(5,7)-1];
+  const mExp=expensesForMonth(curMonth), mNet=mGenerated-mExp;
   const targetHs = mt.value>0
-    ? `<div class="hs"><div class="k">Target ${monthName}${mt.implied?' (auto)':''}</div><div class="v ${tcls}">${tpct}%</div>
-         <div class="tgt-sub">${fmtMoney2(mCollected)} / ${fmtMoney2(Math.round(mt.value))}</div>
+    ? `<div class="hs"><div class="k">Target ${monthName} · gen.${mt.implied?' (auto)':''}</div><div class="v ${tcls}">${tpct}%</div>
+         <div class="tgt-sub">${fmtMoney2(mGenerated)} / ${fmtMoney2(Math.round(mt.value))}</div>
          <div class="tgt-bar on-dark" style="max-width:150px; margin-top:6px;"><i class="${tcls}" style="width:${Math.min(100,tpct)}%"></i></div></div>`
-    : `<div class="hs"><div class="k">Target ${monthName}</div><div class="v" style="color:rgba(255,255,255,.5);">—</div><div class="tgt-sub">set it in the month strip</div></div>`;
+    : `<div class="hs"><div class="k">Target ${monthName} · gen.</div><div class="v" style="color:rgba(255,255,255,.5);">—</div><div class="tgt-sub">set it in the month strip</div></div>`;
   $('#homeHero').innerHTML=`
     <h2>${greet}, Agelo 👋</h2>
     <p>${today.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · here's your day at a glance</p>
@@ -1782,6 +2021,8 @@ function renderHome(){
       <div class="hs"><div class="k">Meetings this week</div><div class="v b">${weekMeetings.length}</div></div>
       <div class="hs"><div class="k">${fmtMonth(curMonth)} to collect</div><div class="v c">${fmtMoney2(rem)}</div></div>
       ${targetHs}
+      <div class="hs"><div class="k">${monthName} expenses</div><div class="v c">${fmtMoney2(Math.round(mExp))}</div></div>
+      <div class="hs"><div class="k">${monthName} net profit</div><div class="v ${mNet>=0?'g':'c'}">${fmtMoney2(Math.round(mNet))}</div></div>
       <div class="hs"><div class="k">Overdue renewals</div><div class="v ${overdue.length?'c':'g'}">${overdue.length}</div></div>
       <div class="hs"><div class="k">High priority</div><div class="v ${hiCount?'c':'g'}">${hiCount}</div></div>
     </div>`;
@@ -1926,14 +2167,14 @@ function switchView(v){
   curView=v;
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
   document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el.id==='view-'+v));
-  $('#strip').style.display = (v==='year'||v==='renewals'||v==='calendar'||v==='todo'||v==='monthly'||v==='home') ? 'none' : 'flex';
+  $('#strip').style.display = (v==='year'||v==='renewals'||v==='calendar'||v==='todo'||v==='ideas'||v==='monthly'||v==='home') ? 'none' : 'flex';
   renderAll();
 }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchView(t.dataset.view)));
 
 function renderAll(){
   if(!state) return;
-  renderHome(); renderStats(); renderBoard(); renderCalendar(); renderYear(); renderLogs(); renderWarm(); renderSched(); renderRenewals(); renderTodo(); renderMonthly();
+  renderHome(); renderStats(); renderBoard(); renderCalendar(); renderYear(); renderLogs(); renderWarm(); renderSched(); renderRenewals(); renderTodo(); renderIdeas(); renderMonthly(); renderExpenses();
 }
 
 /* ---------- export ---------- */
@@ -2039,7 +2280,7 @@ $('#restoreFile').addEventListener('change',e=>{
       const data=JSON.parse(r.result);
       if(!data.clients) throw 0;
       if(confirm('Replace everything with this backup? Current data will be overwritten.')){
-        state=data; state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={};
+        state=data; state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={}; state.ideas||=[]; ensureExpenses();
         state.clients.forEach(c=>{ if(OLD_STAGE_MAP[c.stage]) c.stage=OLD_STAGE_MAP[c.stage]; });
         save(); renderAll(); toast('Backup restored ✓');
       }

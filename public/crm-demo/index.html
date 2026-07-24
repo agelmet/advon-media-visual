@@ -590,7 +590,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
     <div class="stat-pill paid-pill"><div class="k">Collected</div><div class="v" id="statPaid">€0</div></div>
     <div class="stat-pill"><div class="k">To collect</div><div class="v" id="statRem" style="color:var(--coral);">€0</div></div>
     <div class="stat-pill target-pill" id="statTargetPill" title="Click to set this month's target">
-      <div class="k">Target <span class="tgt-meta" id="statTargetMeta"></span></div>
+      <div class="k">Target · generated <span class="tgt-meta" id="statTargetMeta"></span></div>
       <div class="v" id="statTarget">Set →</div>
       <div class="tgt-bar"><i id="statTargetBar"></i></div>
     </div>
@@ -908,6 +908,15 @@ function collectedForMonth(key){
   return paid+subs;
 }
 function collectedForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=collectedForMonth(y+'-'+pad(m)); return sum; }
+/* "Generated" = total booked value of every client that month (any payment stage)
+   + monthly-subscription income recorded for that month. This is what the TARGET is
+   measured against — separate from "Collected". */
+function generatedForMonth(key){
+  const booked=state.clients.filter(c=>c.month===key).reduce((a,c)=>a+(+c.value||0),0);
+  const subs=state.subs.reduce((a,s)=>a+((s.paid && s.paid[key])?(+s.value||0):0),0);
+  return booked+subs;
+}
+function generatedForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=generatedForMonth(y+'-'+pad(m)); return sum; }
 function monthTarget(key){ /* {value, implied} — implied = yearly ÷ 12 fallback */
   ensureTargets();
   if(state.targets.monthly[key]!=null) return {value:+state.targets.monthly[key], implied:false};
@@ -950,17 +959,17 @@ function renderStats(){
   $('#statTotal').textContent=fmtMoney(tot);
   $('#statPaid').textContent=fmtMoney(paid);
   $('#statRem').textContent=fmtMoney(tot-paid);
-  // target pill
-  const collected=collectedForMonth(curMonth);
+  // target pill — measured against GENERATED income (booked value + subs), not collected
+  const generated=generatedForMonth(curMonth);
   const mt=monthTarget(curMonth);
   const pill=$('#statTargetPill'), bar=$('#statTargetBar');
   if(mt.value>0){
-    const pct=progPct(collected,mt.value), cls=progClass(pct);
+    const pct=progPct(generated,mt.value), cls=progClass(pct);
     pill.classList.toggle('implied', mt.implied);
     $('#statTarget').textContent=fmtMoney(Math.round(mt.value));
     $('#statTargetMeta').textContent=(mt.implied?'auto · ':'')+pct+'%';
     bar.className=cls; bar.style.width=Math.min(100,pct)+'%';
-    pill.title=fmtMoney(collected)+' of '+fmtMoney(Math.round(mt.value))+' collected — click to change';
+    pill.title=fmtMoney(generated)+' generated of '+fmtMoney(Math.round(mt.value))+' target — click to change';
   } else {
     pill.classList.remove('implied');
     $('#statTarget').textContent='Set →';
@@ -1149,8 +1158,8 @@ function renderYear(){
       if(n){ bar+=`<div style="flex:${n};background:${st.hex}" title="${st.name}: ${n}"></div>`;
              legend+=`<span class="chip" style="background:${st.cs};color:${st.hex}">${st.name} ${n}</span>`; }
     });
-    const mCollected=collectedForMonth(key), mt=monthTarget(key), mpct=progPct(mCollected,mt.value);
-    const mprog = mt.value>0 ? `<div class="tgt-bar m-progress" title="${fmtMoney(mCollected)} of ${fmtMoney(Math.round(mt.value))} target (${mpct}%)${mt.implied?' · auto':''}"><i class="${progClass(mpct)}" style="width:${Math.min(100,mpct)}%"></i></div>` : '';
+    const mGenerated=generatedForMonth(key), mt=monthTarget(key), mpct=progPct(mGenerated,mt.value);
+    const mprog = mt.value>0 ? `<div class="tgt-bar m-progress" title="${fmtMoney(mGenerated)} generated of ${fmtMoney(Math.round(mt.value))} target (${mpct}%)${mt.implied?' · auto':''}"><i class="${progClass(mpct)}" style="width:${Math.min(100,mpct)}%"></i></div>` : '';
     card.innerHTML=`
       <h3>${MONTHS[m-1]}</h3>
       <div class="m-count">${items.length} client${items.length===1?'':'s'}${paid?` · ${fmtMoney(paid)} collected`:''}${(total-paid)>0?` · <b style="color:var(--coral)">${fmtMoney(total-paid)} to collect</b>`:''}</div>
@@ -1166,12 +1175,13 @@ function renderYear(){
     return a+n*(+s.value||0);
   },0);
   const ytd=yPaid+subCollected;
-  const ytVal=yearTarget(curYear), ypct=progPct(ytd,ytVal), ycls=progClass(ypct);
+  const yGenerated=generatedForYear(curYear);
+  const ytVal=yearTarget(curYear), ypct=progPct(yGenerated,ytVal), ycls=progClass(ypct);
   const targetCell=`<div class="cell target" id="yearTargetCell" title="Click to set ${curYear} target">
-      <div class="k">Target ${curYear}</div>
+      <div class="k">Target ${curYear} · generated</div>
       <div class="big">${ytVal? fmtMoney2(ytVal) : 'Set →'}</div>
       ${ytVal? `<div class="tgt-bar on-dark" style="margin-top:8px; max-width:230px;"><i class="${ycls}" style="width:${Math.min(100,ypct)}%"></i></div>
-        <div class="k" style="margin-top:5px; color:rgba(255,255,255,.78);">${ypct}% reached · ${fmtMoney2(Math.max(0,ytVal-ytd))} to go</div>` : `<div class="k" style="margin-top:5px; color:rgba(255,255,255,.5);">no target set</div>`}
+        <div class="k" style="margin-top:5px; color:rgba(255,255,255,.78);">${ypct}% reached · ${fmtMoney2(Math.max(0,ytVal-yGenerated))} to go</div>` : `<div class="k" style="margin-top:5px; color:rgba(255,255,255,.5);">no target set</div>`}
     </div>`;
   $('#yearBanner').innerHTML=`
     <div class="cell"><div class="k">${curYear} total booked</div><div class="big">${fmtMoney2(yTotal)}</div></div>
@@ -1703,14 +1713,14 @@ function renderHome(){
   const hiCount=hiNotes.length + hiClients.length;
   // hero
   const rem=mTotal-mPaid;
-  const mCollected=collectedForMonth(curMonth), mt=monthTarget(curMonth);
-  const tpct=progPct(mCollected,mt.value), tcls=progClass(tpct);
+  const mGenerated=generatedForMonth(curMonth), mt=monthTarget(curMonth);
+  const tpct=progPct(mGenerated,mt.value), tcls=progClass(tpct);
   const monthName=MONTHS[+curMonth.slice(5,7)-1];
   const targetHs = mt.value>0
-    ? `<div class="hs"><div class="k">Target ${monthName}${mt.implied?' (auto)':''}</div><div class="v ${tcls}">${tpct}%</div>
-         <div class="tgt-sub">${fmtMoney2(mCollected)} / ${fmtMoney2(Math.round(mt.value))}</div>
+    ? `<div class="hs"><div class="k">Target ${monthName} · gen.${mt.implied?' (auto)':''}</div><div class="v ${tcls}">${tpct}%</div>
+         <div class="tgt-sub">${fmtMoney2(mGenerated)} / ${fmtMoney2(Math.round(mt.value))}</div>
          <div class="tgt-bar on-dark" style="max-width:150px; margin-top:6px;"><i class="${tcls}" style="width:${Math.min(100,tpct)}%"></i></div></div>`
-    : `<div class="hs"><div class="k">Target ${monthName}</div><div class="v" style="color:rgba(255,255,255,.5);">—</div><div class="tgt-sub">set it in the month strip</div></div>`;
+    : `<div class="hs"><div class="k">Target ${monthName} · gen.</div><div class="v" style="color:rgba(255,255,255,.5);">—</div><div class="tgt-sub">set it in the month strip</div></div>`;
   $('#homeHero').innerHTML=`
     <h2>${greet}, Agelo 👋</h2>
     <p>${today.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · here's your day at a glance</p>
