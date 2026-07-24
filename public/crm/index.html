@@ -116,6 +116,21 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .stat-pill.paid-pill{background:linear-gradient(135deg,var(--green),#0AA55F); border:none; box-shadow:0 6px 18px rgba(14,198,115,.35);}
 .stat-pill.paid-pill .k{color:rgba(255,255,255,.85);}
 .stat-pill.paid-pill .v{color:#fff;}
+.stat-pill.target-pill{cursor:pointer; min-width:120px; transition:border-color .12s;}
+.stat-pill.target-pill:hover{border-color:#BFD4F2;}
+.stat-pill.target-pill.implied{border-style:dashed;}
+.stat-pill.target-pill.implied .v{color:var(--muted);}
+.stat-pill .tgt-meta{font-size:9.5px; font-weight:700; color:var(--muted); letter-spacing:.03em; text-transform:none;}
+/* target progress bars (work in light + dark) */
+.tgt-bar{height:6px; border-radius:99px; background:var(--bg); overflow:hidden; margin-top:6px;}
+.tgt-bar.on-dark{background:rgba(255,255,255,.20);}
+.tgt-bar > i{display:block; height:100%; border-radius:99px; transition:width .35s ease;}
+.tgt-bar > i.low{background:var(--coral);}
+.tgt-bar > i.mid{background:var(--yellow);}
+.tgt-bar > i.good{background:var(--green);}
+.ycard .m-progress{margin:0 0 10px;}
+.year-banner .cell.target{cursor:pointer;}
+.hs .tgt-sub{font-size:11px; color:rgba(255,255,255,.6); font-weight:600; margin-top:2px; font-variant-numeric:tabular-nums;}
 
 .view{max-width:1600px; margin:18px auto 60px; padding:0 24px; display:none;}
 .view.active{display:block;}
@@ -579,6 +594,11 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
     <div class="stat-pill pipe"><div class="k">Month pipeline</div><div class="v" id="statTotal">€0</div></div>
     <div class="stat-pill paid-pill"><div class="k">Collected</div><div class="v" id="statPaid">€0</div></div>
     <div class="stat-pill"><div class="k">To collect</div><div class="v" id="statRem" style="color:var(--coral);">€0</div></div>
+    <div class="stat-pill target-pill" id="statTargetPill" title="Click to set this month's target">
+      <div class="k">Target <span class="tgt-meta" id="statTargetMeta"></span></div>
+      <div class="v" id="statTarget">Set →</div>
+      <div class="tgt-bar"><i id="statTargetBar"></i></div>
+    </div>
   </div>
 </div>
 
@@ -914,7 +934,7 @@ async function loadDecrypted(){
     if(legacy && legacy.clients){ state=legacy; try{localStorage.removeItem('advon_crm_v3');}catch(e){} }
     else state=JSON.parse(await aesDec(CUR_KEY, VAULT.iv, VAULT.ct));
   }
-  state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[];
+  state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={};
   state.clients.forEach(c=>{ if(OLD_STAGE_MAP[c.stage]) c.stage=OLD_STAGE_MAP[c.stage]; });
   await saveNow();
   if(!canPersist) $('#storageWarn').classList.add('show');
@@ -939,6 +959,52 @@ let weekStart=mondayOf(new Date());
 function mondayOf(d){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); x.setHours(0,0,0,0); return x; }
 
 /* ---------- stats strip ---------- */
+/* ---------- revenue targets ---------- */
+function ensureTargets(){
+  if(!state.targets || typeof state.targets!=='object') state.targets={yearly:{},monthly:{}};
+  state.targets.yearly ||= {}; state.targets.monthly ||= {};
+}
+/* "Collected" = paid-stage client revenue + collected monthly-subscription income
+   for the period — matches the Year tab's "Money made" figure. */
+function collectedForMonth(key){
+  const paid=state.clients.filter(c=>c.month===key && c.stage==='paid').reduce((a,c)=>a+(+c.value||0),0);
+  const subs=state.subs.reduce((a,s)=>a+((s.paid && s.paid[key])?(+s.value||0):0),0);
+  return paid+subs;
+}
+function collectedForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=collectedForMonth(y+'-'+pad(m)); return sum; }
+function monthTarget(key){ /* {value, implied} — implied = yearly ÷ 12 fallback */
+  ensureTargets();
+  if(state.targets.monthly[key]!=null) return {value:+state.targets.monthly[key], implied:false};
+  const y=key.slice(0,4);
+  if(state.targets.yearly[y]!=null) return {value:(+state.targets.yearly[y])/12, implied:true};
+  return {value:0, implied:false};
+}
+function yearTarget(y){ ensureTargets(); return state.targets.yearly[y]!=null ? +state.targets.yearly[y] : 0; }
+function progPct(done,target){ return target>0 ? Math.round(done/target*100) : 0; }
+function progClass(pct){ return pct>=90?'good':pct>=50?'mid':'low'; } /* good=green, mid=yellow, low=coral */
+function editMonthTarget(key){
+  ensureTargets();
+  const cur=state.targets.monthly[key]!=null? state.targets.monthly[key] : '';
+  const v=prompt('Target for '+fmtMonth(key)+' (€) — leave empty to use the yearly target ÷ 12:', cur);
+  if(v===null) return;
+  const t=String(v).trim();
+  if(t===''){ delete state.targets.monthly[key]; }
+  else { const n=Math.round(parseFloat(t.replace(',','.'))); if(isNaN(n)||n<0){ toast('Enter a number, e.g. 7500'); return; } state.targets.monthly[key]=n; }
+  state.targets.updated=Date.now();
+  save(); renderAll(); toast('Target updated');
+}
+function editYearTarget(y){
+  ensureTargets();
+  const cur=state.targets.yearly[y]!=null? state.targets.yearly[y] : '';
+  const v=prompt('Yearly revenue target for '+y+' (€) — leave empty to clear:', cur);
+  if(v===null) return;
+  const t=String(v).trim();
+  if(t===''){ delete state.targets.yearly[y]; }
+  else { const n=Math.round(parseFloat(t.replace(',','.'))); if(isNaN(n)||n<0){ toast('Enter a number, e.g. 90000'); return; } state.targets.yearly[y]=n; }
+  state.targets.updated=Date.now();
+  save(); renderAll(); toast('Target updated');
+}
+
 function renderStats(){
   $('#monthLabel').textContent=fmtMonth(curMonth);
   const mc=state.clients.filter(c=>c.month===curMonth);
@@ -948,7 +1014,26 @@ function renderStats(){
   $('#statTotal').textContent=fmtMoney(tot);
   $('#statPaid').textContent=fmtMoney(paid);
   $('#statRem').textContent=fmtMoney(tot-paid);
+  // target pill
+  const collected=collectedForMonth(curMonth);
+  const mt=monthTarget(curMonth);
+  const pill=$('#statTargetPill'), bar=$('#statTargetBar');
+  if(mt.value>0){
+    const pct=progPct(collected,mt.value), cls=progClass(pct);
+    pill.classList.toggle('implied', mt.implied);
+    $('#statTarget').textContent=fmtMoney(Math.round(mt.value));
+    $('#statTargetMeta').textContent=(mt.implied?'auto · ':'')+pct+'%';
+    bar.className=cls; bar.style.width=Math.min(100,pct)+'%';
+    pill.title=fmtMoney(collected)+' of '+fmtMoney(Math.round(mt.value))+' collected — click to change';
+  } else {
+    pill.classList.remove('implied');
+    $('#statTarget').textContent='Set →';
+    $('#statTargetMeta').textContent='';
+    bar.className=''; bar.style.width='0%';
+    pill.title='Click to set this month’s target';
+  }
 }
+$('#statTargetPill').addEventListener('click',()=>editMonthTarget(curMonth));
 
 /* ---------- board ---------- */
 function dropHandlers(el, stageId){
@@ -1128,10 +1213,13 @@ function renderYear(){
       if(n){ bar+=`<div style="flex:${n};background:${st.hex}" title="${st.name}: ${n}"></div>`;
              legend+=`<span class="chip" style="background:${st.cs};color:${st.hex}">${st.name} ${n}</span>`; }
     });
+    const mCollected=collectedForMonth(key), mt=monthTarget(key), mpct=progPct(mCollected,mt.value);
+    const mprog = mt.value>0 ? `<div class="tgt-bar m-progress" title="${fmtMoney(mCollected)} of ${fmtMoney(Math.round(mt.value))} target (${mpct}%)${mt.implied?' · auto':''}"><i class="${progClass(mpct)}" style="width:${Math.min(100,mpct)}%"></i></div>` : '';
     card.innerHTML=`
       <h3>${MONTHS[m-1]}</h3>
       <div class="m-count">${items.length} client${items.length===1?'':'s'}${paid?` · ${fmtMoney(paid)} collected`:''}${(total-paid)>0?` · <b style="color:var(--coral)">${fmtMoney(total-paid)} to collect</b>`:''}</div>
       <div class="m-total ${total?'':'zero'}">${fmtMoney(total)}</div>
+      ${mprog}
       ${bar?`<div class="stagebar">${bar}</div><div class="m-legend">${legend}</div>`:'<div class="empty-note" style="padding:6px 0;text-align:left;">Nothing booked yet</div>'}`;
     card.addEventListener('click',()=>{ curMonth=key; switchView('board'); });
     grid.appendChild(card);
@@ -1142,12 +1230,21 @@ function renderYear(){
     return a+n*(+s.value||0);
   },0);
   const ytd=yPaid+subCollected;
+  const ytVal=yearTarget(curYear), ypct=progPct(ytd,ytVal), ycls=progClass(ypct);
+  const targetCell=`<div class="cell target" id="yearTargetCell" title="Click to set ${curYear} target">
+      <div class="k">Target ${curYear}</div>
+      <div class="big">${ytVal? fmtMoney2(ytVal) : 'Set →'}</div>
+      ${ytVal? `<div class="tgt-bar on-dark" style="margin-top:8px; max-width:230px;"><i class="${ycls}" style="width:${Math.min(100,ypct)}%"></i></div>
+        <div class="k" style="margin-top:5px; color:rgba(255,255,255,.78);">${ypct}% reached · ${fmtMoney2(Math.max(0,ytVal-ytd))} to go</div>` : `<div class="k" style="margin-top:5px; color:rgba(255,255,255,.5);">no target set</div>`}
+    </div>`;
   $('#yearBanner').innerHTML=`
     <div class="cell"><div class="k">${curYear} total booked</div><div class="big">${fmtMoney2(yTotal)}</div></div>
     <div class="cell paid"><div class="k">Money made ${curYear}</div><div class="big">${fmtMoney2(ytd)}</div><div class="k" style="margin-top:2px;">${fmtMoney2(yPaid)} projects + ${fmtMoney2(subCollected)} monthly</div></div>
+    ${targetCell}
     <div class="cell"><div class="k">To collect</div><div class="big" style="color:#FFB39F;">${fmtMoney2(yTotal-yPaid)}</div></div>
     <div class="cell"><div class="k">Clients</div><div class="big">${yCount}</div></div>
     <div class="cell renew"><div class="k">Renewals due ${curYear}</div><div class="big">${fmtMoney2(rTotal)}</div></div>`;
+  const ytc=$('#yearTargetCell'); if(ytc) ytc.addEventListener('click',()=>editYearTarget(curYear));
 }
 
 /* ---------- quick log ---------- */
@@ -1670,12 +1767,21 @@ function renderHome(){
   const hiCount=hiNotes.length + hiClients.length;
   // hero
   const rem=mTotal-mPaid;
+  const mCollected=collectedForMonth(curMonth), mt=monthTarget(curMonth);
+  const tpct=progPct(mCollected,mt.value), tcls=progClass(tpct);
+  const monthName=MONTHS[+curMonth.slice(5,7)-1];
+  const targetHs = mt.value>0
+    ? `<div class="hs"><div class="k">Target ${monthName}${mt.implied?' (auto)':''}</div><div class="v ${tcls}">${tpct}%</div>
+         <div class="tgt-sub">${fmtMoney2(mCollected)} / ${fmtMoney2(Math.round(mt.value))}</div>
+         <div class="tgt-bar on-dark" style="max-width:150px; margin-top:6px;"><i class="${tcls}" style="width:${Math.min(100,tpct)}%"></i></div></div>`
+    : `<div class="hs"><div class="k">Target ${monthName}</div><div class="v" style="color:rgba(255,255,255,.5);">—</div><div class="tgt-sub">set it in the month strip</div></div>`;
   $('#homeHero').innerHTML=`
     <h2>${greet}, Agelo 👋</h2>
     <p>${today.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · here's your day at a glance</p>
     <div class="hero-stats">
       <div class="hs"><div class="k">Meetings this week</div><div class="v b">${weekMeetings.length}</div></div>
       <div class="hs"><div class="k">${fmtMonth(curMonth)} to collect</div><div class="v c">${fmtMoney2(rem)}</div></div>
+      ${targetHs}
       <div class="hs"><div class="k">Overdue renewals</div><div class="v ${overdue.length?'c':'g'}">${overdue.length}</div></div>
       <div class="hs"><div class="k">High priority</div><div class="v ${hiCount?'c':'g'}">${hiCount}</div></div>
     </div>`;
@@ -1933,7 +2039,7 @@ $('#restoreFile').addEventListener('change',e=>{
       const data=JSON.parse(r.result);
       if(!data.clients) throw 0;
       if(confirm('Replace everything with this backup? Current data will be overwritten.')){
-        state=data; state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[];
+        state=data; state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={};
         state.clients.forEach(c=>{ if(OLD_STAGE_MAP[c.stage]) c.stage=OLD_STAGE_MAP[c.stage]; });
         save(); renderAll(); toast('Backup restored ✓');
       }
