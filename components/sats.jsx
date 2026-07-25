@@ -41,11 +41,12 @@ export default function Stats() {
     return () => observer.disconnect();
   }, []);
 
+  /* `accent` = the gold, shining number. Only the reviews stat gets it. */
   const stats = [
     { end: 3,   suffix: '+', labelEl: 'ΧΡΟΝΙΑ ΕΜΠΕΙΡΙΑΣ', labelEn: 'YEARS EXPERIENCE' },
     { end: 200, suffix: '+', labelEl: 'ΙΣΤΟΣΕΛΙΔΕΣ',       labelEn: 'WEBSITES' },
     { end: 100, suffix: '%', labelEl: 'ΕΠΙΤΥΧΙΑ',          labelEn: 'SUCCESS' },
-    { end: 110, suffix: '+', labelEl: 'ΑΞΙΟΛΟΓΗΣΕΙΣ',      labelEn: '5-STAR REVIEWS' },
+    { end: 110, suffix: '+', labelEl: 'ΑΞΙΟΛΟΓΗΣΕΙΣ',      labelEn: '5-STAR REVIEWS', accent: true },
   ];
 
   return (
@@ -62,13 +63,15 @@ export default function Stats() {
         />
       </div>
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-10 text-center relative z-10">
-        {stats.map(({ end, suffix, labelEl, labelEn }, i) => (
+        {stats.map(({ end, suffix, labelEl, labelEn, accent }, i) => (
           <div key={labelEn} className="group flex flex-col items-center">
             <div
-              className="font-black font-display text-electric-cyan mb-2 transition-transform duration-300 group-hover:scale-110"
+              className={`font-black font-display mb-2 transition-transform duration-300 group-hover:scale-110 ${accent ? 'stat-shine' : 'text-electric-cyan'}`}
               style={{
                 fontSize: 'clamp(2.5rem, 6vw, 4rem)',
-                filter: 'drop-shadow(0 0 20px rgba(71,200,245,0.3))',
+                filter: accent
+                  ? 'drop-shadow(0 0 14px rgba(251,188,5,0.5)) drop-shadow(0 0 38px rgba(240,165,0,0.28))'
+                  : 'drop-shadow(0 0 20px rgba(71,200,245,0.3))',
                 transitionDelay: `${i * 80}ms`,
               }}
             >
