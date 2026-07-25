@@ -205,7 +205,7 @@ export default function Reviews() {
   const reducedMotion = useReducedMotion();
 
   return (
-    <section id="reviews" className="py-32 relative overflow-hidden">
+    <section id="reviews" className="py-32 relative overflow-hidden scroll-mt-24">
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[70%] bg-electric-cyan/4 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute top-0 left-0 right-0 h-px cyber-divider" />
@@ -227,7 +227,7 @@ export default function Reviews() {
                 {[1, 2, 3, 4, 5].map((s) => <GoogleStar key={s} className="w-6 h-6" />)}
               </div>
               <span className="text-[#5f6368] font-medium text-sm">
-                100+ {lang === 'el' ? 'αξιολογήσεις στη Google' : 'reviews on Google'}
+                110+ {lang === 'el' ? 'αξιολογήσεις στη Google' : 'reviews on Google'}
               </span>
             </div>
           </div>
@@ -257,8 +257,8 @@ export default function Reviews() {
           <div className="text-center mt-8">
             <span className="text-gray-500 text-xs">
               {lang === 'el'
-                ? 'Εμφανίζονται 100+ πραγματικές αξιολογήσεις από τη Google'
-                : 'Showing 100+ real reviews from Google'}
+                ? 'Εμφανίζονται 110+ πραγματικές αξιολογήσεις από τη Google'
+                : 'Showing 110+ real reviews from Google'}
             </span>
           </div>
         </ScrollReveal>

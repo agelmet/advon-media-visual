@@ -40,6 +40,17 @@ export default function HomeClient() {
     if (el) el.style.transform = 'translate(0px, 0px) scale(1)';
   };
 
+  /* Hero proof line → reviews section. Smooth on desktop and mobile; the href
+     stays a real link so it still works without JS. */
+  const scrollToReviews = (e) => {
+    const el = document.getElementById('reviews');
+    if (!el) return;
+    e.preventDefault();
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    if (window.history?.replaceState) window.history.replaceState(null, '', '#reviews');
+  };
+
   useEffect(() => {
     const onScroll = () => {
       if (heroDecoRef.current) {
@@ -183,11 +194,20 @@ export default function HomeClient() {
               : 'No deposit. You see it finished first — then you decide. You pay only for the hosting.'}
           </p>
 
-          {/* Proof line */}
-          <p className="reveal-item delay-5 text-electric-cyan/90 text-sm md:text-base font-bold tracking-wide mb-12">
-            {lang === 'el'
-              ? '200+ ιστοσελίδες · 100+ κριτικές 5★ στο Google'
-              : '200+ websites · 100+ 5★ reviews on Google'}
+          {/* Proof line — the reviews half is a tappable jump down to the reviews section */}
+          <p className="reveal-item delay-5 text-electric-cyan/90 text-sm md:text-base font-bold tracking-wide mb-12 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
+            <span>{lang === 'el' ? '200+ ιστοσελίδες' : '200+ websites'}</span>
+            <span className="text-electric-cyan/40 hidden sm:inline" aria-hidden="true">·</span>
+            <Link
+              href="/#reviews"
+              onClick={scrollToReviews}
+              title={lang === 'el' ? 'Δείτε τις αξιολογήσεις' : 'See the reviews'}
+              className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-electric-cyan/8 border border-electric-cyan/25 hover:bg-electric-cyan/16 hover:border-electric-cyan/60 hover:text-electric-cyan focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-cyan/70 transition-all duration-300 cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-[#FBBC05] shrink-0" aria-hidden="true"><path d="M12 2.5l2.9 5.88 6.49.94-4.7 4.58 1.11 6.46L12 17.3l-5.8 3.06 1.11-6.46-4.7-4.58 6.49-.94L12 2.5z"/></svg>
+              {lang === 'el' ? '110+ κριτικές 5★ στο Google' : '110+ 5★ reviews on Google'}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 shrink-0 opacity-70 group-hover:opacity-100 group-hover:translate-y-0.5 transition-all duration-300" aria-hidden="true"><path d="M12 5v14"/><path d="m5 12 7 7 7-7"/></svg>
+            </Link>
           </p>
 
           {/* CTA Buttons */}
