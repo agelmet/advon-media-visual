@@ -108,8 +108,8 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .month-label{font-family:'Sora'; font-weight:700; font-size:15.5px; padding:0 10px; min-width:160px; text-align:center; letter-spacing:-.01em;}
 .today-btn{font-size:12px; font-weight:700; color:var(--brand); padding:6px 12px; border-radius:9px;}
 .today-btn:hover{background:var(--blue-soft);}
-.stat-pills{display:flex; gap:10px; margin-left:auto; flex-wrap:wrap;}
-.stat-pill{background:#fff; border:1px solid var(--line); border-radius:14px; padding:8px 18px; box-shadow:var(--shadow); text-align:right;}
+.stat-pills{display:grid; grid-template-columns:repeat(5,minmax(96px,1fr)); gap:10px; margin-left:auto;}
+.stat-pill{background:#fff; border:1px solid var(--line); border-radius:14px; padding:9px 16px 10px; box-shadow:var(--shadow); text-align:right; display:flex; flex-direction:column; justify-content:flex-end; min-width:0;}
 .stat-pill .k{font-size:10.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted);}
 .stat-pill .v{font-family:'Sora'; font-weight:800; font-size:20px; letter-spacing:-.02em; font-variant-numeric:tabular-nums;}
 .stat-pill.pipe .v{background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;}
@@ -118,8 +118,8 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .stat-pill.paid-pill .v{color:#fff;}
 .stat-pill.target-pill{cursor:pointer; min-width:120px; transition:border-color .12s;}
 .stat-pill.target-pill:hover{border-color:#BFD4F2;}
-.stat-pill.target-pill.implied{border-style:dashed;}
-.stat-pill.target-pill.implied .v{color:var(--muted);}
+.stat-pill.target-pill.unset{border-style:dashed;}
+.stat-pill.target-pill.unset .v{color:var(--muted);}
 .stat-pill .tgt-meta{font-size:9.5px; font-weight:700; color:var(--muted); letter-spacing:.03em; text-transform:none;}
 /* target progress bars (work in light + dark) */
 .tgt-bar{height:6px; border-radius:99px; background:var(--bg); overflow:hidden; margin-top:6px;}
@@ -159,7 +159,14 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .card:hover{box-shadow:0 6px 20px -6px var(--c), var(--shadow); transform:translateY(-1px);}
 .card.dragging{opacity:.45;}
 .card .c-name{font-weight:700; font-size:13px; margin-bottom:5px; padding-right:20px; word-break:break-word;}
-.card .c-prio{display:inline-block; width:8px; height:8px; border-radius:99px; margin-right:6px; vertical-align:middle; flex-shrink:0;}
+/* priority reads at a glance: coloured tag on the name + ring round high-priority cards */
+.card .c-prio{display:inline-flex; align-items:center; gap:4px; font-size:9px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; padding:2px 6px; border-radius:6px; margin-right:6px; vertical-align:1px;}
+.card .c-prio i{width:6px; height:6px; border-radius:99px; background:currentColor; display:block; flex-shrink:0;}
+.card .c-prio.high{background:var(--red-soft); color:var(--red);}
+.card .c-prio.medium{background:var(--yellow-soft); color:#8A6D00;}
+.card .c-prio.low{background:var(--green-soft); color:var(--deep);}
+.card.pr-high{box-shadow:0 0 0 1.5px var(--red), var(--shadow);}
+.card.pr-high:hover{box-shadow:0 0 0 1.5px var(--red), 0 6px 20px -6px var(--red);}
 .card .c-added{font-family:'Inter'; font-weight:600; font-size:10px; color:var(--muted); margin-left:6px; opacity:.75; white-space:nowrap;}
 .chip.contact{cursor:pointer; text-decoration:none; padding:3px 6px;}
 .chip.contact:hover{background:var(--blue-soft);}
@@ -219,15 +226,45 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .ycard .m-total.zero{color:#C6CBD8;}
 .ycard .m-net{font-size:11.5px; font-weight:600; color:var(--muted); margin:-6px 0 10px; font-variant-numeric:tabular-nums;}
 .ycard .m-net b.pos{color:var(--deep);} .ycard .m-net b.neg{color:var(--coral);}
+.ycard .m-target{display:flex; align-items:center; gap:7px; margin:0 0 10px; font-size:11.5px; font-weight:700; color:var(--muted); font-variant-numeric:tabular-nums;}
+.ycard .m-target .tgt-set{margin-left:auto; font-size:11px; font-weight:800; color:var(--brand); background:var(--blue-soft); border-radius:8px; padding:5px 10px; white-space:nowrap;}
+.ycard .m-target .tgt-set:hover{filter:brightness(.96);}
+.ycard .m-target b{color:var(--ink);}
 .stagebar{display:flex; height:8px; border-radius:99px; overflow:hidden; background:var(--bg); margin-bottom:10px;}
 .stagebar div{height:100%;}
 .m-legend{display:flex; flex-wrap:wrap; gap:5px;}
 .m-legend .chip{font-size:10px; padding:2px 7px;}
-.year-banner{background:linear-gradient(120deg,#10141F 20%,#1B3A6B 70%,#2F7FE0 130%); color:#fff; border-radius:var(--radius); padding:22px 26px; margin-bottom:20px; display:flex; align-items:center; gap:34px; flex-wrap:wrap; box-shadow:var(--shadow-lg);}
-.year-banner .big{font-family:'Sora'; font-weight:800; font-size:36px; letter-spacing:-.03em; font-variant-numeric:tabular-nums;}
+.year-banner{background:linear-gradient(120deg,#10141F 20%,#1B3A6B 70%,#2F7FE0 130%); color:#fff; border-radius:var(--radius); padding:22px 26px; margin-bottom:20px; display:grid; grid-template-columns:repeat(5,1fr); gap:20px 26px; align-items:start; box-shadow:var(--shadow-lg);}
+.year-banner .cell{min-width:0;}
+.year-banner .big{font-family:'Sora'; font-weight:800; font-size:32px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1.1; margin-top:4px;}
 .year-banner .k{font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.6);}
 .year-banner .cell.paid .big{color:#4BE8A0;}
 .year-banner .cell.renew .big{color:#7FD9F5;}
+@media(max-width:1180px){.year-banner{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:640px){
+  .year-banner{grid-template-columns:repeat(2,1fr); gap:16px 18px; padding:18px 16px;}
+  .year-banner .big{font-size:23px;}
+}
+
+/* ---------- Year — money & expenses summary, then yearly stats ---------- */
+.ysec{margin-top:28px;}
+.fin-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start;}
+@media(max-width:900px){.fin-grid{grid-template-columns:1fr;}}
+.fin-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px 18px 14px; min-width:0;}
+.fin-card h4{font-family:'Sora'; font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); margin-bottom:8px;}
+.fin-row{display:flex; align-items:baseline; gap:12px; padding:10px 0; border-bottom:1px dashed var(--line);}
+.fin-row:last-child{border-bottom:none;}
+.fin-row .fr-name{font-weight:700; font-size:13px; min-width:0; word-break:break-word;}
+.fin-row .fr-sub{display:block; font-size:11px; color:var(--muted); font-weight:500; margin-top:2px;}
+.fin-row .fr-amt{margin-left:auto; font-family:'Sora'; font-weight:800; font-size:14.5px; font-variant-numeric:tabular-nums; white-space:nowrap;}
+.fin-row .fr-amt.cost{color:var(--coral);} .fin-row .fr-amt.pos{color:var(--deep);} .fin-row .fr-amt.neg{color:var(--coral);}
+.fin-row.tot{border-top:2px solid var(--line); border-bottom:none; margin-top:4px; padding-top:12px;}
+.fin-net{border-radius:14px; padding:15px 16px; background:var(--green-soft); border:1px solid rgba(14,198,115,.28);}
+.fin-net.neg{background:var(--coral-soft); border-color:rgba(255,107,87,.3);}
+.fin-net .k{font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
+.fin-net .v{font-family:'Sora'; font-weight:800; font-size:30px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; color:var(--deep); margin-top:4px;}
+.fin-net.neg .v{color:var(--coral);}
+.fin-net .sub{font-size:11.5px; color:var(--muted); font-weight:600; margin-top:4px;}
 
 /* ---------- Quick Log ---------- */
 .lanes{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
@@ -378,16 +415,21 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .todo-lane-body.dragover{background:var(--bg); box-shadow:inset 0 0 0 2px var(--dropc,var(--brand)); border-radius:0 0 var(--radius) var(--radius);}
 .todo-lane-empty{font-size:11.5px; color:#B4BAC8; text-align:center; padding:14px 6px;}
 /* task rows (manual + client) */
-.task-item{display:flex; align-items:flex-start; gap:9px; padding:9px 11px; border-radius:12px; background:var(--bg); border:1px solid var(--line); border-left:4px solid var(--line); transition:background .12s, box-shadow .12s; cursor:grab;}
+.task-item{display:flex; align-items:flex-start; gap:9px; padding:9px 11px; border-radius:12px; background:var(--bg); border:1px solid var(--line); border-left:5px solid var(--line); transition:background .12s, box-shadow .12s; cursor:grab;}
 .task-item.dragging{opacity:.4; cursor:grabbing;}
-.task-item.p-high{border-left-color:var(--red); background:var(--red-soft);}
-.task-item.p-medium{border-left-color:var(--yellow); background:var(--yellow-soft);}
-.task-item.p-low{border-left-color:var(--green); background:var(--green-soft);}
-.task-item.done{opacity:.5;}
-.task-item.done .task-text{text-decoration:line-through;}
+.task-item.p-high{border-left-color:var(--red); background:var(--red-soft); border-color:rgba(255,77,94,.34); box-shadow:0 0 0 1px rgba(255,77,94,.24);}
+.task-item.p-high .task-text{font-weight:700;}
+.task-item.p-medium{border-left-color:var(--yellow); background:var(--yellow-soft); border-color:rgba(245,167,0,.32);}
+.task-item.p-low{border-left-color:var(--green); background:var(--green-soft); border-color:rgba(14,198,115,.3);}
+.task-item.done{opacity:.5; box-shadow:none;}
+.task-item.done .task-text{text-decoration:line-through; font-weight:600;}
 .prio-dot{width:22px; height:22px; border-radius:99px; flex-shrink:0; display:grid; place-items:center; font-size:12px; line-height:1; border:2px dashed var(--line); background:transparent; margin-top:1px;}
 .prio-dot.set{border:none;}
+.prio-dot.set.p-high{box-shadow:0 0 0 2px rgba(255,77,94,.28);}
+.prio-dot.set.p-medium{box-shadow:0 0 0 2px rgba(245,167,0,.28);}
+.prio-dot.set.p-low{box-shadow:0 0 0 2px rgba(14,198,115,.26);}
 .prio-dot:hover{border-color:var(--brand);}
+.prio-flag{font-size:9px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; padding:2px 6px; border-radius:6px; background:var(--red); color:#fff; align-self:center; flex-shrink:0;}
 .n-check{width:20px; height:20px; border-radius:7px; border:2px solid var(--brand); flex-shrink:0; display:grid; place-items:center; color:#fff; font-size:11px; font-weight:800; margin-top:1px;}
 .task-item.done .n-check{background:var(--green); border-color:var(--green);}
 .task-body{flex:1; min-width:0; display:flex; gap:8px; align-items:baseline; flex-wrap:wrap;}
@@ -454,20 +496,71 @@ body.dark .exp-row .item-x:hover{background:rgba(255,255,255,.1);}
 .card .c-lost:hover{background:var(--coral-soft); color:var(--coral);}
 
 /* ---------- Quick Log — daily call tracker ---------- */
-.ql-add{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:13px 15px; display:flex; gap:9px; align-items:center; flex-wrap:wrap; margin-bottom:16px; border-left:5px solid var(--brand);}
-.ql-add .qa-title{font-family:'Sora'; font-weight:700; font-size:12.5px; white-space:nowrap;}
-.ql-add input,.ql-add select{border:1px solid var(--line); border-radius:10px; padding:9px 11px; background:var(--bg); color:var(--ink);}
-.ql-add input:focus,.ql-add select:focus{background:var(--surface);}
-.ql-add .qn{flex:1; min-width:150px;} .ql-add .qv{width:96px;} .ql-add .qd{width:150px;}
-.ql-stats{margin-bottom:18px;}
-.ql-stat-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; margin-bottom:12px;}
-.qs-pill{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:11px 15px; box-shadow:var(--shadow);}
-.qs-pill .k{font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); display:flex; align-items:center; gap:5px;}
-.qs-pill .v{font-family:'Sora'; font-weight:800; font-size:22px; letter-spacing:-.02em; font-variant-numeric:tabular-nums; margin-top:3px;}
-.qs-pill .sub{font-size:10.5px; color:var(--muted); font-weight:600; margin-top:1px;}
+/* three big colour-coded logging cards — the fastest thing on the page */
+.ql-cards{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:11px; align-items:stretch;}
+.ql-card{border-radius:18px; padding:14px 15px 15px; display:flex; flex-direction:column; gap:11px; min-width:0; color:#fff; box-shadow:0 10px 30px -14px var(--qc), 0 1px 2px rgba(24,49,92,.10);}
+.ql-card.g{background:linear-gradient(135deg,#13D07E,#0A9F5B); --qc:rgba(14,198,115,.85);}
+.ql-card.y{background:linear-gradient(135deg,#FFCE2E,#F2A100); --qc:rgba(245,167,0,.8); color:#4A3B00;}
+.ql-card.r{background:linear-gradient(135deg,#FF6272,#E32E43); --qc:rgba(255,77,94,.8);}
+.qc-top{display:flex; align-items:center; gap:9px; min-width:0;}
+.qc-ico{width:32px; height:32px; border-radius:11px; display:grid; place-items:center; background:rgba(255,255,255,.22); flex-shrink:0;}
+.qc-ico .ic{width:1.15em; height:1.15em;}
+.ql-card.y .qc-ico{background:rgba(74,59,0,.15);}
+.qc-txt{min-width:0;}
+.qc-title{font-family:'Sora',sans-serif; font-weight:800; font-size:17px; line-height:1.08; letter-spacing:.02em; text-transform:uppercase;}
+.qc-sub{font-size:10.5px; font-weight:600; opacity:.85; margin-top:3px;}
+.qc-count{margin-left:auto; flex-shrink:0; text-align:center; background:rgba(255,255,255,.22); border-radius:12px; padding:5px 11px 6px;}
+.ql-card.y .qc-count{background:rgba(74,59,0,.15);}
+.qc-count b{display:block; font-family:'Sora',sans-serif; font-weight:800; font-size:17px; line-height:1; font-variant-numeric:tabular-nums;}
+.qc-count small{display:block; font-size:8.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; opacity:.85; margin-top:3px;}
+.qc-form{display:flex; gap:8px; align-items:stretch;}
+.ql-card input{flex:1 1 0; min-width:0; border:none; border-radius:12px; padding:12px 13px; background:rgba(255,255,255,.95); color:#10141F; font-weight:600; font-size:14.5px;}
+.ql-card input::placeholder{color:#8C93A3; font-weight:500;}
+body.dark .ql-card input{background:rgba(255,255,255,.94); color:#10141F;}
+body.dark .ql-card input:focus{background:#fff;}
+.ql-card input:focus{background:#fff; outline:2px solid rgba(255,255,255,.9); outline-offset:1px;}
+.qc-go{flex:0 0 auto; min-width:54px; border-radius:12px; background:rgba(255,255,255,.95); font-family:'Sora',sans-serif; font-weight:800; font-size:21px; line-height:1; display:grid; place-items:center; color:#0A9F5B; transition:transform .12s;}
+.qc-go:active{transform:scale(.94);}
+.ql-card.y .qc-go{color:#A87A00;} .ql-card.r .qc-go{color:#D6293C;}
+.qc-extra{display:flex; gap:8px;}
+.qc-extra input{padding:9px 11px; font-size:13px;}
+.qc-hint{display:flex; align-items:center; gap:6px; margin-top:auto; font-size:10.5px; font-weight:600; opacity:.85;}
+.qc-hint .ic{width:1.1em; height:1.1em; flex-shrink:0;}
+/* shared day + source bar (applies to whichever card you submit) */
+.ql-bar{display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); padding:9px 12px; margin-bottom:20px;}
+.ql-bar .qb-lbl{font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
+.ql-bar input[type=date]{border:1px solid var(--line); border-radius:10px; padding:7px 10px; background:var(--bg); color:var(--ink); font-weight:600;}
+.ql-bar input[type=date]:focus{background:var(--surface);}
+.qb-seg{display:flex; gap:4px; background:var(--bg); border-radius:11px; padding:3px; flex-wrap:wrap;}
+.qb-seg button{padding:6px 11px; border-radius:8px; font-size:12px; font-weight:700; color:var(--muted);}
+.qb-seg button.active{background:var(--surface); color:var(--brand); box-shadow:var(--shadow);}
+@media(max-width:820px){
+  .ql-cards{grid-template-columns:1fr; gap:10px; margin-bottom:10px;}
+  .ql-card{padding:11px 12px 12px; gap:8px; border-radius:15px;}
+  .qc-title{font-size:15px;} .qc-sub{display:none;}
+  .qc-ico{width:28px; height:28px; border-radius:9px;}
+  .qc-count{padding:4px 9px 5px;} .qc-count b{font-size:15px;} .qc-count small{font-size:8px;}
+  .ql-card input{padding:10px 12px;}
+  .qc-hint{display:none;}
+  .ql-bar{margin-bottom:14px; padding:8px 10px;}
+}
+/* statistics — moved to the bottom, symmetric grid of equal cards */
+.stats-sec,.ql-stats{margin-top:26px;}
+.stats-sec-head{display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;}
+.stats-sec-head .ico{width:34px; height:34px; border-radius:11px; display:grid; place-items:center; flex-shrink:0; background:var(--blue-soft); color:var(--blue);}
+.stats-sec-head h3{font-size:15.5px; font-weight:800; letter-spacing:-.01em;}
+.stats-sec-head p{font-size:11.5px; color:var(--muted); font-weight:500;}
+.stats-sec-head .tag{margin-left:auto; font-size:11px; font-weight:700; color:var(--muted); background:var(--bg); border:1px solid var(--line); border-radius:99px; padding:4px 11px; font-variant-numeric:tabular-nums;}
+.ql-stat-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:14px; align-items:stretch;}
+@media(max-width:1120px){.ql-stat-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:680px){.ql-stat-grid{grid-template-columns:repeat(2,1fr); gap:10px;}}
+.qs-pill{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:12px 14px 13px; box-shadow:var(--shadow); display:flex; flex-direction:column; min-width:0; min-height:104px;}
+.qs-pill .k{font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); display:flex; align-items:center; gap:5px; line-height:1.3;}
+.qs-pill .v{font-family:'Sora'; font-weight:800; font-size:22px; letter-spacing:-.02em; font-variant-numeric:tabular-nums; margin-top:6px;}
+.qs-pill .sub{font-size:10.5px; color:var(--muted); font-weight:600; margin-top:2px;}
 .qs-pill.accent{background:var(--grad); border:none; color:#fff;}
 .qs-pill.accent .k{color:rgba(255,255,255,.85);} .qs-pill.accent .sub{color:rgba(255,255,255,.8);}
-.qs-pill .tgt-bar{margin-top:8px;}
+.qs-pill .tgt-bar{margin-top:auto;}
 .day-log{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:14px; overflow:hidden;}
 .daylog-head{display:flex; align-items:center; gap:10px; padding:12px 15px; border-bottom:1px solid var(--line); flex-wrap:wrap;}
 .daylog-head .dl-date{font-family:'Sora'; font-weight:800; font-size:14px; letter-spacing:-.01em;}
@@ -482,14 +575,25 @@ body.dark .exp-row .item-x:hover{background:rgba(255,255,255,.1);}
 .dl-badge.rate{background:var(--violet-soft); color:var(--violet);}
 .daylog-lanes{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:12px 14px 14px;}
 @media(max-width:760px){.daylog-lanes{grid-template-columns:1fr;}}
-.dl-lane{border:1px solid var(--line); border-radius:12px; background:var(--bg); display:flex; flex-direction:column; min-width:0;}
+.dl-lane{border:1px solid var(--line); border-radius:12px; background:var(--bg); display:flex; flex-direction:column; min-width:0; overflow:hidden;}
 .dl-lane-head{display:flex; align-items:center; gap:6px; padding:8px 11px; font-size:11px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; border-bottom:1px solid var(--line);}
-.dl-lane.g .dl-lane-head{color:var(--deep);} .dl-lane.y .dl-lane-head{color:#8A6D00;} .dl-lane.r .dl-lane-head{color:#B02231;}
+.dl-lane-head .dot{width:8px; height:8px; border-radius:99px; flex-shrink:0;}
+.dl-lane.g{border-color:rgba(14,198,115,.34);} .dl-lane.y{border-color:rgba(245,167,0,.34);} .dl-lane.r{border-color:rgba(255,77,94,.32);}
+.dl-lane.g .dl-lane-head{color:var(--deep); background:var(--green-soft); border-bottom-color:rgba(14,198,115,.28);}
+.dl-lane.y .dl-lane-head{color:#8A6D00; background:var(--yellow-soft); border-bottom-color:rgba(245,167,0,.28);}
+.dl-lane.r .dl-lane-head{color:#B02231; background:var(--red-soft); border-bottom-color:rgba(255,77,94,.26);}
+.dl-lane.g .dl-lane-head .dot{background:var(--green);} .dl-lane.y .dl-lane-head .dot{background:var(--yellow);} .dl-lane.r .dl-lane-head .dot{background:var(--red);}
 .dl-lane-head .c{margin-left:auto; font-variant-numeric:tabular-nums; opacity:.8;}
 .dl-lane-body{padding:8px; display:flex; flex-direction:column; gap:6px; min-height:44px;}
 .dl-lane-body.dragover{background:var(--blue-soft); border-radius:0 0 12px 12px; box-shadow:inset 0 0 0 2px var(--brand);}
 .dl-empty{font-size:11px; color:#B4BAC8; text-align:center; padding:8px 4px;}
-.log-entry{display:flex; align-items:center; gap:7px; padding:8px 9px; border-radius:10px; background:var(--surface); border:1px solid var(--line); cursor:grab; font-size:12.5px; flex-wrap:wrap;}
+.log-entry{display:flex; align-items:center; gap:7px; padding:8px 9px; border-radius:10px; background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--line); cursor:grab; font-size:12.5px; flex-wrap:wrap;}
+.log-entry.t-g{background:var(--green-soft); border-color:rgba(14,198,115,.30); border-left-color:var(--green);}
+.log-entry.t-y{background:var(--yellow-soft); border-color:rgba(245,167,0,.30); border-left-color:var(--yellow);}
+.log-entry.t-r{background:var(--red-soft); border-color:rgba(255,77,94,.28); border-left-color:var(--red);}
+.log-entry.t-r .le-name{color:#B02231;}
+.log-entry.t-y .le-val,.log-entry.t-r .le-val{background:rgba(255,255,255,.65);}
+body.dark .log-entry.t-y .le-val,body.dark .log-entry.t-r .le-val{background:rgba(255,255,255,.10);}
 .log-entry.dragging{opacity:.4; cursor:grabbing;}
 .log-entry .le-name{font-weight:700; word-break:break-word; flex:1; min-width:0;}
 .log-entry .le-val{font-size:10.5px; font-weight:800; color:var(--deep); background:var(--green-soft); border-radius:6px; padding:2px 6px; white-space:nowrap;}
@@ -506,13 +610,21 @@ body.dark .log-entry .le-edit:hover,body.dark .log-entry .le-x:hover{background:
 .ql-mv{background:var(--green); color:#fff; font-size:10px; font-weight:700; border-radius:6px; padding:3px 6px; opacity:0; white-space:nowrap;}
 .log-entry:hover .ql-mv{opacity:1;}
 @media(max-width:760px){ .log-entry .le-edit,.log-entry .le-x,.log-entry .ql-mv{opacity:.7;} }
-.qlc-wrap{background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); padding:14px 15px;}
-.qlc-title{font-size:11px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); margin-bottom:10px;}
-.qlc-grid{display:grid; grid-template-columns:repeat(12,1fr); gap:5px; align-items:end;}
-.qlc-col{display:flex; flex-direction:column; align-items:center; gap:5px; min-width:0;}
-.qlc-bar{width:100%; height:70px; background:var(--bg); border-radius:6px; display:flex; align-items:flex-end; overflow:hidden;}
-.qlc-bar>i{width:100%; background:var(--grad); border-radius:6px; min-height:0;}
-.qlc-lbl{font-size:9.5px; font-weight:700; color:var(--muted);}
+.qlc-wrap{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px 18px 14px;}
+.qlc-title{font-size:11px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); margin-bottom:14px; display:flex; align-items:center; gap:6px;}
+.qlc-grid{display:grid; grid-template-columns:repeat(12,1fr); gap:6px; align-items:end;}
+.qlc-col{display:flex; flex-direction:column; align-items:center; gap:6px; min-width:0;}
+.qlc-val{font-size:10px; font-weight:800; color:var(--muted); font-variant-numeric:tabular-nums; line-height:1;}
+.qlc-bar{width:100%; height:132px; background:var(--bg); border-radius:8px; display:flex; align-items:flex-end; overflow:hidden;}
+.qlc-bar>i{width:100%; background:var(--grad); border-radius:8px; min-height:0;}
+.qlc-col.cur .qlc-bar{box-shadow:inset 0 0 0 1.5px var(--brand);}
+.qlc-lbl{font-size:10px; font-weight:700; color:var(--muted); letter-spacing:-.01em; white-space:nowrap; overflow:hidden; max-width:100%;}
+.qlc-col.cur .qlc-lbl{color:var(--brand);}
+@media(max-width:520px){
+  .qlc-wrap{padding:13px 11px 11px;}
+  .qlc-grid{gap:3px;} .qlc-bar{height:104px; border-radius:6px;}
+  .qlc-lbl{font-size:8.5px;} .qlc-val{font-size:8.5px;}
+}
 
 /* ---------- Card color swatches ---------- */
 .swatches{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
@@ -612,7 +724,12 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
   .home-hero .hero-stats{gap:18px;}
   .topbar-inner{padding:12px 14px; gap:12px;}
   .strip,.view,.storage-warn{padding-left:14px; padding-right:14px;}
-  .stat-pills{margin-left:0; width:100%;}
+  .stat-pills{margin-left:0; width:100%; grid-template-columns:repeat(2,minmax(0,1fr));}
+  .stat-pill{padding:8px 13px 9px;}
+  .stat-pill .v{font-size:18px;}
+  .stat-pill.target-pill{grid-column:span 2;}
+  /* on the phone, Quick Log keeps only the target pill so the logging cards stay above the fold */
+  body[data-view="quicklog"] .stat-pills .stat-pill:not(.target-pill){display:none;}
   .tabs{order:3; width:100%; max-width:100%; overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch;}
   .tab{flex:0 0 auto;}
   .col{min-width:230px; flex:0 0 auto;}
@@ -786,30 +903,66 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
   </div>
   <div class="year-banner" id="yearBanner"></div>
   <div class="year-grid" id="yearGrid"></div>
+  <section class="ysec" id="yearFinance"></section>
+  <section class="ysec" id="yearStats"></section>
 </main>
 
-<!-- QUICK LOG — daily call tracker -->
+<!-- QUICK LOG — speed first: log a call outcome in under two seconds -->
 <main class="view" id="view-quicklog">
-  <div class="ql-add">
-    <span class="qa-title">＋ Log</span>
-    <input class="qn" id="qlName" placeholder="Name — who you contacted">
-    <input class="qv" id="qlVal" type="number" placeholder="€ value" min="0" title="Deal value — used when booked">
-    <select id="qlType" title="Outcome">
-      <option value="g">Booked</option>
-      <option value="y">SMS / Email sent</option>
-      <option value="r">Said no</option>
-    </select>
-    <select id="qlSource" title="Where this lead came from">
-      <option value="cold">Cold call</option>
-      <option value="referral">Referral</option>
-      <option value="form">Form</option>
-      <option value="other">Other</option>
-    </select>
-    <input class="qd" id="qlDate" type="date" title="Day (defaults to today)">
-    <button class="btn btn-green" id="qlAdd">Log entry</button>
+  <div class="ql-cards">
+    <div class="ql-card g">
+      <div class="qc-top">
+        <span class="qc-ico" data-ic="check"></span>
+        <div class="qc-txt"><div class="qc-title">Booked</div><div class="qc-sub">Meeting set — lands on the Board</div></div>
+        <div class="qc-count" id="qcCountG" title="Booked on the selected day"><b>0</b><small>day</small></div>
+      </div>
+      <div class="qc-form">
+        <input class="qc-name" id="qcNameG" placeholder="Name — then Enter" autocomplete="off" maxlength="120">
+        <button class="qc-go" data-add="g" title="Log as booked" aria-label="Log as booked">＋</button>
+      </div>
+      <div class="qc-extra">
+        <input id="qcVal" type="number" min="0" placeholder="€ value" title="Deal value — optional, name + Enter is enough">
+        <input id="qcTime" type="time" title="Meeting time — optional, puts the meeting on the logged day">
+      </div>
+    </div>
+    <div class="ql-card y">
+      <div class="qc-top">
+        <span class="qc-ico" data-ic="message"></span>
+        <div class="qc-txt"><div class="qc-title">SMS sent</div><div class="qc-sub">Follow-up sent — waiting on them</div></div>
+        <div class="qc-count" id="qcCountY" title="SMS sent on the selected day"><b>0</b><small>day</small></div>
+      </div>
+      <div class="qc-form">
+        <input class="qc-name" id="qcNameY" placeholder="Name — then Enter" autocomplete="off" maxlength="120">
+        <button class="qc-go" data-add="y" title="Log as SMS sent" aria-label="Log as SMS sent">＋</button>
+      </div>
+      <div class="qc-hint">Drag it into Booked below when they say yes</div>
+    </div>
+    <div class="ql-card r">
+      <div class="qc-top">
+        <span class="qc-ico" data-ic="x"></span>
+        <div class="qc-txt"><div class="qc-title">No</div><div class="qc-sub">Not interested — keep the count honest</div></div>
+        <div class="qc-count" id="qcCountR" title="No's on the selected day"><b>0</b><small>day</small></div>
+      </div>
+      <div class="qc-form">
+        <input class="qc-name" id="qcNameR" placeholder="Name — then Enter" autocomplete="off" maxlength="120">
+        <button class="qc-go" data-add="r" title="Log as a no" aria-label="Log as a no">＋</button>
+      </div>
+      <div class="qc-hint">Every no counts — it is what makes the rate honest</div>
+    </div>
   </div>
-  <div class="ql-stats" id="qlStats"></div>
+  <div class="ql-bar">
+    <span class="qb-lbl">Day</span>
+    <input type="date" id="qlDate" title="Day the entries above are logged on — defaults to today">
+    <span class="qb-lbl">Source</span>
+    <div class="qb-seg" id="qlSourceSeg">
+      <button data-src="cold" class="active">Cold call</button>
+      <button data-src="referral">Referral</button>
+      <button data-src="form">Form</button>
+      <button data-src="other">Other</button>
+    </div>
+  </div>
   <div id="qlDays"></div>
+  <div class="ql-stats" id="qlStats"></div>
 </main>
 
 <!-- TO DO -->
@@ -1124,6 +1277,16 @@ function mondayOf(d){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate
 function ensureTargets(){
   if(!state.targets || typeof state.targets!=='object') state.targets={yearly:{},monthly:{}};
   state.targets.yearly ||= {}; state.targets.monthly ||= {};
+  /* Yearly targets are no longer set by hand — the year figure is the sum of its
+     months. Any yearly number set by the old version is spread across its twelve
+     months once, so nothing is lost. */
+  if(!state.targets.spread){
+    Object.keys(state.targets.yearly).forEach(y=>{
+      const per=Math.round((+state.targets.yearly[y]||0)/12);
+      if(per>0) for(let m=1;m<=12;m++){ const k=y+'-'+pad(m); if(state.targets.monthly[k]==null) state.targets.monthly[k]=per; }
+    });
+    state.targets.spread=true;
+  }
 }
 /* "Collected" = paid-stage client revenue + collected monthly-subscription income
    for the period — matches the Year tab's "Money made" figure. */
@@ -1156,35 +1319,31 @@ function recurringMonthly(){ ensureExpenses(); return state.expenses.recurring.r
 function websitesSold(key){ return state.clients.filter(c=>c.month===key && c.stage==='paid').length; }
 function expensesForMonth(key){ ensureExpenses(); return websitesSold(key)*(+state.expenses.perWebsite||0) + recurringMonthly(); }
 function expensesForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=expensesForMonth(y+'-'+pad(m)); return sum; }
-function monthTarget(key){ /* {value, implied} — implied = yearly ÷ 12 fallback */
+function monthTarget(key){ /* monthly targets are the only ones you set by hand */
   ensureTargets();
-  if(state.targets.monthly[key]!=null) return {value:+state.targets.monthly[key], implied:false};
-  const y=key.slice(0,4);
-  if(state.targets.yearly[y]!=null) return {value:(+state.targets.yearly[y])/12, implied:true};
-  return {value:0, implied:false};
+  return {value: state.targets.monthly[key]!=null ? +state.targets.monthly[key] : 0};
 }
-function yearTarget(y){ ensureTargets(); return state.targets.yearly[y]!=null ? +state.targets.yearly[y] : 0; }
+/* the year figure is derived — the sum of that year's monthly targets */
+function yearTarget(y){
+  ensureTargets();
+  let sum=0; for(let m=1;m<=12;m++) sum+=(+state.targets.monthly[y+'-'+pad(m)]||0);
+  return sum;
+}
+function monthsWithTarget(y){
+  ensureTargets();
+  let n=0; for(let m=1;m<=12;m++) if(state.targets.monthly[y+'-'+pad(m)]!=null) n++;
+  return n;
+}
 function progPct(done,target){ return target>0 ? Math.round(done/target*100) : 0; }
 function progClass(pct){ return pct>=90?'good':pct>=50?'mid':'low'; } /* good=green, mid=yellow, low=coral */
 function editMonthTarget(key){
   ensureTargets();
   const cur=state.targets.monthly[key]!=null? state.targets.monthly[key] : '';
-  const v=prompt('Target for '+fmtMonth(key)+' (€) — leave empty to use the yearly target ÷ 12:', cur);
+  const v=prompt('Target for '+fmtMonth(key)+' (€ generated) — leave empty to clear it:', cur);
   if(v===null) return;
   const t=String(v).trim();
   if(t===''){ delete state.targets.monthly[key]; }
   else { const n=Math.round(parseFloat(t.replace(',','.'))); if(isNaN(n)||n<0){ toast('Enter a number, e.g. 7500'); return; } state.targets.monthly[key]=n; }
-  state.targets.updated=Date.now();
-  save(); renderAll(); toast('Target updated');
-}
-function editYearTarget(y){
-  ensureTargets();
-  const cur=state.targets.yearly[y]!=null? state.targets.yearly[y] : '';
-  const v=prompt('Yearly revenue target for '+y+' (€) — leave empty to clear:', cur);
-  if(v===null) return;
-  const t=String(v).trim();
-  if(t===''){ delete state.targets.yearly[y]; }
-  else { const n=Math.round(parseFloat(t.replace(',','.'))); if(isNaN(n)||n<0){ toast('Enter a number, e.g. 90000'); return; } state.targets.yearly[y]=n; }
   state.targets.updated=Date.now();
   save(); renderAll(); toast('Target updated');
 }
@@ -1204,15 +1363,15 @@ function renderStats(){
   const pill=$('#statTargetPill'), bar=$('#statTargetBar');
   if(mt.value>0){
     const pct=progPct(generated,mt.value), cls=progClass(pct);
-    pill.classList.toggle('implied', mt.implied);
+    pill.classList.remove('unset');
     $('#statTarget').textContent=fmtMoney(Math.round(mt.value));
-    $('#statTargetMeta').textContent=(mt.implied?'auto · ':'')+pct+'%';
+    $('#statTargetMeta').textContent=pct+'%';
     bar.className=cls; bar.style.width=Math.min(100,pct)+'%';
     pill.title=fmtMoney(generated)+' generated of '+fmtMoney(Math.round(mt.value))+' target — click to change';
   } else {
-    pill.classList.remove('implied');
+    pill.classList.add('unset');
     $('#statTarget').textContent='Set →';
-    $('#statTargetMeta').textContent='';
+    $('#statTargetMeta').textContent='tap';
     bar.className=''; bar.style.width='0%';
     pill.title='Click to set this month’s target';
   }
@@ -1309,8 +1468,10 @@ function cardEl(c,st){
   const nextName= (!isLost && idx>=0 && idx<FLOW.length-1) ? FLOW[idx+1].name : null;
   const added= c.created ? new Date(c.created) : null;
   const addedTxt= added ? pad(added.getDate())+'/'+pad(added.getMonth()+1) : '';
+  const prio= c.prio&&PRIO_COLOR[c.prio] ? c.prio : '';
+  if(prio==='high') el.classList.add('pr-high');
   el.innerHTML=`
-    <div class="c-name">${c.prio&&PRIO_COLOR[c.prio]?`<span class="c-prio" style="background:${PRIO_COLOR[c.prio].c}" title="Priority: ${c.prio}"></span>`:''}${esc(c.name)}${addedTxt?`<span class="c-added" title="Added ${addedTxt}">${addedTxt}</span>`:''}</div>
+    <div class="c-name">${prio?`<span class="c-prio ${prio}" title="Priority: ${prio}"><i></i>${prio}</span>`:''}${esc(c.name)}${addedTxt?`<span class="c-added" title="Added ${addedTxt}">${addedTxt}</span>`:''}</div>
     <div class="c-meta">
       ${c.value?`<span class="chip money">${fmtMoney(c.value)}</span>`:''}
       ${c.day?`<span class="chip">${IC.calendar} ${fmtDay(c.day)}</span>`:''}
@@ -1445,7 +1606,10 @@ function renderYear(){
              legend+=`<span class="chip" style="background:${st.cs};color:${st.hex}">${st.name} ${n}</span>`; }
     });
     const mGenerated=generatedForMonth(key), mt=monthTarget(key), mpct=progPct(mGenerated,mt.value);
-    const mprog = mt.value>0 ? `<div class="tgt-bar m-progress" title="${fmtMoney(mGenerated)} generated of ${fmtMoney(Math.round(mt.value))} target (${mpct}%)${mt.implied?' · auto':''}"><i class="${progClass(mpct)}" style="width:${Math.min(100,mpct)}%"></i></div>` : '';
+    const mprog = mt.value>0 ? `<div class="tgt-bar m-progress" title="${fmtMoney(mGenerated)} generated of ${fmtMoney(Math.round(mt.value))} target (${mpct}%)"><i class="${progClass(mpct)}" style="width:${Math.min(100,mpct)}%"></i></div>` : '';
+    const mTargetLine = mt.value>0
+      ? `<div class="m-target">${IC.target} <span>Target <b>${fmtMoney(Math.round(mt.value))}</b> · ${mpct}%</span><button class="tgt-set" title="Change ${MONTHS[m-1]}'s target">Edit</button></div>`
+      : `<div class="m-target">${IC.target} <span>No target</span><button class="tgt-set" title="Set ${MONTHS[m-1]}'s target">Set target</button></div>`;
     const mExp=expensesForMonth(key), mNet=mGenerated-mExp;
     const mNetLine = items.length ? `<div class="m-net">− ${fmtMoney(Math.round(mExp))} costs · <b class="${mNet>=0?'pos':'neg'}">${fmtMoney(Math.round(mNet))} net</b></div>` : '';
     card.innerHTML=`
@@ -1453,9 +1617,11 @@ function renderYear(){
       <div class="m-count">${items.length} client${items.length===1?'':'s'}${paid?` · ${fmtMoney(paid)} collected`:''}${(total-paid)>0?` · <b style="color:var(--coral)">${fmtMoney(total-paid)} to collect</b>`:''}</div>
       <div class="m-total ${total?'':'zero'}">${fmtMoney(total)}</div>
       ${mNetLine}
+      ${mTargetLine}
       ${mprog}
       ${bar?`<div class="stagebar">${bar}</div><div class="m-legend">${legend}</div>`:'<div class="empty-note" style="padding:6px 0;text-align:left;">Nothing booked yet</div>'}`;
     card.addEventListener('click',()=>{ curMonth=key; switchView('board'); });
+    card.querySelector('.tgt-set').addEventListener('click',e=>{ e.stopPropagation(); editMonthTarget(key); });
     grid.appendChild(card);
   }
   const rTotal=state.renewals.filter(r=>r.date&&r.date.startsWith(String(curYear))).reduce((a,r)=>a+(+r.value||0),0);
@@ -1465,23 +1631,65 @@ function renderYear(){
   },0);
   const ytd=yPaid+subCollected;
   const yGenerated=generatedForYear(curYear), yExp=expensesForYear(curYear), yNet=yGenerated-yExp;
+  /* the yearly target is derived — never prompted for; it is the sum of the monthly ones */
   const ytVal=yearTarget(curYear), ypct=progPct(yGenerated,ytVal), ycls=progClass(ypct);
-  const targetCell=`<div class="cell target" id="yearTargetCell" title="Click to set ${curYear} target">
-      <div class="k">Target ${curYear} · generated</div>
-      <div class="big">${ytVal? fmtMoney2(ytVal) : 'Set →'}</div>
-      ${ytVal? `<div class="tgt-bar on-dark" style="margin-top:8px; max-width:230px;"><i class="${ycls}" style="width:${Math.min(100,ypct)}%"></i></div>
-        <div class="k" style="margin-top:5px; color:rgba(255,255,255,.78);">${ypct}% reached · ${fmtMoney2(Math.max(0,ytVal-yGenerated))} to go</div>` : `<div class="k" style="margin-top:5px; color:rgba(255,255,255,.5);">no target set</div>`}
+  const monthsSet=monthsWithTarget(curYear);
+  const targetCell=`<div class="cell target">
+      <div class="k">Target ${curYear} · sum of monthly</div>
+      <div class="big">${ytVal? fmtMoney2(ytVal) : '—'}</div>
+      ${ytVal? `<div class="tgt-bar on-dark" style="margin-top:8px;"><i class="${ycls}" style="width:${Math.min(100,ypct)}%"></i></div>
+        <div class="k" style="margin-top:5px; color:rgba(255,255,255,.78);">${ypct}% reached · ${fmtMoney2(Math.max(0,ytVal-yGenerated))} to go · ${monthsSet}/12 months set</div>`
+      : `<div class="k" style="margin-top:5px; color:rgba(255,255,255,.5);">set a month's target below</div>`}
     </div>`;
   $('#yearBanner').innerHTML=`
-    <div class="cell"><div class="k">${curYear} total booked</div><div class="big">${fmtMoney2(yTotal)}</div></div>
-    <div class="cell paid"><div class="k">Money made ${curYear}</div><div class="big">${fmtMoney2(ytd)}</div><div class="k" style="margin-top:2px;">${fmtMoney2(yPaid)} projects + ${fmtMoney2(subCollected)} monthly</div></div>
-    ${targetCell}
+    <div class="cell"><div class="k">Generated ${curYear}</div><div class="big">${fmtMoney2(yTotal)}</div></div>
+    <div class="cell paid"><div class="k">Money made ${curYear}</div><div class="big">${fmtMoney2(ytd)}</div><div class="k" style="margin-top:4px;">${fmtMoney2(yPaid)} projects + ${fmtMoney2(subCollected)} monthly</div></div>
     <div class="cell"><div class="k">To collect</div><div class="big" style="color:#FFB39F;">${fmtMoney2(yTotal-yPaid)}</div></div>
-    <div class="cell"><div class="k">Expenses ${curYear}</div><div class="big" style="color:#FFB39F;">${fmtMoney2(Math.round(yExp))}</div></div>
-    <div class="cell"><div class="k">Net profit ${curYear}</div><div class="big" style="color:${yNet>=0?'#4BE8A0':'#FF9C8F'};">${fmtMoney2(Math.round(yNet))}</div><div class="k" style="margin-top:2px;">generated − expenses</div></div>
     <div class="cell"><div class="k">Clients</div><div class="big">${yCount}</div></div>
-    <div class="cell renew"><div class="k">Renewals due ${curYear}</div><div class="big">${fmtMoney2(rTotal)}</div></div>`;
-  const ytc=$('#yearTargetCell'); if(ytc) ytc.addEventListener('click',()=>editYearTarget(curYear));
+    ${targetCell}`;
+  renderYearFinance(yGenerated, yExp, yNet, rTotal);
+  renderYearStats();
+}
+/* Expenses + net profit live here — out of the banner, with room to breathe. */
+function renderYearFinance(yGenerated, yExp, yNet, rTotal){
+  const el=$('#yearFinance'); if(!el) return;
+  ensureExpenses();
+  const rate=+state.expenses.perWebsite||0;
+  let sold=0; for(let m=1;m<=12;m++) sold+=websitesSold(curYear+'-'+pad(m));
+  const domainCost=sold*rate;
+  const recRows=state.expenses.recurring.map(r=>{
+    const yearly=(+r.amount||0)*12;
+    return `<div class="fin-row"><div><div class="fr-name">${esc(r.name)}<span class="fr-sub">${fmtMoney2(+r.amount||0)} / month × 12</span></div></div><span class="fr-amt cost">${fmtMoney2(Math.round(yearly))}</span></div>`;
+  }).join('');
+  el.innerHTML=`
+    <div class="stats-sec-head">
+      <span class="ico" style="background:var(--coral-soft);color:var(--coral)">${IC.receipt}</span>
+      <div><h3>Money & expenses · ${curYear}</h3><p>What the year cost you, and what is left after it</p></div>
+      <span class="tag">${sold} website${sold===1?'':'s'} delivered</span>
+    </div>
+    <div class="fin-grid">
+      <div class="fin-card">
+        <h4>Expense breakdown</h4>
+        <div class="fin-row"><div><div class="fr-name">Domains<span class="fr-sub">${sold} website${sold===1?'':'s'} paid × ${fmtMoney2(rate)} each</span></div></div><span class="fr-amt cost">${fmtMoney2(Math.round(domainCost))}</span></div>
+        ${recRows}
+        <div class="fin-row tot"><div><div class="fr-name">Total expenses ${curYear}<span class="fr-sub">edit the amounts on the Monthly tab</span></div></div><span class="fr-amt cost">${fmtMoney2(Math.round(yExp))}</span></div>
+      </div>
+      <div class="fin-card">
+        <h4>Net profit</h4>
+        <div class="fin-row"><div><div class="fr-name">Generated<span class="fr-sub">booked value + monthly income, lost excluded</span></div></div><span class="fr-amt pos">${fmtMoney2(Math.round(yGenerated))}</span></div>
+        <div class="fin-row"><div><div class="fr-name">Expenses<span class="fr-sub">domains + recurring costs</span></div></div><span class="fr-amt cost">− ${fmtMoney2(Math.round(yExp))}</span></div>
+        <div class="fin-net ${yNet>=0?'':'neg'}" style="margin-top:12px;">
+          <div class="k">Net profit ${curYear}</div>
+          <div class="v">${fmtMoney2(Math.round(yNet))}</div>
+          <div class="sub">generated − expenses${rTotal?` · ${fmtMoney2(rTotal)} renewals due this year`:''}</div>
+        </div>
+      </div>
+    </div>`;
+}
+/* The yearly call/revenue statistics — relocated here from Quick Log. */
+function renderYearStats(){
+  const el=$('#yearStats'); if(!el) return;
+  el.innerHTML=yearStatsHtml(yearLogStats(curYear),curYear);
 }
 
 /* ---------- quick log — daily cold-calling tracker ---------- */
@@ -1494,6 +1702,8 @@ const SRC_META={
 };
 const srcMeta=s=>SRC_META[s]||SRC_META.cold;
 let dragLogId=null;
+/* source applies to whatever you log next — one shared choice keeps a log to name + Enter */
+let qlSource='cold';
 function ensureLogs(){
   if(!Array.isArray(state.logs)) state.logs=[];
   if(!state.workdays || typeof state.workdays!=='object') state.workdays={};
@@ -1540,7 +1750,11 @@ function monthStatsHtml(m,key){
   const callConv=Math.round(m.callConv*100), meetConv=Math.round(m.meetConv*100);
   const wdIsOverride=(state.workdays&&state.workdays[key]!=null);
   return `
-  <div class="month-group"><h4>${IC.bars} ${fmtMonth(key)} — call tracker <span class="count">${m.calls} calls</span></h4></div>
+  <div class="stats-sec-head">
+    <span class="ico">${IC.bars}</span>
+    <div><h3>${fmtMonth(key)} — statistics</h3><p>How the month is going. The year totals live on the Year tab.</p></div>
+    <span class="tag">${m.calls} cold calls · ${m.booked} booked</span>
+  </div>
   <div class="ql-stat-grid">
     <div class="qs-pill"><div class="k">${IC.phone} Cold calls</div><div class="v">${m.calls}</div><div class="sub">call volume · cold only</div></div>
     <div class="qs-pill"><div class="k">${IC.check} Booked</div><div class="v">${m.booked}</div><div class="sub">all sources</div></div>
@@ -1557,39 +1771,61 @@ function monthStatsHtml(m,key){
 function yearStatsHtml(y,year){
   const callConv=Math.round(y.callConv*100), meetConv=Math.round(y.meetConv*100);
   const maxCalls=Math.max(1,...y.months.map(mm=>mm.calls));
+  const thisMonth = (new Date()).getFullYear()===+year ? (new Date()).getMonth() : -1;
   const bars=y.months.map((mm,i)=>{
     const h=Math.round(mm.calls/maxCalls*100);
-    return `<div class="qlc-col" title="${MONTHS[i]} ${year}: ${mm.calls} calls · ${mm.booked} booked · ${fmtMoney(Math.round(mm.revenue))} generated"><div class="qlc-bar"><i style="height:${Math.max(mm.calls?6:0,h)}%"></i></div><span class="qlc-lbl">${MONTHS[i][0]}</span></div>`;
+    return `<div class="qlc-col${i===thisMonth?' cur':''}" title="${MONTHS[i]} ${year}: ${mm.calls} calls · ${mm.booked} booked · ${fmtMoney(Math.round(mm.revenue))} generated">
+      <span class="qlc-val">${mm.calls||''}</span>
+      <div class="qlc-bar"><i style="height:${Math.max(mm.calls?6:0,h)}%"></i></div>
+      <span class="qlc-lbl">${MONTHS[i].slice(0,3)}</span></div>`;
   }).join('');
   return `
-  <div class="month-group" style="margin-top:6px;"><h4>${IC.bars} ${year} — year totals <span class="count">${y.calls} calls</span></h4></div>
-  <div class="ql-stat-grid">
-    <div class="qs-pill"><div class="k">${IC.phone} Cold calls</div><div class="v">${y.calls}</div></div>
-    <div class="qs-pill"><div class="k">${IC.check} Booked</div><div class="v">${y.booked}</div></div>
-    <div class="qs-pill"><div class="k">${IC.message} SMS</div><div class="v">${y.sms}</div></div>
-    <div class="qs-pill"><div class="k">${IC.x} No's</div><div class="v">${y.nos}</div></div>
-    <div class="qs-pill accent"><div class="k">${IC.target} Call → booking</div><div class="v">${callConv}%</div><div class="tgt-bar on-dark"><i class="${progClass(callConv)}" style="width:${Math.min(100,callConv)}%"></i></div></div>
-    <div class="qs-pill"><div class="k">${IC.check2} Meeting → client</div><div class="v">${meetConv}%</div><div class="sub">${y.converted}/${y.meetClients} paid</div></div>
-    <div class="qs-pill"><div class="k">${IC.calendar} Working days</div><div class="v">${y.workingDays}</div></div>
-    <div class="qs-pill"><div class="k">${IC.phone} Avg calls / day</div><div class="v">${y.avgCalls.toFixed(1)}</div></div>
-    <div class="qs-pill"><div class="k">${IC.euro} Revenue</div><div class="v">${fmtMoney(Math.round(y.revenue))}</div></div>
-    <div class="qs-pill"><div class="k">${IC.euro} Avg € / working day</div><div class="v">${fmtMoney(Math.round(y.avgRevPerDay))}</div></div>
+  <div class="stats-sec-head">
+    <span class="ico">${IC.bars}</span>
+    <div><h3>${year} — year totals</h3><p>Everything you logged this year, added up</p></div>
+    <span class="tag">${y.calls} cold calls · ${y.booked} booked</span>
   </div>
-  <div class="qlc-wrap"><div class="qlc-title">Calls by month · ${year}</div><div class="qlc-grid">${bars}</div></div>`;
+  <div class="ql-stat-grid">
+    <div class="qs-pill"><div class="k">${IC.phone} Cold calls</div><div class="v">${y.calls}</div><div class="sub">call volume · cold only</div></div>
+    <div class="qs-pill"><div class="k">${IC.check} Booked</div><div class="v">${y.booked}</div><div class="sub">all sources</div></div>
+    <div class="qs-pill"><div class="k">${IC.message} SMS sent</div><div class="v">${y.sms}</div><div class="sub">all sources</div></div>
+    <div class="qs-pill"><div class="k">${IC.x} No's</div><div class="v">${y.nos}</div><div class="sub">all sources</div></div>
+    <div class="qs-pill accent"><div class="k">${IC.target} Call → booking</div><div class="v">${callConv}%</div><div class="sub">cold booked ÷ cold calls</div><div class="tgt-bar on-dark"><i class="${progClass(callConv)}" style="width:${Math.min(100,callConv)}%"></i></div></div>
+    <div class="qs-pill"><div class="k">${IC.check2} Meeting → client</div><div class="v">${meetConv}%</div><div class="sub">${y.converted}/${y.meetClients} paid · lost = fail</div><div class="tgt-bar"><i class="${progClass(meetConv)}" style="width:${Math.min(100,meetConv)}%"></i></div></div>
+    <div class="qs-pill"><div class="k">${IC.calendar} Working days</div><div class="v">${y.workingDays}</div><div class="sub">summed from the months</div></div>
+    <div class="qs-pill"><div class="k">${IC.phone} Avg calls / day</div><div class="v">${y.avgCalls.toFixed(1)}</div><div class="sub">over ${y.workingDays} working day${y.workingDays===1?'':'s'}</div></div>
+    <div class="qs-pill"><div class="k">${IC.euro} Revenue generated</div><div class="v">${fmtMoney(Math.round(y.revenue))}</div><div class="sub">excludes lost</div></div>
+    <div class="qs-pill"><div class="k">${IC.euro} Avg € / working day</div><div class="v">${fmtMoney(Math.round(y.avgRevPerDay))}</div><div class="sub">generated ÷ working days</div></div>
+  </div>
+  <div class="qlc-wrap"><div class="qlc-title">${IC.bars} Cold calls by month · ${year}</div><div class="qlc-grid">${bars}</div></div>`;
 }
+/* Quick Log keeps the MONTH statistics only — and they sit at the bottom of the tab. */
 function renderQLStats(){
   const el=$('#qlStats'); if(!el) return;
-  el.innerHTML = monthStatsHtml(monthLogStats(curMonth),curMonth) + yearStatsHtml(yearLogStats(curYear),curYear);
+  el.innerHTML = monthStatsHtml(monthLogStats(curMonth),curMonth);
   const wd=el.querySelector('#wdOverride'); if(wd) wd.addEventListener('click',()=>editWorkdays(curMonth));
+}
+/* the three logging cards show the count for whichever day you are logging on */
+function renderQLCards(){
+  const d=($('#qlDate')&&$('#qlDate').value)||todayIso();
+  const s=dayStats(d);
+  const isToday=d===todayIso();
+  const lbl=isToday?'today':fmtDay(d);
+  [['#qcCountG',s.booked],['#qcCountY',s.sms],['#qcCountR',s.nos]].forEach(([sel,n])=>{
+    const el=$(sel); if(!el) return;
+    el.innerHTML='<b>'+n+'</b><small>'+lbl+'</small>';
+  });
+  document.querySelectorAll('#qlSourceSeg button').forEach(b=>b.classList.toggle('active', b.dataset.src===qlSource));
 }
 function renderQuickLog(){
   ensureLogs();
   renderQLStats();
+  renderQLCards();
   const wrap=$('#qlDays'); if(!wrap) return; wrap.innerHTML='';
   const byDate={};
   logsForMonth(curMonth).forEach(l=>{ (byDate[l.date] ||= []).push(l); });
   const dates=Object.keys(byDate).sort().reverse();
-  if(!dates.length){ wrap.innerHTML='<div class="empty-note">No calls logged for '+fmtMonth(curMonth)+' yet — add your first above.</div>'; return; }
+  if(!dates.length){ wrap.innerHTML='<div class="empty-note">No calls logged for '+fmtMonth(curMonth)+' yet — use the cards above.</div>'; return; }
   dates.forEach(iso=>{
     const ds=dayStats(iso);
     const d=new Date(iso+'T00:00'); const dow=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][(d.getDay()+6)%7];
@@ -1612,7 +1848,7 @@ function renderQuickLog(){
     LOG_TYPES.forEach(([type,label])=>{
       const items=byDate[iso].filter(l=>l.type===type).sort((a,b)=>b.created-a.created);
       const lane=document.createElement('div'); lane.className='dl-lane '+type;
-      lane.innerHTML=`<div class="dl-lane-head">${label}<span class="c">${items.length}</span></div><div class="dl-lane-body" data-date="${iso}" data-type="${type}">${items.length?'':'<div class="dl-empty">—</div>'}</div>`;
+      lane.innerHTML=`<div class="dl-lane-head"><span class="dot"></span>${label}<span class="c">${items.length}</span></div><div class="dl-lane-body" data-date="${iso}" data-type="${type}">${items.length?'':'<div class="dl-empty">—</div>'}</div>`;
       const body=lane.querySelector('.dl-lane-body');
       items.forEach(l=>body.appendChild(logEntryEl(l)));
       logDropHandlers(body, iso, type);
@@ -1623,7 +1859,7 @@ function renderQuickLog(){
 }
 function logEntryEl(l){
   const sm=srcMeta(l.source);
-  const row=document.createElement('div'); row.className='log-entry'; row.draggable=true; row.dataset.id=l.id;
+  const row=document.createElement('div'); row.className='log-entry t-'+(l.type||'y'); row.draggable=true; row.dataset.id=l.id;
   row.addEventListener('dragstart',e=>{ dragLogId=l.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',l.id); });
   row.addEventListener('dragend',()=>{ dragLogId=null; row.classList.remove('dragging'); document.querySelectorAll('.dl-lane-body.dragover').forEach(b=>b.classList.remove('dragover')); });
   row.innerHTML=`
@@ -1639,10 +1875,12 @@ function logEntryEl(l){
   const mv=row.querySelector('.ql-mv'); if(mv) mv.addEventListener('click',()=>convertToBooked(l.id));
   return row;
 }
-function linkClientForLog(l){
+function linkClientForLog(l, time){
   if(l.clientId && state.clients.find(c=>c.id===l.clientId)) return;
-  const month=(l.date||todayIso()).slice(0,7);
-  const c={id:uid(), name:l.name, value:+l.value||0, day:'', time:'', stage:'booked', month, notes:'', created:Date.now(), updated:Date.now()};
+  const date=l.date||todayIso();
+  const month=date.slice(0,7);
+  /* a time means you scheduled the meeting — put it on the calendar for the logged day */
+  const c={id:uid(), name:l.name, value:+l.value||0, day:time?date:'', time:time||'', stage:'booked', month, notes:'', created:Date.now(), updated:Date.now()};
   state.clients.push(c); l.clientId=c.id;
 }
 function convertToBooked(id){
@@ -1688,21 +1926,36 @@ function editWorkdays(key){
   else { const n=parseInt(t,10); if(isNaN(n)||n<0){ toast('Enter a whole number, e.g. 20'); return; } state.workdays[key]=n; }
   save(); renderAll(); toast('Working days updated');
 }
-function qlAddEntry(){
-  const name=$('#qlName').value.trim(); if(!name){ $('#qlName').focus(); return; }
-  const type=$('#qlType').value, source=$('#qlSource').value;
+const QL_NAME={g:'#qcNameG', y:'#qcNameY', r:'#qcNameR'};
+function qlAddEntry(type){
+  const inp=$(QL_NAME[type]); if(!inp) return;
+  const name=inp.value.trim(); if(!name){ inp.focus(); return; }
   const date=$('#qlDate').value || todayIso();
-  const value= type==='g' ? (+$('#qlVal').value||0) : 0;
-  const l={id:uid(), type, name, value, source, note:'', date, created:Date.now(), updated:Date.now()};
+  const value= type==='g' ? (+$('#qcVal').value||0) : 0;
+  const time= type==='g' ? $('#qcTime').value : '';
+  const l={id:uid(), type, name, value, source:qlSource, note:'', date, created:Date.now(), updated:Date.now()};
   state.logs.push(l);
-  if(type==='g') linkClientForLog(l);
-  $('#qlName').value=''; $('#qlVal').value='';
+  if(type==='g') linkClientForLog(l, time);
+  inp.value='';
+  if(type==='g'){ $('#qcVal').value=''; $('#qcTime').value=''; }
   if(date.slice(0,7)!==curMonth) curMonth=date.slice(0,7);
-  save(); renderAll(); $('#qlName').focus();
-  toast(type==='g'?'Booked · added to the Board':'Logged');
+  save(); renderAll(); inp.focus();
+  toast(type==='g'?name+' → Booked · added to the Board':type==='y'?name+' → SMS sent':name+' → No');
 }
-$('#qlAdd').addEventListener('click',qlAddEntry);
-['qlName','qlVal'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')qlAddEntry();}));
+document.querySelectorAll('.qc-go').forEach(b=>b.addEventListener('click',()=>qlAddEntry(b.dataset.add)));
+Object.entries(QL_NAME).forEach(([type,sel])=>{
+  $(sel).addEventListener('keydown',e=>{ if(e.key==='Enter') qlAddEntry(type); });
+});
+['#qcVal','#qcTime'].forEach(sel=>$(sel).addEventListener('keydown',e=>{ if(e.key==='Enter') qlAddEntry('g'); }));
+$('#qlSourceSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-src]'); if(!b) return;
+  qlSource=b.dataset.src; renderQLCards();
+});
+$('#qlDate').addEventListener('change',()=>{
+  const d=$('#qlDate').value;
+  if(d && d.slice(0,7)!==curMonth){ curMonth=d.slice(0,7); renderAll(); }
+  else renderQLCards();
+});
 
 /* ---------- callbacks ---------- */
 function renderWarm(){
@@ -1842,6 +2095,11 @@ $('#rnName').addEventListener('keydown',e=>{if(e.key==='Enter')$('#rnAdd').click
 const PRIO_RANK={high:0,medium:1,low:2,none:3};
 const PRIO_CYCLE={none:'high',high:'medium',medium:'low',low:'none'};
 const PRIO_COLOR={high:{c:'var(--red)',soft:'var(--red-soft)'},medium:{c:'var(--yellow)',soft:'var(--yellow-soft)'},low:{c:'var(--green)',soft:'var(--green-soft)'}};
+/* one priority language everywhere: red = high, amber = medium, green = low */
+const prioDotHtml=p=> (p==='none'||!PRIO_COLOR[p])
+  ? `<button class="prio-dot" title="Set priority — high / medium / low"></button>`
+  : `<button class="prio-dot set p-${p}" title="Priority: ${p} — click to change">${prioDotSvg(p)}</button>`;
+const prioFlagHtml=p=> p==='high' ? `<span class="prio-flag" title="High priority">High</span>` : '';
 const DEFAULT_TODO_CATS=['Changes','Build','Pay now','Contact','General'];
 const TODO_PAL={
   pink:  {grad:'linear-gradient(120deg,#F45B9A,#D8437E)', hex:'#F45B9A', soft:'var(--pink-soft)'},
@@ -1962,7 +2220,7 @@ function renderTodo(){
 }
 function clientRow(c,h,pal){
   const p=c.prio||'none';
-  const row=document.createElement('div'); row.className='task-item client';
+  const row=document.createElement('div'); row.className='task-item client'+(p==='none'?'':' p-'+p);
   /* prioritized rows take the matching priority border + tint, exactly like manual tasks;
      unprioritized rows keep the lane's own colour tint */
   const pc = p==='none' ? {c:pal.hex, soft:pal.soft} : PRIO_COLOR[p];
@@ -1974,12 +2232,11 @@ function clientRow(c,h,pal){
   if(c.month) bits.push(esc(fmtMonth(c.month)));
   if(c.notes) bits.push(esc(c.notes));
   if(c.value) bits.push(fmtMoney2(c.value));
-  const dot = p==='none'
-    ? `<button class="prio-dot" title="Set priority"></button>`
-    : `<button class="prio-dot set" title="Priority: ${p}">${prioDotSvg(p)}</button>`;
+  const dot = prioDotHtml(p);
   row.innerHTML=dot+
     `<span class="cli-avatar" title="Open client">${IC.user}</span>`+
     `<div class="task-body cli-body"><span class="task-text">${esc(c.name)}</span>${bits.length?`<span class="task-note">${bits.join(' · ')}</span>`:''}</div>`+
+    prioFlagHtml(p)+
     `<button class="task-edit" title="Edit client note">${IC.edit}</button>`+
     `<button class="cli-adv" title="Move to ${h.nextName}">${h.btn}</button>`;
   row.querySelector('.prio-dot').addEventListener('click',e=>{ e.stopPropagation(); const np=PRIO_CYCLE[p]; c.prio = np==='none'?undefined:np; c.updated=Date.now(); save(); renderAll(); });
@@ -1999,12 +2256,11 @@ function taskRow(n){
   row.draggable=true; row.dataset.id=n.id;
   row.addEventListener('dragstart',e=>{ dragTaskId=n.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',n.id); });
   row.addEventListener('dragend',()=>{ dragTaskId=null; row.classList.remove('dragging'); document.querySelectorAll('.todo-lane-body.dragover').forEach(b=>b.classList.remove('dragover')); });
-  const dot = p==='none'
-    ? `<button class="prio-dot" title="Set priority"></button>`
-    : `<button class="prio-dot set" title="Priority: ${p}">${prioDotSvg(p)}</button>`;
+  const dot = prioDotHtml(p);
   row.innerHTML=dot+
     `<button class="n-check" title="Done">${n.done?IC.check:''}</button>`+
     `<div class="task-body"><span class="task-text">${esc(n.text)}</span>${n.note?`<span class="task-note">${esc(n.note)}</span>`:''}</div>`+
+    (n.done?'':prioFlagHtml(p))+
     `<button class="task-edit" title="Side note">${IC.edit}</button>`+
     `<button class="item-x" title="Remove">${IC.x}</button>`;
   row.querySelector('.prio-dot').addEventListener('click',()=>{ n.prio=PRIO_CYCLE[p]; n.updated=Date.now(); save(); renderTodo(); });
@@ -2152,11 +2408,10 @@ function ideaRow(i){
   row.draggable=true; row.dataset.id=i.id;
   row.addEventListener('dragstart',e=>{ dragIdeaId=i.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',i.id); });
   row.addEventListener('dragend',()=>{ dragIdeaId=null; row.classList.remove('dragging'); document.querySelectorAll('.todo-lane-body.dragover').forEach(b=>b.classList.remove('dragover')); });
-  const dot = p==='none'
-    ? `<button class="prio-dot" title="Set priority"></button>`
-    : `<button class="prio-dot set" title="Priority: ${p}">${prioDotSvg(p)}</button>`;
+  const dot = prioDotHtml(p);
   row.innerHTML=dot+
     `<div class="task-body"><span class="task-text">${esc(i.title)}</span>${i.detail?`<span class="idea-detail">${esc(i.detail)}</span>`:''}</div>`+
+    prioFlagHtml(p)+
     `<button class="task-edit" title="Add detail">${IC.edit}</button>`+
     `<button class="item-x" title="Remove">${IC.x}</button>`;
   row.querySelector('.prio-dot').addEventListener('click',()=>{ i.prio=PRIO_CYCLE[p]; i.updated=Date.now(); save(); renderIdeas(); });
@@ -2342,7 +2597,7 @@ function renderHome(){
   const todayCalls=dayStats(todayI), mStats=monthLogStats(curMonth);
   const callConv=Math.round(mStats.callConv*100);
   const targetHs = mt.value>0
-    ? `<div class="hs"><div class="k">Target ${monthName} · gen.${mt.implied?' (auto)':''}</div><div class="v ${tcls}">${tpct}%</div>
+    ? `<div class="hs"><div class="k">Target ${monthName} · gen.</div><div class="v ${tcls}">${tpct}%</div>
          <div class="tgt-sub">${fmtMoney2(mGenerated)} / ${fmtMoney2(Math.round(mt.value))}</div>
          <div class="tgt-bar on-dark" style="max-width:150px; margin-top:6px;"><i class="${tcls}" style="width:${Math.min(100,tpct)}%"></i></div></div>`
     : `<div class="hs"><div class="k">Target ${monthName} · gen.</div><div class="v" style="color:rgba(255,255,255,.5);">—</div><div class="tgt-sub">set it in the month strip</div></div>`;
@@ -2524,6 +2779,7 @@ $('#nextY').addEventListener('click',()=>{curYear++; renderYear();});
 
 function switchView(v){
   curView=v;
+  document.body.dataset.view=v;
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
   document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el.id==='view-'+v));
   $('#strip').style.display = (v==='year'||v==='renewals'||v==='calendar'||v==='todo'||v==='ideas'||v==='monthly'||v==='home') ? 'none' : 'flex';
@@ -2653,7 +2909,7 @@ $('#restoreFile').addEventListener('change',e=>{
 /* ---------- init ---------- */
 function unlockUI(){ $('#loginScreen').style.display='none'; document.body.classList.remove('locked'); }
 function lockUI(){ $('#loginScreen').style.display='grid'; document.body.classList.add('locked'); $('#loginErr').style.display='none'; $('#loginPass').value=''; setTimeout(()=>$('#loginUser').focus(),50); }
-function boot(){ $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); renderAll(); }
+function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); renderAll(); }
 let loggingIn=false;
 async function tryLogin(){
   if(loggingIn) return;
