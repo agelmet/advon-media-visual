@@ -108,9 +108,17 @@ export default function Contact() {
         </h2>
         </ScrollReveal>
 
-        <div className="grid md:grid-cols-2 gap-8 mb-16 items-stretch">
+        {/* The booking widget needs its own full-width row.
+            Zoho's embed switches from "calendar, then times underneath" to
+            "calendar | times side by side" somewhere between 760px and 900px of iframe
+            width — measured, not guessed. In the old two-up grid this panel was only
+            ~600px, so visitors had to pick a date and then scroll down to discover the
+            times, which is where people were dropping out. Full width gives it ~1150px
+            inside the padding on desktop, comfortably past the breakpoint. Below md it
+            stacks anyway, which is the correct mobile layout regardless. */}
+        <div className="grid gap-8 mb-16">
           {/* Form */}
-          <ScrollReveal direction="left" className="h-full">
+          <ScrollReveal direction="left" className="h-full w-full max-w-3xl mx-auto">
           <div className="glass-panel p-8 md:p-10 rounded-3xl text-left h-full flex flex-col">
             <h3 className="text-2xl md:text-3xl font-black mb-6 text-white font-display">{lang === 'el' ? 'Εκδήλωση Ενδιαφέροντος' : 'Express Interest'}</h3>
             <p className="text-gray-400 mb-8">{lang === 'el' ? 'Συμπληρώστε τη φόρμα και ένας εκπρόσωπός μας θα επικοινωνήσει μαζί σας μέσω email ή τηλεφώνου εντός της ίδιας ημέρας.' : 'Fill out the form and a representative will contact you via email or phone within the same day.'}</p>
@@ -152,7 +160,7 @@ export default function Contact() {
                  calendar does nothing. At a fixed height the iframe scrolls its own
                  content natively. Zoho sets inline width/height on the iframe it injects,
                  so the [&_iframe] rules force it to fill the box on every breakpoint. */}
-             <div className="w-full flex-grow rounded-xl bg-white relative min-h-[600px] overflow-hidden">
+             <div className="w-full flex-grow rounded-xl bg-white relative min-h-[620px] lg:min-h-[760px] overflow-hidden">
                 <div
                   id={ZOHO_PARENT_ID}
                   className="absolute inset-0 w-full h-full [&_iframe]:!w-full [&_iframe]:!h-full [&_iframe]:!border-0"
