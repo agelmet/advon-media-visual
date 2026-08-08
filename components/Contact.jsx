@@ -4,27 +4,68 @@ import { useState, useEffect } from 'react';
 import { useLangStore } from '@/store/langStore';
 import ScrollReveal from '@/components/ScrollReveal';
 
+// Zoho Bookings inline embed.
+//
+// Both values come from Zoho itself (Event Types > Website Meeting > Share >
+// Embed as Widget > Inline Embed), not from a copy-pasted blog snippet:
+//   - the script is Zoho's own embed CDN (nimbuspop.com is Zoho's, despite the name)
+//   - ZOHO_BOOKING_URL is the SERVICE-specific url, so visitors land straight on the
+//     calendar instead of first having to pick "Website Meeting" from a list of one.
+//     The account-wide url (.../portal-embed#/advonmedia) adds that pointless extra click.
+const ZOHO_EMBED_SCRIPT = 'https://bookings.nimbuspop.com/assets/embed.js';
+const ZOHO_BOOKING_URL =
+  'https://advonmedia.zohobookings.eu/portal-embed#/264312000000038046';
+const ZOHO_SCRIPT_ID = 'zoho-bookings-embed';
+const ZOHO_PARENT_ID = 'zoho-booking-inline';
+
 export default function Contact() {
   const { lang } = useLangStore();
   const [status, setStatus] = useState('');
 
-  // Bulletproof Calendar Injection
+  // Calendar injection.
+  //
+  // NOTE: Zoho's own snippet wraps the init in `window.onload = ...`. That is fine on a
+  // plain HTML page but silently does nothing here — this is a client component, so by
+  // the time it mounts the window load event has usually already fired and the handler
+  // never runs, leaving an empty box. We hook the script's own load event instead, and
+  // handle the case where the script is already in the DOM from a previous mount.
   useEffect(() => {
-    // 1. Remove old script if it exists (prevents duplicate bugs)
-    const oldScript = document.getElementById('trafft-script');
-    if (oldScript) oldScript.remove();
-    
-    // 2. Inject fresh script so Trafft finds the div instantly
-    const timer = setTimeout(() => {
-      const script = document.createElement('script');
-      script.id = 'trafft-script';
-      script.src = 'https://advonmedia.trafft.com/embed.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }, 100); // 100ms delay ensures the HTML div is painted first
+    let cancelled = false;
 
-    return () => clearTimeout(timer);
-  }, [lang]); // Re-runs instantly if language changes
+    const render = () => {
+      if (cancelled) return;
+      const parent = document.getElementById(ZOHO_PARENT_ID);
+      if (!parent || !window.Bookings) return;
+      parent.innerHTML = ''; // drop any iframe from a previous render
+      window.Bookings.inlineEmbed({
+        url: ZOHO_BOOKING_URL,
+        parent: `#${ZOHO_PARENT_ID}`,
+        height: '600px',
+      });
+    };
+
+    let script = document.getElementById(ZOHO_SCRIPT_ID);
+
+    if (window.Bookings) {
+      render();
+    } else if (script) {
+      script.addEventListener('load', render);
+    } else {
+      script = document.createElement('script');
+      script.id = ZOHO_SCRIPT_ID;
+      script.src = ZOHO_EMBED_SCRIPT;
+      script.async = true;
+      script.addEventListener('load', render);
+      document.body.appendChild(script);
+    }
+
+    return () => {
+      cancelled = true;
+      if (script) script.removeEventListener('load', render);
+      const parent = document.getElementById(ZOHO_PARENT_ID);
+      if (parent) parent.innerHTML = '';
+    };
+  }, [lang]); // re-render the widget if the language changes
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,26 +141,22 @@ export default function Contact() {
           </div>
           </ScrollReveal>
 
-          {/* Working Trafft Calendar */}
+          {/* Zoho Bookings Calendar */}
           <ScrollReveal direction="right" delay={100} className="h-full">
           <div className="glass-panel p-8 md:p-10 rounded-3xl text-left flex flex-col h-full overflow-hidden">
              <h3 className="text-2xl md:text-3xl font-black mb-6 text-white font-display">{lang === 'el' ? 'Κλείστε Ραντεβού' : 'Book Appointment'}</h3>
              <p className="text-gray-400 mb-8">{lang === 'el' ? 'Επιλέξτε την ημέρα και ώρα που σας εξυπηρετεί για μια δωρεάν συμβουλευτική κλήση.' : 'Choose the day and time that suits you for a free consultation call.'}</p>
-             {/* autoresize must stay off: with it on, Trafft grows the iframe to
-                 full content height inside this fixed, clipped box, leaving nothing
-                 scrollable — wheel/touch over the calendar then does nothing.
-                 At a fixed height the iframe scrolls its own content natively. */}
+             {/* Same reasoning as the old Trafft box: keep a FIXED height rather than
+                 letting the widget grow to its full content height. Inside this clipped
+                 panel a tall iframe leaves nothing scrollable, so wheel/touch over the
+                 calendar does nothing. At a fixed height the iframe scrolls its own
+                 content natively. Zoho sets inline width/height on the iframe it injects,
+                 so the [&_iframe] rules force it to fill the box on every breakpoint. */}
              <div className="w-full flex-grow rounded-xl bg-white relative min-h-[600px] overflow-hidden">
                 <div
-                  className="embedded-booking absolute inset-0 w-full h-full"
-                  data-url="https://advonmedia.trafft.com"
-                  data-query="&t=s&uuid=1003c403-d56e-439b-876a-c563b3127470"
-                  data-employee="aggelos-metrides"
-                  data-lang={lang}
-                  data-autoresize="0"
-                  data-showsidebar="0"
-                  data-showservices="0"
-                  style={{width: '100%', height: '100%'}}>
+                  id={ZOHO_PARENT_ID}
+                  className="absolute inset-0 w-full h-full [&_iframe]:!w-full [&_iframe]:!h-full [&_iframe]:!border-0"
+                >
                 </div>
              </div>
           </div>
