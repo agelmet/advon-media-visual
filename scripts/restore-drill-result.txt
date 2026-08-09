@@ -1,0 +1,29 @@
+Advon CRM restore drill — 2026-08-09T12:01:30.853Z
+
+PASS  CRM loads and locks until the passphrase is entered
+PASS  Passphrase unlocks and decrypts
+PASS  Data at rest on the device is ciphertext, not readable text
+PASS  Change reached the server  — updatedAt 2026-08-09T12:01:21.880Z
+PASS  Server holds ciphertext only — no client names visible
+PASS  A dated snapshot was written on save  — 2 snapshot(s)
+PASS  Encrypted backup exports with a dated, self-describing format
+PASS  Encrypted backup contains no readable client data
+PASS  Plain CSV lists every client  — 5 rows
+PASS  CSV survives quotes, commas, semicolons and newlines in notes
+PASS  A second device loads the current data from the server, not a stale copy  — 5 clients pulled
+PASS  Phone edit stored on the server
+PASS  A write based on an out-of-date copy is REFUSED, not applied
+PASS  The refusal returns the newer copy so it can be shown for a choice
+PASS  The newer data on the server was left untouched by the refused write
+PASS  Local storage wiped
+PASS  After the wipe the app comes up without the lost records  — showing 1 seed record(s)
+PASS  Restore brings back the same number of records  — 5 of 5
+PASS  Every restored record matches the original field for field
+PASS  Greek text, apostrophes and multi-line notes survived the round trip
+PASS  Restored data was re-encrypted back onto the device
+PASS  A backup cannot be opened with the wrong key, and nothing is damaged trying
+PASS  Every sync is its own commit in the data repo
+PASS  An older version can be pulled out of git history and decrypted  — 4 clients at HEAD~1
+PASS  The recovered version is the good data, not the bad edit
+
+25 passed, 0 failed

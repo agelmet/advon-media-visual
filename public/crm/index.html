@@ -739,6 +739,35 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
   .mcell{min-height:64px;}
 }
 </style>
+<style>
+/* ---------- sync status + conflict UI ---------- */
+.sync-pill{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 11px;border-radius:999px;
+  border:1px solid var(--line,#e5e7eb);background:transparent;cursor:pointer;font:500 12px/1 inherit;
+  color:var(--muted,#6b7280);white-space:nowrap;transition:background .15s,border-color .15s,color .15s;}
+.sync-pill:hover{background:rgba(0,0,0,.04);}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#9ca3af;flex:none;}
+.sync-pill[data-state="ok"] .sync-dot{background:#0EC673;}
+.sync-pill[data-state="syncing"] .sync-dot{background:#3b82f6;animation:syncspin 1s linear infinite;
+  border-radius:50%;box-shadow:0 0 0 2px rgba(59,130,246,.25);}
+.sync-pill[data-state="pending"]{border-color:#f59e0b;color:#b45309;}
+.sync-pill[data-state="pending"] .sync-dot{background:#f59e0b;}
+.sync-pill[data-state="error"]{border-color:#dc2626;color:#fff;background:#dc2626;font-weight:700;}
+.sync-pill[data-state="error"] .sync-dot{background:#fff;animation:syncflash 1.1s ease-in-out infinite;}
+.sync-pill[data-state="off"]{opacity:.65;}
+@keyframes syncspin{to{transform:rotate(360deg);}}
+@keyframes syncflash{50%{opacity:.25;}}
+/* unmissable banner when a save could not reach the server */
+.sync-banner{display:none;position:sticky;top:0;z-index:60;background:#dc2626;color:#fff;
+  padding:11px 16px;font-size:14px;font-weight:600;text-align:center;}
+.sync-banner.show{display:block;}
+.sync-banner button{margin-left:12px;background:#fff;color:#dc2626;border:0;border-radius:8px;
+  padding:5px 12px;font-weight:700;cursor:pointer;font-size:13px;}
+.sync-code{display:block;word-break:break-all;font-family:ui-monospace,Menlo,Consolas,monospace;
+  font-size:12px;background:rgba(0,0,0,.05);padding:10px;border-radius:10px;margin:6px 0 14px;}
+.sync-modal-body p{margin:0 0 12px;font-size:14px;line-height:1.55;}
+.sync-modal-body ol{margin:0 0 12px 18px;font-size:14px;line-height:1.6;}
+@media(max-width:860px){.sync-pill span:not(.sync-dot){display:none;} .sync-pill{padding:0 9px;}}
+</style>
 </head>
 <body class="locked">
 
@@ -783,6 +812,10 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
         <input id="globalSearch" placeholder="Search clients…" autocomplete="off">
         <div class="search-results" id="searchResults"></div>
       </div>
+      <button class="sync-pill" id="syncPill" title="Sync status — click to sync now">
+        <span class="sync-dot" id="syncDot"></span>
+        <span id="syncLabel">Sync…</span>
+      </button>
       <button class="btn btn-ghost" id="themeBtn" title="Toggle dark mode" aria-label="Toggle dark mode"></button>
       <button class="btn btn-ghost" id="logoutBtn" title="Lock the CRM" aria-label="Lock"></button>
       <div class="export-wrap">
@@ -797,14 +830,27 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
           <div class="sep"></div>
           <button data-x="csv-renewals" data-ic="sheet">Excel / CSV — renewals</button>
           <div class="sep"></div>
-          <button data-x="backup" data-ic="save">Backup everything (JSON)</button>
+          <button data-x="csv-clients" data-ic="sheet">Plain CSV — every client</button>
+          <div class="sep"></div>
+          <button data-x="backup-enc" data-ic="save">Export backup (encrypted)</button>
+          <button data-x="restore-enc" data-ic="folder">Import backup (encrypted)</button>
+          <div class="sep"></div>
+          <button data-x="backup" data-ic="save">Backup everything (plain JSON)</button>
           <button data-x="restore" data-ic="folder">Restore from backup</button>
+          <div class="sep"></div>
+          <button data-x="sync-setup" data-ic="save">Sync setup…</button>
           <input type="file" id="restoreFile" accept=".json" style="display:none">
+          <input type="file" id="restoreEncFile" accept=".json,.advoncrm" style="display:none">
         </div>
       </div>
     </div>
   </div>
 </header>
+
+<div class="sync-banner" id="syncBanner">
+  <span id="syncBannerText">Your last change has not reached the server.</span>
+  <button id="syncBannerRetry">Retry now</button>
+</div>
 
 <div class="storage-warn" id="storageWarn">
   <div>This preview can't save data. Open the file directly in your browser (or deploy it on Netlify) and everything saves automatically on this device.</div>
@@ -1105,6 +1151,54 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
   </div>
 </div>
 
+<!-- CONFLICT: the stored copy changed since this device loaded -->
+<div class="overlay" id="conflictOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Two devices changed the data</h3>
+    </div>
+    <div class="modal-body sync-modal-body">
+      <p><strong>Nothing has been overwritten.</strong> The copy on the server was changed
+         after this device loaded its data — probably from your phone or another browser.</p>
+      <p id="conflictDetail" style="color:var(--muted);"></p>
+      <p>Choose what to keep. Whichever you pick, a backup file of <em>both</em> versions is
+         downloaded first, so nothing is lost either way.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="cfKeepRemote">Use the server copy</button>
+      <button class="btn btn-brand" id="cfKeepMine">Keep what's on this device</button>
+    </div>
+  </div>
+</div>
+
+<!-- SYNC SETUP -->
+<div class="overlay" id="syncSetupOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Sync setup</h3>
+      <button class="modal-close" id="syncSetupClose" aria-label="Close"></button>
+    </div>
+    <div class="modal-body sync-modal-body">
+      <p>Cross-device sync needs one value stored on the server. This is <strong>not</strong> your
+         passphrase and cannot be turned back into it — it is a one-way fingerprint.</p>
+      <p><strong>Your CRM_AUTH_HASH:</strong></p>
+      <code class="sync-code" id="syncAuthHash">—</code>
+      <p>In Vercel → your project → Settings → Environment Variables, add:</p>
+      <ol>
+        <li><code>CRM_AUTH_HASH</code> — the value above</li>
+        <li><code>CRM_GH_REPO</code> — the private data repo, e.g. <code>agelmet/advon-crm-data</code></li>
+        <li><code>CRM_GH_TOKEN</code> — a GitHub token with Contents read &amp; write on that repo</li>
+      </ol>
+      <p>Then redeploy. Full instructions are in <code>RECOVERY.md</code> in the website repo.</p>
+      <p id="syncSetupState" style="color:var(--muted);"></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="syncCopyHash">Copy the value</button>
+      <button class="btn btn-brand" id="syncTestBtn">Test connection</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <div id="printArea"></div>
 
@@ -1140,16 +1234,107 @@ async function aesEnc(key, str){
 }
 let CUR_KEY=null;
 const KKEY='advon_crm_k';
+/* ------------------------------------------------------------------
+   Key persistence.
+
+   The old build exported the raw AES key and wrote it, in plaintext, to
+   localStorage. Anyone with the device — or any script on the page — could
+   read it and decrypt everything without the passphrase.
+
+   Now the key is stored as a NON-EXTRACTABLE CryptoKey in IndexedDB. The
+   browser will use it to decrypt, but no code can read the key material back
+   out, so it cannot be copied off the device.
+------------------------------------------------------------------- */
+const IDB_NAME='advon_crm_keys', IDB_STORE='keys', SESS_MARK='advon_crm_sess';
+const TOKKEY='advon_crm_synctok';
+function idb(){
+  return new Promise((res,rej)=>{
+    let r;
+    try{ r=indexedDB.open(IDB_NAME,1); }catch(e){ return rej(e); }
+    r.onupgradeneeded=()=>{ try{ r.result.createObjectStore(IDB_STORE,{keyPath:'id'}); }catch(e){} };
+    r.onsuccess=()=>res(r.result);
+    r.onerror=()=>rej(r.error);
+  });
+}
+function idbPut(rec){
+  return idb().then(db=>new Promise((res,rej)=>{
+    const t=db.transaction(IDB_STORE,'readwrite');
+    t.objectStore(IDB_STORE).put(rec);
+    t.oncomplete=()=>res(true); t.onerror=()=>rej(t.error);
+  }));
+}
+function idbGet(id){
+  return idb().then(db=>new Promise((res,rej)=>{
+    const t=db.transaction(IDB_STORE,'readonly');
+    const q=t.objectStore(IDB_STORE).get(id);
+    q.onsuccess=()=>res(q.result||null); q.onerror=()=>rej(q.error);
+  }));
+}
+function idbDel(id){
+  return idb().then(db=>new Promise((res)=>{
+    const t=db.transaction(IDB_STORE,'readwrite');
+    t.objectStore(IDB_STORE).delete(id);
+    t.oncomplete=()=>res(true); t.onerror=()=>res(false);
+  })).catch(()=>false);
+}
+
+/* Sync token: a one-way fingerprint of the key. It authorises reading and
+   writing the ENCRYPTED blob on the server. It can never decrypt anything and
+   cannot be turned back into the key or the passphrase. */
+let SYNC_TOKEN=null;
+async function deriveSyncToken(extractableKey){
+  try{
+    const raw=new Uint8Array(await crypto.subtle.exportKey('raw', extractableKey));
+    const tag=te.encode('advon-sync-auth-v1');
+    const buf=new Uint8Array(raw.length+tag.length);
+    buf.set(raw,0); buf.set(tag,raw.length);
+    const h=await crypto.subtle.digest('SHA-256', buf);
+    return b64(h);
+  }catch(e){ return null; }
+}
+async function sha256Hex(str){
+  const h=await crypto.subtle.digest('SHA-256', te.encode(str));
+  return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+/* Re-import the derived key as non-extractable, then persist it. */
 async function rememberKey(remember){
   try{
-    const raw=b64(await crypto.subtle.exportKey('raw', CUR_KEY));
-    (remember?localStorage:sessionStorage).setItem(KKEY, raw);
+    if(!SYNC_TOKEN) SYNC_TOKEN=await deriveSyncToken(CUR_KEY);
+    const raw=await crypto.subtle.exportKey('raw', CUR_KEY);
+    const sealed=await crypto.subtle.importKey('raw', raw, {name:'AES-GCM'}, false, ['encrypt','decrypt']);
+    CUR_KEY=sealed;                       /* from here on, unexportable */
+    await idbPut({id:'k', key:sealed, persist:!!remember});
+    try{ sessionStorage.setItem(SESS_MARK,'1'); }catch(e){}
+    try{
+      if(SYNC_TOKEN) (remember?localStorage:sessionStorage).setItem(TOKKEY, SYNC_TOKEN);
+    }catch(e){}
+    /* clean up the old plaintext-key storage from previous versions */
+    try{ localStorage.removeItem(KKEY); }catch(e){}
+    try{ sessionStorage.removeItem(KKEY); }catch(e){}
+    touchActivity();
   }catch(e){}
 }
 function clearKey(){
-  CUR_KEY=null;
+  CUR_KEY=null; SYNC_TOKEN=null;
+  idbDel('k');
   try{localStorage.removeItem(KKEY);}catch(e){}
   try{sessionStorage.removeItem(KKEY);}catch(e){}
+  try{localStorage.removeItem(TOKKEY);}catch(e){}
+  try{sessionStorage.removeItem(TOKKEY);}catch(e){}
+  try{sessionStorage.removeItem(SESS_MARK);}catch(e){}
+  try{localStorage.removeItem(ACT_KEY);}catch(e){}
+}
+
+/* Idle auto-lock: a stay-signed-in session stops being usable after this long
+   without activity, so a forgotten open device does not stay unlocked forever. */
+const ACT_KEY='advon_crm_lastact', IDLE_LOCK_MS=12*60*60*1000;
+function touchActivity(){ try{ localStorage.setItem(ACT_KEY, String(Date.now())); }catch(e){} }
+function idleExpired(){
+  try{
+    const t=parseInt(localStorage.getItem(ACT_KEY)||'0',10);
+    return t>0 && (Date.now()-t)>IDLE_LOCK_MS;
+  }catch(e){ return false; }
 }
 let failCount=0, lockUntil=0;
 
@@ -1237,7 +1422,11 @@ async function loadDecrypted(){
   let stored=null;
   try{ stored=localStorage.getItem(KEY); }catch(e){ canPersist=false; }
   if(stored){
-    try{ const o=JSON.parse(stored); state=JSON.parse(await aesDec(CUR_KEY, o.iv, o.ct)); }
+    try{
+      const o=JSON.parse(stored);
+      state=JSON.parse(await aesDec(CUR_KEY, o.iv, o.ct));
+      LOCAL_UPDATED_AT=o.updatedAt||null;
+    }
     catch(e){ state=null; }
   }
   if(!state && memStore) state=memStore;
@@ -1250,18 +1439,322 @@ async function loadDecrypted(){
   }
   state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={}; state.ideas||=[]; state.workdays||={}; ensureExpenses(); ensureLogs();
   state.clients.forEach(c=>{ if(OLD_STAGE_MAP[c.stage]) c.stage=OLD_STAGE_MAP[c.stage]; });
-  await saveNow();
+  /* Re-persisting what we just loaded is not an edit: keep the original
+     timestamp and do not push, or merely opening the app on a device would
+     make it look newer than the server and cause a false conflict. */
+  await saveNow({noPush:true, keepStamp:true});
   if(!canPersist) $('#storageWarn').classList.add('show');
 }
-async function saveNow(){
+async function saveNow(opts){
   if(!CUR_KEY || !state) return;
   memStore=state;
+  const stamp=(opts && opts.stamp) ||
+              ((opts && opts.keepStamp) ? LOCAL_UPDATED_AT : new Date().toISOString());
   try{
     const payload=await aesEnc(CUR_KEY, JSON.stringify(state));
+    if(stamp) payload.updatedAt=stamp;
     localStorage.setItem(KEY, JSON.stringify(payload));
+    if(stamp) LOCAL_UPDATED_AT=stamp;
   }catch(e){ canPersist=false; $('#storageWarn').classList.add('show'); }
+  if(!(opts && opts.noPush)) Sync.queuePush();
 }
-function save(){ memStore=state; saveNow(); }
+function save(){ memStore=state; touchActivity(); saveNow(); }
+
+/* ==================================================================
+   CROSS-DEVICE SYNC
+   ------------------------------------------------------------------
+   The server only ever holds the AES-GCM ciphertext. It cannot read
+   client data, and neither can anyone who steals the server, the token
+   or the storage repo — only the passphrase decrypts.
+
+   Rules:
+     - every load fetches the remote copy fresh, cache-busted, before
+       anything is rendered
+     - regaining focus re-checks for remote changes
+     - a save that cannot reach the server is kept locally and retried;
+       the change is never dropped
+     - a remote copy newer than what this device loaded is never
+       overwritten silently — you are asked
+   ================================================================== */
+const SYNC_URL='/api/crm';
+const META_KEY='advon_crm_sync_meta';
+const PEND_KEY='advon_crm_pending';
+let LOCAL_UPDATED_AT=null;
+
+function deviceId(){
+  let d=null;
+  try{ d=localStorage.getItem('advon_crm_device'); }catch(e){}
+  if(!d){
+    d=(navigator.platform||'device').replace(/[^A-Za-z0-9]/g,'').slice(0,10)+'-'+
+      Math.random().toString(36).slice(2,7);
+    try{ localStorage.setItem('advon_crm_device', d); }catch(e){}
+  }
+  return d;
+}
+function syncMeta(){
+  try{ return JSON.parse(localStorage.getItem(META_KEY))||{}; }catch(e){ return {}; }
+}
+function setSyncMeta(m){
+  try{ localStorage.setItem(META_KEY, JSON.stringify({...syncMeta(), ...m})); }catch(e){}
+}
+function relTime(iso){
+  if(!iso) return 'never';
+  const s=Math.max(0,(Date.now()-new Date(iso).getTime())/1000);
+  if(s<45) return 'just now';
+  if(s<90) return '1 min ago';
+  if(s<3600) return Math.round(s/60)+' min ago';
+  if(s<7200) return '1 hour ago';
+  if(s<86400) return Math.round(s/3600)+' hours ago';
+  const d=new Date(iso);
+  return d.toLocaleDateString()+' '+d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+}
+
+const Sync={
+  state:'idle',        /* idle | syncing | ok | pending | error | off */
+  lastError:null,
+  pushTimer:null,
+  retryTimer:null,
+  retryDelay:5000,
+  lastCheck:0,
+  busy:false,
+  conflictOpen:false,
+
+  headers(){
+    const h={'Content-Type':'application/json'};
+    if(SYNC_TOKEN) h['x-crm-auth']=SYNC_TOKEN;
+    return h;
+  },
+
+  setState(s, msg){
+    this.state=s; this.lastError=msg||null;
+    const pill=$('#syncPill'), label=$('#syncLabel'), banner=$('#syncBanner'), bt=$('#syncBannerText');
+    if(!pill) return;
+    pill.dataset.state=s;
+    const last=syncMeta().lastSyncAt;
+    if(s==='syncing')      label.textContent='Syncing…';
+    else if(s==='ok')      label.textContent='Synced '+relTime(last);
+    else if(s==='pending') label.textContent='Waiting to sync';
+    else if(s==='error')   label.textContent='SYNC FAILED';
+    else if(s==='off')     label.textContent='Sync off';
+    else                   label.textContent='Synced '+relTime(last);
+    pill.title = s==='error'
+      ? ('Sync failed: '+(msg||'unknown error')+' — your change is saved on this device and will be retried. Click to retry now.')
+      : s==='off'
+        ? 'Sync is not configured. Data is saved on this device only. Click for setup.'
+        : ('Last successful sync: '+relTime(last)+(msg?(' — '+msg):'')+'. Click to sync now.');
+    if(banner){
+      if(s==='error'){
+        bt.textContent='Not saved to the server: '+(msg||'connection problem')+
+                       '. Your change is safe on this device and will keep retrying.';
+        banner.classList.add('show');
+      }else if(s==='pending' && this.pendingFlag()){
+        bt.textContent='A change has not reached the server yet. Retrying…';
+        banner.classList.add('show');
+      }else{
+        banner.classList.remove('show');
+      }
+    }
+  },
+
+  pendingFlag(){ try{ return localStorage.getItem(PEND_KEY)==='1'; }catch(e){ return false; } },
+  setPending(v){ try{ v?localStorage.setItem(PEND_KEY,'1'):localStorage.removeItem(PEND_KEY); }catch(e){} },
+
+  async request(method, body){
+    const url=SYNC_URL+'?t='+Date.now()+'&d='+encodeURIComponent(deviceId());
+    const res=await fetch(url,{
+      method,
+      cache:'no-store',
+      headers:this.headers(),
+      body: body?JSON.stringify(body):undefined
+    });
+    let payload=null;
+    try{ payload=await res.json(); }catch(e){}
+    return {res, payload};
+  },
+
+  /* ---- called once per load, BEFORE anything is rendered ---- */
+  async pullOnLoad(){
+    if(!SYNC_TOKEN){ this.setState('off'); return; }
+    this.setState('syncing');
+    try{
+      /* never let a dead network keep the CRM from opening */
+      const out=await Promise.race([
+        this.request('GET'),
+        new Promise(r=>setTimeout(()=>r({timeout:true}),9000))
+      ]);
+      if(out.timeout){ this.setState('error','server did not answer in time'); return; }
+      await this.handlePull(out, true);
+    }catch(e){
+      this.setState('error', e.message||'network unreachable');
+    }
+  },
+
+  async pull(silent){
+    if(!SYNC_TOKEN || this.busy || this.conflictOpen) return;
+    this.busy=true;
+    if(!silent) this.setState('syncing');
+    try{
+      const out=await this.request('GET');
+      await this.handlePull(out, false);
+    }catch(e){
+      this.setState('error', e.message||'network unreachable');
+    }finally{ this.busy=false; this.lastCheck=Date.now(); }
+  },
+
+  async handlePull(out, isLoad){
+    const {res, payload}=out;
+    if(res.status===401){ this.setState('error','the server rejected this device (check CRM_AUTH_HASH)'); return; }
+    if(res.status===503){ this.setState('off'); return; }
+    if(!res.ok){ this.setState('error', (payload&&payload.message)||('server error '+res.status)); return; }
+
+    const meta=syncMeta();
+
+    /* Nothing stored yet — this device seeds the server. */
+    if(payload.empty){
+      this.setState('pending');
+      await this.push(true);
+      return;
+    }
+
+    const remoteAt=payload.updatedAt||null;
+    const localAt=LOCAL_UPDATED_AT||null;
+    const remoteIsNew = remoteAt && (!meta.updatedAt || remoteAt>meta.updatedAt);
+    const localAhead  = this.pendingFlag() || (localAt && remoteAt && localAt>remoteAt);
+
+    /* Remote changed AND this device has unsynced work → ask, never clobber. */
+    if(remoteIsNew && localAhead){
+      this.openConflict(payload);
+      return;
+    }
+
+    /* Remote is the newer copy → adopt it. */
+    if(remoteAt && (!localAt || remoteAt>localAt) && !this.pendingFlag()){
+      try{
+        const plain=await aesDec(CUR_KEY, payload.data.iv, payload.data.ct);
+        state=JSON.parse(plain);
+        normalizeState();
+        await saveNow({stamp:remoteAt, noPush:true});
+        setSyncMeta({sha:payload.sha, updatedAt:remoteAt, lastSyncAt:new Date().toISOString()});
+        this.setPending(false);
+        this.setState('ok');
+        if(!isLoad){ renderAll(); toast('Updated from your other device'); }
+        return;
+      }catch(e){
+        this.setState('error','the server copy could not be decrypted');
+        return;
+      }
+    }
+
+    setSyncMeta({sha:payload.sha, updatedAt:remoteAt});
+    if(localAhead){ await this.push(false); }
+    else{ setSyncMeta({lastSyncAt:new Date().toISOString()}); this.setPending(false); this.setState('ok'); }
+  },
+
+  queuePush(){
+    if(!SYNC_TOKEN){ this.setState('off'); return; }
+    this.setPending(true);
+    this.setState('pending');
+    clearTimeout(this.pushTimer);
+    this.pushTimer=setTimeout(()=>this.push(false), 900);   /* debounce rapid edits */
+  },
+
+  async push(force){
+    if(!SYNC_TOKEN || !CUR_KEY || !state) return;
+    if(this.busy || this.conflictOpen) return;
+    this.busy=true; this.setState('syncing');
+    try{
+      const stamp=LOCAL_UPDATED_AT||new Date().toISOString();
+      const blob=await aesEnc(CUR_KEY, JSON.stringify(state));
+      const {res, payload}=await this.request('PUT',{
+        data:blob, updatedAt:stamp, deviceId:deviceId(),
+        baseSha:syncMeta().sha||null, force:!!force
+      });
+      if(res.status===409){
+        this.busy=false;
+        this.openConflict(payload);
+        return;
+      }
+      if(res.status===503){ this.setState('off'); this.busy=false; return; }
+      if(!res.ok){ throw new Error((payload&&payload.message)||('server error '+res.status)); }
+      setSyncMeta({sha:payload.sha, updatedAt:payload.updatedAt, lastSyncAt:new Date().toISOString()});
+      this.setPending(false);
+      this.retryDelay=5000;
+      this.setState('ok');
+    }catch(e){
+      /* the edit stays in localStorage; keep retrying with backoff */
+      this.setPending(true);
+      this.setState('error', e.message||'could not reach the server');
+      clearTimeout(this.retryTimer);
+      this.retryTimer=setTimeout(()=>this.push(false), this.retryDelay);
+      this.retryDelay=Math.min(this.retryDelay*2, 5*60000);
+    }finally{ this.busy=false; }
+  },
+
+  openConflict(remote){
+    if(this.conflictOpen) return;
+    this.conflictOpen=true;
+    this._remote=remote;
+    const det=$('#conflictDetail');
+    if(det){
+      det.textContent='Server copy: '+relTime(remote.updatedAt)+
+        (remote.deviceId?(' from '+remote.deviceId):'')+
+        '.  This device: '+relTime(LOCAL_UPDATED_AT)+'.';
+    }
+    $('#conflictOverlay').classList.add('open');
+    this.setState('pending');
+  },
+  closeConflict(){
+    this.conflictOpen=false;
+    $('#conflictOverlay').classList.remove('open');
+  },
+  async resolve(keep){
+    const remote=this._remote;
+    /* Always take both versions to disk before changing anything. */
+    try{
+      download('advon-crm-conflict-thisdevice-'+todayIso()+'.json',
+        new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));
+      if(remote && remote.data){
+        const plain=await aesDec(CUR_KEY, remote.data.iv, remote.data.ct);
+        download('advon-crm-conflict-server-'+todayIso()+'.json',
+          new Blob([plain],{type:'application/json'}));
+      }
+    }catch(e){}
+    this.closeConflict();
+    if(keep==='remote'){
+      try{
+        const plain=await aesDec(CUR_KEY, remote.data.iv, remote.data.ct);
+        state=JSON.parse(plain);
+        normalizeState();
+        await saveNow({stamp:remote.updatedAt, noPush:true});
+        setSyncMeta({sha:remote.sha, updatedAt:remote.updatedAt, lastSyncAt:new Date().toISOString()});
+        this.setPending(false);
+        this.setState('ok');
+        renderAll();
+        toast('Now showing the server copy');
+      }catch(e){ this.setState('error','could not read the server copy'); }
+    }else{
+      setSyncMeta({sha:remote?remote.sha:null});
+      await this.push(true);            /* force — server version already saved to disk */
+      renderAll();
+      toast('Kept this device’s version');
+    }
+  }
+};
+
+/* Fill in anything a restored or downloaded dataset is missing, so an older
+   backup cannot crash the app with undefined collections. */
+function normalizeState(){
+  if(!state) return;
+  state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[];
+  state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.ideas||=[];
+  state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={};
+  state.workdays||={};
+  try{ ensureExpenses(); }catch(e){}
+  try{ ensureLogs(); }catch(e){}
+  try{
+    state.clients.forEach(c=>{ if(OLD_STAGE_MAP[c.stage]) c.stage=OLD_STAGE_MAP[c.stage]; });
+  }catch(e){}
+}
 
 /* ---------- navigation state ---------- */
 const now=new Date();
@@ -2803,6 +3296,10 @@ $('#exportMenu').addEventListener('click',e=>{
   if(x==='pdf-month') exportPDF('month');
   if(x==='pdf-year')  exportPDF('year');
   if(x==='csv-renewals') exportRenewalsCSV();
+  if(x==='csv-clients') exportAllClientsCSV();
+  if(x==='backup-enc')  backupEncrypted();
+  if(x==='restore-enc') $('#restoreEncFile').click();
+  if(x==='sync-setup')  openSyncSetup();
   if(x==='backup')    backup();
   if(x==='restore')   $('#restoreFile').click();
   $('#exportMenu').classList.remove('open');
@@ -2886,7 +3383,74 @@ function exportPDF(scope){
 }
 function backup(){
   download('advon-crm-backup-'+todayIso()+'.json', new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));
-  toast('Backup downloaded — keep it safe');
+  toast('Backup downloaded — this file is NOT encrypted, keep it somewhere safe');
+}
+
+/* ---- Encrypted export / import ----------------------------------
+   Same AES-256-GCM key as the app. Safe to keep in cloud storage or email to
+   yourself: without the passphrase the file is meaningless.               */
+async function backupEncrypted(){
+  if(!CUR_KEY || !state){ toast('Nothing to export'); return; }
+  try{
+    const blob=await aesEnc(CUR_KEY, JSON.stringify(state));
+    const file={
+      format:'advon-crm-encrypted-backup',
+      version:1,
+      exportedAt:new Date().toISOString(),
+      device:deviceId(),
+      clients:(state.clients||[]).length,
+      salt:VAULT.salt,          /* so a future build can re-derive the key */
+      iv:blob.iv, ct:blob.ct
+    };
+    download('advon-crm-encrypted-'+todayIso()+'.json',
+      new Blob([JSON.stringify(file,null,2)],{type:'application/json'}));
+    toast('Encrypted backup downloaded ('+file.clients+' clients)');
+  }catch(e){ toast('Export failed: '+(e.message||e)); }
+}
+
+$('#restoreEncFile').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=async()=>{
+    try{
+      const file=JSON.parse(r.result);
+      if(!file.iv || !file.ct) throw new Error('not an Advon CRM encrypted backup');
+      const plain=await aesDec(CUR_KEY, file.iv, file.ct);
+      const data=JSON.parse(plain);
+      if(!data.clients) throw new Error('no client records inside');
+      const when=file.exportedAt?new Date(file.exportedAt).toLocaleString():'unknown date';
+      if(confirm('Restore '+(data.clients.length)+' clients from the backup made '+when+
+                 '?\n\nEverything currently in the CRM will be replaced.')){
+        state=data;
+        normalizeState();
+        await saveNow();
+        renderAll();
+        toast('Restored '+data.clients.length+' clients');
+      }
+    }catch(err){
+      toast('Could not restore: '+(err.message||'wrong passphrase or damaged file'));
+    }
+    e.target.value='';
+  };
+  r.readAsText(f);
+});
+
+/* ---- Plain CSV of every client ----------------------------------
+   The worst-case escape hatch: readable in Excel or Numbers with no app,
+   no passphrase and no internet.                                        */
+function exportAllClientsCSV(){
+  const rows=[['Name','Value (EUR)','Stage','Month','Day','Time','Phone','Viber','Email','Notes']];
+  (state.clients||[])
+    .slice()
+    .sort((a,b)=>String(a.month||'').localeCompare(String(b.month||''))||String(a.name||'').localeCompare(String(b.name||'')))
+    .forEach(c=>rows.push([
+      c.name||'', c.value||0,
+      (()=>{ try{ return stageById(c.stage).name; }catch(e){ return c.stage||''; } })(),
+      c.month?fmtMonth(c.month):'', c.day||'', c.time||'',
+      c.phone||'', c.viber||'', c.email||'', (c.notes||'').replace(/\r?\n/g,' · ')
+    ]));
+  download('advon-crm-all-clients-'+todayIso()+'.csv', csvBlob(rows));
+  toast('CSV downloaded — '+((state.clients||[]).length)+' clients');
 }
 $('#restoreFile').addEventListener('change',e=>{
   const f=e.target.files[0]; if(!f) return;
@@ -2923,10 +3487,13 @@ async function tryLogin(){
     const key=await deriveKey(u+':'+p, VAULT.salt);
     await aesDec(key, VAULT.iv, VAULT.ct); /* throws on wrong credentials */
     CUR_KEY=key;
+    SYNC_TOKEN=await deriveSyncToken(key);
     await rememberKey($('#loginRemember').checked);
     await loadDecrypted();
     $('#loginPass').value='';
-    unlockUI(); boot(); toast('Welcome back');
+    btn.textContent='Getting your latest data…';
+    await Sync.pullOnLoad();          /* always the freshest copy before anything shows */
+    unlockUI(); boot(); wireSyncEvents(); toast('Welcome back');
   }catch(e){
     failCount++;
     if(failCount>=5){ lockUntil=Date.now()+30000; failCount=0; }
@@ -2946,19 +3513,129 @@ $('#logoutBtn').addEventListener('click',()=>{ clearKey(); state=null; lockUI();
     $('#loginErr').style.display='block';
     return;
   }
-  let raw=null;
-  try{ raw=localStorage.getItem(KKEY)||sessionStorage.getItem(KKEY); }catch(e){}
-  if(raw){
+  /* One-time migration off the old plaintext-key storage. The raw key used to
+     sit in localStorage in the clear; move it into IndexedDB as a
+     non-extractable key and wipe the old copy. */
+  let legacyRaw=null;
+  try{ legacyRaw=localStorage.getItem(KKEY)||sessionStorage.getItem(KKEY); }catch(e){}
+  if(legacyRaw){
     try{
-      CUR_KEY=await crypto.subtle.importKey('raw', ub64(raw), {name:'AES-GCM'}, true, ['encrypt','decrypt']);
-      await aesDec(CUR_KEY, VAULT.iv, VAULT.ct); /* validate the remembered key */
+      const tmp=await crypto.subtle.importKey('raw', ub64(legacyRaw), {name:'AES-GCM'}, true, ['encrypt','decrypt']);
+      await aesDec(tmp, VAULT.iv, VAULT.ct);
+      CUR_KEY=tmp;
+      SYNC_TOKEN=await deriveSyncToken(tmp);
+      await rememberKey(!!localStorage.getItem(KKEY));
+    }catch(e){}
+    try{ localStorage.removeItem(KKEY); }catch(e){}
+    try{ sessionStorage.removeItem(KKEY); }catch(e){}
+  }
+
+  if(!CUR_KEY){
+    let rec=null;
+    try{ rec=await idbGet('k'); }catch(e){}
+    /* a session-only key does not survive closing the browser */
+    if(rec && !rec.persist){
+      let mark=null; try{ mark=sessionStorage.getItem(SESS_MARK); }catch(e){}
+      if(!mark){ await idbDel('k'); rec=null; }
+    }
+    /* a stay-signed-in session expires after 12 hours of no activity */
+    if(rec && rec.persist && idleExpired()){ clearKey(); rec=null; }
+    if(rec && rec.key){
+      try{
+        CUR_KEY=rec.key;
+        await aesDec(CUR_KEY, VAULT.iv, VAULT.ct);   /* validate */
+        try{ SYNC_TOKEN=localStorage.getItem(TOKKEY)||sessionStorage.getItem(TOKKEY)||null; }catch(e){}
+      }catch(e){ clearKey(); }
+    }
+  }
+
+  if(CUR_KEY){
+    try{
       await loadDecrypted();
+      await Sync.pullOnLoad();       /* freshest remote copy before first paint */
+      touchActivity();
       unlockUI(); boot();
+      wireSyncEvents();
       return;
     }catch(e){ clearKey(); }
   }
   lockUI();
 })();
+
+/* ---------- keeping an open tab honest ---------- */
+let syncWired=false;
+function wireSyncEvents(){
+  if(syncWired) return; syncWired=true;
+
+  /* switching back to an already-open tab re-checks the server */
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState!=='visible') return;
+    touchActivity();
+    if(idleExpired()){ clearKey(); state=null; lockUI(); return; }
+    if(Date.now()-Sync.lastCheck>4000) Sync.pull(true);
+  });
+  window.addEventListener('focus',()=>{
+    if(Date.now()-Sync.lastCheck>4000) Sync.pull(true);
+  });
+  /* back online → flush anything that failed while offline */
+  window.addEventListener('online',()=>{ if(Sync.pendingFlag()) Sync.push(false); else Sync.pull(true); });
+  window.addEventListener('offline',()=>{ if(Sync.pendingFlag()) Sync.setState('error','you are offline'); });
+
+  /* last-ditch flush if the tab is closed with work outstanding */
+  window.addEventListener('pagehide',()=>{ if(Sync.pendingFlag()) Sync.push(false); });
+  window.addEventListener('beforeunload',(e)=>{
+    if(Sync.pendingFlag()){ e.preventDefault(); e.returnValue=''; }
+  });
+
+  /* periodic catch-up while the tab sits open */
+  setInterval(()=>{
+    if(document.visibilityState!=='visible') return;
+    if(Sync.pendingFlag()) Sync.push(false); else Sync.pull(true);
+  }, 60000);
+
+  /* keep the "synced X ago" label truthful */
+  setInterval(()=>{ if(Sync.state==='ok'||Sync.state==='idle') Sync.setState(Sync.state); }, 30000);
+
+  ['click','keydown','touchstart'].forEach(ev=>
+    document.addEventListener(ev, ()=>touchActivity(), {passive:true}));
+
+  $('#syncPill').addEventListener('click',()=>{
+    if(Sync.state==='off'){ openSyncSetup(); return; }
+    if(Sync.pendingFlag()) Sync.push(false); else Sync.pull(false);
+  });
+  $('#syncBannerRetry').addEventListener('click',()=>{
+    Sync.retryDelay=5000;
+    if(Sync.pendingFlag()) Sync.push(false); else Sync.pull(false);
+  });
+  $('#cfKeepMine').addEventListener('click',()=>Sync.resolve('mine'));
+  $('#cfKeepRemote').addEventListener('click',()=>Sync.resolve('remote'));
+  $('#syncSetupClose').addEventListener('click',closeSyncSetup);
+  $('#syncCopyHash').addEventListener('click',async()=>{
+    try{ await navigator.clipboard.writeText($('#syncAuthHash').textContent.trim()); toast('Copied'); }
+    catch(e){ toast('Select the value and copy it manually'); }
+  });
+  $('#syncTestBtn').addEventListener('click',async()=>{
+    $('#syncSetupState').textContent='Testing…';
+    try{
+      const {res,payload}=await Sync.request('GET');
+      if(res.status===503) $('#syncSetupState').textContent='Server reached, but not configured yet. Missing: '+((payload&&payload.missing)||[]).join(', ');
+      else if(res.status===401) $('#syncSetupState').textContent='Server reached, but CRM_AUTH_HASH does not match this passphrase.';
+      else if(res.ok) $('#syncSetupState').textContent='Working. '+(payload.empty?'No data stored yet.':'Server copy last changed '+relTime(payload.updatedAt)+'.');
+      else $('#syncSetupState').textContent='Server error: '+((payload&&payload.message)||res.status);
+    }catch(e){ $('#syncSetupState').textContent='Could not reach the server: '+(e.message||e); }
+  });
+}
+
+async function openSyncSetup(){
+  let hash='—';
+  try{ if(SYNC_TOKEN) hash=await sha256Hex(SYNC_TOKEN); }catch(e){}
+  $('#syncAuthHash').textContent=hash;
+  $('#syncSetupState').textContent='';
+  $('#syncSetupOverlay').classList.add('open');
+}
+function closeSyncSetup(){
+  $('#syncSetupOverlay').classList.remove('open');
+}
 </script>
 </body>
 </html>
