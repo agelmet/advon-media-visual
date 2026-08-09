@@ -1183,13 +1183,13 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
          passphrase and cannot be turned back into it — it is a one-way fingerprint.</p>
       <p><strong>Your CRM_AUTH_HASH:</strong></p>
       <code class="sync-code" id="syncAuthHash">—</code>
-      <p>In Vercel → your project → Settings → Environment Variables, add:</p>
+      <p>In Netlify → your site → Site configuration → Environment variables, add:</p>
       <ol>
         <li><code>CRM_AUTH_HASH</code> — the value above</li>
         <li><code>CRM_GH_REPO</code> — the private data repo, e.g. <code>agelmet/advon-crm-data</code></li>
         <li><code>CRM_GH_TOKEN</code> — a GitHub token with Contents read &amp; write on that repo</li>
       </ol>
-      <p>Then redeploy. Full instructions are in <code>RECOVERY.md</code> in the website repo.</p>
+      <p>Then redeploy the site. Full instructions are in <code>README-SYNC.md</code> in the website repo.</p>
       <p id="syncSetupState" style="color:var(--muted);"></p>
     </div>
     <div class="modal-foot">

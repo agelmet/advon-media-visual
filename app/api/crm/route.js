@@ -11,7 +11,10 @@
 // Every write is a git commit, so history is durable and recoverable, and a
 // dated snapshot file is kept for at least 30 days.
 //
-// Required environment variables (set these in Vercel → Settings → Environment Variables):
+// Required environment variables. Set these on the host that actually serves
+// advonmedia.com, which is NETLIFY:
+//   Netlify → your site → Site configuration → Environment variables
+// (A Vercel project also builds this repo, but it does not serve the live domain.)
 //   CRM_GH_TOKEN   fine-grained GitHub PAT with Contents: read & write on the data repo
 //   CRM_GH_REPO    "owner/repo" of the PRIVATE data repo, e.g. "agelmet/advon-crm-data"
 //   CRM_GH_BRANCH  optional, defaults to "main"

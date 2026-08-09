@@ -7,7 +7,7 @@ can make things worse, and none of it requires you to be technical.
 
 ## ⚠️ READ THIS FIRST — the one thing nobody can fix for you
 
-**Your passphrase cannot be recovered. Not by Anthropic, not by Vercel, not by
+**Your passphrase cannot be recovered. Not by Anthropic, not by Netlify, not by
 GitHub, not by a developer, not by anyone.**
 
 Your client data is encrypted with a key made from your username and passphrase.
@@ -190,7 +190,7 @@ Do this, in order:
    Find My → Erase. This is the strongest step and it is enough on its own.
 2. **Change your CRM passphrase** if you cannot wipe the device. This is a code
    change — the `VAULT` value in `public/crm/index.html` has to be regenerated,
-   and `CRM_AUTH_HASH` in Vercel updated to match. Ask a developer. Until this
+   and `CRM_AUTH_HASH` in Netlify updated to match. Ask a developer. Until this
    is done, a signed-in stolen device can still read your data.
 3. **Check nothing was destroyed.** Open the CRM on a device you still have. If
    anything is missing, use section 1 to restore.
