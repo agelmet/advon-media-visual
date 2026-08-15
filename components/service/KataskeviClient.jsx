@@ -184,11 +184,32 @@ export default function KataskeviClient() {
             <h2 className="text-4xl md:text-5xl font-black font-display mb-3 text-white tracking-tight">
               {lang === 'el' ? 'Δείτε μερικές από τις Δουλειές μας' : 'Check Out Some Of Our Work'}
             </h2>
-            <p className="text-sm text-gray-500 leading-relaxed max-w-2xl mx-auto">
-              {lang === 'el'
-                ? 'Όλες είναι ιστοσελίδες πελατών μας — καμία δεν μοιάζει με την άλλη. Η δική σας μπορεί να θυμίζει κάποια από αυτές, να πάει σε εντελώς άλλη κατεύθυνση, ή να ακολουθήσει τη σχεδίαση μιας ιστοσελίδας που είδατε και σας άρεσε. Αρκεί να μας την περιγράψετε ή να μας τη δείξετε.'
-                : 'These are all client websites — no two alike. Yours can resemble one of them, go in a completely different direction, or follow the design of a site you have seen and liked. All we need is a description or an example.'}
-            </p>
+            <div className="max-w-2xl mx-auto space-y-4">
+              <p className="text-sm text-gray-500 leading-relaxed">
+                {lang === 'el' ? (
+                  <>
+                    {'Όλες είναι ιστοσελίδες πελατών μας, '}
+                    <strong className="text-gray-300 font-semibold">γραμμένες από την αρχή σε κώδικα</strong>
+                    {' — '}
+                    <strong className="text-gray-300 font-semibold">όχι πάνω σε έτοιμο template</strong>
+                    {' — γύρω από το δικό τους επάγγελμα, τις δικές τους φωτογραφίες και τα δικά τους χρώματα.'}
+                  </>
+                ) : (
+                  <>
+                    {'Every one of these is a client’s website, '}
+                    <strong className="text-gray-300 font-semibold">written from scratch in code</strong>
+                    {' — '}
+                    <strong className="text-gray-300 font-semibold">not on top of a ready-made template</strong>
+                    {' — around their own profession, their own photos and their own colours.'}
+                  </>
+                )}
+              </p>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                {lang === 'el'
+                  ? 'Η δική σας μπορεί να θυμίζει κάποια από αυτές, να πάει σε εντελώς άλλη κατεύθυνση, ή να ακολουθήσει τη σχεδίαση μιας ιστοσελίδας που είδατε και σας άρεσε. Αρκεί να μας την περιγράψετε ή να μας τη δείξετε.'
+                  : 'Yours can resemble one of them, go in a completely different direction, or follow the design of a site you have seen and liked. All we need is a description or an example.'}
+              </p>
+            </div>
           </ScrollReveal>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {portfolioData.map((item, index) => (
