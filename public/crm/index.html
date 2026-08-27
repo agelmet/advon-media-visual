@@ -495,6 +495,17 @@ body.dark .exp-row .item-x:hover{background:rgba(255,255,255,.1);}
 .card:hover .c-lost{opacity:1;}
 .card .c-lost:hover{background:var(--coral-soft); color:var(--coral);}
 
+.think-tray .lost-head .ico{background:var(--yellow-soft); color:#B8860B;}
+.think-tray.has-due{box-shadow:0 0 0 1.5px var(--red-soft), var(--shadow);}
+.think-tray .think-due{color:var(--red); font-weight:700;}
+.think-tray .lost-body .card{opacity:1;}
+.card .c-waiting{margin-top:7px; font-size:11px; font-weight:600; color:var(--muted);
+  background:var(--bg); border-radius:7px; padding:3px 8px; display:inline-block;}
+.card .c-waiting.over{background:var(--red-soft); color:var(--red);}
+.home-row .hr-days{margin-left:auto; font-size:11px; font-weight:700; font-variant-numeric:tabular-nums;
+  background:var(--bg); color:var(--muted); border-radius:7px; padding:2px 8px;}
+.home-row .hr-days.over{background:var(--red-soft); color:var(--red);}
+
 /* ---------- Quick Log — daily call tracker ---------- */
 /* three big colour-coded logging cards — the fastest thing on the page */
 .ql-cards{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:11px; align-items:stretch;}
@@ -975,6 +986,10 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
       <div class="home-card-body" id="homeSubs"></div>
     </section>
     <section class="home-card wide">
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--yellow-soft);color:#B8860B" data-ic="clock"></span><h3>Follow up after the meeting</h3><button class="hc-link" data-goto="board">Board</button></div>
+      <div class="home-card-body" id="homeThink"></div>
+    </section>
+    <section class="home-card wide">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft);color:var(--red)" data-ic="flag"></span><h3>High priority</h3><button class="hc-link" data-goto="todo">To Do</button></div>
       <div class="home-card-body" id="homeNotes"></div>
     </section>
@@ -996,6 +1011,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
     <div class="tray" id="changesTray" style="--tc:var(--pink)"></div>
   </div>
   <div class="board" id="board"></div>
+  <div class="lost-tray think-tray" id="thinkTray"></div>
   <div class="lost-tray" id="lostTray"></div>
 </main>
 
@@ -1424,10 +1440,31 @@ const STAGES = [
   {id:'changes',  name:'Making changes',  c:'var(--pink)',   cs:'var(--pink-soft)',   hex:'#F45B9A'},
   {id:'pay',      name:'Waiting payment', c:'var(--coral)',  cs:'var(--coral-soft)',  hex:'#FF6B57'},
   {id:'paid',     name:'Paid',            c:'var(--deep)',   cs:'var(--green-soft)',  hex:'#0B9E5C'},
+  {id:'thinking', name:'Thinking',        c:'var(--yellow)', cs:'var(--yellow-soft)', hex:'#F5A623'},
   {id:'lost',     name:'Lost',            c:'var(--muted)',  cs:'var(--bg)',          hex:'#8A94A8'},
 ];
-/* FLOW = the linear working pipeline; 'lost' sits outside it (its own tray) */
-const FLOW = STAGES.filter(s=>s.id!=='lost');
+/* FLOW = the linear working pipeline; 'thinking' and 'lost' sit outside it (own trays) */
+const FLOW = STAGES.filter(s=>s.id!=='lost' && s.id!=='thinking');
+/* ---- post-meeting follow-up: how long has this person been deciding? ---- */
+const THINK_DAYS = 7;                    /* chase after a week */
+function thinkSince(c){
+  return c.thinkAt || (c.day ? Date.parse(c.day+'T00:00') : 0) || c.created || Date.now();
+}
+function thinkDays(c){
+  return Math.max(0, Math.floor((Date.now() - thinkSince(c)) / 864e5));
+}
+const isThinking = c => c.stage==='thinking';
+const thinkOverdue = c => isThinking(c) && thinkDays(c) >= THINK_DAYS;
+/* Anyone past the window flags themselves high priority so they surface on Home
+   and float to the top of their To Do lane. Runs on every render; only writes
+   when something actually changed, so it never spams the sync. */
+function escalateThinking(){
+  let changed = false;
+  state.clients.forEach(c=>{
+    if(thinkOverdue(c) && c.prio!=='high' && !c.thinkAck){ c.prio='high'; changed = true; }
+  });
+  if(changed) save();
+}
 const stageById = id => STAGES.find(s=>s.id===id) || STAGES[0];
 /* revenue predicates — 'lost' clients never count toward any money figure */
 const notLost = c => c.stage!=='lost';
@@ -1961,6 +1998,8 @@ function dropHandlers(el, stageId){
       cl.stage=stageId; cl.updated=Date.now();
       if(stageId==='lost'){ cl.lostAt=Date.now(); lostOpen=true; }
       else { delete cl.lostReason; cl.lostAt=null; }
+      if(stageId==='thinking'){ if(!cl.thinkAt) cl.thinkAt=Date.now(); thinkOpen=true; }
+      else { cl.thinkAt=null; delete cl.thinkAck; }
       save(); renderAll(); toast(cl.name+' → '+stageById(stageId).name);
     }
   });
@@ -2005,7 +2044,39 @@ function renderBoard(){
     dropHandlers(body,st.id);
     board.appendChild(col);
   });
+  renderThinkTray();
   renderLostTray();
+}
+let thinkOpen=false;
+function renderThinkTray(){
+  const st=stageById('thinking');
+  const items=state.clients.filter(c=>c.month===curMonth && c.stage==='thinking')
+    .sort((a,b)=>thinkDays(b)-thinkDays(a));
+  const el=$('#thinkTray'); if(!el) return;
+  const due=items.filter(thinkOverdue).length;
+  el.classList.toggle('open', thinkOpen);
+  el.classList.toggle('has-due', due>0);
+  el.innerHTML=`
+    <div class="lost-head">
+      <span class="ico">${IC.clock||IC.flag}</span>
+      <span class="name">Thinking · Το σκέφτεται</span>
+      <span class="count">${items.length}</span>
+      <span class="lost-sum">${due? `<b class="think-due">${due} need chasing — ${THINK_DAYS}+ days</b>` : (items.length?'drag a card back into the board when they say yes':'')}</span>
+      <span class="chev">${IC.chevRight}</span>
+    </div>
+    <div class="lost-body">${items.length?'':'<div class="lost-empty">Nobody is sitting on a decision this month.</div>'}</div>`;
+  el.querySelector('.lost-head').addEventListener('click',()=>{ thinkOpen=!thinkOpen; renderThinkTray(); });
+  const body=el.querySelector('.lost-body');
+  items.forEach(c=>{
+    const card=cardEl(c,st);
+    const d=thinkDays(c), over=d>=THINK_DAYS;
+    const tag=document.createElement('div');
+    tag.className='c-waiting'+(over?' over':'');
+    tag.textContent = d===0 ? 'today' : d===1 ? '1 day waiting' : d+' days waiting';
+    card.appendChild(tag);
+    body.appendChild(card);
+  });
+  dropHandlers(body,'thinking');
 }
 let lostOpen=false;
 function renderLostTray(){
@@ -2686,8 +2757,9 @@ const TODO_NAMED={'Changes':'pink','Build':'blue','Pay now':'coral','Contact':'v
 const TODO_CYCLE=['cyan','orange','yellow','violet','pink','blue','coral','green'];
 /* auto-pulled client lanes: which board stage feeds which lane, and its advance target */
 const TODO_HOSTS=[
-  {stage:'changes',  next:'pay',    nextName:'Waiting payment', btn:IC.check+' Done → Pay'},
-  {stage:'building', next:'review', nextName:'Draft · Review',  btn:IC.check+' Built → Review'},
+  {stage:'changes',  next:'pay',      nextName:'Waiting payment', btn:IC.check+' Done → Pay'},
+  {stage:'building', next:'review',   nextName:'Draft · Review',  btn:IC.check+' Built → Review'},
+  {stage:'thinking', next:'needinfo', nextName:'Need info',       btn:IC.check+' Said yes → Need info'},
 ];
 let pendingFocusCat=null, dragTaskId=null, dragCliId=null;
 
@@ -2700,6 +2772,8 @@ function ensureTodo(){
       building: state.noteCats.includes('Build')?'Build':'General',
     };
   }
+  if(!state.todoHosts.thinking)
+    state.todoHosts.thinking = state.noteCats.includes('Contact')?'Contact':'General';
   let maxSort=0;
   state.todos.forEach(n=>{
     if(!n.cat || !state.noteCats.includes(n.cat)) n.cat='General';
@@ -3156,6 +3230,9 @@ function renderHome(){
     const di=isoDate(d);
     return di>=todayI && di<=in7 && !(s.paid && s.paid[curMonth]);
   });
+  escalateThinking();
+  const thinking=state.clients.filter(isThinking).sort((a,b)=>thinkDays(b)-thinkDays(a));
+  const thinkDue=thinking.filter(thinkOverdue);
   const hiNotes=state.todos.filter(n=>!n.done && (n.prio||'medium')==='high');
   const hiClients=state.clients.filter(c=>c.prio==='high');
   const hiCount=hiNotes.length + hiClients.length;
@@ -3185,6 +3262,7 @@ function renderHome(){
       <div class="hs"><div class="k">${monthName} expenses</div><div class="v c">${fmtMoney2(Math.round(mExp))}</div></div>
       <div class="hs"><div class="k">${monthName} net profit</div><div class="v ${mNet>=0?'g':'c'}">${fmtMoney2(Math.round(mNet))}</div></div>
       <div class="hs"><div class="k">Overdue renewals</div><div class="v ${overdue.length?'c':'g'}">${overdue.length}</div></div>
+      <div class="hs"><div class="k">Chase after meeting</div><div class="v ${thinkDue.length?'c':'g'}">${thinkDue.length}</div></div>
       <div class="hs"><div class="k">High priority</div><div class="v ${hiCount?'c':'g'}">${hiCount}</div></div>
     </div>`;
   // week
@@ -3210,6 +3288,16 @@ function renderHome(){
   const hs=$('#homeSubs');
   hs.innerHTML= subsDue.length? subsDue.map(s=>`<div class="home-row" data-goto="monthly"><span class="hr-name">${esc(s.name)}</span><span class="hr-sub">day ${s.renewDay}</span><span class="hr-val">${fmtMoney2(s.value)}</span></div>`).join('') : '<div class="home-empty">No subscriptions due in the next 7 days.</div>';
   // high-priority notes
+  const ht=$('#homeThink');
+  ht.innerHTML = thinking.length
+    ? thinking.map(c=>{
+        const d=thinkDays(c), over=d>=THINK_DAYS;
+        return `<div class="home-row" data-open="${c.id}">
+          <span class="hr-name">${IC.user} ${esc(c.name)}${c.day?` · met ${fmtDay(c.day)}`:''}</span>
+          <span class="hr-days${over?' over':''}">${d===0?'today':d+'d'}</span>
+        </div>`;
+      }).join('')
+    : '<div class="home-empty">Nobody is waiting on a decision.</div>';
   const hn=$('#homeNotes');
   const hiRows=[
     ...hiClients.map(c=>`<div class="home-row" data-open="${c.id}"><span class="hr-name">${IC.user} ${esc(c.name)}</span></div>`),
@@ -3318,6 +3406,8 @@ $('#mSave').addEventListener('click',()=>{
     Object.assign(tgt, data, {updated:Date.now()});
     if(data.stage==='lost' && !wasLost){ tgt.lostAt=Date.now(); }
     else if(data.stage!=='lost' && wasLost){ delete tgt.lostReason; tgt.lostAt=null; }
+    if(data.stage==='thinking'){ if(!tgt.thinkAt) tgt.thinkAt=Date.now(); }
+    else { tgt.thinkAt=null; delete tgt.thinkAck; }
   }
   else state.clients.push({id:uid(), ...data, created:Date.now(), updated:Date.now()});
   save(); renderAll(); closeModal(); toast('Saved');
