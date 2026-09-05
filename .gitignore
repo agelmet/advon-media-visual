@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# CRM backups are kept next to the app but never deployed
+public/crm/index.backup-*.html
+.claude/settings.local.json
+
+# session scratch (device shell cannot delete files)
+_to_delete/

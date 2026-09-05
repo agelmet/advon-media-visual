@@ -2,181 +2,156 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useLangStore } from '@/store/langStore';
-import { services } from '@/lib/services';
+import { NAV_SERVICES as services } from '@/lib/nav';
+
+function Logo({ lang }) {
+  return (
+    <Link href="/" className="flex items-center shrink-0" aria-label={lang === 'el' ? 'Advon Media — Αρχική' : 'Advon Media — Home'}>
+      <img
+        src="/img/advon-logo.webp"
+        srcSet="/img/advon-logo.webp 1x, /img/advon-logo@2x.webp 2x"
+        alt="Advon Media"
+        width="190"
+        height="96"
+        className="h-9 md:h-10 w-auto"
+        decoding="async"
+      />
+    </Link>
+  );
+}
+
+function LangButton({ lang, toggleLang, small }) {
+  return (
+    <button
+      type="button"
+      onClick={toggleLang}
+      className={`inline-flex items-center gap-1.5 rounded-md border border-line bg-ink-2 font-bold text-paper-2 hover:text-paper hover:border-aegean transition-colors ${small ? 'px-2.5 py-1.5 text-xs' : 'px-3 py-1.5 text-xs'}`}
+      aria-label={lang === 'el' ? 'EN — English' : 'EL — Ελληνικά'}
+    >
+      <span aria-hidden="true">{lang === 'el' ? '🇬🇧' : '🇬🇷'}</span>
+      {lang === 'el' ? 'EN' : 'EL'}
+    </button>
+  );
+}
 
 export default function Header() {
   const { lang, toggleLang } = useLangStore();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const isLP = pathname?.startsWith('/dorean-istoselida');
+  const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  return (
-    <header
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
-      style={{
-        background: scrolled
-          ? 'rgba(5,10,14,0.85)'
-          : 'transparent',
-        backdropFilter: scrolled ? 'blur(24px)' : 'blur(0px)',
-        WebkitBackdropFilter: scrolled ? 'blur(24px)' : 'blur(0px)',
-        borderBottom: scrolled
-          ? '1px solid rgba(71,200,245,0.12)'
-          : '1px solid transparent',
-        boxShadow: scrolled
-          ? '0 8px 32px rgba(0,0,0,0.4), 0 0 60px rgba(71,200,245,0.03)'
-          : 'none',
-      }}
-    >
-      <div className="max-w-7xl mx-auto px-6 h-28 pt-4 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-3">
-          <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-            {/* Animated outer ring */}
-            <div
-              className="logo-glow-ring"
-              style={{
-                position: 'absolute',
-                inset: '-9px',
-                borderRadius: '50%',
-                border: '1.5px solid rgba(71,200,245,0.5)',
-                pointerEvents: 'none',
-              }}
-            />
-            {/* Radial halo */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: '-20px',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(71,200,245,0.22) 0%, rgba(71,200,245,0.06) 55%, transparent 72%)',
-                filter: 'blur(8px)',
-                pointerEvents: 'none',
-              }}
-            />
-            {/* Logo circle */}
-            <div
-              className="transition-all duration-300 shrink-0 w-[104px] h-[104px] md:w-[116px] md:h-[116px]"
-              style={{
-                borderRadius: '50%',
-                overflow: 'hidden',
-                border: '1.5px solid rgba(71,200,245,0.30)',
-                boxShadow: '0 0 22px rgba(71,200,245,0.55), 0 0 50px rgba(71,200,245,0.22), 0 0 90px rgba(71,200,245,0.08)',
-                position: 'relative',
-                zIndex: 1,
-              }}
-            >
-              <img
-                src="https://raw.githubusercontent.com/agelmet/Advon-Media/refs/heads/main/logo.png"
-                alt="Advon Media"
-                style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#ffffff', display: 'block' }}
-              />
-            </div>
+  useEffect(() => { setOpen(false); }, [pathname]);
+
+  const shell = `fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${scrolled || open ? 'bg-ink/92 border-b border-line' : 'bg-transparent border-b border-transparent'}`;
+
+  if (isLP) {
+    return (
+      <header className={shell} style={scrolled ? { backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' } : undefined}>
+        <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
+          <Logo lang={lang} />
+          <div className="flex items-center gap-3">
+            <a href="#form" className="btn-primary !py-2 !px-4 text-sm hidden sm:inline-flex">
+              {lang === 'el' ? 'Δωρεάν δείγμα' : 'Free draft'}
+            </a>
+            <LangButton lang={lang} toggleLang={toggleLang} small />
           </div>
-        </Link>
+        </div>
+      </header>
+    );
+  }
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
+  const nav = [
+    { href: '/#work', el: 'Πορτφόλιο', en: 'Portfolio' },
+    { href: '/#reviews', el: 'Κριτικές', en: 'Reviews' },
+    { href: '/#pricing', el: 'Τιμές', en: 'Pricing' },
+    { href: '/faq', el: 'FAQ', en: 'FAQ' },
+    { href: '/blog', el: 'Blog', en: 'Blog' },
+  ];
 
-          <Link href="/" className="text-electric-cyan hover:text-white transition-colors relative group py-2">
-            {lang === 'el' ? 'Αρχική' : 'Home'}
-            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-electric-cyan scale-x-0 group-hover:scale-x-100 transition-transform origin-right group-hover:origin-left duration-300" />
-          </Link>
+  return (
+    <header className={shell} style={scrolled || open ? { backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' } : undefined}>
+      <div className="max-w-7xl mx-auto px-5 md:px-8 h-16 md:h-20 flex items-center justify-between gap-6">
+        <Logo lang={lang} />
 
-          {/* Services dropdown */}
+        {/* Desktop */}
+        <nav className="hidden lg:flex items-center gap-7 text-[0.92rem] font-medium" aria-label={lang === 'el' ? 'Κύριο μενού' : 'Main menu'}>
           <div className="relative group py-2">
-            <div className="flex items-center gap-1 text-electric-cyan hover:text-white transition-colors">
+            <button type="button" className="flex items-center gap-1 text-paper-2 hover:text-paper transition-colors" aria-haspopup="true">
               {lang === 'el' ? 'Υπηρεσίες' : 'Services'}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 transition-transform group-hover:rotate-180 duration-300"><path d="m6 9 6 6 6-6"/></svg>
-            </div>
-            <div className="absolute top-full left-[-20px] hidden group-hover:block z-[100] pt-2">
-              <div className="bg-[rgba(5,10,14,0.97)] min-w-[250px] rounded-2xl border border-electric-cyan/20 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(71,200,245,0.05)] py-2 overflow-hidden">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div className="absolute top-full left-0 hidden group-hover:block group-focus-within:block z-[100] pt-2">
+              <div className="bg-ink-2 min-w-[260px] rounded-xl border border-line shadow-[0_20px_60px_rgba(0,0,0,0.6)] py-2 overflow-hidden">
                 {services.map((service) => (
-                  <Link
-                    key={service.slug}
-                    href={`/${service.slug}`}
-                    className="block text-[#d1d5db] px-5 py-3 text-[0.875rem] hover:bg-electric-cyan/8 hover:text-electric-cyan border-l-2 border-transparent hover:border-electric-cyan transition-all duration-200"
-                  >
-                    {service.nav[lang]}
+                  <Link key={service.slug} href={`/${service.slug}`} className="block text-paper-2 px-5 py-2.5 text-[0.9rem] hover:bg-ink-3 hover:text-paper transition-colors">
+                    {service[lang]}
                   </Link>
                 ))}
+                <Link href="/diaxeirisi-social-media" className="block text-paper-2 px-5 py-2.5 text-[0.9rem] hover:bg-ink-3 hover:text-paper transition-colors">
+                  {lang === 'el' ? 'Διαχείριση Social Media' : 'Social Media Management'}
+                </Link>
               </div>
             </div>
           </div>
-
-          {[
-            { href: '/kataskevi-istoselidas#portfolio', el: 'Πορτφόλιο', en: 'Portfolio' },
-            { href: '/#reviews', el: 'Αξιολογήσεις', en: 'Reviews' },
-            { href: '/faq', el: 'FAQ', en: 'FAQ' },
-            { href: '/blog', el: 'Blog', en: 'Blog' },
-          ].map((item) => (
-            <Link key={item.href} href={item.href} className="text-electric-cyan hover:text-white transition-colors relative group py-2">
+          {nav.map((item) => (
+            <Link key={item.href} href={item.href} className="text-paper-2 hover:text-paper transition-colors py-2">
               {lang === 'el' ? item.el : item.en}
-              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-electric-cyan scale-x-0 group-hover:scale-x-100 transition-transform origin-right group-hover:origin-left duration-300" />
             </Link>
           ))}
-
-          <Link
-            href="#contact"
-            className="btn-premium px-5 py-2.5 rounded-full bg-electric-cyan/10 border border-electric-cyan/30 text-xs font-bold text-electric-cyan hover:bg-electric-cyan hover:text-[#050a0e] transition-all duration-300 shadow-[0_0_20px_rgba(71,200,245,0.15)]"
-          >
-            {lang === 'el' ? 'Επικοινωνία' : 'Contact'}
+          <Link href="/dorean-istoselida" prefetch={false} className="btn-primary !py-2.5 !px-4 text-sm">
+            {lang === 'el' ? 'Δωρεάν δείγμα' : 'Free draft'}
           </Link>
-
-          <button
-            onClick={toggleLang}
-            className="btn-premium flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg border border-electric-cyan/40 bg-electric-cyan/8 text-xs font-bold text-electric-cyan hover:bg-electric-cyan hover:text-[#050a0e] transition-all duration-300"
-          >
-            {lang === 'el' ? '🇬🇧 EN' : '🇬🇷 EL'}
-          </button>
+          <LangButton lang={lang} toggleLang={toggleLang} />
         </nav>
 
         {/* Mobile controls */}
-        <div className="md:hidden flex items-center gap-3">
+        <div className="lg:hidden flex items-center gap-2">
+          <LangButton lang={lang} toggleLang={toggleLang} small />
           <button
-            onClick={toggleLang}
-            className="flex items-center gap-1 px-2 py-1 rounded-lg border border-electric-cyan/40 bg-electric-cyan/10 text-xs font-bold text-electric-cyan hover:bg-electric-cyan hover:text-[#050a0e] transition-all"
+            type="button"
+            className="text-paper p-2 rounded-md border border-line bg-ink-2"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label={open ? (lang === 'el' ? 'Κλείσιμο μενού' : 'Close menu') : (lang === 'el' ? 'Άνοιγμα μενού' : 'Open menu')}
           >
-            {lang === 'el' ? '🇬🇧 EN' : '🇬🇷 EL'}
-          </button>
-          <button
-            className="text-electric-cyan p-2 bg-electric-cyan/10 rounded-lg hover:bg-electric-cyan/20 transition-colors"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            {open ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" aria-hidden="true"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
             )}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      <div
-        className={`md:hidden bg-[#050a0e]/97 backdrop-blur-xl border-b border-electric-cyan/15 transition-all duration-400 ${isMobileMenuOpen ? 'max-h-[calc(100vh-7rem)] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0 overflow-hidden'}`}
-      >
-        <nav className="flex flex-col p-6 gap-4 text-lg font-medium text-electric-cyan">
-          <Link href="/"                        onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Αρχική' : 'Home'}</Link>
-          <div className="pl-4 border-l border-electric-cyan/20 flex flex-col gap-3 my-1">
-            <span className="text-xs text-gray-500 uppercase font-black tracking-widest">{lang === 'el' ? 'Υπηρεσίες' : 'Services'}</span>
-            {services.map((service) => (
-              <Link key={service.slug} href={`/${service.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors text-base">
-                {service.nav[lang]}
-              </Link>
-            ))}
-          </div>
-          <Link href="/kataskevi-istoselidas#portfolio" onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Πορτφόλιο' : 'Portfolio'}</Link>
-          <Link href="/#reviews"                onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Αξιολογήσεις' : 'Reviews'}</Link>
-          <Link href="/faq"                     onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">FAQ</Link>
-          <Link href="/blog"                    onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">Blog</Link>
-          <Link href="#contact"                 onClick={() => setIsMobileMenuOpen(false)} className="text-electric-cyan font-black tracking-wide">{lang === 'el' ? 'Επικοινωνία' : 'Contact'}</Link>
+      {/* Mobile menu */}
+      <div id="mobile-menu" hidden={!open} className="lg:hidden bg-ink border-b border-line max-h-[calc(100vh-4rem)] overflow-y-auto">
+        <nav className="flex flex-col p-5 gap-1 text-base font-medium" aria-label={lang === 'el' ? 'Μενού κινητού' : 'Mobile menu'}>
+          <Link href="/dorean-istoselida" className="btn-primary mb-3">{lang === 'el' ? 'Δείτε το δείγμα σας — δωρεάν' : 'See your free draft'}</Link>
+          <span className="text-xs text-paper-3 uppercase font-bold tracking-widest mt-2 mb-1">{lang === 'el' ? 'Υπηρεσίες' : 'Services'}</span>
+          {services.map((service) => (
+            <Link key={service.slug} href={`/${service.slug}`} className="text-paper-2 hover:text-paper py-2 border-b border-line/60">
+              {service[lang]}
+            </Link>
+          ))}
+          <Link href="/diaxeirisi-social-media" className="text-paper-2 hover:text-paper py-2 border-b border-line/60">{lang === 'el' ? 'Διαχείριση Social Media' : 'Social Media Management'}</Link>
+          <span className="text-xs text-paper-3 uppercase font-bold tracking-widest mt-4 mb-1">{lang === 'el' ? 'Πλοήγηση' : 'Explore'}</span>
+          {nav.map((item) => (
+            <Link key={item.href} href={item.href} className="text-paper-2 hover:text-paper py-2 border-b border-line/60">
+              {lang === 'el' ? item.el : item.en}
+            </Link>
+          ))}
+          <Link href="/#contact" className="text-paper py-2 font-bold">{lang === 'el' ? 'Επικοινωνία' : 'Contact'}</Link>
         </nav>
       </div>
     </header>

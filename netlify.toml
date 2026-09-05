@@ -1,0 +1,15 @@
+# Netlify configuration for advonmedia.com (Next.js via the Netlify Next runtime).
+# Build settings stay as configured in the Netlify UI; this file only adds
+# long-lived caching for the self-hosted image assets. Security headers (CSP,
+# HSTS, XFO, …) are set in next.config.ts so they apply to every route,
+# including server-rendered ones.
+
+[[headers]]
+  for = "/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/og/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
