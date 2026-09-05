@@ -23,3 +23,11 @@ Root causes: Google Fonts via CSS @import; Playfair Display has no Greek glyphs 
 - Add `/dorean-istoselida` (ads landing page: promise text verbatim from the October Blueprint, three-site strip, review wall, 3-field form posting to the forms rail + CRM lead endpoint with utm_source/campaign/content) and its thank-you page with the Zoho embed; Meta Pixel Lead on submit, Schedule on booking.
 - Security headers (CSP, HSTS, XFO, COOP) in netlify.toml; add llms.txt; OG image per page is a real mockup.
 - Budget before any push: mobile Lighthouse ≥ 90 performance / ≥ 95 accessibility, LCP ≤ 2.0s, ≤ 900KB. Keep the review count consistent with the live Google figure everywhere (site, schema, ads).
+
+## Working notes (5 Sept 2026, after the v2 rebuild)
+- Repo: `agelmet/advon-media-visual`, branch `main`; Netlify deploys every push. Local commit `7e0819e` holds the v2 rebuild + CRM 3.0.0 and only needs `git push origin main`.
+- Pushing from a Cowork session: `git push` on the Mac shell has no credentials — either Angelo pastes a GitHub token for the session, or he runs the push from his own Claude Code / terminal (macOS keychain). GitHub web upload works for assets but the classifier blocks code uploads; do not rely on it.
+- `lib/nav.js` holds the menu labels used by Header/Footer (keeps the 66KB catalogue out of the shared JS). Update it whenever `lib/services.js` nav labels change.
+- Fonts are self-hosted via `next/font` (`lib/fonts.js`). A container without internet can build with `NEXT_FONT_GOOGLE_MOCKED_RESPONSES=<mock.js> npx next build --webpack` (Turbopack ignores the mock).
+- Lead inbox: `/api/lead` reuses `CRM_GH_TOKEN` / `CRM_GH_REPO` (leads stored in `leads/inbox.json` of the data repo). Optional: `RESEND_API_KEY` + `LEAD_NOTIFY_TO`, `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID`, `NEXT_PUBLIC_META_PIXEL_ID` — all set in Netlify → Environment variables.
+- Device shell cannot delete files: before every git command `mv .git/*.lock _to_delete/`; replace files with `git show ref:path > path` (never `git checkout -- path`); move deletions into `_to_delete/` (gitignored).
