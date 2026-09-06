@@ -685,6 +685,29 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 .home-row.warn{background:var(--coral-soft);} .home-row.warn .hr-val{color:var(--coral);}
 .home-row .hr-sub{font-size:11px; color:var(--muted);}
 .home-empty{padding:20px 12px; text-align:center; color:var(--muted); font-size:12.5px;}
+/* Do ASAP — numbered quick list on Home */
+.hc-hint{font-size:11px; color:var(--muted); font-weight:600; text-align:right;}
+.asap-body{max-height:none;}
+.asap-list{list-style:none; margin:0; padding:0;}
+.asap-row{display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:11px; margin-bottom:5px; background:var(--bg); border:1px solid transparent;}
+.asap-row .grip{cursor:grab; color:var(--muted); font-size:13px; letter-spacing:-2px; padding:0 2px; user-select:none;}
+.asap-row .n{font-family:'Sora'; font-weight:800; font-size:12px; color:var(--brand); min-width:24px; text-align:right; font-variant-numeric:tabular-nums;}
+.asap-row .txt{flex:1; min-width:0; border:none; background:transparent; color:var(--ink); font:inherit; font-weight:700; font-size:13px; outline:none; padding:4px 6px; border-radius:7px; box-shadow:none;}
+.asap-row .txt:focus{background:var(--surface); box-shadow:0 0 0 2px var(--blue-soft);}
+.asap-row .ab{border:none; background:transparent; cursor:pointer; color:var(--muted); font-size:13px; line-height:1; padding:5px 6px; border-radius:8px; box-shadow:none;}
+.asap-row .ab:hover{background:var(--surface); color:var(--ink);}
+.asap-row .ab.hot{filter:grayscale(1); opacity:.55;}
+.asap-row .ab.hot.on, .asap-row .ab.hot:hover{filter:none; opacity:1;}
+.asap-row.hot{background:var(--red-soft); border-color:rgba(255,77,94,.4);}
+.asap-row.hot .n, .asap-row.hot .txt{color:var(--red);}
+.asap-row.done{opacity:.55;}
+.asap-row.done .txt{text-decoration:line-through;}
+.asap-row.dragging{opacity:.35;}
+.asap-row.dragover{box-shadow:inset 0 3px 0 var(--brand);}
+.asap-add{display:flex; gap:8px; margin-top:6px;}
+.asap-add input{flex:1;}
+.asap-foot{display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:11px; color:var(--muted); font-weight:600;}
+.asap-empty{padding:14px 12px 6px; color:var(--muted); font-size:12.5px;}
 .home-mini{display:flex; justify-content:space-between; align-items:center; padding:8px 11px; border-radius:10px; margin-bottom:4px;}
 .home-mini .mm-name{font-weight:600; font-size:12.5px;} .home-mini .mm-val{font-weight:800; font-size:12.5px; color:var(--coral); font-variant-numeric:tabular-nums;}
 
@@ -928,6 +951,10 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
           <button data-x="restore" data-ic="folder">Restore from backup</button>
           <div class="sep"></div>
           <button data-x="sync-setup" data-ic="save">Sync setup…</button>
+          <div class="sep"></div>
+          <div class="lbl">Call statistics</div>
+          <button data-x="reset-stats" data-ic="repeat">Restart call statistics…</button>
+          <button data-x="restore-stats" data-ic="folder">Restore archived calls</button>
           <input type="file" id="restoreFile" accept=".json" style="display:none">
           <input type="file" id="restoreEncFile" accept=".json,.advoncrm" style="display:none">
         </div>
@@ -969,6 +996,10 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 <main class="view active" id="view-home">
   <div class="home-hero" id="homeHero"></div>
   <div class="home-grid">
+    <section class="home-card wide asap-card">
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft);color:var(--red)" data-ic="flag"></span><h3>Do ASAP</h3><span class="hc-hint">Click a line to edit · 🔥 = super-high priority · drag ⋮⋮ to reorder</span></div>
+      <div class="home-card-body asap-body" id="homeAsap"></div>
+    </section>
     <section class="home-card">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--blue)" data-ic="calendar"></span><h3>This week's meetings</h3><button class="hc-link" data-goto="calendar">Open calendar</button></div>
       <div class="home-card-body" id="homeWeek"></div>
@@ -982,16 +1013,16 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
       <div class="home-card-body" id="homeRenew"></div>
     </section>
     <section class="home-card">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--green-soft);color:var(--deep)" data-ic="calendar"></span><h3>Subscriptions due this week</h3><button class="hc-link" data-goto="monthly">Monthly</button></div>
-      <div class="home-card-body" id="homeSubs"></div>
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft);color:var(--red)" data-ic="flag"></span><h3>High priority</h3><button class="hc-link" data-goto="todo">To Do</button></div>
+      <div class="home-card-body" id="homeNotes"></div>
     </section>
     <section class="home-card wide">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--yellow-soft);color:#B8860B" data-ic="clock"></span><h3>Follow up after the meeting</h3><button class="hc-link" data-goto="board">Board</button></div>
       <div class="home-card-body" id="homeThink"></div>
     </section>
-    <section class="home-card wide">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft);color:var(--red)" data-ic="flag"></span><h3>High priority</h3><button class="hc-link" data-goto="todo">To Do</button></div>
-      <div class="home-card-body" id="homeNotes"></div>
+    <section class="home-card wide subs-card">
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--green-soft);color:var(--deep)" data-ic="calendar"></span><h3>Subscriptions due this week</h3><button class="hc-link" data-goto="monthly">Monthly</button></div>
+      <div class="home-card-body" id="homeSubs"></div>
     </section>
   </div>
 </main>
@@ -1552,7 +1583,7 @@ async function loadDecrypted(){
     if(legacy && legacy.clients){ state=legacy; try{localStorage.removeItem('advon_crm_v3');}catch(e){} }
     else state=JSON.parse(await aesDec(CUR_KEY, VAULT.iv, VAULT.ct));
   }
-  state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={}; state.ideas||=[]; state.workdays||={}; ensureExpenses(); ensureLogs();
+  state.clients||=[]; state.logs||=[]; state.asap||=[]; state.meta||={}; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={}; state.ideas||=[]; state.workdays||={}; ensureExpenses(); ensureLogs();
   state.clients.forEach(c=>{ if(OLD_STAGE_MAP[c.stage]) c.stage=OLD_STAGE_MAP[c.stage]; });
   /* Re-persisting what we just loaded is not an edit: keep the original
      timestamp and do not push, or merely opening the app on a device would
@@ -2394,7 +2425,7 @@ function monthStatsHtml(m,key){
   return `
   <div class="stats-sec-head">
     <span class="ico">${IC.bars}</span>
-    <div><h3>${fmtMonth(key)} — statistics</h3><p>How the month is going. The year totals live on the Year tab.</p></div>
+    <div><h3>${fmtMonth(key)} — statistics</h3><p>${statsSinceLabel()||'How the month is going.'} · year totals on the Year tab.</p></div>
     <span class="tag">${m.calls} cold calls · ${m.booked} booked</span>
   </div>
   <div class="ql-stat-grid">
@@ -2424,7 +2455,7 @@ function yearStatsHtml(y,year){
   return `
   <div class="stats-sec-head">
     <span class="ico">${IC.bars}</span>
-    <div><h3>${year} — year totals</h3><p>Everything you logged this year, added up</p></div>
+    <div><h3>${year} — year totals</h3><p>${statsSinceLabel()||'Everything you logged this year, added up'}</p></div>
     <span class="tag">${y.calls} cold calls · ${y.booked} booked</span>
   </div>
   <div class="ql-stat-grid">
@@ -3287,6 +3318,7 @@ function renderHome(){
   // subs due this week
   const hs=$('#homeSubs');
   hs.innerHTML= subsDue.length? subsDue.map(s=>`<div class="home-row" data-goto="monthly"><span class="hr-name">${esc(s.name)}</span><span class="hr-sub">day ${s.renewDay}</span><span class="hr-val">${fmtMoney2(s.value)}</span></div>`).join('') : '<div class="home-empty">No subscriptions due in the next 7 days.</div>';
+  renderAsap();
   // high-priority notes
   const ht=$('#homeThink');
   ht.innerHTML = thinking.length
@@ -3307,6 +3339,119 @@ function renderHome(){
   // wire
   $('#view-home').querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click',()=>openModal(el.dataset.open)));
   $('#view-home').querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>switchView(el.dataset.goto)));
+}
+
+
+/* ---------- Do ASAP — numbered quick list on Home (free text, 🔥 = super-high priority) ---------- */
+let dragAsapId=null;
+function ensureAsap(){
+  if(!Array.isArray(state.asap)) state.asap=[];
+  state.asap.forEach((t,i)=>{ if(!t.id) t.id=uid(); if(t.sort==null) t.sort=i; t.hot=!!t.hot; t.done=!!t.done; if(!t.created) t.created=Date.now(); if(typeof t.text!=='string') t.text=String(t.text??''); });
+}
+function asapSorted(){ ensureAsap(); return [...state.asap].sort((a,b)=>(a.done-b.done)||(a.sort-b.sort)); }
+function renderAsap(){
+  const el=$('#homeAsap'); if(!el) return; ensureAsap();
+  const items=asapSorted();
+  const open=items.filter(t=>!t.done).length, hot=items.filter(t=>!t.done&&t.hot).length;
+  let n=0;
+  const rows=items.map(t=>{
+    const num=t.done?'✓':(++n)+'.';
+    return `<li class="asap-row${t.hot?' hot':''}${t.done?' done':''}" data-id="${t.id}">
+      <span class="grip" title="Drag to reorder">⋮⋮</span>
+      <span class="n">${num}</span>
+      <input class="txt" value="${esc(t.text)}" maxlength="240" placeholder="Write anything…" spellcheck="false">
+      <button class="ab hot${t.hot?' on':''}" data-act="hot" title="${t.hot?'Remove super-high priority':'Super-high priority'}">🔥</button>
+      <button class="ab" data-act="done" title="${t.done?'Reopen':'Done'}">${t.done?'↺':'✓'}</button>
+      <button class="ab" data-act="del" title="Delete">✕</button>
+    </li>`;
+  }).join('');
+  el.innerHTML=`${items.length?`<ol class="asap-list">${rows}</ol>`:'<div class="asap-empty">Nothing here yet — type what needs doing first and press Enter. Press 🔥 on a line to make it red.</div>'}
+    <div class="asap-add"><input id="asapNew" placeholder="＋ Add something to do ASAP — then Enter" maxlength="240" autocomplete="off"><button class="btn btn-brand" id="asapAddBtn">Add</button></div>
+    <div class="asap-foot"><span>${open} open${hot?` · <b style="color:var(--red)">${hot} super-high</b>`:''}</span>${items.some(t=>t.done)?'<button class="hc-link" id="asapClear">Clear done</button>':''}</div>`;
+  wireAsap(el);
+}
+function wireAsap(el){
+  const byId=id=>state.asap.find(t=>t.id===id);
+  const add=()=>{
+    const inp=$('#asapNew'); const v=(inp.value||'').trim(); if(!v) return;
+    ensureAsap();
+    state.asap.push({id:uid(), text:v, hot:false, done:false, created:Date.now(), sort:Math.max(-1,...state.asap.map(t=>t.sort||0))+1});
+    save(); renderAsap(); const ni=$('#asapNew'); if(ni) ni.focus();
+  };
+  $('#asapAddBtn').addEventListener('click',add);
+  $('#asapNew').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); add(); } });
+  const clr=$('#asapClear'); if(clr) clr.addEventListener('click',()=>{ state.asap=state.asap.filter(t=>!t.done); save(); renderAsap(); });
+  el.querySelectorAll('.asap-row').forEach(row=>{
+    const t=byId(row.dataset.id); if(!t) return;
+    const txt=row.querySelector('.txt');
+    txt.addEventListener('change',()=>{ const v=txt.value.trim(); if(!v) state.asap=state.asap.filter(x=>x.id!==t.id); else t.text=v; save(); renderAsap(); });
+    txt.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); txt.blur(); } });
+    row.querySelectorAll('.ab').forEach(b=>b.addEventListener('click',()=>{
+      const a=b.dataset.act;
+      if(a==='hot') t.hot=!t.hot;
+      else if(a==='done') t.done=!t.done;
+      else if(a==='del') state.asap=state.asap.filter(x=>x.id!==t.id);
+      save(); renderAsap();
+    }));
+    /* drag only from the grip, so text can still be selected inside the line */
+    const grip=row.querySelector('.grip');
+    grip.addEventListener('mousedown',()=>{ row.draggable=true; });
+    grip.addEventListener('mouseup',()=>{ row.draggable=false; });
+    row.addEventListener('dragstart',e=>{ dragAsapId=t.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; try{ e.dataTransfer.setData('text/plain',t.id); }catch(x){} });
+    row.addEventListener('dragend',()=>{ dragAsapId=null; row.draggable=false; el.querySelectorAll('.asap-row').forEach(r=>r.classList.remove('dragging','dragover')); });
+    row.addEventListener('dragover',e=>{ if(!dragAsapId||dragAsapId===t.id) return; e.preventDefault(); e.dataTransfer.dropEffect='move'; row.classList.add('dragover'); });
+    row.addEventListener('dragleave',()=>row.classList.remove('dragover'));
+    row.addEventListener('drop',e=>{
+      e.preventDefault(); row.classList.remove('dragover');
+      const id=dragAsapId; dragAsapId=null; if(!id||id===t.id) return;
+      const order=asapSorted().map(x=>x.id).filter(x=>x!==id);
+      order.splice(order.indexOf(t.id),0,id);
+      order.forEach((x,i)=>{ const it=byId(x); if(it) it.sort=i; });
+      save(); renderAsap();
+    });
+  });
+}
+
+/* ---------- call statistics — restart counting from the first call logged after a reset ----------
+   Angelo restarts cold calling in mid/late September 2026. The earlier Quick Log is archived
+   inside the data (recoverable from Export → Restore archived calls) so every call number —
+   calls, booked, SMS, no's, conversion, working days — starts from the next logged call.
+   Clients, renewals, subscriptions and money are never touched by this. */
+function ensureMeta(){ if(!state.meta||typeof state.meta!=='object') state.meta={}; }
+function statsSinceLabel(){
+  ensureMeta(); if(!state.meta.callStatsResetAt) return '';
+  const first=state.logs.map(l=>l.date).filter(Boolean).sort()[0];
+  return first? 'Counting since '+fmtDate(first)+' — the first call logged after the restart' : 'Restarted '+fmtDate(state.meta.callStatsResetAt.slice(0,10))+' — counting starts with the first call you log';
+}
+function archiveCallLogs(reason){
+  ensureMeta(); ensureLogs();
+  const arch=Array.isArray(state.meta.callLogArchive)? state.meta.callLogArchive : [];
+  if(state.logs.length) arch.push({at:new Date().toISOString(), reason:reason||'reset', logs:state.logs, workdays:state.workdays||{}});
+  state.meta.callLogArchive=arch;
+  state.logs=[]; state.workdays={};
+  state.meta.callStatsResetAt=new Date().toISOString();
+}
+function migrateCallStats(){
+  ensureMeta();
+  if(state.meta.callStatsMigrated) return false;
+  state.meta.callStatsMigrated='2026-09-06';
+  archiveCallLogs('restart-sept-2026');
+  return true;
+}
+function resetCallStatsUI(){
+  if(!confirm('Restart the call statistics?\n\nEvery Quick Log call so far is archived (recoverable) and all call numbers start again from the next call you log. Clients, renewals and money are not touched.')) return;
+  archiveCallLogs('manual'); save(); renderAll(); toast('Call statistics restarted — counting from your next logged call');
+}
+function restoreCallLogsUI(){
+  ensureMeta(); const arch=Array.isArray(state.meta.callLogArchive)? state.meta.callLogArchive : [];
+  if(!arch.length){ toast('No archived calls to restore'); return; }
+  const last=arch[arch.length-1];
+  if(!confirm('Bring back the '+last.logs.length+' archived calls (archived '+fmtDate(last.at.slice(0,10))+')? They merge with anything logged since.')) return;
+  ensureLogs(); const have=new Set(state.logs.map(l=>l.id));
+  last.logs.forEach(l=>{ if(!have.has(l.id)) state.logs.push(l); });
+  state.workdays=Object.assign({}, last.workdays||{}, state.workdays||{});
+  arch.pop(); if(!arch.length) delete state.meta.callStatsResetAt;
+  save(); renderAll(); toast('Archived calls restored');
 }
 
 /* ---------- global search ---------- */
@@ -3464,6 +3609,8 @@ $('#exportMenu').addEventListener('click',e=>{
   if(x==='backup-enc')  backupEncrypted();
   if(x==='restore-enc') $('#restoreEncFile').click();
   if(x==='sync-setup')  openSyncSetup();
+  if(x==='reset-stats')   resetCallStatsUI();
+  if(x==='restore-stats') restoreCallLogsUI();
   if(x==='backup')    backup();
   if(x==='restore')   $('#restoreFile').click();
   $('#exportMenu').classList.remove('open');
@@ -3642,6 +3789,13 @@ function exportYearReport(){
   /* ---------------- what to do ---------------- */
   const todos=(state.todos||[]).filter(t=>!t.done);
   const cats=(state.noteCats&&state.noteCats.length?state.noteCats:DEFAULT_TODO_CATS);
+  const asapOpen=(Array.isArray(state.asap)?state.asap:[]).filter(t=>!t.done).sort((a,b)=>(a.sort||0)-(b.sort||0));
+  if(asapOpen.length){
+    h+=`<section class="rp-sec avoid"><div class="rp-h">Do ASAP <span class="hc">· ${asapOpen.length} open</span></div>
+      <div class="rp-hs">The numbered list from Home — red means super-high priority</div>`;
+    asapOpen.forEach((t,i)=>{ h+=`<div class="rp-li prio-${t.hot?'high':'none'}"><span class="d"></span><span class="t">${i+1}. ${esc(t.text)}</span></div>`; });
+    h+='</section>';
+  }
   h+=`<section class="rp-sec"><div class="rp-h">What to do <span class="hc">· ${todos.length} open</span></div>
     <div class="rp-hs">Your To Do board — red dot means high priority</div>`;
   if(todos.length){
@@ -3808,7 +3962,7 @@ $('#restoreFile').addEventListener('change',e=>{
 /* ---------- init ---------- */
 function unlockUI(){ $('#loginScreen').style.display='none'; document.body.classList.remove('locked'); }
 function lockUI(){ $('#loginScreen').style.display='grid'; document.body.classList.add('locked'); $('#loginErr').style.display='none'; $('#loginPass').value=''; setTimeout(()=>$('#loginUser').focus(),50); }
-function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); renderAll(); }
+function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); if(migrateCallStats()){ save(); setTimeout(()=>toast('Call statistics restarted — the old calls are archived; counting from your next logged call'),900); } renderAll(); }
 let loggingIn=false;
 async function tryLogin(){
   if(loggingIn) return;
