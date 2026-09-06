@@ -74,9 +74,10 @@ export default function HomeClient() {
           style={{ willChange: 'transform' }}
         >
           {/* Ambient aurora orbs */}
-          <div className="absolute rounded-full" style={{ top: '-15%', left: '-10%', width: 'min(70vw, 700px)', height: 'min(70vw, 700px)', background: 'radial-gradient(circle, rgba(71,200,245,0.13) 0%, transparent 65%)', filter: 'blur(70px)', animation: 'auroraFloat1 22s ease-in-out infinite' }} />
-          <div className="absolute rounded-full" style={{ bottom: '-12%', right: '-5%', width: 'min(60vw, 620px)', height: 'min(60vw, 620px)', background: 'radial-gradient(circle, rgba(107,63,160,0.16) 0%, transparent 65%)', filter: 'blur(90px)', animation: 'auroraFloat2 28s ease-in-out infinite' }} />
-          <div className="absolute rounded-full" style={{ top: '28%', left: '55%', width: 'min(38vw, 420px)', height: 'min(38vw, 420px)', background: 'radial-gradient(circle, rgba(71,200,245,0.09) 0%, transparent 60%)', filter: 'blur(55px)', animation: 'auroraFloat3 17s ease-in-out infinite' }} />
+          {/* Same three orbs — drawn as soft gradients (no blur filter to recompute every frame) */}
+          <div className="absolute rounded-full aurora" style={{ top: '-22%', left: '-16%', width: 'min(84vw, 840px)', height: 'min(84vw, 840px)', background: 'radial-gradient(circle, rgba(71,200,245,0.12) 0%, rgba(71,200,245,0.06) 30%, rgba(71,200,245,0.02) 52%, transparent 70%)', animation: 'auroraFloat1 22s ease-in-out infinite' }} />
+          <div className="absolute rounded-full aurora" style={{ bottom: '-20%', right: '-12%', width: 'min(74vw, 760px)', height: 'min(74vw, 760px)', background: 'radial-gradient(circle, rgba(107,63,160,0.15) 0%, rgba(107,63,160,0.07) 30%, rgba(107,63,160,0.025) 52%, transparent 70%)', animation: 'auroraFloat2 28s ease-in-out infinite' }} />
+          <div className="absolute rounded-full aurora" style={{ top: '22%', left: '50%', width: 'min(48vw, 540px)', height: 'min(48vw, 540px)', background: 'radial-gradient(circle, rgba(71,200,245,0.085) 0%, rgba(71,200,245,0.04) 30%, rgba(71,200,245,0.012) 52%, transparent 68%)', animation: 'auroraFloat3 17s ease-in-out infinite' }} />
 
           {/* Tech grid */}
           <div
@@ -145,7 +146,7 @@ export default function HomeClient() {
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-            style={{ width: '900px', height: '600px', background: 'radial-gradient(ellipse, rgba(71,200,245,0.08) 0%, transparent 65%)', filter: 'blur(60px)' }}
+            style={{ width: '1100px', height: '760px', background: 'radial-gradient(ellipse, rgba(71,200,245,0.075) 0%, rgba(71,200,245,0.035) 32%, rgba(71,200,245,0.01) 55%, transparent 70%)' }}
           />
         </div>
 
@@ -170,8 +171,13 @@ export default function HomeClient() {
             style={{ fontSize: 'clamp(2.6rem, 7vw, 6rem)', perspective: '1000px' }}
           >
             <span className="reveal-word !block" style={{ animationDelay: '0.15s' }}>
-              <span className="bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-200 to-gray-500">
-                {lang === 'el' ? 'Η ιστοσελίδα σας.' : 'Your website.'}
+              <span className="relative inline-block">
+                <span className="bg-clip-text text-transparent bg-gradient-to-br from-white via-gray-200 to-gray-500">
+                  {lang === 'el' ? 'Η ιστοσελίδα σας.' : 'Your website.'}
+                </span>
+                <span className="hero-sheen absolute inset-0 bg-clip-text text-transparent pointer-events-none select-none" aria-hidden="true">
+                  {lang === 'el' ? 'Η ιστοσελίδα σας.' : 'Your website.'}
+                </span>
               </span>
             </span>
             <span className="reveal-word inline-block" style={{ animationDelay: '0.4s' }}>
@@ -284,7 +290,7 @@ export default function HomeClient() {
       {/* ─── SERVICES ─── */}
       <section id="services" className="py-32 relative scroll-mt-24">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[60%] bg-[radial-gradient(ellipse,rgba(71,200,245,0.03)_0%,transparent_70%)] blur-[80px]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[96%] h-[80%] bg-[radial-gradient(ellipse,rgba(71,200,245,0.028)_0%,rgba(71,200,245,0.012)_40%,transparent_70%)]" />
         </div>
 
         <div className="max-w-7xl mx-auto px-6">

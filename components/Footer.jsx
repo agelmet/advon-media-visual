@@ -2,7 +2,7 @@
 'use client';
 import Link from 'next/link';
 import { useLangStore } from '@/store/langStore';
-import { services, IDENTITY } from '@/lib/services';
+import { NAV_SERVICES as services, IDENTITY } from '@/lib/nav';
 
 export default function Footer() {
   const { lang } = useLangStore();
@@ -24,7 +24,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-center sm:text-left">
           {/* Brand */}
           <div className="flex flex-col items-center sm:items-start gap-4">
-            <img src="https://assets.cdn.filesafe.space/NkFUgZER3rrdnofCwAIl/media/648dd017a1f733fa5b51e5e9.png" alt="Advon Media" className="h-8 w-auto opacity-60" />
+            <img src="https://assets.cdn.filesafe.space/NkFUgZER3rrdnofCwAIl/media/648dd017a1f733fa5b51e5e9.png" alt="Advon Media" className="h-8 w-auto opacity-60" loading="lazy" decoding="async" />
             <p className="text-sm leading-relaxed text-gray-500 max-w-xs">
               {IDENTITY[lang]}
             </p>
@@ -39,7 +39,7 @@ export default function Footer() {
               {services.map((service) => (
                 <li key={service.slug}>
                   <Link href={`/${service.slug}`} className="text-sm text-gray-400 hover:text-electric-cyan transition-colors">
-                    {service.nav[lang]}
+                    {service[lang]}
                   </Link>
                 </li>
               ))}

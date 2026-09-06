@@ -58,8 +58,8 @@ export default function Stats() {
       {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-          style={{ width: '70%', height: '160%', background: 'radial-gradient(ellipse, rgba(71,200,245,0.06) 0%, transparent 65%)', filter: 'blur(70px)', animation: 'auroraFloat3 20s ease-in-out infinite' }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 aurora"
+          style={{ width: '90%', height: '200%', background: 'radial-gradient(ellipse, rgba(71,200,245,0.055) 0%, rgba(71,200,245,0.025) 35%, transparent 70%)', animation: 'auroraFloat3 20s ease-in-out infinite' }}
         />
       </div>
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-10 text-center relative z-10">

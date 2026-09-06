@@ -1,109 +1,17 @@
 // components/Reviews.jsx
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import { useLangStore } from '@/store/langStore';
-import { googleReviews, REVIEWS_URL, OVERALL_RATING } from '@/lib/reviews';
+import { REVIEWS_URL, OVERALL_RATING } from '@/lib/reviews-meta';
 import ScrollReveal from '@/components/ScrollReveal';
+import { GoogleStar, GoogleG } from '@/components/ReviewsGlyphs';
 
-const INITIAL_VISIBLE = 12;
-const LOAD_STEP = 24;
-const CLAMP_CHARS = 220;
-
-// Per-column loop durations (seconds) so adjacent columns never move in lockstep.
-const COLUMN_DURATIONS = [78, 92, 84, 88];
-
-const GoogleStar = ({ className }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-  </svg>
-);
-
-/* Official Google "G" */
-const GoogleG = ({ className }) => (
-  <svg viewBox="0 0 48 48" className={className} aria-hidden="true">
-    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
-    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
-    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
-    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
-  </svg>
-);
-
-/* Google-style deterministic avatar colors (initial-letter fallback) */
-const AVATAR_COLORS = ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#039BE5', '#0097A7', '#00796B', '#43A047', '#7CB342', '#EF6C00', '#F4511E', '#795548', '#607D8B'];
-
-function avatarColor(name) {
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
-  return AVATAR_COLORS[hash % AVATAR_COLORS.length];
-}
-
-function Avatar({ review }) {
-  const { name, photo } = review;
-  const [broken, setBroken] = useState(false);
-  if (photo && !broken) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={photo}
-        alt=""
-        onError={() => setBroken(true)}
-        className="w-10 h-10 rounded-full object-cover shrink-0 select-none"
-      />
-    );
-  }
-  return (
-    <div
-      className="w-10 h-10 rounded-full flex items-center justify-center text-white text-lg font-medium shrink-0 select-none"
-      style={{ backgroundColor: avatarColor(name) }}
-      aria-hidden="true"
-    >
-      {name.charAt(0).toUpperCase()}
-    </div>
-  );
-}
-
-function ReviewCard({ review, lang }) {
-  const [expanded, setExpanded] = useState(false);
-  const { name } = review;
-  const text = lang === 'el' ? review.text : review.textEn;
-  const isLong = text.length > CLAMP_CHARS;
-  const shown = isLong && !expanded ? text.slice(0, CLAMP_CHARS).trimEnd() + '…' : text;
-
-  return (
-    <div className="break-inside-avoid mb-4 bg-white rounded-2xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.4)] border border-white/70 hover:shadow-[0_6px_24px_rgba(0,0,0,0.5)] transition-shadow duration-300">
-      <div className="flex items-start justify-between gap-3 mb-2.5">
-        <div className="flex items-center gap-3 min-w-0">
-          <Avatar review={review} />
-          <div className="min-w-0">
-            <h4 className="text-[#202124] font-semibold text-[15px] leading-tight truncate">{name}</h4>
-            <div className="flex gap-0.5 text-[#FBBC05] mt-1" aria-label={lang === 'el' ? 'Βαθμολογία 5 στα 5' : 'Rated 5 out of 5'}>
-              {[1, 2, 3, 4, 5].map((s) => <GoogleStar key={s} className="w-4 h-4" />)}
-            </div>
-          </div>
-        </div>
-        <GoogleG className="w-5 h-5 shrink-0 mt-1" />
-      </div>
-
-      {text ? (
-        <>
-          <p className="text-[#3c4043] text-sm leading-relaxed whitespace-pre-line">{shown}</p>
-          {isLong && (
-            <button
-              onClick={() => setExpanded(!expanded)}
-              className="mt-1.5 text-[#1a73e8] text-sm font-medium hover:underline"
-            >
-              {expanded ? (lang === 'el' ? 'Λιγότερα' : 'Less') : (lang === 'el' ? 'Περισσότερα' : 'More')}
-            </button>
-          )}
-        </>
-      ) : (
-        <p className="text-[#80868b] text-sm italic">
-          {lang === 'el' ? 'Αξιολόγηση 5 αστέρων' : '5-star rating'}
-        </p>
-      )}
-    </div>
-  );
-}
+/* The cards themselves (and the 70KB review list) live in their own chunk and are fetched
+   only when the reviews are about 700px away from the screen. Same cards, same motion —
+   the page just does not pay for them before anyone can see them. */
+const MarqueeColumns = dynamic(() => import('@/components/ReviewsColumns').then((m) => m.MarqueeColumns), { ssr: false, loading: () => null });
+const StaticGrid = dynamic(() => import('@/components/ReviewsColumns').then((m) => m.StaticGrid), { ssr: false, loading: () => null });
 
 /* How many columns for the current viewport (desktop 4 / tablet 2 / mobile 1). */
 function useColumnCount() {
@@ -135,74 +43,27 @@ function useReducedMotion() {
   return reduced;
 }
 
-/* Static, non-moving fallback grid (prefers-reduced-motion). */
-function StaticGrid({ lang }) {
-  const [visible, setVisible] = useState(INITIAL_VISIBLE);
-  const total = googleReviews.length;
-  const remaining = total - visible;
 
-  return (
-    <>
-      <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
-        {googleReviews.slice(0, visible).map((review) => (
-          <ReviewCard key={review.name} review={review} lang={lang} />
-        ))}
-      </div>
-      <div className="text-center mt-8">
-        {remaining > 0 && (
-          <button
-            onClick={() => setVisible((v) => Math.min(v + LOAD_STEP, total))}
-            className="btn-premium inline-flex items-center gap-2.5 px-8 py-3.5 bg-white text-[#202124] rounded-full font-bold text-sm shadow-[0_4px_20px_rgba(0,0,0,0.4)] hover:shadow-[0_6px_28px_rgba(0,0,0,0.55)] transition-all duration-300"
-          >
-            {lang === 'el' ? 'Περισσότερες αξιολογήσεις' : 'More reviews'}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="m6 9 6 6 6-6" /></svg>
-          </button>
-        )}
-      </div>
-    </>
-  );
-}
-
-/* Vertical auto-scrolling columns marquee. */
-function MarqueeColumns({ lang, columnCount }) {
-  // Distribute reviews evenly: review index % columnCount → column (index % 4 on desktop).
-  const columns = Array.from({ length: columnCount }, () => []);
-  googleReviews.forEach((review, i) => columns[i % columnCount].push(review));
-
-  return (
-    <div
-      className="reviews-viewport grid gap-4"
-      style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}
-    >
-      {columns.map((col, ci) => {
-        // Columns 1 & 3 scroll up, 2 & 4 scroll down (adjacent columns opposite).
-        const goingUp = ci % 2 === 0;
-        const duration = COLUMN_DURATIONS[ci % COLUMN_DURATIONS.length];
-        return (
-          <div key={ci} className="min-w-0">
-            <div
-              className="reviews-col"
-              style={{
-                animationName: goingUp ? 'reviewsScrollUp' : 'reviewsScrollDown',
-                animationDuration: `${duration}s`,
-              }}
-            >
-              {/* Duplicate the card set so the -50% loop is seamless/infinite. */}
-              {[...col, ...col].map((review, idx) => (
-                <ReviewCard key={`${ci}-${idx}`} review={review} lang={lang} />
-              ))}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
+/* Mounts its children once the wrapper is near the viewport. */
+function useNear(rootMargin = '700px 0px') {
+  const ref = useRef(null);
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || near) return;
+    if (!('IntersectionObserver' in window)) { setNear(true); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setNear(true); io.disconnect(); } }, { rootMargin });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near, rootMargin]);
+  return [ref, near];
 }
 
 export default function Reviews() {
   const { lang } = useLangStore();
   const columnCount = useColumnCount();
   const reducedMotion = useReducedMotion();
+  const [nearRef, near] = useNear();
 
   return (
     <section id="reviews" className="py-32 relative overflow-hidden scroll-mt-24">
@@ -248,11 +109,15 @@ export default function Reviews() {
 
         {/* Reviews — vertical auto-scrolling columns (static grid if reduced-motion) */}
         <ScrollReveal direction="fade" delay={60}>
-          {reducedMotion ? (
-            <StaticGrid lang={lang} />
-          ) : (
-            <MarqueeColumns lang={lang} columnCount={columnCount} />
-          )}
+          <div ref={nearRef}>
+            {!near ? (
+              <div className="reviews-viewport" aria-hidden="true" />
+            ) : reducedMotion ? (
+              <StaticGrid lang={lang} />
+            ) : (
+              <MarqueeColumns lang={lang} columnCount={columnCount} />
+            )}
+          </div>
 
           <div className="text-center mt-8">
             <span className="text-gray-500 text-xs">

@@ -29,7 +29,20 @@ export default function Contact() {
   // the time it mounts the window load event has usually already fired and the handler
   // never runs, leaving an empty box. We hook the script's own load event instead, and
   // handle the case where the script is already in the DOM from a previous mount.
+  // The calendar is injected when the contact section is about 900px from the screen —
+  // on a first paint nobody can see it yet, so the page no longer waits for Zoho.
+  const [wantZoho, setWantZoho] = useState(false);
   useEffect(() => {
+    if (wantZoho) return;
+    const el = document.getElementById(ZOHO_PARENT_ID);
+    if (!el || !('IntersectionObserver' in window)) { setWantZoho(true); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setWantZoho(true); io.disconnect(); } }, { rootMargin: '900px 0px' });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [wantZoho]);
+
+  useEffect(() => {
+    if (!wantZoho) return;
     let cancelled = false;
 
     const render = () => {
@@ -65,7 +78,7 @@ export default function Contact() {
       const parent = document.getElementById(ZOHO_PARENT_ID);
       if (parent) parent.innerHTML = '';
     };
-  }, [lang]); // re-render the widget if the language changes
+  }, [lang, wantZoho]); // re-render the widget if the language changes
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,12 +102,12 @@ export default function Contact() {
       {/* Ambient depth layers */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div
-          className="absolute rounded-full"
-          style={{ top: '-10%', left: '-8%', width: 'min(55vw, 560px)', height: 'min(55vw, 560px)', background: 'radial-gradient(circle, rgba(71,200,245,0.09) 0%, transparent 65%)', filter: 'blur(80px)', animation: 'auroraFloat1 24s ease-in-out infinite' }}
+          className="absolute rounded-full aurora"
+          style={{ top: '-18%', left: '-14%', width: 'min(68vw, 700px)', height: 'min(68vw, 700px)', background: 'radial-gradient(circle, rgba(71,200,245,0.085) 0%, rgba(71,200,245,0.04) 32%, rgba(71,200,245,0.012) 55%, transparent 70%)', animation: 'auroraFloat1 24s ease-in-out infinite' }}
         />
         <div
-          className="absolute rounded-full"
-          style={{ bottom: '-12%', right: '-6%', width: 'min(50vw, 520px)', height: 'min(50vw, 520px)', background: 'radial-gradient(circle, rgba(107,63,160,0.12) 0%, transparent 65%)', filter: 'blur(90px)', animation: 'auroraFloat2 30s ease-in-out infinite' }}
+          className="absolute rounded-full aurora"
+          style={{ bottom: '-20%', right: '-12%', width: 'min(62vw, 640px)', height: 'min(62vw, 640px)', background: 'radial-gradient(circle, rgba(107,63,160,0.11) 0%, rgba(107,63,160,0.05) 32%, rgba(107,63,160,0.015) 55%, transparent 70%)', animation: 'auroraFloat2 30s ease-in-out infinite' }}
         />
       </div>
 
@@ -124,20 +137,20 @@ export default function Contact() {
             <p className="text-gray-400 mb-8">{lang === 'el' ? 'Συμπληρώστε τη φόρμα και ένας εκπρόσωπός μας θα επικοινωνήσει μαζί σας μέσω email ή τηλεφώνου εντός της ίδιας ημέρας.' : 'Fill out the form and a representative will contact you via email or phone within the same day.'}</p>
             <form action="https://formspree.io/f/xkopgoaj" method="POST" onSubmit={handleSubmit} className="space-y-6 flex-grow flex flex-col">
               <div>
-                <label className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Όνομα / Επωνυμία' : 'Name / Company'}</label>
-                <input type="text" name="name" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors" />
+                <label htmlFor="cf-name" className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Όνομα / Επωνυμία' : 'Name / Company'}</label>
+                <input id="cf-name" type="text" name="name" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors" />
               </div>
               <div>
-                <label className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">Email</label>
-                <input type="email" name="email" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors" />
+                <label htmlFor="cf-email" className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">Email</label>
+                <input id="cf-email" type="email" name="email" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors" />
               </div>
               <div>
-                <label className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Τηλέφωνο' : 'Phone Number'}</label>
-                <input type="tel" name="phone" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors" />
+                <label htmlFor="cf-phone" className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Τηλέφωνο' : 'Phone Number'}</label>
+                <input id="cf-phone" type="tel" name="phone" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors" />
               </div>
               <div className="flex-grow">
-                <label className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Μήνυμα / Υπηρεσία που σας ενδιαφέρει' : 'Message / Service of Interest'}</label>
-                <textarea name="message" rows="4" required className="w-full h-full min-h-[120px] bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors resize-none"></textarea>
+                <label htmlFor="cf-message" className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Μήνυμα / Υπηρεσία που σας ενδιαφέρει' : 'Message / Service of Interest'}</label>
+                <textarea id="cf-message" name="message" rows="4" required className="w-full h-full min-h-[120px] bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors resize-none"></textarea>
               </div>
               <div className="mt-auto">
                 <button type="submit" className="w-full py-4 bg-electric-cyan text-[#050a0e] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-[0_0_20px_rgba(71,200,245,0.3)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)]">

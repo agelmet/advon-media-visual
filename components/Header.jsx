@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLangStore } from '@/store/langStore';
-import { services } from '@/lib/services';
+import { NAV_SERVICES as services } from '@/lib/nav';
 
 export default function Header() {
   const { lang, toggleLang } = useLangStore();
@@ -72,8 +72,13 @@ export default function Header() {
               }}
             >
               <img
-                src="https://raw.githubusercontent.com/agelmet/Advon-Media/refs/heads/main/logo.png"
+                src="/img/advon-logo-116.webp"
+                srcSet="/img/advon-logo-116.webp 1x, /img/advon-logo-232.webp 2x"
+                width="116"
+                height="116"
                 alt="Advon Media"
+                fetchPriority="high"
+                decoding="async"
                 style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#ffffff', display: 'block' }}
               />
             </div>
@@ -102,7 +107,7 @@ export default function Header() {
                     href={`/${service.slug}`}
                     className="block text-[#d1d5db] px-5 py-3 text-[0.875rem] hover:bg-electric-cyan/8 hover:text-electric-cyan border-l-2 border-transparent hover:border-electric-cyan transition-all duration-200"
                   >
-                    {service.nav[lang]}
+                    {service[lang]}
                   </Link>
                 ))}
               </div>
@@ -168,7 +173,7 @@ export default function Header() {
             <span className="text-xs text-gray-500 uppercase font-black tracking-widest">{lang === 'el' ? 'Υπηρεσίες' : 'Services'}</span>
             {services.map((service) => (
               <Link key={service.slug} href={`/${service.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors text-base">
-                {service.nav[lang]}
+                {service[lang]}
               </Link>
             ))}
           </div>
