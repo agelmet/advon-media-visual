@@ -283,6 +283,20 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .fin-net.neg .v{color:var(--coral);}
 .fin-net .sub{font-size:11.5px; color:var(--muted); font-weight:600; margin-top:4px;}
 
+/* the three money pots of the year */
+.pots{display:grid; grid-template-columns:1.3fr 1fr 1fr 1fr; gap:12px; margin-bottom:14px;}
+@media(max-width:1000px){.pots{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.pots{grid-template-columns:1fr;}}
+.pot{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:14px 16px 13px; min-width:0; border-top:4px solid var(--pc,var(--line));}
+.pot .k{font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); display:flex; align-items:center; gap:6px;}
+.pot .v{font-family:'Sora'; font-weight:800; font-size:26px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; margin-top:5px; color:var(--pc,var(--ink));}
+.pot .sub{font-size:11px; color:var(--muted); font-weight:600; margin-top:3px;}
+.pot-bar{height:6px; border-radius:99px; background:var(--bg); overflow:hidden; margin-top:9px;}
+.pot-bar i{display:block; height:100%; border-radius:99px; background:var(--pc); transition:width .35s;}
+.pot.total{--pc:var(--ink); background:linear-gradient(120deg,#10141F 20%,#1B3A6B 90%,#2F7FE0 160%); color:#fff; border-color:transparent;}
+.pot.total .k{color:rgba(255,255,255,.62);} .pot.total .v{color:#fff; font-size:30px;} .pot.total .sub{color:rgba(255,255,255,.62);}
+.pot.new{--pc:var(--deep);} .pot.renew{--pc:#0F8BA8;} .pot.subs{--pc:var(--violet);}
+
 /* ---------- Quick Log ---------- */
 .lanes{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
 @media(max-width:1000px){.lanes{grid-template-columns:1fr;}}
@@ -354,22 +368,109 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .item-x:hover{background:rgba(0,0,0,.07); color:var(--ink);}
 .empty-note{font-size:12.5px; color:#B4BAC8; text-align:center; padding:22px 10px;}
 
-/* ---------- Renewals ---------- */
 .rn-banner{background:linear-gradient(120deg,#10141F 15%,#123A63 60%,#2F7FE0 120%); color:#fff; border-radius:var(--radius); padding:20px 26px; margin-bottom:16px; display:flex; align-items:center; gap:34px; flex-wrap:wrap; box-shadow:var(--shadow-lg);}
 .rn-banner .big{font-family:'Sora'; font-weight:800; font-size:32px; letter-spacing:-.03em; font-variant-numeric:tabular-nums;}
 .rn-banner .k{font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.6);}
 .rn-banner .cell.hot .big{color:#7FD9F5;}
-.rn-cols{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start;}
-@media(max-width:1000px){.rn-cols{grid-template-columns:1fr;}}
-.rn-item{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; margin-bottom:6px; background:var(--cyan-soft); border:1px solid #C8EDF8;}
-.rn-item.overdue{background:var(--coral-soft); border-color:#FFD1C9;}
-.rn-item.soon{background:var(--yellow-soft); border-color:#F2DC9A;}
-.rn-item .w-name{flex:1;}
-.rn-item .rn-val{font-weight:800; font-size:13px; color:var(--deep); font-variant-numeric:tabular-nums; white-space:nowrap;}
-.rn-item .rn-date{font-size:11.5px; font-weight:600; color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap;}
-.rn-item.overdue .rn-date{color:#D6402F; font-weight:700;}
-.rn-done{background:var(--grad); color:#fff; font-size:10.5px; font-weight:700; border-radius:7px; padding:4px 8px; opacity:0; white-space:nowrap;}
-.rn-item:hover .rn-done{opacity:1;}
+/* ---------- Renewals — the year, month by month; renewed ones move into their own pot ---------- */
+.rn-banner.rnb{padding:22px 26px; margin-bottom:14px; display:grid; grid-template-columns:repeat(6,1fr); gap:18px 22px; align-items:start;}
+.rn-banner.rnb .cell{min-width:0;}
+.rn-banner.rnb .big{font-family:'Sora'; font-weight:800; font-size:28px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1.1; margin-top:5px;}
+.rn-banner.rnb .k{font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.62); display:flex; align-items:center; gap:6px;}
+.rn-banner.rnb .k.sub{margin-top:5px; text-transform:none; letter-spacing:.03em; font-size:11.5px; color:rgba(255,255,255,.55);}
+.rn-banner.rnb .cell.over .big{color:#FF8A96;} .rn-banner.rnb .cell.over.zero .big{color:rgba(255,255,255,.45);}
+.rn-banner.rnb .cell.now .big{color:#FFD166;}
+.rn-banner .cell.hot .big{color:#7FD9F5;}
+.rn-banner.rnb .cell.paid .big{color:#4BE8A0;}
+@media(max-width:1180px){.rn-banner.rnb{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:640px){.rn-banner.rnb{grid-template-columns:repeat(2,1fr); gap:14px 16px; padding:18px 16px;} .rn-banner.rnb .big{font-size:22px;}}
+.rn-addbar{margin-bottom:14px;}
+.rn-yearbar{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px;}
+.rn-strip{flex:1; min-width:280px; display:grid; grid-template-columns:repeat(12,1fr); gap:4px; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:6px; box-shadow:var(--shadow);}
+.rn-strip button{display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 2px 5px; border-radius:9px; min-width:0; transition:background .12s;}
+.rn-strip button:hover{background:var(--bg);}
+.rn-strip button.cur{background:var(--blue-soft);}
+.rn-strip button.cur .rs-m{color:var(--brand);}
+.rn-strip .rs-bar{width:100%; height:26px; display:flex; align-items:flex-end; justify-content:center;}
+.rn-strip .rs-bar i{display:block; width:60%; max-width:22px; border-radius:4px 4px 2px 2px; background:var(--cyan); min-height:2px; opacity:.9;}
+.rn-strip button.over .rs-bar i{background:var(--coral);}
+.rn-strip button.done .rs-bar i{background:var(--green);}
+.rn-strip .rs-m{font-size:9.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);}
+.rn-strip .rs-v{font-size:9.5px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; max-width:100%;}
+.rn-strip .rs-v.zero{color:#C0C6D4;}
+@media(max-width:900px){.rn-strip{grid-template-columns:repeat(6,1fr);} .rn-strip .rs-bar{height:18px;}}
+.rn-months{display:flex; flex-direction:column; gap:12px;}
+.rn-month,.rn-overdue,.rn-paid{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
+.rn-month.current{box-shadow:0 0 0 2px var(--blue-soft), var(--shadow);}
+.rn-month.empty{box-shadow:none; background:transparent; border-style:dashed;}
+.rn-month.empty .rn-mh{border-bottom:none; padding:10px 18px;}
+.rn-month.empty .rn-mh h3{font-size:13px; color:var(--muted); font-weight:700;}
+.rn-mh{display:flex; align-items:center; gap:12px; padding:13px 18px; border-bottom:1px solid var(--line); flex-wrap:wrap;}
+.rn-mh .rmh-txt{flex:1; min-width:150px;}
+.rn-mh h3{font-size:15.5px; font-weight:800; letter-spacing:-.01em; display:flex; align-items:center; gap:8px;}
+.rn-mh h3 .now-tag{font-size:9px; font-weight:800; letter-spacing:.1em; background:var(--grad); color:#fff; padding:3px 7px; border-radius:6px;}
+.rn-mh p{font-size:11.5px; color:var(--muted); font-weight:500; margin-top:2px;}
+.rn-mh p b.g{color:var(--deep);} .rn-mh p b.r{color:var(--coral);}
+.rn-mh .rn-msum{text-align:right; display:flex; flex-direction:column; align-items:flex-end;}
+.rn-mh .rn-msum .k{font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
+.rn-mh .rn-msum .v{font-family:'Sora'; font-weight:800; font-size:20px; letter-spacing:-.02em; color:var(--cyan); font-variant-numeric:tabular-nums; line-height:1.1;}
+.rn-overdue .rn-mh{background:linear-gradient(120deg,#2E1418,#10141F 120%); color:#fff; border-bottom:none;}
+.rn-overdue .rn-mh p{color:rgba(255,255,255,.65);}
+.rn-overdue .rn-mh .rn-msum .k{color:rgba(255,255,255,.55);} .rn-overdue .rn-mh .rn-msum .v{color:#FF8A96;}
+.rn-overdue{margin-bottom:12px; border-color:rgba(255,77,94,.35);}
+.rn-body{padding:9px 12px 11px; display:flex; flex-direction:column; gap:6px;}
+.rn-row{display:grid; grid-template-columns:1fr auto auto auto auto; align-items:center; gap:12px; padding:9px 12px 9px 12px; border-radius:12px; background:var(--bg); border:1px solid var(--line); border-left:5px solid var(--cyan); transition:box-shadow .15s, transform .15s;}
+.rn-row:hover{box-shadow:var(--shadow); transform:translateY(-1px);}
+.rn-row.soon{border-left-color:var(--yellow); background:var(--yellow-soft);}
+.rn-row.overdue{border-left-color:var(--red); background:var(--red-soft);}
+.rn-row.today{border-left-color:var(--orange); background:var(--orange-soft);}
+.rn-row .rn-main{min-width:0;}
+.rn-row .rn-name{font-weight:700; font-size:13.5px; word-break:break-word;}
+.rn-row .rn-sub{font-size:11px; color:var(--muted); font-weight:500; margin-top:2px; display:flex; gap:6px; flex-wrap:wrap; align-items:center;}
+.rn-row .rn-sub .hist{background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:1px 6px; font-weight:600;}
+.rn-row .rn-val{font-family:'Sora'; font-weight:800; font-size:15px; color:var(--deep); font-variant-numeric:tabular-nums; white-space:nowrap; cursor:pointer; border-bottom:1px dashed transparent;}
+.rn-row .rn-val:hover{border-bottom-color:var(--deep);}
+.rn-row .rn-date{font-size:12px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap; cursor:pointer; display:inline-flex; align-items:center; gap:5px; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:5px 9px;}
+.rn-row .rn-date:hover{border-color:var(--brand); color:var(--brand);}
+.rn-row .rn-days{font-size:10.5px; font-weight:800; letter-spacing:.03em; border-radius:7px; padding:4px 8px; white-space:nowrap; background:var(--cyan-soft); color:#0F8BA8; text-transform:uppercase;}
+.rn-row.soon .rn-days{background:#FFE9A8; color:#7A5A00;}
+.rn-row.overdue .rn-days{background:var(--red); color:#fff;}
+.rn-row.today .rn-days{background:var(--orange); color:#fff;}
+.rn-row .rn-acts{display:flex; align-items:center; gap:6px;}
+.rn-done{display:inline-flex; align-items:center; gap:5px; background:var(--green); color:#fff; font-size:12px; font-weight:700; border-radius:9px; padding:7px 11px; white-space:nowrap; box-shadow:0 3px 10px rgba(14,198,115,.3); transition:filter .12s, transform .12s;}
+.rn-done:hover{filter:brightness(1.05);} .rn-done:active{transform:scale(.96);}
+.rn-row .item-x{opacity:0; margin-left:0;}
+.rn-row:hover .item-x{opacity:1;}
+.rn-empty-line{font-size:12px; color:#B4BAC8; padding:2px 6px;}
+/* the renewed pot */
+.rn-paid{margin-top:22px; border-color:rgba(14,198,115,.35);}
+.rn-paid > .rn-mh{background:linear-gradient(120deg,#0B2A1E,#10141F 130%); color:#fff; border-bottom:none; cursor:pointer; user-select:none;}
+.rn-paid > .rn-mh .ico{width:36px; height:36px; border-radius:11px; display:grid; place-items:center; background:rgba(14,198,115,.2); color:#4BE8A0; font-size:16px; flex-shrink:0;}
+.rn-paid > .rn-mh p{color:rgba(255,255,255,.62);}
+.rn-paid > .rn-mh .rn-msum .k{color:rgba(255,255,255,.55);} .rn-paid > .rn-mh .rn-msum .v{color:#4BE8A0;}
+.rn-paid > .rn-mh .chev{transition:transform .18s; color:rgba(255,255,255,.6); display:grid; font-size:16px;}
+.rn-paid.open > .rn-mh .chev{transform:rotate(90deg);}
+.rn-paid-body{display:none; padding:10px 12px 12px; flex-direction:column; gap:12px;}
+.rn-paid.open .rn-paid-body{display:flex;}
+.rn-pgroup h4{font-family:'Sora'; font-size:12px; font-weight:800; margin:4px 4px 7px; display:flex; align-items:center; gap:8px;}
+.rn-pgroup h4 .count{background:var(--green-soft); color:var(--deep); border-radius:99px; padding:2px 9px; font-size:11px;}
+.rn-pgroup h4 .gsum{margin-left:auto; font-size:12px; color:var(--deep); font-variant-numeric:tabular-nums;}
+.rn-pgroup .rows{display:flex; flex-direction:column; gap:6px;}
+.rn-row.paid{border-left-color:var(--green); background:var(--green-soft); grid-template-columns:1fr auto auto auto;}
+.rn-row.paid .rn-val{color:var(--deep);}
+.rn-row.paid .rn-days{background:var(--surface); color:var(--muted); text-transform:none; letter-spacing:0; font-weight:600;}
+.rn-undo{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700; color:var(--muted); background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:5px 9px; opacity:0;}
+.rn-row.paid:hover .rn-undo{opacity:1;}
+.rn-undo:hover{color:var(--red); border-color:rgba(255,77,94,.4); background:var(--red-soft);}
+@media(max-width:760px){
+  .rn-row{grid-template-columns:1fr auto; gap:7px 10px;}
+  .rn-row .rn-date{grid-column:1; justify-self:start;}
+  .rn-row .rn-days{grid-column:2; justify-self:end;}
+  .rn-row .rn-acts{grid-column:1 / -1; justify-content:flex-end;}
+  .rn-row .item-x,.rn-undo{opacity:.8;}
+  .rn-row.paid{grid-template-columns:1fr auto;}
+}
+body.dark .rn-row .rn-date,body.dark .rn-row .rn-sub .hist,body.dark .rn-undo{background:var(--surface);}
 
 /* ---------- Remaining — money still out there ---------- */
 .rem-banner{background:linear-gradient(120deg,#10141F 10%,#1B2E52 55%,#2F7FE0 140%); color:#fff; border-radius:var(--radius); padding:22px 26px; margin-bottom:14px; display:grid; grid-template-columns:1.5fr repeat(4,1fr); gap:18px 24px; align-items:start; box-shadow:var(--shadow-lg); position:relative; overflow:hidden;}
@@ -968,8 +1069,6 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 }
 @media(max-width:900px){
   .tray-row{grid-template-columns:1fr;}
-  .rn-item{flex-wrap:wrap;}
-  .rn-item .w-name{flex:1 1 100%;}
   .search-wrap{flex:1;}
   .search-wrap input,.search-wrap input:focus{width:100%;}
   .search-results{width:calc(100vw - 28px); right:auto; left:0;}
@@ -1432,19 +1531,30 @@ body.dark .btn-ghost:hover{background:var(--bg);}
   </section>
 </main>
 
-<!-- RENEWALS -->
+<!-- RENEWALS — month by month, with the renewed ones moved into their own pot -->
 <main class="view" id="view-renewals">
-  <div class="rn-banner" id="rnBanner"></div>
-  <section class="panel" style="margin-bottom:16px;">
+  <div class="rn-banner rnb" id="rnBanner"></div>
+  <section class="panel rn-addbar">
     <div class="panel-form" style="border-bottom:none;">
       <span style="font-family:'Sora';font-weight:700;font-size:12.5px;align-self:center;white-space:nowrap;">＋ Add renewal</span>
       <input class="grow" id="rnName" placeholder="Client name">
       <input id="rnVal" type="number" placeholder="€ / year" min="0" style="width:110px;">
-      <input id="rnDate" type="date" style="width:150px;">
+      <input id="rnDate" type="date" style="width:150px;" title="Next renewal date">
       <button id="rnAdd">Add</button>
     </div>
   </section>
-  <div class="rn-cols" id="rnList"></div>
+  <div class="rn-yearbar">
+    <div class="month-nav">
+      <button id="rnPrevY" aria-label="Previous year">‹</button>
+      <div class="month-label" id="rnYearLabel"></div>
+      <button id="rnNextY" aria-label="Next year">›</button>
+    </div>
+    <button class="today-btn" id="rnThisYear">This year</button>
+    <div class="rn-strip" id="rnStrip"></div>
+  </div>
+  <section class="rn-overdue" id="rnOverdue"></section>
+  <div class="rn-months" id="rnList"></div>
+  <section class="rn-paid" id="rnPaid"></section>
 </main>
 
 <!-- REMAINING — every euro still out there, month by month -->
@@ -2139,6 +2249,7 @@ function normalizeState(){
   state.workdays||={};
   try{ ensureExpenses(); }catch(e){}
   try{ ensureLogs(); }catch(e){}
+  try{ ensureRenewals(); }catch(e){}
   try{
     state.clients.forEach(c=>{ if(OLD_STAGE_MAP[c.stage]) c.stage=OLD_STAGE_MAP[c.stage]; });
   }catch(e){}
@@ -2193,8 +2304,21 @@ const XTRA_PRESETS=['NFC review stand','Google Business Profile','Λογότυπ
 function collectedForMonth(key){
   const paid=state.clients.filter(c=>c.month===key && c.stage==='paid').reduce((a,c)=>a+cval(c),0);
   const subs=state.subs.reduce((a,s)=>a+((s.paid && s.paid[key])?(+s.value||0):0),0);
-  return paid+subs;
+  return paid+subs+renewalsPaidForMonth(key);
 }
+/* ---------- renewals income ----------
+   Every time you press «Renewed» a line is written into r.history {at, value, due}.
+   That money counts in the month it was PAID (at), as its own pot beside new-client
+   projects and monthly subscriptions — on the Year tab, in generated/collected and in
+   the target progress. */
+function ensureRenewals(){
+  if(!Array.isArray(state.renewals)) state.renewals=[];
+  state.renewals.forEach(r=>{ if(!Array.isArray(r.history)) r.history=[]; });
+}
+function renewalHistory(){ ensureRenewals(); const out=[]; state.renewals.forEach(r=>r.history.forEach(h=>out.push({r,h}))); return out; }
+function renewalsPaidForMonth(key){ return renewalHistory().reduce((a,x)=>a+(((x.h.at||'').slice(0,7)===key)?(+x.h.value||0):0),0); }
+function renewalsPaidForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=renewalsPaidForMonth(y+'-'+pad(m)); return sum; }
+function renewalsPaidCountForYear(y){ return renewalHistory().filter(x=>(x.h.at||'').startsWith(String(y))).length; }
 function collectedForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=collectedForMonth(y+'-'+pad(m)); return sum; }
 /* "Generated" = total booked value of every client that month (any payment stage)
    + monthly-subscription income recorded for that month. This is what the TARGET is
@@ -2202,7 +2326,7 @@ function collectedForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=collectedFo
 function generatedForMonth(key){
   const booked=state.clients.filter(c=>c.month===key && notLost(c)).reduce((a,c)=>a+cval(c),0);
   const subs=state.subs.reduce((a,s)=>a+((s.paid && s.paid[key])?(+s.value||0):0),0);
-  return booked+subs;
+  return booked+subs+renewalsPaidForMonth(key);
 }
 function generatedForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=generatedForMonth(y+'-'+pad(m)); return sum; }
 /* ---------- expenses ---------- */
@@ -2549,7 +2673,7 @@ function renderYear(){
     const mNetLine = items.length ? `<div class="m-net">− ${fmtMoney(Math.round(mExp))} costs · <b class="${mNet>=0?'pos':'neg'}">${fmtMoney(Math.round(mNet))} net</b></div>` : '';
     card.innerHTML=`
       <h3>${MONTHS[m-1]}</h3>
-      <div class="m-count">${items.length} client${items.length===1?'':'s'}${paid?` · ${fmtMoney(paid)} collected`:''}${(total-paid)>0?` · <b style="color:var(--coral)">${fmtMoney(total-paid)} to collect</b>`:''}</div>
+      <div class="m-count">${items.length} client${items.length===1?'':'s'}${paid?` · ${fmtMoney(paid)} collected`:''}${(total-paid)>0?` · <b style="color:var(--coral)">${fmtMoney(total-paid)} to collect</b>`:''}${renewalsPaidForMonth(key)?` · <b style="color:#0F8BA8">${fmtMoney(renewalsPaidForMonth(key))} renewals</b>`:''}</div>
       <div class="m-total ${total?'':'zero'}">${fmtMoney(total)}</div>
       ${mNetLine}
       ${mTargetLine}
@@ -2564,7 +2688,8 @@ function renderYear(){
     let n=0; for(let m=1;m<=12;m++){ if(s.paid && s.paid[curYear+'-'+pad(m)]) n++; }
     return a+n*(+s.value||0);
   },0);
-  const ytd=yPaid+subCollected;
+  const rPaid=renewalsPaidForYear(curYear);
+  const ytd=yPaid+subCollected+rPaid;
   const yGenerated=generatedForYear(curYear), yExp=expensesForYear(curYear), yNet=yGenerated-yExp;
   /* the yearly target is derived — never prompted for; it is the sum of the monthly ones */
   const ytVal=yearTarget(curYear), ypct=progPct(yGenerated,ytVal), ycls=progClass(ypct);
@@ -2578,16 +2703,18 @@ function renderYear(){
     </div>`;
   $('#yearBanner').innerHTML=`
     <div class="cell"><div class="k">Generated ${curYear}</div><div class="big">${fmtMoney2(yTotal)}</div></div>
-    <div class="cell paid"><div class="k">Money made ${curYear}</div><div class="big">${fmtMoney2(ytd)}</div><div class="k" style="margin-top:4px;">${fmtMoney2(yPaid)} projects + ${fmtMoney2(subCollected)} monthly</div></div>
+    <div class="cell paid"><div class="k">Money made ${curYear}</div><div class="big">${fmtMoney2(ytd)}</div><div class="k" style="margin-top:4px;">${fmtMoney2(yPaid)} new clients + ${fmtMoney2(subCollected)} monthly + ${fmtMoney2(rPaid)} renewals</div></div>
     <div class="cell"><div class="k">To collect</div><div class="big" style="color:#FFB39F;">${fmtMoney2(yTotal-yPaid)}</div></div>
     <div class="cell"><div class="k">Clients</div><div class="big">${yCount}</div></div>
     ${targetCell}`;
-  renderYearFinance(yGenerated, yExp, yNet, rTotal);
+  renderYearFinance(yGenerated, yExp, yNet, rTotal, {yPaid, subCollected, rPaid, ytd, toCollect:yTotal-yPaid, rCount:renewalsPaidCountForYear(curYear)});
   renderYearStats();
 }
 /* Expenses + net profit live here — out of the banner, with room to breathe. */
-function renderYearFinance(yGenerated, yExp, yNet, rTotal){
+function renderYearFinance(yGenerated, yExp, yNet, rTotal, pots){
   const el=$('#yearFinance'); if(!el) return;
+  pots=pots||{yPaid:0,subCollected:0,rPaid:0,ytd:0,toCollect:0,rCount:0};
+  const potPct=v=> pots.ytd? Math.round(v/pots.ytd*100) : 0;
   ensureExpenses();
   const rate=+state.expenses.perWebsite||0;
   let sold=0; for(let m=1;m<=12;m++) sold+=websitesSold(curYear+'-'+pad(m));
@@ -2602,6 +2729,12 @@ function renderYearFinance(yGenerated, yExp, yNet, rTotal){
       <div><h3>Money & expenses · ${curYear}</h3><p>What the year cost you, and what is left after it</p></div>
       <span class="tag">${sold} website${sold===1?'':'s'} delivered</span>
     </div>
+    <div class="pots">
+      <div class="pot total"><div class="k">${IC.wallet} Total collected ${curYear}</div><div class="v">${fmtMoney2(Math.round(pots.ytd))}</div><div class="sub">${fmtMoney2(Math.round(pots.toCollect))} still to collect from clients</div></div>
+      <div class="pot new"><div class="k">${IC.users} New clients</div><div class="v">${fmtMoney2(Math.round(pots.yPaid))}</div><div class="sub">${potPct(pots.yPaid)}% of the total · paid websites &amp; extras</div><div class="pot-bar"><i style="width:${potPct(pots.yPaid)}%"></i></div></div>
+      <div class="pot renew"><div class="k">${IC.repeat} Renewals</div><div class="v">${fmtMoney2(Math.round(pots.rPaid))}</div><div class="sub">${potPct(pots.rPaid)}% of the total · ${pots.rCount} renewed${rTotal?` · ${fmtMoney2(rTotal)} still due`:''}</div><div class="pot-bar"><i style="width:${potPct(pots.rPaid)}%"></i></div></div>
+      <div class="pot subs"><div class="k">${IC.calendar} Monthly subscriptions</div><div class="v">${fmtMoney2(Math.round(pots.subCollected))}</div><div class="sub">${potPct(pots.subCollected)}% of the total · months marked paid</div><div class="pot-bar"><i style="width:${potPct(pots.subCollected)}%"></i></div></div>
+    </div>
     <div class="fin-grid">
       <div class="fin-card">
         <h4>Expense breakdown</h4>
@@ -2611,12 +2744,12 @@ function renderYearFinance(yGenerated, yExp, yNet, rTotal){
       </div>
       <div class="fin-card">
         <h4>Net profit</h4>
-        <div class="fin-row"><div><div class="fr-name">Generated<span class="fr-sub">booked value + monthly income, lost excluded</span></div></div><span class="fr-amt pos">${fmtMoney2(Math.round(yGenerated))}</span></div>
+        <div class="fin-row"><div><div class="fr-name">Generated<span class="fr-sub">booked value + monthly income + renewals, lost excluded</span></div></div><span class="fr-amt pos">${fmtMoney2(Math.round(yGenerated))}</span></div>
         <div class="fin-row"><div><div class="fr-name">Expenses<span class="fr-sub">domains + recurring costs</span></div></div><span class="fr-amt cost">− ${fmtMoney2(Math.round(yExp))}</span></div>
         <div class="fin-net ${yNet>=0?'':'neg'}" style="margin-top:12px;">
           <div class="k">Net profit ${curYear}</div>
           <div class="v">${fmtMoney2(Math.round(yNet))}</div>
-          <div class="sub">generated − expenses${rTotal?` · ${fmtMoney2(rTotal)} renewals due this year`:''}</div>
+          <div class="sub">generated − expenses${pots.rPaid?` · includes ${fmtMoney2(Math.round(pots.rPaid))} from renewals`:''}</div>
         </div>
       </div>
     </div>`;
@@ -2954,83 +3087,203 @@ $('#schedAdd').addEventListener('click',()=>{
 ['schedName','schedNote'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#schedAdd').click();}));
 
 /* ---------- renewals ---------- */
+let rnYear=now.getFullYear();
+let rnPaidOpen=true;
+const rnDays=(date,today)=>Math.round((Date.parse(date+'T00:00')-Date.parse(today+'T00:00'))/864e5);
+function rnDaysChip(r,today){
+  if(!r.date) return {cls:'', txt:'no date'};
+  const d=rnDays(r.date,today);
+  if(d<0)  return {cls:'overdue', txt:(-d)+' day'+(d===-1?'':'s')+' overdue'};
+  if(d===0) return {cls:'today', txt:'due today'};
+  if(d<=30) return {cls:'soon', txt:'in '+d+' day'+(d===1?'':'s')};
+  return {cls:'', txt:'in '+d+' days'};
+}
+/* «Renewed»: write the payment into the history, then move the client one year ahead */
+function markRenewed(r){
+  ensureRenewals();
+  const today=todayIso();
+  const due=r.date||today;
+  r.history.push({id:uid(), at:today, value:+r.value||0, due});
+  const [y,m,d]=due.split('-'); r.date=(+y+1)+'-'+m+'-'+d;
+  r.lastRenewed=today; r.updated=Date.now();
+  save(); renderAll();
+  toast(r.name+' renewed · '+fmtMoney(r.value||0)+' collected · next '+fmtDate(r.date));
+}
+function undoRenewal(r,h){
+  ensureRenewals();
+  if(!confirm('Undo this renewal for "'+r.name+'"?\n'+fmtMoney(h.value||0)+' paid on '+fmtDate(h.at)+' is removed from the income and the client goes back to '+fmtDate(h.due)+'.')) return;
+  r.history=r.history.filter(x=>x!==h);
+  r.date=h.due; r.updated=Date.now();
+  const last=r.history[r.history.length-1]; r.lastRenewed= last? last.at : '';
+  save(); renderAll(); toast('Renewal undone — '+r.name+' is due '+fmtDate(r.date));
+}
 function renderRenewals(){
+  ensureRenewals();
   const today=todayIso();
   const in90=isoDate(new Date(Date.now()+90*864e5));
-  const withDate=state.renewals.filter(r=>r.date).sort((a,b)=>a.date<b.date?-1:1);
-  const noDate=state.renewals.filter(r=>!r.date);
-  const due90=withDate.filter(r=>r.date>=today && r.date<=in90);
+  const all=[...state.renewals].sort((a,b)=>(a.date||'9999')<(b.date||'9999')?-1:1);
+  const withDate=all.filter(r=>r.date), noDate=all.filter(r=>!r.date);
   const overdue=withDate.filter(r=>r.date<today);
-  const y1=String(curYear), y2=String(curYear+1);
-  const sumY=y=>withDate.filter(r=>r.date.startsWith(y)).reduce((a,r)=>a+(+r.value||0),0);
+  const due90=withDate.filter(r=>r.date>=today && r.date<=in90);
+  const thisM=today.slice(0,7);
+  const dueThisM=withDate.filter(r=>r.date.slice(0,7)===thisM && r.date>=today);
+  const sum=arr=>arr.reduce((a,r)=>a+(+r.value||0),0);
+  const yS=String(rnYear);
+  const dueYear=withDate.filter(r=>r.date.startsWith(yS));
+  const paidYear=renewalsPaidForYear(rnYear), paidCount=renewalsPaidCountForYear(rnYear);
+  /* banner */
   $('#rnBanner').innerHTML=`
-    <div class="cell hot"><div class="k">Next 90 days</div><div class="big">${fmtMoney(due90.reduce((a,r)=>a+(+r.value||0),0))}</div><div class="k" style="margin-top:2px;">${due90.length} renewals</div></div>
-    <div class="cell"><div class="k">Due ${y1}</div><div class="big">${fmtMoney(sumY(y1))}</div></div>
-    <div class="cell"><div class="k">Due ${y2}</div><div class="big">${fmtMoney(sumY(y2))}</div></div>
-    <div class="cell"><div class="k">Total clients renewing</div><div class="big">${state.renewals.length}</div></div>
-    ${overdue.length?`<div class="cell"><div class="k" style="color:#FF9C8F;">Overdue</div><div class="big" style="color:#FF9C8F;">${overdue.length}</div></div>`:''}`;
-  const el=$('#rnList'); el.innerHTML='';
-  const groups={};
-  withDate.forEach(r=>{ (groups[r.date.slice(0,7)] ||= []).push(r); });
-  const keys=Object.keys(groups).sort();
-  const colA=document.createElement('div'), colB=document.createElement('div');
-  const half=Math.ceil(keys.length/2);
-  keys.forEach((m,i)=>{
-    const g=document.createElement('div'); g.className='month-group';
-    const gsum=groups[m].reduce((a,r)=>a+(+r.value||0),0);
-    g.innerHTML=`<h4>${fmtMonth(m)} <span class="count">${groups[m].length}</span><span class="gsum">${fmtMoney(gsum)}</span></h4>`;
-    groups[m].forEach(r=>g.appendChild(rnItem(r,today,in90)));
-    (i<half?colA:colB).appendChild(g);
-  });
-  if(noDate.length){
-    const g=document.createElement('div'); g.className='month-group';
-    g.innerHTML=`<h4>No date yet <span class="count">${noDate.length}</span></h4>`;
-    noDate.forEach(r=>g.appendChild(rnItem(r,today,in90)));
-    colB.appendChild(g);
+    <div class="cell over${overdue.length?'':' zero'}"><div class="k">${IC.flag} Overdue</div><div class="big">${overdue.length?fmtMoney(sum(overdue)):'—'}</div><div class="k sub">${overdue.length?overdue.length+' waiting to be chased':'nothing overdue'}</div></div>
+    <div class="cell now"><div class="k">${IC.calendar} Due this month</div><div class="big">${fmtMoney(sum(dueThisM))}</div><div class="k sub">${dueThisM.length} renewal${dueThisM.length===1?'':'s'} · ${MONTHS[+thisM.slice(5,7)-1]}</div></div>
+    <div class="cell hot"><div class="k">${IC.clock} Next 90 days</div><div class="big">${fmtMoney(sum(due90))}</div><div class="k sub">${due90.length} renewal${due90.length===1?'':'s'} coming up</div></div>
+    <div class="cell paid"><div class="k">${IC.check2} Renewed ${rnYear}</div><div class="big">${fmtMoney(paidYear)}</div><div class="k sub">${paidCount} paid · counts in Money made</div></div>
+    <div class="cell"><div class="k">${IC.repeat} Still due ${rnYear}</div><div class="big">${fmtMoney(sum(dueYear))}</div><div class="k sub">${dueYear.length} left in the year</div></div>
+    <div class="cell"><div class="k">${IC.users} Clients renewing</div><div class="big">${state.renewals.length}</div><div class="k sub">${fmtMoney(sum(all))} / year in total</div></div>`;
+  /* year bar + 12-month strip */
+  $('#rnYearLabel').textContent=rnYear;
+  const strip=$('#rnStrip');
+  const monthDue=[], monthPaid=[];
+  for(let m=1;m<=12;m++){ const key=yS+'-'+pad(m);
+    monthDue.push(sum(withDate.filter(r=>r.date.slice(0,7)===key)));
+    monthPaid.push(renewalsPaidForMonth(key)); }
+  const maxV=Math.max(1,...monthDue,...monthPaid);
+  strip.innerHTML=monthDue.map((v,i)=>{ const key=yS+'-'+pad(i+1);
+    const past=key<thisM, cur=key===thisM;
+    const shown= past? monthPaid[i] : v;
+    const h=Math.round(shown/maxV*100);
+    return `<button data-key="${key}" class="${cur?'cur':''}${past?' done':''}${(!past&&v&&withDate.some(r=>r.date.slice(0,7)===key&&r.date<today))?' over':''}" title="${MONTHS[i]} ${yS}: ${fmtMoney(v)} due${monthPaid[i]?' · '+fmtMoney(monthPaid[i])+' renewed':''}">
+      <span class="rs-bar"><i style="height:${Math.max(shown?8:2,h)}%"></i></span>
+      <span class="rs-m">${MONTHS[i].slice(0,3)}</span>
+      <span class="rs-v ${shown?'':'zero'}">${shown?fmtMoney(shown):'—'}</span></button>`; }).join('');
+  strip.querySelectorAll('button[data-key]').forEach(b=>b.addEventListener('click',()=>{
+    let k=b.dataset.key, el=null; for(let i=0;i<12 && !el;i++){ el=document.getElementById('rnm-'+k); if(!el){ let [y,m]=k.split('-').map(Number); m--; if(m<1) break; k=y+'-'+pad(m); } }
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }));
+  /* overdue drawer — always on top, whatever year is shown */
+  const ov=$('#rnOverdue');
+  if(overdue.length){
+    ov.style.display='';
+    ov.innerHTML=`<div class="rn-mh"><div class="rmh-txt"><h3>${IC.flag} Overdue — chase these first</h3><p>Renewal date has passed and nobody pressed «Renewed» yet. Press it when they pay, or fix the date if it moved.</p></div>
+      <div class="rn-msum"><span class="k">overdue</span><span class="v">${fmtMoney(sum(overdue))}</span></div></div>
+      <div class="rn-body"></div>`;
+    const body=ov.querySelector('.rn-body'); overdue.forEach(r=>body.appendChild(rnRow(r,today)));
+  } else { ov.style.display='none'; ov.innerHTML=''; }
+  /* the twelve months of the chosen year */
+  const list=$('#rnList'); list.innerHTML='';
+  if(!state.renewals.length){ list.innerHTML='<div class="empty-note">No renewals yet — add your first client above (name, € per year, next renewal date).</div>'; }
+  else { let emptyRun=[];
+  const flushEmpty=()=>{ if(!emptyRun.length) return;
+    const sec=document.createElement('section'); sec.className='rn-month empty'; sec.id='rnm-'+emptyRun[0];
+    const names=emptyRun.map(k=>MONTHS[+k.slice(5,7)-1].slice(0,3)).join(' · ');
+    sec.innerHTML=`<div class="rn-mh"><div class="rmh-txt"><h3>${names} ${yS}</h3></div><span class="rn-empty-line">nothing due</span></div>`;
+    list.appendChild(sec); emptyRun=[]; };
+  for(let m=1;m<=12;m++){ const key=yS+'-'+pad(m);
+    const items=withDate.filter(r=>r.date.slice(0,7)===key && r.date>=today);   /* overdue ones sit in the drawer above */
+    const pastDue=withDate.filter(r=>r.date.slice(0,7)===key && r.date<today).length;
+    const paid=monthPaid[m-1];
+    if(!items.length && !pastDue && !paid && key!==thisM){ emptyRun.push(key); continue; }
+    flushEmpty();
+    const sec=document.createElement('section'); sec.id='rnm-'+key;
+    sec.className='rn-month'+(key===thisM?' current':'')+(items.length?'':' empty');
+    const bits=[];
+    if(items.length) bits.push(items.length+' renewal'+(items.length===1?'':'s'));
+    if(pastDue) bits.push(`<b class="r">${pastDue} overdue — see above</b>`);
+    if(paid) bits.push(`<b class="g">${fmtMoney(paid)} renewed this month</b>`);
+    sec.innerHTML=`<div class="rn-mh"><div class="rmh-txt"><h3>${MONTHS[m-1]} ${yS}${key===thisM?'<span class="now-tag">NOW</span>':''}</h3>${bits.length?`<p>${bits.join(' · ')}</p>`:''}</div>
+      ${items.length?`<div class="rn-msum"><span class="k">due</span><span class="v">${fmtMoney(sum(items))}</span></div>`:'<span class="rn-empty-line">nothing due</span>'}</div>
+      ${items.length?'<div class="rn-body"></div>':''}`;
+    const body=sec.querySelector('.rn-body'); if(body) items.forEach(r=>body.appendChild(rnRow(r,today)));
+    list.appendChild(sec);
   }
-  if(!keys.length && !noDate.length) el.innerHTML='<div class="empty-note">No renewals yet — add your first one above.</div>';
-  else { el.appendChild(colA); el.appendChild(colB); }
+  flushEmpty(); }
+  if(noDate.length){
+    const sec=document.createElement('section'); sec.className='rn-month';
+    sec.innerHTML=`<div class="rn-mh"><div class="rmh-txt"><h3>No date yet</h3><p>Click the date on each row to set when they renew.</p></div><div class="rn-msum"><span class="k">value</span><span class="v">${fmtMoney(sum(noDate))}</span></div></div><div class="rn-body"></div>`;
+    const body=sec.querySelector('.rn-body'); noDate.forEach(r=>body.appendChild(rnRow(r,today)));
+    list.appendChild(sec);
+  }
+  /* the renewed pot — income, grouped by the month it was paid */
+  const pot=$('#rnPaid');
+  const hist=renewalHistory().filter(x=>(x.h.at||'').startsWith(yS)).sort((a,b)=>a.h.at<b.h.at?1:-1);
+  pot.classList.toggle('open', rnPaidOpen);
+  pot.innerHTML=`<div class="rn-mh"><span class="ico">${IC.wallet}</span><div class="rmh-txt"><h3>Renewed · income ${yS}</h3><p>${hist.length? 'Every renewal that was paid, in the month you collected it. This is the renewals pot on the Year tab.' : 'Nothing renewed yet this year — press «Renewed» on a client when they pay and it lands here.'}</p></div>
+    <div class="rn-msum"><span class="k">collected</span><span class="v">${fmtMoney(paidYear)}</span></div><span class="chev">${IC.chevRight}</span></div>
+    <div class="rn-paid-body"></div>`;
+  pot.querySelector('.rn-mh').addEventListener('click',()=>{ rnPaidOpen=!rnPaidOpen; pot.classList.toggle('open',rnPaidOpen); });
+  const pb=pot.querySelector('.rn-paid-body');
+  if(!hist.length) pb.innerHTML='<div class="rn-empty-line" style="padding:6px 8px 4px;">No renewals collected in '+yS+' yet.</div>';
+  else {
+    const groups={}; hist.forEach(x=>{ (groups[x.h.at.slice(0,7)] ||= []).push(x); });
+    Object.keys(groups).sort().reverse().forEach(key=>{
+      const g=document.createElement('div'); g.className='rn-pgroup';
+      const gs=groups[key].reduce((a,x)=>a+(+x.h.value||0),0);
+      g.innerHTML=`<h4>${fmtMonth(key)} <span class="count">${groups[key].length}</span><span class="gsum">${fmtMoney(gs)}</span></h4><div class="rows"></div>`;
+      const rows=g.querySelector('.rows');
+      groups[key].forEach(({r,h})=>{
+        const row=document.createElement('div'); row.className='rn-row paid';
+        row.innerHTML=`<div class="rn-main"><div class="rn-name">${esc(r.name)}</div><div class="rn-sub">covered until ${fmtDate(h.due)} · next renewal ${r.date?fmtDate(r.date):'—'}</div></div>
+          <span class="rn-val">${fmtMoney(h.value||0)}</span>
+          <span class="rn-days" title="Click to change the day it was paid">${IC.check} paid ${fmtDate(h.at)}</span>
+          <button class="rn-undo" title="Undo — remove this payment and move the date back">${IC.undo} Undo</button>`;
+        row.querySelector('.rn-days').style.cursor='pointer';
+        row.querySelector('.rn-days').addEventListener('click',()=>{
+          const nd=prompt('Day this renewal was paid (YYYY-MM-DD):', h.at);
+          if(nd===null) return; const t=nd.trim();
+          if(/^\d{4}-\d{2}-\d{2}$/.test(t)){ h.at=t; save(); renderAll(); } else toast('Use the format YYYY-MM-DD');
+        });
+        row.querySelector('.rn-val').addEventListener('click',()=>{
+          const nv=prompt('Amount paid (€) for '+r.name+':', h.value||0); if(nv===null) return;
+          const n=parseFloat(String(nv).replace(',','.')); if(!isNaN(n)&&n>=0){ h.value=Math.round(n); save(); renderAll(); } else toast('Enter a number, e.g. 100');
+        });
+        row.querySelector('.rn-undo').addEventListener('click',()=>undoRenewal(r,h));
+        rows.appendChild(row);
+      });
+      pb.appendChild(g);
+    });
+  }
 }
-function rnItem(r,today,in90){
+function rnRow(r,today){
   const row=document.createElement('div');
-  const cls= !r.date ? '' : r.date<today ? ' overdue' : r.date<=in90 ? ' soon' : '';
-  row.className='rn-item'+cls;
-  row.innerHTML=`<div class="w-name">${esc(r.name)}</div>
-    <span class="rn-val">${fmtMoney(r.value)}</span>
-    <span class="rn-date">${r.date? fmtDate(r.date) : 'set date'}</span>
-    <button class="rn-done" title="Paid — move one year ahead">${IC.check} Renewed +1y</button>
-    <button class="item-x" title="Remove">${IC.x}</button>`;
-  row.querySelector('.rn-done').addEventListener('click',()=>{
-    if(r.date){ const [y,m,d]=r.date.split('-'); r.date=(+y+1)+'-'+m+'-'+d; }
-    else r.date=isoDate(new Date(Date.now()+365*864e5));
-    save(); renderRenewals(); toast(r.name+' renewed — next: '+fmtDate(r.date));
-  });
-  const rv=row.querySelector('.rn-val');
-  rv.style.cursor='pointer'; rv.title='Click to edit the amount';
-  rv.addEventListener('click',()=>{
-    const nv=prompt('Renewal amount (€) for '+r.name+':', r.value||0);
+  const chip=rnDaysChip(r,today);
+  row.className='rn-row'+(chip.cls?' '+chip.cls:'');
+  const n=(r.history||[]).length;
+  const hist= n ? `<span class="hist" title="Renewed ${n} time${n===1?'':'s'}">${IC.repeat} renewed ${n}×${r.lastRenewed?' · last '+fmtDate(r.lastRenewed):''}</span>` : `<span class="hist">first renewal</span>`;
+  row.innerHTML=`<div class="rn-main"><div class="rn-name">${esc(r.name)}</div><div class="rn-sub">${hist}${r.note?`<span>${esc(r.note)}</span>`:''}</div></div>
+    <span class="rn-val" title="Click to edit the amount">${fmtMoney(r.value||0)}</span>
+    <button class="rn-date" title="Click to change the renewal date">${IC.calendar} ${r.date? fmtDate(r.date) : 'set date'}</button>
+    <span class="rn-days">${chip.txt}</span>
+    <div class="rn-acts">
+      <button class="rn-done" title="They paid — collect ${fmtMoney(r.value||0)} and move them one year ahead">${IC.check} Renewed</button>
+      <button class="item-x" title="Remove this client from renewals">${IC.x}</button>
+    </div>`;
+  row.querySelector('.rn-done').addEventListener('click',()=>markRenewed(r));
+  row.querySelector('.rn-val').addEventListener('click',()=>{
+    const nv=prompt('Renewal amount (€ / year) for '+r.name+':', r.value||0);
     if(nv===null) return;
     const n=parseFloat(String(nv).replace(',','.'));
-    if(!isNaN(n)&&n>=0){ r.value=Math.round(n); save(); renderRenewals(); toast(r.name+' — renewal now '+fmtMoney(r.value)); }
+    if(!isNaN(n)&&n>=0){ r.value=Math.round(n); save(); renderAll(); toast(r.name+' — renewal now '+fmtMoney(r.value)); }
     else toast('Enter a number, e.g. 100');
   });
-  row.querySelector('.rn-date').style.cursor='pointer';
   row.querySelector('.rn-date').addEventListener('click',()=>{
     const nd=prompt('Renewal date for '+r.name+' (YYYY-MM-DD):', r.date||'');
     if(nd===null) return;
-    if(/^\d{4}-\d{2}-\d{2}$/.test(nd.trim())){ r.date=nd.trim(); save(); renderRenewals(); }
+    if(/^\d{4}-\d{2}-\d{2}$/.test(nd.trim())){ r.date=nd.trim(); save(); renderAll(); }
     else toast('Use the format YYYY-MM-DD');
   });
   row.querySelector('.item-x').addEventListener('click',()=>{
-    if(confirm('Remove renewal for "'+r.name+'"?')){ state.renewals=state.renewals.filter(x=>x.id!==r.id); save(); renderRenewals(); }
+    const n=(r.history||[]).length;
+    if(confirm('Remove "'+r.name+'" from renewals?'+(n?'\n\nIts '+n+' past payment'+(n===1?'':'s')+' ('+fmtMoney(r.history.reduce((a,h)=>a+(+h.value||0),0))+') would leave the income too.':''))){ state.renewals=state.renewals.filter(x=>x.id!==r.id); save(); renderAll(); }
   });
   return row;
 }
+$('#rnPrevY').addEventListener('click',()=>{ rnYear--; renderRenewals(); });
+$('#rnNextY').addEventListener('click',()=>{ rnYear++; renderRenewals(); });
+$('#rnThisYear').addEventListener('click',()=>{ rnYear=new Date().getFullYear(); renderRenewals(); });
 $('#rnAdd').addEventListener('click',()=>{
   const name=$('#rnName').value.trim(); if(!name){ $('#rnName').focus(); return; }
-  state.renewals.push({id:uid(), name, value:+$('#rnVal').value||0, date:$('#rnDate').value||'', created:Date.now()});
+  state.renewals.push({id:uid(), name, value:+$('#rnVal').value||0, date:$('#rnDate').value||'', history:[], created:Date.now()});
   ['#rnName','#rnVal','#rnDate'].forEach(s=>$(s).value='');
-  save(); renderRenewals(); toast('Renewal added'); $('#rnName').focus();
+  save(); renderAll(); toast('Renewal added'); $('#rnName').focus();
 });
 $('#rnName').addEventListener('keydown',e=>{if(e.key==='Enter')$('#rnAdd').click();});
 
@@ -4178,13 +4431,13 @@ function exportYearReport(){
       <div class="rp-kpis">
         <div class="rp-kpi hero"><div class="k">Generated</div><div class="v">${fmtMoney(gen)}</div><div class="n">${sold} website${sold===1?'':'s'} paid</div></div>
         <div class="rp-kpi"><div class="k">Pipeline value</div><div class="v">${fmtMoney(pipeline)}</div><div class="n">${yearClients.length} active client${yearClients.length===1?'':'s'}</div></div>
-        <div class="rp-kpi good"><div class="k">Collected</div><div class="v">${fmtMoney(collected)}</div><div class="n">money in the bank</div></div>
+        <div class="rp-kpi good"><div class="k">Collected</div><div class="v">${fmtMoney(collected+renewalsPaidForYear(y))}</div><div class="n">${fmtMoney(collected)} new clients + ${fmtMoney(renewalsPaidForYear(y))} renewals</div></div>
         <div class="rp-kpi ${toCollect>0?'warn':''}"><div class="k">Still to collect</div><div class="v">${fmtMoney(toCollect)}</div><div class="n">invoiced but unpaid</div></div>
         <div class="rp-kpi"><div class="k">Expenses</div><div class="v">${fmtMoney2(exp)}</div><div class="n">domains + fixed monthly</div></div>
         <div class="rp-kpi ${net>=0?'good':'bad'}"><div class="k">Net profit</div><div class="v">${fmtMoney2(net)}</div><div class="n">generated − expenses</div></div>
       </div>
       <div class="rp-kpis">
-        <div class="rp-kpi"><div class="k">Renewals due ≤90d</div><div class="v">${dueSoon.length}</div><div class="n">${fmtMoney(dueSoon.reduce((a,r)=>a+(+r.value||0),0))} at stake</div></div>
+        <div class="rp-kpi"><div class="k">Renewals due ≤90d</div><div class="v">${dueSoon.length}</div><div class="n">${fmtMoney(dueSoon.reduce((a,r)=>a+(+r.value||0),0))} at stake · ${fmtMoney(renewalsPaidForYear(y))} renewed in ${y}</div></div>
         <div class="rp-kpi"><div class="k">Subscriptions</div><div class="v">${(state.subs||[]).length}</div><div class="n">${fmtMoney2(subsTotal)} / month</div></div>
         <div class="rp-kpi"><div class="k">Open to-dos</div><div class="v">${(state.todos||[]).filter(t=>!t.done).length}</div><div class="n">${lostCount} lost this year</div></div>
       </div>
