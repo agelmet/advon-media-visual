@@ -371,6 +371,105 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .rn-done{background:var(--grad); color:#fff; font-size:10.5px; font-weight:700; border-radius:7px; padding:4px 8px; opacity:0; white-space:nowrap;}
 .rn-item:hover .rn-done{opacity:1;}
 
+/* ---------- Remaining — money still out there ---------- */
+.rem-banner{background:linear-gradient(120deg,#10141F 10%,#1B2E52 55%,#2F7FE0 140%); color:#fff; border-radius:var(--radius); padding:22px 26px; margin-bottom:14px; display:grid; grid-template-columns:1.5fr repeat(4,1fr); gap:18px 24px; align-items:start; box-shadow:var(--shadow-lg); position:relative; overflow:hidden;}
+.rem-banner::before{content:''; position:absolute; inset:-40% auto auto -10%; width:60%; height:180%; background:radial-gradient(closest-side,rgba(53,199,233,.22),transparent 70%); pointer-events:none;}
+.rem-banner .cell{min-width:0; position:relative;}
+.rem-banner .k{font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.62); display:flex; align-items:center; gap:6px;}
+.rem-banner .k.sub{margin-top:6px; letter-spacing:.04em; text-transform:none; font-size:11.5px; color:rgba(255,255,255,.55);}
+.rem-banner .big{font-family:'Sora'; font-weight:800; font-size:30px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1.1; margin-top:6px;}
+.rem-banner .cell.hero .big{font-size:40px; color:#FFB39F;}
+.rem-banner .cell.green .big{color:#4BE8A0;} .rem-banner .cell.orange .big{color:#FFB35C;} .rem-banner .cell.red .big{color:#FF8A96;}
+.rem-banner .cell.trash .big{color:rgba(255,255,255,.55); text-decoration:line-through; text-decoration-thickness:2px; text-decoration-color:rgba(255,77,94,.7);}
+.rem-banner .k .dot{width:9px; height:9px; border-radius:99px; display:inline-block; background:currentColor;}
+.rem-banner .cell.green .k .dot{background:#4BE8A0;} .rem-banner .cell.orange .k .dot{background:#FFB35C;} .rem-banner .cell.red .k .dot{background:#FF8A96;}
+@media(max-width:1180px){.rem-banner{grid-template-columns:repeat(3,1fr);} .rem-banner .cell.hero{grid-column:span 3;}}
+@media(max-width:640px){.rem-banner{grid-template-columns:repeat(2,1fr); gap:14px 16px; padding:18px 16px;} .rem-banner .cell.hero{grid-column:span 2;} .rem-banner .big{font-size:22px;} .rem-banner .cell.hero .big{font-size:32px;}}
+.rem-legend{display:flex; align-items:center; gap:14px 18px; flex-wrap:wrap; padding:2px 6px 16px; font-size:12px; font-weight:600; color:var(--muted);}
+.rem-legend .rl-item{display:inline-flex; align-items:center; gap:7px; color:var(--ink);}
+.rem-legend .rl-hint{margin-left:auto; font-weight:500; font-size:11.5px;}
+.rem-legend .rl-hint b{color:var(--ink);}
+@media(max-width:900px){.rem-legend .rl-hint{margin-left:0; width:100%;}}
+.rem-months{display:flex; flex-direction:column; gap:14px;}
+.rem-month{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
+.rem-month.current{box-shadow:0 0 0 2px var(--blue-soft), var(--shadow);}
+.rem-month-head{display:flex; align-items:center; gap:14px; padding:14px 18px; border-bottom:1px solid var(--line); flex-wrap:wrap;}
+.rem-month-head .rmh-txt{flex:1; min-width:160px;}
+.rem-month-head h3{font-size:16px; font-weight:800; letter-spacing:-.01em;}
+.rem-month.current h3::after{content:'NOW'; margin-left:8px; font-size:9px; font-weight:800; letter-spacing:.1em; background:var(--grad); color:#fff; padding:3px 7px; border-radius:6px; vertical-align:2px;}
+.rem-month-head p{font-size:12px; color:var(--muted); font-weight:500; margin-top:2px;}
+.rem-month-head p b.g{color:var(--deep);}
+.rmh-open{font-size:12px; font-weight:700; color:var(--brand); background:var(--blue-soft); border-radius:9px; padding:7px 11px; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;}
+.rmh-open:hover{filter:brightness(.96);}
+.rmh-sum{text-align:right; display:flex; flex-direction:column; align-items:flex-end;}
+.rmh-sum .k{font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
+.rmh-sum .v{font-family:'Sora'; font-weight:800; font-size:22px; letter-spacing:-.02em; color:var(--coral); font-variant-numeric:tabular-nums; line-height:1.1;}
+.rem-month-body{padding:10px 12px 12px; display:flex; flex-direction:column; gap:7px;}
+.rem-row{display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:12px; padding:11px 13px 11px 11px; border-radius:13px; background:var(--bg); border:1px solid var(--line); border-left:5px solid var(--sc,var(--line)); transition:box-shadow .15s, transform .15s, background .15s;}
+.rem-row:hover{box-shadow:var(--shadow); transform:translateY(-1px);}
+.rem-row.f-green{background:var(--green-soft); border-color:rgba(14,198,115,.35); border-left-color:var(--green);}
+.rem-row.f-orange{background:var(--orange-soft); border-color:rgba(255,138,0,.35); border-left-color:var(--orange);}
+.rem-row.f-red{background:var(--red-soft); border-color:rgba(255,77,94,.4); border-left-color:var(--red);}
+.rem-flags{display:flex; flex-direction:column; gap:5px; padding:2px 2px 2px 0;}
+@media(max-width:700px){.rem-flags{flex-direction:row;}}
+.rem-dot{width:16px; height:16px; border-radius:99px; border:2px solid transparent; opacity:.42; transition:transform .12s, opacity .12s; box-shadow:0 0 0 0 transparent; padding:0; display:inline-block;}
+.rem-dot.green{background:var(--green);} .rem-dot.orange{background:var(--orange);} .rem-dot.red{background:var(--red);}
+.rem-dot:hover{opacity:.85; transform:scale(1.15);}
+.rem-dot.on{opacity:1; border-color:#fff; box-shadow:0 0 0 2px currentColor; transform:scale(1.12);}
+.rem-dot.green.on{color:var(--green);} .rem-dot.orange.on{color:var(--orange);} .rem-dot.red.on{color:var(--red);}
+body.dark .rem-dot.on{border-color:var(--surface);}
+.rem-legend .rem-dot{width:13px; height:13px; transform:none; cursor:default; box-shadow:none; border-width:1.5px;}
+.rem-main{min-width:0; cursor:pointer;}
+.rem-name{font-weight:700; font-size:14px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; word-break:break-word;}
+.rem-flag-lbl{font-size:9.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; padding:3px 7px; border-radius:6px;}
+.rem-flag-lbl.green{background:var(--green); color:#fff;} .rem-flag-lbl.orange{background:var(--orange); color:#fff;} .rem-flag-lbl.red{background:var(--red); color:#fff;}
+.rem-meta{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:5px;}
+.rem-stage{font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:7px; letter-spacing:.02em; white-space:nowrap;}
+.rem-chip,.rem-age{font-size:11px; font-weight:600; color:var(--muted); background:var(--surface); border:1px solid var(--line); border-radius:7px; padding:2px 7px; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; text-decoration:none; font-variant-numeric:tabular-nums;}
+.rem-chip.link:hover{color:var(--brand); border-color:#BFD4F2;}
+.rem-chip.xtra{background:var(--violet-soft); color:var(--violet); border-color:transparent; font-weight:700;}
+.rem-age.late{color:var(--red); border-color:rgba(255,77,94,.4); background:var(--red-soft);}
+.rem-note{font-size:11px; color:var(--muted); max-width:340px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:500;}
+.rem-note.reason{color:var(--coral); font-weight:600; display:inline-flex; align-items:center; gap:4px;}
+.rem-val{font-family:'Sora'; font-weight:800; font-size:18px; letter-spacing:-.02em; color:var(--coral); font-variant-numeric:tabular-nums; white-space:nowrap;}
+.rem-row.f-green .rem-val{color:var(--deep);}
+.rem-val.lost{color:var(--muted); text-decoration:line-through; text-decoration-color:var(--red); text-decoration-thickness:2px;}
+.rem-actions{display:flex; gap:6px; align-items:center;}
+.rem-btn{display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:700; border-radius:9px; padding:7px 10px; white-space:nowrap; transition:filter .12s, transform .12s;}
+.rem-btn:active{transform:scale(.96);}
+.rem-btn.paid{background:var(--green); color:#fff; box-shadow:0 3px 10px rgba(14,198,115,.3);}
+.rem-btn.paid:hover{filter:brightness(1.05);}
+.rem-btn.trash{background:var(--surface); border:1px solid var(--line); color:var(--muted); padding:7px 8px;}
+.rem-btn.trash:hover{background:var(--red-soft); color:var(--red); border-color:rgba(255,77,94,.4);}
+.rem-btn.restore{background:var(--blue-soft); color:var(--brand);}
+.rem-btn.restore:hover{filter:brightness(.96);}
+@media(max-width:700px){
+  .rem-row{grid-template-columns:1fr auto; gap:8px 10px;}
+  .rem-flags{grid-column:1 / -1; order:3; padding:0;}
+  .rem-actions{grid-column:1 / -1; order:4; justify-content:flex-end;}
+  .rem-val{font-size:16px;}
+  .rem-note{max-width:100%; white-space:normal; display:block; width:100%;}
+}
+.rem-empty{background:var(--surface); border:1px dashed var(--line); border-radius:var(--radius); padding:36px 20px; text-align:center;}
+.rem-empty .ico{width:44px; height:44px; border-radius:14px; display:inline-grid; place-items:center; background:var(--green-soft); color:var(--deep); font-size:20px; margin-bottom:10px;}
+.rem-empty h3{font-size:16px; font-weight:800;} .rem-empty p{font-size:12.5px; color:var(--muted); margin-top:4px;}
+.rem-trash{margin-top:22px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
+.rem-trash-head{display:flex; align-items:center; gap:12px; padding:14px 18px; cursor:pointer; user-select:none; background:linear-gradient(120deg,#10141F,#2A1418 140%); color:#fff;}
+.rem-trash-head .ico{width:36px; height:36px; border-radius:11px; display:grid; place-items:center; background:rgba(255,77,94,.18); color:#FF8A96; font-size:16px; flex-shrink:0;}
+.rem-trash-head .rth-txt{flex:1; min-width:160px;}
+.rem-trash-head h3{font-size:15px; font-weight:800;}
+.rem-trash-head p{font-size:11.5px; color:rgba(255,255,255,.6); font-weight:500; margin-top:2px;}
+.rem-trash-head .rth-sum{text-align:right; display:flex; flex-direction:column; align-items:flex-end;}
+.rem-trash-head .rth-sum .k{font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.55);}
+.rem-trash-head .rth-sum .v{font-family:'Sora'; font-weight:800; font-size:22px; letter-spacing:-.02em; color:#FF8A96; font-variant-numeric:tabular-nums; line-height:1.1; text-decoration:line-through; text-decoration-thickness:2px; text-decoration-color:rgba(255,255,255,.5);}
+.rem-trash-head .chev{transition:transform .18s; color:rgba(255,255,255,.6); display:grid; font-size:16px;}
+.rem-trash.open .rem-trash-head .chev{transform:rotate(90deg);}
+.rem-trash-body{display:none; padding:10px 12px 12px; flex-direction:column; gap:7px;}
+.rem-trash.open .rem-trash-body{display:flex;}
+.rem-row.trashed{grid-template-columns:1fr auto auto; opacity:.86; border-left-color:var(--muted); background:var(--bg);}
+.rem-row.trashed .rem-name{color:var(--muted);}
+.rem-trash-empty{font-size:12.5px; color:#B4BAC8; text-align:center; padding:16px;}
+
 /* ---------- Horizontal trays (Booked / Making changes) ---------- */
 .tray-row{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;}
 .tray{background:#fff; border:1px solid var(--line); border-top:5px solid var(--tc); border-radius:var(--radius); box-shadow:var(--shadow), 0 10px 26px -18px var(--tc); min-width:0;}
@@ -590,6 +689,7 @@ body.dark .ql-card input:focus{background:#fff;}
 .qs-pill.accent .k{color:rgba(255,255,255,.85);} .qs-pill.accent .sub{color:rgba(255,255,255,.8);}
 .qs-pill .tgt-bar{margin-top:auto;}
 .day-log{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:14px; overflow:hidden;}
+.day-log.uncounted{opacity:.72; box-shadow:none; border-style:dashed;}
 .daylog-head{display:flex; align-items:center; gap:10px; padding:12px 15px; border-bottom:1px solid var(--line); flex-wrap:wrap;}
 .daylog-head .dl-date{font-family:'Sora'; font-weight:800; font-size:14px; letter-spacing:-.01em;}
 .daylog-head .dl-dow{font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;}
@@ -677,12 +777,28 @@ body.dark .log-entry .le-edit:hover,body.dark .log-entry .le-x:hover{background:
 body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-select:none;}
 
 /* ---------- Home / dashboard ---------- */
-.home-hero{background:linear-gradient(120deg,#10141F 15%,#1B3A6B 65%,#2F7FE0 130%); color:#fff; border-radius:var(--radius); padding:24px 28px; margin-bottom:18px; box-shadow:var(--shadow-lg);}
-.home-hero h2{font-size:23px; font-weight:800; letter-spacing:-.02em; margin-bottom:4px;}
+.home-hero{background:linear-gradient(120deg,#10141F 15%,#1B3A6B 65%,#2F7FE0 130%); color:#fff; border-radius:var(--radius); padding:24px 28px 22px; margin-bottom:18px; box-shadow:var(--shadow-lg); position:relative; overflow:hidden;}
+.home-hero::before{content:''; position:absolute; top:-60%; right:-10%; width:55%; height:200%; background:radial-gradient(closest-side,rgba(53,199,233,.20),transparent 70%); pointer-events:none;}
+.home-hero > *{position:relative;}
+.home-hero h2{font-size:24px; font-weight:800; letter-spacing:-.02em; margin-bottom:3px;}
 .home-hero p{font-size:13px; color:rgba(255,255,255,.72); font-weight:500;}
-.home-hero .hero-stats{display:flex; gap:28px; flex-wrap:wrap; margin-top:16px;}
-.home-hero .hs .k{font-size:10px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:rgba(255,255,255,.55);}
-.home-hero .hs .v{font-family:'Sora'; font-weight:800; font-size:24px; letter-spacing:-.02em; font-variant-numeric:tabular-nums;}
+/* three calm groups instead of one long row: Calls · Money · Attention */
+.hero-groups{display:grid; grid-template-columns:3.6fr 4.7fr 2.9fr; gap:12px; margin-top:18px;}
+@media(max-width:1100px){.hero-groups{grid-template-columns:1fr 1fr;} .hero-groups .hg.attention{grid-column:1 / -1;}}
+@media(max-width:640px){.hero-groups{grid-template-columns:1fr;}}
+.hg{background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.11); border-radius:14px; padding:12px 15px 13px; min-width:0; backdrop-filter:blur(4px);}
+.hg.attention.hot{border-color:rgba(255,179,159,.35); background:rgba(255,107,87,.10);}
+.hg-title{display:flex; align-items:center; gap:6px; font-size:10px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; color:rgba(255,255,255,.62); margin-bottom:10px;}
+.hg-title .ic{width:1.15em; height:1.15em; opacity:.9;}
+.hg-title .hg-note{margin-left:auto; font-weight:600; letter-spacing:.02em; text-transform:none; font-size:10.5px; color:rgba(255,255,255,.45);}
+.home-hero .hero-stats{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px 14px;}
+.hg.attention .hero-stats{grid-template-columns:repeat(3,minmax(0,1fr));}
+@media(max-width:1280px){.home-hero .hero-stats,.hg.attention .hero-stats{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:1100px){.hg.attention .hero-stats{grid-template-columns:repeat(3,minmax(0,1fr));}}
+@media(max-width:520px){.hg.attention .hero-stats{grid-template-columns:repeat(2,minmax(0,1fr));}}
+.home-hero .hs{min-width:0; display:flex; flex-direction:column; justify-content:flex-start;}
+.home-hero .hs .k{font-size:9.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.55); line-height:1.3; min-height:25px; display:flex; align-items:flex-end;}
+.home-hero .hs .v{font-family:'Sora'; font-weight:800; font-size:23px; letter-spacing:-.02em; font-variant-numeric:tabular-nums; margin-top:2px; line-height:1.15;}
 .home-hero .hs .v.g{color:#4BE8A0;} .home-hero .hs .v.c{color:#FFB39F;} .home-hero .hs .v.b{color:#7FD9F5;}
 .home-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
 @media(max-width:1000px){.home-grid{grid-template-columns:1fr;}}
@@ -727,6 +843,8 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 .asap-empty{padding:14px 12px 6px; color:var(--muted); font-size:12.5px;}
 .home-mini{display:flex; justify-content:space-between; align-items:center; padding:8px 11px; border-radius:10px; margin-bottom:4px;}
 .home-mini .mm-name{font-weight:600; font-size:12.5px;} .home-mini .mm-val{font-weight:800; font-size:12.5px; color:var(--coral); font-variant-numeric:tabular-nums;}
+.home-mini .mm-sub{display:block; font-size:10.5px; color:var(--muted); font-weight:500; margin-top:1px;} .home-mini .mm-sub b{color:var(--deep);}
+.home-mini:hover{background:var(--bg);}
 
 /* ---------- Modal ---------- */
 .overlay{position:fixed; inset:0; background:rgba(10,18,34,.5); backdrop-filter:blur(3px); display:none; place-items:center; z-index:100; padding:20px;}
@@ -902,6 +1020,77 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 .sync-modal-body ol{margin:0 0 12px 18px;font-size:14px;line-height:1.6;}
 @media(max-width:860px){.sync-pill span:not(.sync-dot){display:none;} .sync-pill{padding:0 9px;}}
 </style>
+<style>
+/* ---------- Sept 2026 polish: calmer surfaces, clearer hierarchy, friendlier touch targets.
+   Pure look-and-feel — nothing moves, nothing is renamed. ---------- */
+body{background:radial-gradient(1100px 380px at 18% -8%, rgba(47,127,224,.10), transparent 62%), radial-gradient(900px 340px at 92% -12%, rgba(53,199,233,.08), transparent 60%), var(--bg); background-attachment:fixed;}
+body.dark{background:radial-gradient(1100px 380px at 18% -8%, rgba(47,127,224,.14), transparent 62%), var(--bg); background-attachment:fixed;}
+::selection{background:rgba(47,127,224,.22);}
+*{scrollbar-width:thin; scrollbar-color:rgba(104,113,130,.35) transparent;}
+*::-webkit-scrollbar{width:9px; height:9px;} *::-webkit-scrollbar-thumb{background:rgba(104,113,130,.28); border-radius:99px; border:2px solid transparent; background-clip:padding-box;} *::-webkit-scrollbar-track{background:transparent;}
+.topbar{box-shadow:0 1px 0 rgba(24,49,92,.06);}
+body.dark .topbar{box-shadow:0 1px 0 rgba(255,255,255,.04);}
+.brand h1{font-size:17px;}
+.tabs{border:1px solid var(--line); gap:2px; padding:4px; border-radius:13px; background:var(--surface);}
+body.dark .tabs{background:var(--bg);}
+.tab{padding:8px 12px; transition:background .15s, color .15s, transform .12s;}
+.tab:hover:not(.active){background:var(--bg); color:var(--ink);}
+body.dark .tab:hover:not(.active){background:var(--surface);}
+.tab:active{transform:scale(.97);}
+.tab.active{box-shadow:0 4px 14px rgba(47,127,224,.32);}
+.btn-ghost{background:var(--surface);}
+.btn-ghost:hover{background:var(--bg); border-color:#BFD4F2;}
+.search-wrap input{background:var(--surface);}
+.search-wrap input:focus{box-shadow:0 0 0 4px rgba(47,127,224,.10); border-color:var(--brand); outline:none;}
+input:focus,select:focus,textarea:focus{outline:none; border-color:var(--brand) !important; box-shadow:0 0 0 4px rgba(47,127,224,.12);}
+button:focus-visible{outline:2px solid var(--brand); outline-offset:2px;}
+.month-nav{border-radius:13px;}
+.month-nav button{transition:background .12s, color .12s;}
+.stat-pill{transition:transform .15s, box-shadow .15s; border-radius:15px;}
+.stat-pill:hover{transform:translateY(-1px); box-shadow:var(--shadow-lg);}
+.stat-pill .k{font-size:10px;}
+.quickadd,.panel,.home-card,.lane,.todo-lane,.fin-card,.day-log,.qlc-wrap,.lost-tray,.tray{border-radius:var(--radius);}
+.home-card{transition:box-shadow .18s, transform .18s;}
+.home-card:hover{box-shadow:var(--shadow-lg);}
+.home-card-head{padding:14px 18px;}
+.home-card-head h3{font-size:14.5px; letter-spacing:-.01em;}
+.hc-ico{width:34px; height:34px; border-radius:10px;}
+.hc-link{border-radius:9px; padding:6px 10px; transition:background .12s;}
+.home-card-body{padding:10px 14px 14px;}
+.home-row{padding:10px 12px; border-radius:12px; border:1px solid transparent; transition:transform .12s, box-shadow .12s, border-color .12s;}
+.home-row:hover{transform:translateY(-1px); border-color:var(--line); box-shadow:var(--shadow);}
+.card{border-radius:14px; transition:box-shadow .15s, transform .15s;}
+.col-head .name{font-size:13px;}
+.col-body{gap:9px;}
+.panel-head{padding:15px 18px;}
+.panel-head .ico{border-radius:11px;}
+.panel-form input:focus,.lane-input input:focus,.quickadd input:focus,.todo-lane-add input:focus{background:var(--surface);}
+.year-banner,.rn-banner{position:relative; overflow:hidden;}
+.year-banner::before,.rn-banner::before{content:''; position:absolute; top:-60%; right:-8%; width:50%; height:200%; background:radial-gradient(closest-side,rgba(53,199,233,.18),transparent 70%); pointer-events:none;}
+.year-banner > *,.rn-banner > *{position:relative;}
+.ycard{border-radius:var(--radius);}
+.qs-pill{transition:transform .15s, box-shadow .15s;}
+.qs-pill:hover{transform:translateY(-1px); box-shadow:var(--shadow-lg);}
+.ql-card{transition:transform .15s;}
+.ql-card:hover{transform:translateY(-1px);}
+.modal{border-radius:22px;}
+.modal-head{padding:22px 24px 0;}
+.modal-body{padding:16px 24px 22px;}
+.modal-foot{padding:0 24px 24px;}
+.field input,.field select,.field textarea{border-radius:12px; padding:10px 13px;}
+.toast{border-radius:14px; box-shadow:0 12px 40px rgba(16,20,31,.35);}
+.empty-note,.home-empty,.empty-col,.tray-empty,.lost-empty,.todo-lane-empty,.dl-empty{color:#A9B0C0;}
+body.dark .empty-note,body.dark .home-empty,body.dark .empty-col,body.dark .tray-empty,body.dark .lost-empty,body.dark .todo-lane-empty,body.dark .dl-empty{color:#5E6779;}
+body.dark .rem-month,body.dark .rem-trash,body.dark .rem-empty{background:var(--surface);}
+body.dark .rem-row{background:var(--bg);}
+body.dark .rem-chip,body.dark .rem-age{background:var(--surface);}
+body.dark .btn-ghost:hover{background:var(--bg);}
+@media(max-width:900px){
+  .home-hero{padding:18px 16px 16px;}
+  .hg{padding:11px 12px 12px;}
+  .home-hero .hs .v{font-size:20px;}
+}
+</style>
 </head>
 <body class="locked">
 
@@ -939,6 +1128,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
       <button class="tab" data-view="callbacks">Callbacks</button>
       <button class="tab" data-view="monthly">Monthly</button>
       <button class="tab" data-view="renewals">Renewals</button>
+      <button class="tab" data-view="remaining">Remaining</button>
       <button class="tab" data-view="year">Year</button>
     </nav>
     <div class="topbar-right">
@@ -1022,7 +1212,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
       <div class="home-card-body" id="homeWeek"></div>
     </section>
     <section class="home-card">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--coral-soft);color:var(--coral)" data-ic="euro"></span><h3>Remaining to collect</h3><button class="hc-link" data-goto="year">Year view</button></div>
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--coral-soft);color:var(--coral)" data-ic="euro"></span><h3>Remaining to collect</h3><button class="hc-link" data-goto="remaining">Remaining</button></div>
       <div class="home-card-body" id="homeCollect"></div>
     </section>
     <section class="home-card">
@@ -1255,6 +1445,14 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
     </div>
   </section>
   <div class="rn-cols" id="rnList"></div>
+</main>
+
+<!-- REMAINING — every euro still out there, month by month -->
+<main class="view" id="view-remaining">
+  <div class="rem-banner" id="remBanner"></div>
+  <div class="rem-legend" id="remLegend"></div>
+  <div class="rem-months" id="remMonths"></div>
+  <section class="rem-trash" id="remTrash"></section>
 </main>
 
 <!-- MODAL -->
@@ -1527,7 +1725,18 @@ function escalateThinking(){
 }
 const stageById = id => STAGES.find(s=>s.id===id) || STAGES[0];
 /* revenue predicates — 'lost' clients never count toward any money figure */
-const notLost = c => c.stage!=='lost';
+const notLost = c => c.stage!=='lost' && !c.trashed;
+/* Remaining tab: money still out there. 'trashed' = the site was made/started but the
+   money is gone for good — it leaves every board, target and revenue figure and is
+   shown only in the Remaining → Trash drawer as lost money. */
+const isTrashed = c => !!c.trashed;
+const REM_FLAGS = {
+  green: {name:'About to pay',      c:'var(--green)',  soft:'var(--green-soft)',  hex:'#0EC673', ink:'var(--deep)'},
+  orange:{name:'Most likely lost',  c:'var(--orange)', soft:'var(--orange-soft)', hex:'#FF8A00', ink:'#B85F00'},
+  red:   {name:'About to trash',    c:'var(--red)',    soft:'var(--red-soft)',    hex:'#FF4D5E', ink:'#C4243A'},
+};
+/* an unpaid client = in the pipeline (any stage before Paid), not lost, not trashed */
+const isUnpaid = c => notLost(c) && c.stage!=='paid';
 const PAYING_STAGES = ['pay','paid'];   /* "reached a paying stage" for conversion stats */
 const OLD_STAGE_MAP = {remind:'needinfo', draft:'review', review1:'review', review2:'changes'};
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -1586,6 +1795,10 @@ const IC={
   bars:SVG('<path d="M4 20V10M10 20V4M16 20v-8M22 20h-2M2 20h20"/>'),
   briefcase:SVG('<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>'),
   check2:SVG('<circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/>'),
+  trash:SVG('<path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><path d="M9 7V4h6v3"/>'),
+  undo:SVG('<path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-15-6.7L3 13"/>'),
+  wallet:SVG('<path d="M20 7H5a2 2 0 0 1 0-4h13v4"/><path d="M4 5v14a2 2 0 0 0 2 2h14V7"/><path d="M16 13h4v4h-4a2 2 0 0 1 0-4Z"/>'),
+  hourglass:SVG('<path d="M6 2h12M6 22h12"/><path d="M7 2v5l5 5-5 5v5"/><path d="M17 2v5l-5 5 5 5v5"/>'),
 };
 function prioDotSvg(p){ const col=PRIO_COLOR[p]?PRIO_COLOR[p].c:'var(--muted)'; return `<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="${col}"/></svg>`; }
 
@@ -2129,7 +2342,7 @@ function renderBoard(){
 let thinkOpen=false;
 function renderThinkTray(){
   const st=stageById('thinking');
-  const items=state.clients.filter(c=>c.month===curMonth && c.stage==='thinking')
+  const items=state.clients.filter(c=>c.month===curMonth && c.stage==='thinking' && !isTrashed(c))
     .sort((a,b)=>thinkDays(b)-thinkDays(a));
   const el=$('#thinkTray'); if(!el) return;
   const due=items.filter(thinkOverdue).length;
@@ -2243,7 +2456,7 @@ $('#qaAdd').addEventListener('click',qaSubmit);
 
 /* ---------- calendar ---------- */
 function meetingsOn(iso){
-  return state.clients.filter(c=>c.day===iso).sort((a,b)=>(a.time||'99')<(b.time||'99')?-1:1);
+  return state.clients.filter(c=>c.day===iso && !isTrashed(c)).sort((a,b)=>(a.time||'99')<(b.time||'99')?-1:1);
 }
 function meetHtml(c){
   return `<div class="meet" data-id="${c.id}">
@@ -2440,22 +2653,28 @@ function ensureLogs(){
 }
 /* stats — call volume counts COLD entries only; booking/revenue count ALL sources */
 function logsForMonth(key){ return state.logs.filter(l=>(l.date||'').slice(0,7)===key); }
-function dayStats(iso){
-  const day=state.logs.filter(l=>l.date===iso);
+/* Statistics count from a start date only (default 15 Sept 2026 — the proper cold-calling
+   restart). Older entries stay in the log for reference but never touch a number. */
+const STATS_SINCE_DEFAULT='2026-09-15';
+function statsSince(){ ensureMeta(); return /^\d{4}-\d{2}-\d{2}$/.test(state.meta.statsSince||'') ? state.meta.statsSince : STATS_SINCE_DEFAULT; }
+const statLog = l => (l.date||'') >= statsSince();
+const statClient = c => ((c.day && /^\d{4}-\d{2}-\d{2}$/.test(c.day)) ? c.day : (c.month? c.month+'-01' : '')) >= statsSince();
+function dayStats(iso, raw){
+  const day=state.logs.filter(l=>l.date===iso && (raw || statLog(l)));
   const cold=day.filter(l=>(l.source||'cold')==='cold');
   const coldBooked=cold.filter(l=>l.type==='g').length;
   return { calls:cold.length, booked:day.filter(l=>l.type==='g').length, sms:day.filter(l=>l.type==='y').length, nos:day.filter(l=>l.type==='r').length, coldBooked, rate: cold.length? coldBooked/cold.length : 0 };
 }
 function monthLogStats(key){
-  const logs=logsForMonth(key);
+  const logs=logsForMonth(key).filter(statLog);
   const cold=logs.filter(l=>(l.source||'cold')==='cold');
   const coldBooked=cold.filter(l=>l.type==='g').length;
   const daysWith=new Set(logs.map(l=>l.date)).size;
   const ov=(state.workdays&&state.workdays[key]!=null)?+state.workdays[key]:null;
   const workingDays= ov!=null? ov : daysWith;
-  const meetClients=state.clients.filter(c=>c.month===key);  /* every client had a booked meeting */
+  const meetClients=state.clients.filter(c=>c.month===key && statClient(c));  /* every client had a booked meeting */
   const converted=meetClients.filter(c=>PAYING_STAGES.includes(c.stage)).length;  /* lost ⇒ not counted */
-  const revenue=generatedForMonth(key);  /* already excludes lost */
+  const revenue=meetClients.filter(notLost).reduce((a,c)=>a+(+c.value||0),0);  /* clients counted since the restart, lost excluded */
   return { calls:cold.length, booked:logs.filter(l=>l.type==='g').length, sms:logs.filter(l=>l.type==='y').length, nos:logs.filter(l=>l.type==='r').length,
     coldBooked, callConv: cold.length? coldBooked/cold.length : 0,
     daysWith, workingDays, avgCalls: workingDays? cold.length/workingDays : 0,
@@ -2486,7 +2705,7 @@ function monthStatsHtml(m,key){
     <div class="qs-pill"><div class="k">${IC.check2} Meeting → client</div><div class="v">${meetConv}%</div><div class="sub">${m.converted}/${m.meetClients} paid · lost = fail</div><div class="tgt-bar"><i class="${progClass(meetConv)}" style="width:${Math.min(100,meetConv)}%"></i></div></div>
     <div class="qs-pill" id="wdOverride" style="cursor:pointer" title="Click to override the working-day count"><div class="k">${IC.calendar} Working days</div><div class="v">${m.workingDays}${wdIsOverride?' *':''}</div><div class="sub">${wdIsOverride?'manual · auto '+m.daysWith:'auto from logs'} · edit ${IC.edit}</div></div>
     <div class="qs-pill"><div class="k">${IC.phone} Avg calls / day</div><div class="v">${m.avgCalls.toFixed(1)}</div><div class="sub">over ${m.workingDays} working day${m.workingDays===1?'':'s'}</div></div>
-    <div class="qs-pill"><div class="k">${IC.euro} Revenue generated</div><div class="v">${fmtMoney(Math.round(m.revenue))}</div><div class="sub">excludes lost</div></div>
+    <div class="qs-pill"><div class="k">${IC.euro} Revenue generated</div><div class="v">${fmtMoney(Math.round(m.revenue))}</div><div class="sub">clients since the restart · lost excluded</div></div>
     <div class="qs-pill"><div class="k">${IC.euro} Avg € / working day</div><div class="v">${fmtMoney(Math.round(m.avgRevPerDay))}</div><div class="sub">generated ÷ working days</div></div>
   </div>`;
 }
@@ -2516,7 +2735,7 @@ function yearStatsHtml(y,year){
     <div class="qs-pill"><div class="k">${IC.check2} Meeting → client</div><div class="v">${meetConv}%</div><div class="sub">${y.converted}/${y.meetClients} paid · lost = fail</div><div class="tgt-bar"><i class="${progClass(meetConv)}" style="width:${Math.min(100,meetConv)}%"></i></div></div>
     <div class="qs-pill"><div class="k">${IC.calendar} Working days</div><div class="v">${y.workingDays}</div><div class="sub">summed from the months</div></div>
     <div class="qs-pill"><div class="k">${IC.phone} Avg calls / day</div><div class="v">${y.avgCalls.toFixed(1)}</div><div class="sub">over ${y.workingDays} working day${y.workingDays===1?'':'s'}</div></div>
-    <div class="qs-pill"><div class="k">${IC.euro} Revenue generated</div><div class="v">${fmtMoney(Math.round(y.revenue))}</div><div class="sub">excludes lost</div></div>
+    <div class="qs-pill"><div class="k">${IC.euro} Revenue generated</div><div class="v">${fmtMoney(Math.round(y.revenue))}</div><div class="sub">clients since the restart · lost excluded</div></div>
     <div class="qs-pill"><div class="k">${IC.euro} Avg € / working day</div><div class="v">${fmtMoney(Math.round(y.avgRevPerDay))}</div><div class="sub">generated ÷ working days</div></div>
   </div>
   <div class="qlc-wrap"><div class="qlc-title">${IC.bars} Cold calls by month · ${year}</div><div class="qlc-grid">${bars}</div></div>`;
@@ -2549,14 +2768,16 @@ function renderQuickLog(){
   const dates=Object.keys(byDate).sort().reverse();
   if(!dates.length){ wrap.innerHTML='<div class="empty-note">No calls logged for '+fmtMonth(curMonth)+' yet — use the cards above.</div>'; return; }
   dates.forEach(iso=>{
-    const ds=dayStats(iso);
+    const ds=dayStats(iso,true);
     const d=new Date(iso+'T00:00'); const dow=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][(d.getDay()+6)%7];
     const isToday=iso===todayIso();
-    const sec=document.createElement('div'); sec.className='day-log';
+    const counted = iso>=statsSince();
+    const sec=document.createElement('div'); sec.className='day-log'+(counted?'':' uncounted');
     sec.innerHTML=`
       <div class="daylog-head${isToday?' today':''}">
         <span class="dl-date">${fmtDate(iso)}</span>
         <span class="dl-dow">${dow}${isToday?' · today':''}</span>
+        ${counted?'':`<span class="dl-badge" title="Before the statistics restart on ${fmtDate(statsSince())} — kept for reference, not counted">${IC.ban} not counted</span>`}
         <div class="daylog-counts">
           <span class="dl-badge calls" title="Cold calls made">${IC.phone}${ds.calls} calls</span>
           <span class="dl-badge g" title="Booked">${ds.booked} booked</span>
@@ -2814,6 +3035,173 @@ $('#rnAdd').addEventListener('click',()=>{
 $('#rnName').addEventListener('keydown',e=>{if(e.key==='Enter')$('#rnAdd').click();});
 
 /* ---------- to do (lanes) ---------- */
+/* ---------- Remaining — every unpaid client, month by month, plus the Trash ---------- */
+/* closest to the money first: Waiting payment sits on top, a fresh booking at the bottom */
+const REM_STAGE_RANK={pay:0,changes:1,review:2,building:3,needinfo:4,booked:5,thinking:6};
+const remFlag=c=> (c.remFlag && REM_FLAGS[c.remFlag]) ? c.remFlag : '';
+/* remember when a client reached Waiting payment, so "waiting N days" survives edits and colour changes */
+function ensurePayAt(){
+  let changed=false;
+  state.clients.forEach(c=>{
+    if(c.stage==='pay' && !c.payAt){ c.payAt=c.updated||c.created||Date.now(); changed=true; }
+    else if(c.stage!=='pay' && c.payAt){ delete c.payAt; changed=true; }
+  });
+  if(changed) save();
+}
+function remAgeDays(c){
+  const from = (c.stage==='pay' && c.payAt) ? c.payAt : (c.day ? Date.parse(c.day+'T00:00') : 0) || c.created || Date.now();
+  return Math.max(0, Math.floor((Date.now()-from)/864e5));
+}
+function setRemFlag(id, flag){
+  const c=state.clients.find(x=>x.id===id); if(!c) return;
+  if(remFlag(c)===flag){ delete c.remFlag; }
+  else { c.remFlag=flag; }
+  c.updated=Date.now();
+  save(); renderAll();
+  toast(flag && c.remFlag ? c.name+' · '+REM_FLAGS[flag].name : c.name+' · colour cleared');
+}
+function markPaidFromRemaining(id){
+  const c=state.clients.find(x=>x.id===id); if(!c) return;
+  if(!confirm('Mark "'+c.name+'" as paid — '+fmtMoney2(cval(c))+' collected?')) return;
+  c.stage='paid'; delete c.remFlag; c.thinkAt=null; delete c.thinkAck; c.updated=Date.now();
+  save(); renderAll(); toast(c.name+' → Paid · '+fmtMoney2(cval(c))+' collected');
+}
+function trashClient(id){
+  const c=state.clients.find(x=>x.id===id); if(!c) return;
+  const reason=prompt('Move "'+c.name+'" to the Trash as lost money ('+fmtMoney2(cval(c))+').\nShort reason (optional):', c.trashReason||c.lostReason||'');
+  if(reason===null) return;
+  c.trashed=true; c.trashedAt=Date.now(); c.trashReason=reason.trim(); c.trashStage=c.stage; c.updated=Date.now();
+  delete c.remFlag; c.prio= c.prio==='high' ? 'none' : c.prio;
+  save(); renderAll(); toast(c.name+' → Trash · '+fmtMoney2(cval(c))+' written off');
+}
+function restoreFromTrash(id){
+  const c=state.clients.find(x=>x.id===id); if(!c) return;
+  delete c.trashed; delete c.trashedAt; delete c.trashReason; delete c.trashStage; c.updated=Date.now();
+  save(); renderAll(); toast(c.name+' back in '+stageById(c.stage).name);
+}
+function remRowEl(c){
+  const st=stageById(c.stage), f=remFlag(c), fm=f?REM_FLAGS[f]:null;
+  const age=remAgeDays(c);
+  const ageTxt = c.stage==='pay' ? (age===0?'asked today':'waiting '+age+' day'+(age===1?'':'s')) : (age===0?'today':age+' day'+(age===1?'':'s')+' in');
+  const row=document.createElement('div');
+  row.className='rem-row'+(f?' f-'+f:'');
+  row.style.setProperty('--sc', st.c); row.style.setProperty('--scs', st.cs);
+  row.innerHTML=`
+    <div class="rem-flags" title="Colour this client: green = about to pay · orange = most likely lost · red = about to trash">
+      ${Object.keys(REM_FLAGS).map(k=>`<button class="rem-dot ${k}${f===k?' on':''}" data-flag="${k}" title="${REM_FLAGS[k].name}" aria-label="${REM_FLAGS[k].name}"></button>`).join('')}
+    </div>
+    <div class="rem-main" data-open="${c.id}">
+      <div class="rem-name">${esc(c.name)}${fm?`<span class="rem-flag-lbl ${f}">${fm.name}</span>`:''}</div>
+      <div class="rem-meta">
+        <span class="rem-stage" style="background:${st.cs};color:${st.hex}">${st.name}</span>
+        <span class="rem-age${c.stage==='pay'&&age>=7?' late':''}">${IC.hourglass} ${ageTxt}</span>
+        ${cxTotal(c)?`<span class="rem-chip xtra" title="${esc(cx(c).map(e=>e.name+' · '+fmtMoney(+e.value||0)).join(' · '))}">+ ${cx(c).length===1?esc(cx(c)[0].name):cx(c).length+' extras'} ${fmtMoney(cxTotal(c))}</span>`:''}
+        ${c.day?`<span class="rem-chip">${IC.calendar} ${fmtDay(c.day)}${c.time?' · '+c.time:''}</span>`:''}
+        ${c.phone?`<a class="rem-chip link" href="tel:${esc(c.phone)}" onclick="event.stopPropagation()">${IC.phone} ${esc(c.phone)}</a>`:''}
+        ${c.notes?`<span class="rem-note" title="${esc(c.notes)}">${esc(c.notes)}</span>`:''}
+      </div>
+    </div>
+    <div class="rem-val">${fmtMoney2(cval(c))}</div>
+    <div class="rem-actions">
+      <button class="rem-btn paid" data-paid="${c.id}" title="They paid — move to Paid">${IC.check} Paid</button>
+      <button class="rem-btn trash" data-trash="${c.id}" title="Money is gone — move to the Trash">${IC.trash}</button>
+    </div>`;
+  row.querySelectorAll('.rem-dot').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); setRemFlag(c.id,b.dataset.flag); }));
+  row.querySelector('.rem-main').addEventListener('click',()=>openModal(c.id));
+  row.querySelector('[data-paid]').addEventListener('click',e=>{ e.stopPropagation(); markPaidFromRemaining(c.id); });
+  row.querySelector('[data-trash]').addEventListener('click',e=>{ e.stopPropagation(); trashClient(c.id); });
+  return row;
+}
+let remTrashOpen=false;
+function renderRemaining(){
+  const banner=$('#remBanner'); if(!banner) return;
+  ensurePayAt();
+  const unpaid=state.clients.filter(isUnpaid);
+  const trashed=state.clients.filter(isTrashed).sort((a,b)=>(b.trashedAt||0)-(a.trashedAt||0));
+  const sum=arr=>arr.reduce((a,c)=>a+cval(c),0);
+  const total=sum(unpaid);
+  const byFlag=k=>sum(unpaid.filter(c=>remFlag(c)===k));
+  const lostMoney=sum(trashed);
+  const months={};
+  unpaid.forEach(c=>{ (months[c.month||'0000-00'] ||= []).push(c); });
+  const keys=Object.keys(months).sort().reverse();
+  /* banner */
+  banner.innerHTML=`
+    <div class="cell hero">
+      <div class="k">${IC.wallet} Still to collect</div>
+      <div class="big">${fmtMoney2(total)}</div>
+      <div class="k sub">${unpaid.length} client${unpaid.length===1?'':'s'} · ${keys.length} month${keys.length===1?'':'s'}</div>
+    </div>
+    <div class="cell green"><div class="k"><i class="dot"></i>About to pay</div><div class="big">${fmtMoney2(byFlag('green'))}</div><div class="k sub">${unpaid.filter(c=>remFlag(c)==='green').length} marked green</div></div>
+    <div class="cell orange"><div class="k"><i class="dot"></i>Most likely lost</div><div class="big">${fmtMoney2(byFlag('orange'))}</div><div class="k sub">${unpaid.filter(c=>remFlag(c)==='orange').length} marked orange</div></div>
+    <div class="cell red"><div class="k"><i class="dot"></i>About to trash</div><div class="big">${fmtMoney2(byFlag('red'))}</div><div class="k sub">${unpaid.filter(c=>remFlag(c)==='red').length} marked red</div></div>
+    <div class="cell trash"><div class="k">${IC.trash} Lost money · Trash</div><div class="big">${fmtMoney2(lostMoney)}</div><div class="k sub">${trashed.length} written off</div></div>`;
+  /* legend / how-to */
+  $('#remLegend').innerHTML=`
+    <span class="rl-item"><i class="rem-dot green on"></i> Green — about to pay</span>
+    <span class="rl-item"><i class="rem-dot orange on"></i> Orange — most likely lost</span>
+    <span class="rl-item"><i class="rem-dot red on"></i> Red — about to be trashed</span>
+    <span class="rl-hint">Tap a dot on any client to colour it · tap again to clear · <b>Paid</b> collects it · ${IC.trash} moves it to the Trash</span>`;
+  /* months */
+  const wrap=$('#remMonths'); wrap.innerHTML='';
+  if(!keys.length){
+    wrap.innerHTML=`<div class="rem-empty"><span class="ico">${IC.check2}</span><h3>Nothing left to collect</h3><p>Every client on the board is paid. New unpaid clients show up here automatically.</p></div>`;
+  }
+  keys.forEach(key=>{
+    const items=months[key].sort((a,b)=>{
+      const ra=REM_STAGE_RANK[a.stage]??9, rb=REM_STAGE_RANK[b.stage]??9;
+      return ra-rb || (+b.value||0)-(+a.value||0);
+    });
+    const mSum=sum(items), gSum=sum(items.filter(c=>remFlag(c)==='green'));
+    const sec=document.createElement('section'); sec.className='rem-month'+(key===now.toISOString().slice(0,7)?' current':'');
+    sec.innerHTML=`
+      <div class="rem-month-head">
+        <div class="rmh-txt"><h3>${key==='0000-00'?'No month':fmtMonth(key)}</h3><p>${items.length} unpaid client${items.length===1?'':'s'}${gSum?` · <b class="g">${fmtMoney2(gSum)} about to pay</b>`:''}</p></div>
+        <button class="rmh-open" data-month="${key}" title="Open this month on the Board">Board ${IC.arrowRight}</button>
+        <div class="rmh-sum"><span class="k">to collect</span><span class="v">${fmtMoney2(mSum)}</span></div>
+      </div>
+      <div class="rem-month-body"></div>`;
+    const body=sec.querySelector('.rem-month-body');
+    items.forEach(c=>body.appendChild(remRowEl(c)));
+    const ob=sec.querySelector('.rmh-open'); if(key!=='0000-00') ob.addEventListener('click',()=>{ curMonth=key; switchView('board'); }); else ob.style.display='none';
+    wrap.appendChild(sec);
+  });
+  /* trash */
+  const tr=$('#remTrash');
+  tr.classList.toggle('open', remTrashOpen || false);
+  tr.innerHTML=`
+    <div class="rem-trash-head">
+      <span class="ico">${IC.trash}</span>
+      <div class="rth-txt"><h3>Trash · Lost money</h3><p>${trashed.length? 'Sites you did the work for and will never be paid for — kept here so the number stays honest.' : 'Empty. Drop a client here with the bin button when the money is truly gone.'}</p></div>
+      <div class="rth-sum"><span class="k">written off</span><span class="v">${fmtMoney2(lostMoney)}</span></div>
+      <span class="chev">${IC.chevRight}</span>
+    </div>
+    <div class="rem-trash-body">${trashed.length?'':'<div class="rem-trash-empty">Nothing in the trash.</div>'}</div>`;
+  tr.querySelector('.rem-trash-head').addEventListener('click',()=>{ remTrashOpen=!remTrashOpen; tr.classList.toggle('open', remTrashOpen); });
+  const tb=tr.querySelector('.rem-trash-body');
+  trashed.forEach(c=>{
+    const st=stageById(c.trashStage||c.stage);
+    const row=document.createElement('div'); row.className='rem-row trashed';
+    row.innerHTML=`
+      <div class="rem-main" data-open="${c.id}">
+        <div class="rem-name">${esc(c.name)}</div>
+        <div class="rem-meta">
+          <span class="rem-stage" style="background:${st.cs};color:${st.hex}">was ${st.name}</span>
+          ${c.month?`<span class="rem-chip">${IC.calendar} ${fmtMonth(c.month)}</span>`:''}
+          ${c.trashedAt?`<span class="rem-chip">${IC.trash} ${fmtDate(isoDate(new Date(c.trashedAt)))}</span>`:''}
+          ${c.trashReason?`<span class="rem-note reason">${IC.ban} ${esc(c.trashReason)}</span>`:''}
+        </div>
+      </div>
+      <div class="rem-val lost">${fmtMoney2(cval(c))}</div>
+      <div class="rem-actions">
+        <button class="rem-btn restore" data-restore="${c.id}" title="Bring it back to ${st.name}">${IC.undo} Restore</button>
+      </div>`;
+    row.querySelector('.rem-main').addEventListener('click',()=>openModal(c.id));
+    row.querySelector('[data-restore]').addEventListener('click',e=>{ e.stopPropagation(); restoreFromTrash(c.id); });
+    tb.appendChild(row);
+  });
+}
+
 const PRIO_RANK={high:0,medium:1,low:2,none:3};
 const PRIO_CYCLE={none:'high',high:'medium',medium:'low',low:'none'};
 const PRIO_COLOR={high:{c:'var(--red)',soft:'var(--red-soft)'},medium:{c:'var(--yellow)',soft:'var(--yellow-soft)'},low:{c:'var(--green)',soft:'var(--green-soft)'}};
@@ -2880,7 +3268,7 @@ function renderTodo(){
     /* client work auto-pulled into whichever lane hosts each stage */
     const clients=[];
     TODO_HOSTS.filter(h=>state.todoHosts[h.stage]===cat).forEach(h=>{
-      state.clients.filter(c=>c.stage===h.stage)
+      state.clients.filter(c=>c.stage===h.stage && !isTrashed(c))
         .sort((a,b)=>(a.month||'').localeCompare(b.month||''))
         .forEach(c=>clients.push({c,h}));
     });
@@ -3298,7 +3686,7 @@ function renderHome(){
   const greet= hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
   const ws=mondayOf(new Date()), we=new Date(ws); we.setDate(we.getDate()+6);
   const weekEndI=isoDate(we);
-  const weekMeetings=state.clients.filter(c=>c.day && c.day>=isoDate(ws) && c.day<=weekEndI).sort((a,b)=>(a.day+(a.time||''))<(b.day+(b.time||''))?-1:1);
+  const weekMeetings=state.clients.filter(c=>c.day && !isTrashed(c) && c.day>=isoDate(ws) && c.day<=weekEndI).sort((a,b)=>(a.day+(a.time||''))<(b.day+(b.time||''))?-1:1);
   // this-month collect
   const mc=state.clients.filter(c=>c.month===curMonth && notLost(c));
   const mTotal=mc.reduce((a,c)=>a+cval(c),0), mPaid=mc.filter(c=>c.stage==='paid').reduce((a,c)=>a+cval(c),0);
@@ -3311,10 +3699,10 @@ function renderHome(){
     return di>=todayI && di<=in7 && !(s.paid && s.paid[curMonth]);
   });
   escalateThinking();
-  const thinking=state.clients.filter(isThinking).sort((a,b)=>thinkDays(b)-thinkDays(a));
+  const thinking=state.clients.filter(c=>isThinking(c) && !isTrashed(c)).sort((a,b)=>thinkDays(b)-thinkDays(a));
   const thinkDue=thinking.filter(thinkOverdue);
   const hiNotes=state.todos.filter(n=>!n.done && (n.prio||'medium')==='high');
-  const hiClients=state.clients.filter(c=>c.prio==='high');
+  const hiClients=state.clients.filter(c=>c.prio==='high' && !isTrashed(c));
   const hiCount=hiNotes.length + hiClients.length;
   // hero
   const rem=mTotal-mPaid;
@@ -3332,18 +3720,33 @@ function renderHome(){
   $('#homeHero').innerHTML=`
     <h2>${greet}, Angelo</h2>
     <p>${today.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · here's your day at a glance</p>
-    <div class="hero-stats">
-      <div class="hs"><div class="k">Cold calls today</div><div class="v b">${todayCalls.calls}</div></div>
-      <div class="hs"><div class="k">${monthName} cold calls</div><div class="v b">${mStats.calls}</div></div>
-      <div class="hs"><div class="k">Call → booking</div><div class="v ${callConv>=40?'g':callConv>=20?'':'c'}">${callConv}%</div></div>
-      <div class="hs"><div class="k">Meetings this week</div><div class="v b">${weekMeetings.length}</div></div>
-      <div class="hs"><div class="k">${fmtMonth(curMonth)} to collect</div><div class="v c">${fmtMoney2(rem)}</div></div>
-      ${targetHs}
-      <div class="hs"><div class="k">${monthName} expenses</div><div class="v c">${fmtMoney2(Math.round(mExp))}</div></div>
-      <div class="hs"><div class="k">${monthName} net profit</div><div class="v ${mNet>=0?'g':'c'}">${fmtMoney2(Math.round(mNet))}</div></div>
-      <div class="hs"><div class="k">Overdue renewals</div><div class="v ${overdue.length?'c':'g'}">${overdue.length}</div></div>
-      <div class="hs"><div class="k">Chase after meeting</div><div class="v ${thinkDue.length?'c':'g'}">${thinkDue.length}</div></div>
-      <div class="hs"><div class="k">High priority</div><div class="v ${hiCount?'c':'g'}">${hiCount}</div></div>
+    <div class="hero-groups">
+      <div class="hg calls">
+        <div class="hg-title">${IC.phone} Calls <span class="hg-note">${statsSince()>todayI ? 'counting from '+fmtDay(statsSince()) : ''}</span></div>
+        <div class="hero-stats">
+          <div class="hs"><div class="k">Cold calls today</div><div class="v b">${todayCalls.calls}</div></div>
+          <div class="hs"><div class="k">${monthName} cold calls</div><div class="v b">${mStats.calls}</div></div>
+          <div class="hs"><div class="k">Call → booking</div><div class="v ${callConv>=40?'g':callConv>=20?'':'c'}">${callConv}%</div></div>
+          <div class="hs"><div class="k">Meetings this week</div><div class="v b">${weekMeetings.length}</div></div>
+        </div>
+      </div>
+      <div class="hg money">
+        <div class="hg-title">${IC.euro} Money <span class="hg-note">${monthName} ${curMonth.slice(0,4)}</span></div>
+        <div class="hero-stats">
+          <div class="hs"><div class="k">${fmtMonth(curMonth)} to collect</div><div class="v c">${fmtMoney2(rem)}</div></div>
+          ${targetHs}
+          <div class="hs"><div class="k">${monthName} expenses</div><div class="v c">${fmtMoney2(Math.round(mExp))}</div></div>
+          <div class="hs"><div class="k">${monthName} net profit</div><div class="v ${mNet>=0?'g':'c'}">${fmtMoney2(Math.round(mNet))}</div></div>
+        </div>
+      </div>
+      <div class="hg attention${(overdue.length+thinkDue.length+hiCount)?' hot':''}">
+        <div class="hg-title">${IC.flag} Attention <span class="hg-note">${(overdue.length+thinkDue.length+hiCount)? (overdue.length+thinkDue.length+hiCount)+' open' : 'all clear'}</span></div>
+        <div class="hero-stats">
+          <div class="hs"><div class="k">Overdue renewals</div><div class="v ${overdue.length?'c':'g'}">${overdue.length}</div></div>
+          <div class="hs"><div class="k">Chase after meeting</div><div class="v ${thinkDue.length?'c':'g'}">${thinkDue.length}</div></div>
+          <div class="hs"><div class="k">High priority</div><div class="v ${hiCount?'c':'g'}">${hiCount}</div></div>
+        </div>
+      </div>
     </div>`;
   // week
   const hw=$('#homeWeek');
@@ -3354,13 +3757,12 @@ function renderHome(){
   }).join('');
   // collect per month (only months with remaining)
   const hc=$('#homeCollect');
-  const rows=[];
-  for(let m=1;m<=12;m++){ const key=curYear+'-'+pad(m);
-    const it=state.clients.filter(c=>c.month===key && notLost(c));
-    const t=it.reduce((a,c)=>a+cval(c),0), pd=it.filter(c=>c.stage==='paid').reduce((a,c)=>a+cval(c),0);
-    if(t-pd>0) rows.push(`<div class="home-mini"><span class="mm-name">${MONTHS[m-1]} ${curYear}</span><span class="mm-val">${fmtMoney2(t-pd)}</span></div>`);
-  }
-  hc.innerHTML= rows.length? rows.join('') : '<div class="home-empty">Everything collected this year.</div>';
+  const remByMonth={};
+  state.clients.filter(isUnpaid).forEach(c=>{ const k=c.month||'0000-00'; (remByMonth[k] ||= {n:0,sum:0,g:0}); remByMonth[k].n++; remByMonth[k].sum+=cval(c); if(remFlag(c)==='green') remByMonth[k].g+=cval(c); });
+  const rows=Object.keys(remByMonth).sort().reverse().filter(k=>remByMonth[k].sum>0).map(k=>{ const r=remByMonth[k];
+    return `<div class="home-mini" data-goto="remaining" style="cursor:pointer"><span class="mm-name">${k==='0000-00'?'No month':fmtMonth(k)}<span class="mm-sub">${r.n} unpaid${r.g?` · <b>${fmtMoney2(r.g)} about to pay</b>`:''}</span></span><span class="mm-val">${fmtMoney2(r.sum)}</span></div>`;
+  });
+  hc.innerHTML= rows.length? rows.join('') : '<div class="home-empty">Everything collected. Nothing left out there.</div>';
   // overdue renewals
   const hrn=$('#homeRenew');
   hrn.innerHTML= overdue.length? overdue.slice(0,12).map(r=>`<div class="home-row warn" data-goto="renewals"><span class="hr-name">${esc(r.name)}</span><span class="hr-sub">${fmtDate(r.date)}</span><span class="hr-val">${fmtMoney2(r.value)}</span></div>`).join('') : '<div class="home-empty">No overdue renewals.</div>';
@@ -3468,9 +3870,8 @@ function wireAsap(el){
    Clients, renewals, subscriptions and money are never touched by this. */
 function ensureMeta(){ if(!state.meta||typeof state.meta!=='object') state.meta={}; }
 function statsSinceLabel(){
-  ensureMeta(); if(!state.meta.callStatsResetAt) return '';
-  const first=state.logs.map(l=>l.date).filter(Boolean).sort()[0];
-  return first? 'Counting since '+fmtDate(first)+' — the first call logged after the restart' : 'Restarted '+fmtDate(state.meta.callStatsResetAt.slice(0,10))+' — counting starts with the first call you log';
+  const since=statsSince();
+  return (since>todayIso() ? 'Counting starts ' : 'Counting from ')+fmtDate(since)+' — anything before that day is not counted';
 }
 function archiveCallLogs(reason){
   ensureMeta(); ensureLogs();
@@ -3497,8 +3898,12 @@ function migrateCallStats(){
   return !!had;
 }
 function resetCallStatsUI(){
-  if(!confirm('Restart the call statistics?\n\nEvery Quick Log call so far is archived (recoverable) and all call numbers start again from the next call you log. Clients, renewals and money are not touched.')) return;
-  archiveCallLogs('manual'); save(); renderAll(); toast('Call statistics restarted — counting from your next logged call');
+  const v=prompt('Restart the call statistics from which day?\n\nEvery call, booking and meeting before that day stops counting (nothing is deleted — clients, renewals and money are not touched).\n\nDate as YYYY-MM-DD:', todayIso());
+  if(v===null) return;
+  const d=String(v).trim();
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(d) || isNaN(Date.parse(d+'T00:00'))){ toast('Enter a date like 2026-09-15'); return; }
+  ensureMeta(); state.meta.statsSince=d; state.meta.callStatsResetAt=new Date().toISOString();
+  save(); renderAll(); toast('Call statistics now count from '+fmtDate(d));
 }
 function restoreCallLogsUI(){
   ensureMeta(); const arch=Array.isArray(state.meta.callLogArchive)? state.meta.callLogArchive : [];
@@ -3522,7 +3927,7 @@ function runSearch(q){
   if(cl.length){
     html+='<div class="sr-group">Clients</div>';
     cl.forEach(c=>{ const st=stageById(c.stage);
-      html+=`<div class="sr-item" data-open="${c.id}"><span class="sr-dot" style="background:${c.color||st.hex}"></span><div class="sr-main"><div class="sr-name">${esc(c.name)}</div><div class="sr-meta">${fmtMonth(c.month)}${cval(c)?' · '+fmtMoney(cval(c)):''}${c.phone?' · '+esc(c.phone):''}</div></div><span class="sr-tag">${st.name}</span></div>`;
+      html+=`<div class="sr-item" data-open="${c.id}"><span class="sr-dot" style="background:${c.color||st.hex}"></span><div class="sr-main"><div class="sr-name">${esc(c.name)}</div><div class="sr-meta">${fmtMonth(c.month)}${cval(c)?' · '+fmtMoney(cval(c)):''}${c.phone?' · '+esc(c.phone):''}</div></div><span class="sr-tag">${isTrashed(c)?'Trash':st.name}</span></div>`;
     });
   }
   const rn=state.renewals.filter(r=>hit(r.name)).slice(0,4);
@@ -3582,7 +3987,7 @@ function openModal(id, presetDay){
   $('#mDelete').style.display= c ? '' : 'none';
   const mLost=$('#mLost');
   mLost.style.display= c ? '' : 'none';
-  if(c) mLost.textContent = c.stage==='lost' ? 'Bring back' : "Didn't convert";
+  if(c) mLost.textContent = isTrashed(c) ? 'Restore from trash' : c.stage==='lost' ? 'Bring back' : "Didn't convert";
   $('#mName').value=c?c.name:''; $('#mValue').value=c?(c.value||''):'';
   modalXtras = c ? cx(c).map(e=>({id:e.id||uid(), name:String(e.name||''), value:+e.value||0})) : [];
   renderXtras();
@@ -3655,7 +4060,8 @@ $('#mSave').addEventListener('click',()=>{
 });
 $('#mLost').addEventListener('click',()=>{
   const c=state.clients.find(x=>x.id===editingId); if(!c) return;
-  if(c.stage==='lost'){ reviveClient(c.id); }
+  if(isTrashed(c)){ restoreFromTrash(c.id); }
+  else if(c.stage==='lost'){ reviveClient(c.id); }
   else { markLost(c.id); }
   closeModal();
 });
@@ -3684,14 +4090,14 @@ function switchView(v){
   document.body.dataset.view=v;
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
   document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el.id==='view-'+v));
-  $('#strip').style.display = (v==='year'||v==='renewals'||v==='calendar'||v==='todo'||v==='ideas'||v==='monthly'||v==='home') ? 'none' : 'flex';
+  $('#strip').style.display = (v==='year'||v==='renewals'||v==='calendar'||v==='todo'||v==='ideas'||v==='monthly'||v==='home'||v==='remaining') ? 'none' : 'flex';
   renderAll();
 }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchView(t.dataset.view)));
 
 function renderAll(){
   if(!state) return;
-  renderHome(); renderStats(); renderBoard(); renderCalendar(); renderYear(); renderQuickLog(); renderWarm(); renderSched(); renderRenewals(); renderTodo(); renderIdeas(); renderMonthly(); renderExpenses();
+  renderHome(); renderStats(); renderBoard(); renderCalendar(); renderYear(); renderQuickLog(); renderWarm(); renderSched(); renderRenewals(); renderRemaining(); renderTodo(); renderIdeas(); renderMonthly(); renderExpenses();
 }
 
 /* ---------- export ---------- */
