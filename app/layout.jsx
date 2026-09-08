@@ -8,6 +8,7 @@ import CustomCursor from '@/components/CustomCursor';
 import DeferredWidget from '@/components/DeferredWidget';
 import ScrollProgress from '@/components/ScrollProgress';
 import Spotlight from '@/components/Spotlight';
+import Analytics from '@/components/Analytics';
 import { displayFont, bodyFont } from '@/lib/fonts';
 
 export const metadata = {
@@ -45,6 +46,8 @@ export default function RootLayout({ children }) {
         {/* Advon AI assistant — loaded after the visitor's first interaction (or a few idle
             seconds) so it never competes with the page's own first paint. */}
         <DeferredWidget />
+        {/* Google Analytics 4 — loads after paint; visit /?me=1 once to exclude your own browser. */}
+        <Analytics />
       </body>
     </html>
   );
