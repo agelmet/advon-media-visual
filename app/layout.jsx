@@ -6,7 +6,7 @@ import Contact from '@/components/Contact';
 import Runtime from '@/components/Runtime';
 import DeferredWidget from '@/components/DeferredWidget';
 import MetaPixel from '@/components/MetaPixel';
-import GoogleAnalytics from '@/components/GoogleAnalytics';
+import Analytics from '@/components/Analytics';
 import MobileBar from '@/components/MobileBar';
 import { displayFont, bodyFont } from '@/lib/fonts';
 
@@ -44,7 +44,8 @@ export default function RootLayout({ children }) {
         <Footer />
         <MobileBar />
         <MetaPixel />
-        <GoogleAnalytics />
+        {/* Google Analytics 4 — loads after paint; visit /?me=1 once to exclude your own browser. */}
+        <Analytics />
         <DeferredWidget />
       </body>
     </html>
