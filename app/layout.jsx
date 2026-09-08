@@ -6,6 +6,7 @@ import Contact from '@/components/Contact';
 import Runtime from '@/components/Runtime';
 import DeferredWidget from '@/components/DeferredWidget';
 import MetaPixel from '@/components/MetaPixel';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 import MobileBar from '@/components/MobileBar';
 import { displayFont, bodyFont } from '@/lib/fonts';
 
@@ -43,6 +44,7 @@ export default function RootLayout({ children }) {
         <Footer />
         <MobileBar />
         <MetaPixel />
+        <GoogleAnalytics />
         <DeferredWidget />
       </body>
     </html>
