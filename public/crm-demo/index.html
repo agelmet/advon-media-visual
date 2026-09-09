@@ -669,6 +669,23 @@ body.dark .rem-dot.on{border-color:var(--surface);}
 .task-item.p-low{border-left-color:var(--green); background:var(--green-soft); border-color:rgba(14,198,115,.3);}
 .task-item.done{opacity:.5; box-shadow:none;}
 .task-item.done .task-text{text-decoration:line-through; font-weight:600;}
+/* three always-visible priority dots — same one-tap feel as the colour dots in Remaining */
+.prio-dots{display:flex; flex-direction:column; gap:4px; flex-shrink:0; padding-top:1px;}
+.prio-pick{width:13px; height:13px; border-radius:99px; border:2px solid transparent; opacity:.34; padding:0; display:block; transition:transform .12s, opacity .12s;}
+.prio-pick.high{background:var(--red);} .prio-pick.medium{background:var(--yellow);} .prio-pick.low{background:var(--green);}
+.prio-pick:hover{opacity:.85; transform:scale(1.18);}
+.prio-pick.on{opacity:1; border-color:#fff; transform:scale(1.14);}
+.prio-pick.high.on{box-shadow:0 0 0 2px rgba(255,77,94,.55);}
+.prio-pick.medium.on{box-shadow:0 0 0 2px rgba(245,167,0,.55);}
+.prio-pick.low.on{box-shadow:0 0 0 2px rgba(14,198,115,.5);}
+body.dark .prio-pick.on{border-color:var(--surface);}
+.task-item.client .prio-dots,.idea-item .prio-dots{align-self:center; padding-top:0;}
+@media(max-width:700px){.prio-dots{flex-direction:row; gap:6px; align-self:flex-start;} .prio-pick{width:15px; height:15px;}}
+.todo-legend{display:flex; align-items:center; gap:12px 18px; flex-wrap:wrap; padding:0 2px 12px; font-size:12px; font-weight:600; color:var(--muted);}
+.todo-legend .tl-item{display:inline-flex; align-items:center; gap:7px; color:var(--ink);}
+.todo-legend .tl-item i{width:12px; height:12px; border-radius:99px; display:inline-block;}
+.todo-legend .tl-hint{margin-left:auto; font-weight:500; font-size:11.5px;}
+@media(max-width:900px){.todo-legend .tl-hint{margin-left:0; width:100%;}}
 .prio-dot{width:22px; height:22px; border-radius:99px; flex-shrink:0; display:grid; place-items:center; font-size:12px; line-height:1; border:2px dashed var(--line); background:transparent; margin-top:1px;}
 .prio-dot.set{border:none;}
 .prio-dot.set.p-high{box-shadow:0 0 0 2px rgba(255,77,94,.28);}
@@ -1467,6 +1484,12 @@ body.dark .btn-ghost:hover{background:var(--bg);}
     <div class="thb-txt"><h3>To Do</h3><p>Client work and your notes — one board of lanes</p></div>
     <button class="cat-add-btn" id="catAdd">+ New category</button>
   </div>
+  <div class="todo-legend">
+    <span class="tl-item"><i style="background:var(--red)"></i> High</span>
+    <span class="tl-item"><i style="background:var(--yellow)"></i> Medium</span>
+    <span class="tl-item"><i style="background:var(--green)"></i> Low</span>
+    <span class="tl-hint">Tap a dot on any row to set the priority · tap the same dot again to clear it</span>
+  </div>
   <div class="todo-lanes" id="todoLanes"></div>
 </main>
 
@@ -1475,6 +1498,12 @@ body.dark .btn-ghost:hover{background:var(--bg);}
   <div class="todo-head-bar">
     <div class="thb-ico" style="background:var(--violet-soft);color:var(--violet)" data-ic="bulb"></div>
     <div class="thb-txt"><h3>Ideas</h3><p>Things you want to work on — drag across the lanes as they move</p></div>
+  </div>
+  <div class="todo-legend">
+    <span class="tl-item"><i style="background:var(--red)"></i> High</span>
+    <span class="tl-item"><i style="background:var(--yellow)"></i> Medium</span>
+    <span class="tl-item"><i style="background:var(--green)"></i> Low</span>
+    <span class="tl-hint">Tap a dot on any row to set the priority · tap the same dot again to clear it</span>
   </div>
   <div class="ideas-lanes" id="ideaLanes"></div>
 </main>
@@ -3540,6 +3569,21 @@ const PRIO_RANK={high:0,medium:1,low:2,none:3};
 const PRIO_CYCLE={none:'high',high:'medium',medium:'low',low:'none'};
 const PRIO_COLOR={high:{c:'var(--red)',soft:'var(--red-soft)'},medium:{c:'var(--yellow)',soft:'var(--yellow-soft)'},low:{c:'var(--green)',soft:'var(--green-soft)'}};
 /* one priority language everywhere: red = high, amber = medium, green = low */
+/* one-tap priority: three dots always on show — tap to set, tap the same one again to clear.
+   Exactly the same gesture as the green/orange/red dots on the Remaining tab. */
+const PRIO_ORDER=['high','medium','low'];
+const PRIO_NAME={high:'High priority',medium:'Medium priority',low:'Low priority'};
+const prioDotsHtml=p=>`<div class="prio-dots" title="Priority — red = high, amber = medium, green = low. Tap to set, tap again to clear.">${PRIO_ORDER.map(k=>`<button class="prio-pick ${k}${p===k?' on':''}" data-prio="${k}" title="${PRIO_NAME[k]}" aria-label="${PRIO_NAME[k]}"></button>`).join('')}</div>`;
+function wirePrioDots(row, obj, after, isClient){
+  row.querySelectorAll('.prio-pick').forEach(b=>b.addEventListener('click',e=>{
+    e.stopPropagation();
+    const k=b.dataset.prio, cur=obj.prio||'none';
+    if(cur===k){ delete obj.prio; } else { obj.prio=k; }
+    /* a priority you set by hand wins — the after-meeting rule stops overriding it */
+    if(isClient) obj.thinkAck=true;
+    obj.updated=Date.now(); save(); after();
+  }));
+}
 const prioDotHtml=p=> (p==='none'||!PRIO_COLOR[p])
   ? `<button class="prio-dot" title="Set priority — high / medium / low"></button>`
   : `<button class="prio-dot set p-${p}" title="Priority: ${p} — click to change">${prioDotSvg(p)}</button>`;
@@ -3679,14 +3723,14 @@ function clientRow(c,h,pal){
   if(c.month) bits.push(esc(fmtMonth(c.month)));
   if(c.notes) bits.push(esc(c.notes));
   if(cval(c)) bits.push(fmtMoney2(cval(c)));
-  const dot = prioDotHtml(p);
+  const dot = prioDotsHtml(p);
   row.innerHTML=dot+
     `<span class="cli-avatar" title="Open client">${IC.user}</span>`+
     `<div class="task-body cli-body"><span class="task-text">${esc(c.name)}</span>${bits.length?`<span class="task-note">${bits.join(' · ')}</span>`:''}</div>`+
     prioFlagHtml(p)+
     `<button class="task-edit" title="Edit client note">${IC.edit}</button>`+
     `<button class="cli-adv" title="Move to ${h.nextName}">${h.btn}</button>`;
-  row.querySelector('.prio-dot').addEventListener('click',e=>{ e.stopPropagation(); const np=PRIO_CYCLE[p]; c.prio = np==='none'?undefined:np; c.updated=Date.now(); save(); renderAll(); });
+  wirePrioDots(row, c, renderAll, true);
   row.querySelector('.cli-avatar').addEventListener('click',()=>openModal(c.id));
   row.querySelector('.cli-body').addEventListener('click',()=>openModal(c.id));
   row.querySelector('.task-edit').addEventListener('click',e=>{
@@ -3703,14 +3747,14 @@ function taskRow(n){
   row.draggable=true; row.dataset.id=n.id;
   row.addEventListener('dragstart',e=>{ dragTaskId=n.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',n.id); });
   row.addEventListener('dragend',()=>{ dragTaskId=null; row.classList.remove('dragging'); document.querySelectorAll('.todo-lane-body.dragover').forEach(b=>b.classList.remove('dragover')); });
-  const dot = prioDotHtml(p);
+  const dot = prioDotsHtml(p);
   row.innerHTML=dot+
     `<button class="n-check" title="Done">${n.done?IC.check:''}</button>`+
     `<div class="task-body"><span class="task-text">${esc(n.text)}</span>${n.note?`<span class="task-note">${esc(n.note)}</span>`:''}</div>`+
     (n.done?'':prioFlagHtml(p))+
     `<button class="task-edit" title="Side note">${IC.edit}</button>`+
     `<button class="item-x" title="Remove">${IC.x}</button>`;
-  row.querySelector('.prio-dot').addEventListener('click',()=>{ n.prio=PRIO_CYCLE[p]; n.updated=Date.now(); save(); renderTodo(); });
+  wirePrioDots(row, n, renderTodo);
   row.querySelector('.n-check').addEventListener('click',()=>{ n.done=!n.done; n.updated=Date.now(); save(); renderTodo(); });
   row.querySelector('.task-edit').addEventListener('click',()=>{
     const v=prompt('Side note for "'+n.text+'":', n.note||''); if(v===null) return;
@@ -3855,13 +3899,13 @@ function ideaRow(i){
   row.draggable=true; row.dataset.id=i.id;
   row.addEventListener('dragstart',e=>{ dragIdeaId=i.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',i.id); });
   row.addEventListener('dragend',()=>{ dragIdeaId=null; row.classList.remove('dragging'); document.querySelectorAll('.todo-lane-body.dragover').forEach(b=>b.classList.remove('dragover')); });
-  const dot = prioDotHtml(p);
+  const dot = prioDotsHtml(p);
   row.innerHTML=dot+
     `<div class="task-body"><span class="task-text">${esc(i.title)}</span>${i.detail?`<span class="idea-detail">${esc(i.detail)}</span>`:''}</div>`+
     prioFlagHtml(p)+
     `<button class="task-edit" title="Add detail">${IC.edit}</button>`+
     `<button class="item-x" title="Remove">${IC.x}</button>`;
-  row.querySelector('.prio-dot').addEventListener('click',()=>{ i.prio=PRIO_CYCLE[p]; i.updated=Date.now(); save(); renderIdeas(); });
+  wirePrioDots(row, i, renderIdeas);
   row.querySelector('.task-edit').addEventListener('click',()=>{
     const v=prompt('Detail for "'+i.title+'":', i.detail||''); if(v===null) return;
     i.detail=v.trim(); i.updated=Date.now(); save(); renderIdeas();
