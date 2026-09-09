@@ -376,6 +376,72 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .item-x:hover{background:rgba(0,0,0,.07); color:var(--ink);}
 .empty-note{font-size:12.5px; color:#B4BAC8; text-align:center; padding:22px 10px;}
 
+/* ---------- Callbacks 2.0 — exact numbers on top, three clear groups, one-tap outcomes ---------- */
+.cb-banner{background:linear-gradient(120deg,#10141F 10%,#4A2A08 58%,#FF8A00 135%); color:#fff; border-radius:var(--radius); padding:20px 26px; margin-bottom:16px; display:grid; grid-template-columns:1.5fr repeat(5,1fr); gap:16px 20px; align-items:start; box-shadow:var(--shadow-lg);}
+@media(max-width:1100px){.cb-banner{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:560px){.cb-banner{grid-template-columns:repeat(2,1fr); padding:16px 18px;}}
+.cb-banner .cell{min-width:0;}
+.cb-banner .k{font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.62); display:flex; align-items:center; gap:6px;}
+.cb-banner .k .ic{width:1.2em; height:1.2em;}
+.cb-banner .big{font-family:'Sora'; font-weight:800; font-size:30px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1.1; margin-top:5px;}
+.cb-banner .cell.now .big{font-size:42px; color:#FFD08A;}
+.cb-banner .cell.over .big{color:#FF9AA6;}
+.cb-banner .cell.done .big{color:#4BE8A0;}
+.cb-banner .sub{font-size:11.5px; color:rgba(255,255,255,.62); margin-top:4px; line-height:1.35;}
+.cb-banner .bar{height:6px; border-radius:99px; background:rgba(255,255,255,.18); margin-top:9px; overflow:hidden; max-width:220px;}
+.cb-banner .bar i{display:block; height:100%; background:#4BE8A0; border-radius:99px;}
+.cb-head-n{margin-left:auto; text-align:right; flex-shrink:0;}
+.cb-head-n b{display:block; font-family:'Sora'; font-weight:800; font-size:22px; line-height:1; font-variant-numeric:tabular-nums;}
+.cb-head-n small{display:block; font-size:9.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); margin-top:3px;}
+.cb-group{margin-bottom:16px;}
+.cb-group-h{display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:10px; margin:0 0 8px; font-family:'Sora'; font-size:12px; font-weight:700;}
+.cb-group-h .ic{width:1.1em; height:1.1em;}
+.cb-group-h .n{margin-left:auto; font-size:11px; font-weight:700; border-radius:99px; padding:2px 9px; background:rgba(255,255,255,.75); color:var(--ink);}
+.cb-group-h.warmh{background:var(--orange-soft); color:#B45D00;}
+.cb-group-h.over{background:var(--red-soft); color:#C21F33;}
+.cb-group-h.cur{background:var(--violet-soft); color:#4C34B8;}
+.cb-group-h.later{background:var(--bg); color:var(--muted);}
+.cb-group-h.calledh{background:var(--green-soft); color:var(--deep); cursor:pointer;}
+body.dark .cb-group-h .n{background:rgba(0,0,0,.3); color:var(--ink);}
+.cb-clear{font-size:11px; font-weight:700; color:var(--muted); background:transparent; padding:2px 6px; border-radius:6px;}
+.cb-clear:hover{color:var(--ink); background:rgba(0,0,0,.06);}
+.cb-item{display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:12px; margin-bottom:6px; border:1px solid transparent;}
+.cb-item.warm{background:var(--orange-soft); border-color:#FFE0BC;}
+.cb-item.over{background:var(--red-soft); border-color:#FFC9D0;}
+.cb-item.cur{background:var(--violet-soft); border-color:#E3DAFF;}
+.cb-item.later{background:var(--bg); border-color:var(--line);}
+.cb-item.done{background:var(--bg); border-color:var(--line); opacity:.55;}
+.cb-item.done .w-name{text-decoration:line-through;}
+body.dark .cb-item.warm{border-color:#4A3010;} body.dark .cb-item.over{border-color:#4A1A22;} body.dark .cb-item.cur{border-color:#2E2560;}
+.cb-item .w-main{min-width:0; flex:1;}
+.cb-item .w-name{font-weight:700; font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.cb-item .w-meta{display:flex; flex-wrap:wrap; gap:4px 10px; align-items:center; font-size:12px; color:var(--muted); margin-top:2px;}
+.cb-item .w-meta .w-phone{display:inline-flex; align-items:center; gap:3px;} .cb-item .w-meta .w-phone .ic{width:1em; height:1em;}
+.cb-item .w-wait{font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:99px; background:rgba(0,0,0,.06); color:var(--muted); white-space:nowrap;}
+.cb-item .w-wait.hot{background:var(--red-soft); color:#C21F33;}
+body.dark .cb-item .w-wait{background:rgba(255,255,255,.08);}
+.cb-item .w-check{width:22px; height:22px; border-radius:7px; border:2px solid var(--orange); flex-shrink:0; display:grid; place-items:center; color:#fff; font-size:11px; background:transparent;}
+.cb-item.over .w-check{border-color:var(--red);} .cb-item.cur .w-check,.cb-item.later .w-check{border-color:var(--violet);}
+.cb-item.done .w-check{background:var(--green); border-color:var(--green);}
+.cb-item .w-phone{color:var(--orange);} .cb-item.over .w-phone{color:#C21F33;} .cb-item.cur .w-phone,.cb-item.later .w-phone{color:#4C34B8;}
+.cb-acts{display:flex; gap:4px; flex-shrink:0; opacity:0; transition:opacity .12s;}
+.cb-item:hover .cb-acts,.cb-item:focus-within .cb-acts{opacity:1;}
+@media(max-width:760px){
+  .cb-acts{opacity:1; flex-basis:100%; padding-left:32px; margin-top:2px;}
+  .cb-item{flex-wrap:wrap; row-gap:6px;}
+  .cb-item .w-name{white-space:normal;}
+}
+.cb-acts button{font-size:10.5px; font-weight:700; border-radius:7px; padding:4px 8px; display:inline-flex; align-items:center; gap:3px; white-space:nowrap; border:1px solid var(--line); background:var(--surface); color:var(--ink);}
+.cb-acts button .ic{width:1em; height:1em;}
+.cb-acts .a-book{background:var(--green); border-color:var(--green); color:#fff;}
+.cb-acts .a-no{background:var(--red-soft); border-color:transparent; color:#C21F33;}
+.cb-acts .a-x{padding:4px 6px; color:var(--muted);}
+.cb-acts .a-x:hover{color:var(--ink);}
+.cb-chips{display:flex; gap:5px; flex-wrap:wrap; align-items:center; padding:10px 14px; border-bottom:1px solid var(--line);}
+.cb-chips span{font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-right:2px;}
+.cb-chips button{font-size:11.5px; font-weight:700; border-radius:99px; padding:4px 11px; background:var(--bg); color:var(--ink); border:1px solid var(--line);}
+.cb-chips button.on,.cb-chips button:hover{background:var(--violet-soft); border-color:#C9BDFF; color:#4C34B8;}
+
 .rn-banner{background:linear-gradient(120deg,#10141F 15%,#123A63 60%,#2F7FE0 120%); color:#fff; border-radius:var(--radius); padding:20px 26px; margin-bottom:16px; display:flex; align-items:center; gap:34px; flex-wrap:wrap; box-shadow:var(--shadow-lg);}
 .rn-banner .big{font-family:'Sora'; font-weight:800; font-size:32px; letter-spacing:-.03em; font-variant-numeric:tabular-nums;}
 .rn-banner .k{font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.6);}
@@ -796,8 +862,20 @@ body.dark .ql-card input:focus{background:#fff;}
 .qc-go{flex:0 0 auto; min-width:54px; border-radius:12px; background:rgba(255,255,255,.95); font-family:'Sora',sans-serif; font-weight:800; font-size:21px; line-height:1; display:grid; place-items:center; color:#0A9F5B; transition:transform .12s;}
 .qc-go:active{transform:scale(.94);}
 .ql-card.y .qc-go{color:#A87A00;} .ql-card.r .qc-go{color:#D6293C;}
-.qc-extra{display:flex; gap:8px;}
+.qc-extra{display:flex; gap:6px; flex-wrap:wrap;}
 .qc-extra input{padding:9px 11px; font-size:13px;}
+.qc-extra #qcVal{flex:1 1 70px;} .qc-extra #qcDay{flex:1 1 118px;} .qc-extra #qcTime{flex:0 1 92px;}
+/* one-tap meeting day + time — lands on the Calendar at that slot */
+.qc-quick{display:flex; gap:4px; flex-wrap:wrap;}
+.qc-quick button{font-size:11px; font-weight:700; border-radius:99px; padding:4px 9px; background:rgba(255,255,255,.2); color:#fff; border:1px solid rgba(255,255,255,.3); line-height:1.2; transition:background .12s;}
+.qc-quick button:hover{background:rgba(255,255,255,.38);}
+.qc-quick button.on,.qc-quick button.on:hover{background:rgba(255,255,255,.96); color:#0A9F5B; border-color:transparent;}
+.qc-meet{font-size:11px; font-weight:600; opacity:.92; display:flex; align-items:center; gap:5px; min-height:16px; flex-wrap:wrap;}
+.qc-meet .ic{width:1.1em; height:1.1em; flex-shrink:0;}
+.qc-meet a{color:#fff; text-decoration:underline; cursor:pointer; font-weight:800;}
+.le-meet{font-size:10.5px; font-weight:700; color:var(--blue); display:inline-flex; align-items:center; gap:3px; white-space:nowrap; background:var(--blue-soft); border-radius:6px; padding:2px 6px;}
+.le-meet .ic{width:1em; height:1em;}
+@media(max-width:820px){ .qc-quick{gap:3px;} .qc-quick button{padding:4px 8px; font-size:10.5px;} }
 .qc-hint{display:flex; align-items:center; gap:6px; margin-top:auto; font-size:10.5px; font-weight:600; opacity:.85;}
 .qc-hint .ic{width:1.1em; height:1.1em; flex-shrink:0;}
 /* shared day + source bar (applies to whichever card you submit) */
@@ -939,9 +1017,9 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 .hg-title .ic{width:1.15em; height:1.15em; opacity:.9;}
 .hg-title .hg-note{margin-left:auto; font-weight:600; letter-spacing:.02em; text-transform:none; font-size:10.5px; color:rgba(255,255,255,.45);}
 .home-hero .hero-stats{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px 14px;}
-.hg.attention .hero-stats{grid-template-columns:repeat(3,minmax(0,1fr));}
+.hg.attention .hero-stats{grid-template-columns:repeat(4,minmax(0,1fr));}
 @media(max-width:1280px){.home-hero .hero-stats,.hg.attention .hero-stats{grid-template-columns:repeat(2,minmax(0,1fr));}}
-@media(max-width:1100px){.hg.attention .hero-stats{grid-template-columns:repeat(3,minmax(0,1fr));}}
+@media(max-width:1100px){.hg.attention .hero-stats{grid-template-columns:repeat(4,minmax(0,1fr));}}
 @media(max-width:520px){.hg.attention .hero-stats{grid-template-columns:repeat(2,minmax(0,1fr));}}
 .home-hero .hs{min-width:0; display:flex; flex-direction:column; justify-content:flex-start;}
 .home-hero .hs .k{font-size:9.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.55); line-height:1.3; min-height:25px; display:flex; align-items:flex-end;}
@@ -1434,8 +1512,12 @@ body.dark .btn-ghost:hover{background:var(--bg);}
       </div>
       <div class="qc-extra">
         <input id="qcVal" type="number" min="0" placeholder="€ value" title="Deal value — optional, name + Enter is enough">
-        <input id="qcTime" type="time" title="Meeting time — optional, puts the meeting on the logged day">
+        <input id="qcDay" type="date" title="Meeting day — optional; goes straight onto the Calendar">
+        <input id="qcTime" type="time" title="Meeting time — optional">
       </div>
+      <div class="qc-quick" id="qcQuickDays"></div>
+      <div class="qc-quick" id="qcQuickTimes"></div>
+      <div class="qc-meet" id="qcMeet"></div>
     </div>
     <div class="ql-card y">
       <div class="qc-top">
@@ -1510,11 +1592,13 @@ body.dark .btn-ghost:hover{background:var(--bg);}
 
 <!-- CALLBACKS -->
 <main class="view" id="view-callbacks">
+  <div class="cb-banner" id="cbBanner"></div>
   <div class="cb-grid">
     <section class="panel">
       <div class="panel-head">
         <div class="ico" style="background:var(--orange-soft);color:var(--orange)" data-ic="fire"></div>
-        <div><h3>Warm leads — call back</h3><p>Interested people to chase soon</p></div>
+        <div><h3>Warm leads — call back</h3><p>Interested people to chase in the next days · oldest first</p></div>
+        <div class="cb-head-n" id="warmHeadN"><b>0</b><small>left to call</small></div>
       </div>
       <div class="panel-form">
         <input class="grow" id="warmName" placeholder="Name">
@@ -1527,14 +1611,17 @@ body.dark .btn-ghost:hover{background:var(--bg);}
     <section class="panel">
       <div class="panel-head">
         <div class="ico" style="background:var(--violet-soft);color:var(--violet)" data-ic="calendar"></div>
-        <div><h3>Scheduled callbacks</h3><p>"Call me in September" — grouped by month</p></div>
+        <div><h3>Scheduled callbacks</h3><p>"Call me in October" — overdue first, then this month, then later</p></div>
+        <div class="cb-head-n" id="schedHeadN"><b>0</b><small>to call</small></div>
       </div>
       <div class="panel-form">
         <input class="grow" id="schedName" placeholder="Name">
-        <input type="month" id="schedMonth" style="width:150px;">
+        <input id="schedPhone" placeholder="Phone" style="width:125px;">
+        <input type="month" id="schedMonth" style="width:150px;" title="Month to call them in">
         <input class="grow" id="schedNote" placeholder="Note (optional)">
         <button id="schedAdd">Add</button>
       </div>
+      <div class="cb-chips" id="schedChips"></div>
       <div class="panel-body" id="schedList"></div>
     </section>
   </div>
@@ -2989,9 +3076,11 @@ function logEntryEl(l){
   const row=document.createElement('div'); row.className='log-entry t-'+(l.type||'y'); row.draggable=true; row.dataset.id=l.id;
   row.addEventListener('dragstart',e=>{ dragLogId=l.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',l.id); });
   row.addEventListener('dragend',()=>{ dragLogId=null; row.classList.remove('dragging'); document.querySelectorAll('.dl-lane-body.dragover').forEach(b=>b.classList.remove('dragover')); });
+  const lc=l.clientId? state.clients.find(c=>c.id===l.clientId) : null;
   row.innerHTML=`
     <span class="le-name">${esc(l.name)}</span>
     ${l.value?`<span class="le-val">${fmtMoney(l.value)}</span>`:''}
+    ${(lc&&lc.day)?`<span class="le-meet" title="Meeting on the Calendar">${IC.calendar}${fmtDay(lc.day)}${lc.time?' '+lc.time:''}</span>`:''}
     <span class="src-chip ${l.source||'cold'}" title="Source: ${sm.name}">${sm.icon}${sm.short}</span>
     ${l.type!=='g'?`<button class="ql-mv" title="They booked — move to Booked & add to the Board">${IC.check}Booked</button>`:''}
     <button class="le-edit" title="Edit name, value, note, source, date">${IC.edit}</button>
@@ -3002,14 +3091,46 @@ function logEntryEl(l){
   const mv=row.querySelector('.ql-mv'); if(mv) mv.addEventListener('click',()=>convertToBooked(l.id));
   return row;
 }
-function linkClientForLog(l, time){
+function linkClientForLog(l, time, mday){
   if(l.clientId && state.clients.find(c=>c.id===l.clientId)) return;
   const date=l.date||todayIso();
   const month=date.slice(0,7);
-  /* a time means you scheduled the meeting — put it on the calendar for the logged day */
-  const c={id:uid(), name:l.name, value:+l.value||0, day:time?date:'', time:time||'', stage:'booked', month, notes:'', created:Date.now(), updated:Date.now()};
+  /* a meeting day (or just a time) puts the meeting on the Calendar — the day you picked, else the logged day */
+  const day= mday || (time?date:'');
+  const c={id:uid(), name:l.name, value:+l.value||0, day, time:time||'', stage:'booked', month, notes:'', created:Date.now(), updated:Date.now()};
   state.clients.push(c); l.clientId=c.id;
 }
+/* Quick Log → Booked: one tap for the meeting day and time; the client lands on the Calendar at that slot */
+const QC_TIMES=['10:00','11:00','12:00','13:00','17:00','18:00'];
+function qcQuickDays(){
+  const out=[]; const base=new Date(); base.setHours(0,0,0,0);
+  out.push({k:isoDate(base), t:'Today'});
+  const t1=new Date(base); t1.setDate(t1.getDate()+1); out.push({k:isoDate(t1), t:'Tomorrow'});
+  const d=new Date(t1); let n=0;
+  while(n<3){ d.setDate(d.getDate()+1); if(d.getDay()===0||d.getDay()===6) continue; out.push({k:isoDate(d), t:DOW[(d.getDay()+6)%7]+' '+d.getDate()}); n++; }
+  return out;
+}
+function qcOpenCalendar(day){
+  weekStart=mondayOf(new Date(day+'T00:00')); calMode='week';
+  document.querySelectorAll('[data-cal]').forEach(x=>x.classList.toggle('active',x.dataset.cal==='week'));
+  const tb=$('#calToday'); if(tb) tb.textContent='This week';
+  switchView('calendar');
+}
+function renderQcQuick(){
+  const dEl=$('#qcQuickDays'), tEl=$('#qcQuickTimes'), mEl=$('#qcMeet'); if(!dEl||!tEl||!mEl) return;
+  const day=$('#qcDay').value, time=$('#qcTime').value;
+  dEl.innerHTML=qcQuickDays().map(o=>`<button type="button" data-day="${o.k}" class="${day===o.k?'on':''}" title="${fmtDate(o.k)}">${o.t}</button>`).join('');
+  tEl.innerHTML=QC_TIMES.map(t=>`<button type="button" data-time="${t}" class="${time===t?'on':''}">${t}</button>`).join('');
+  dEl.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ $('#qcDay').value = ($('#qcDay').value===b.dataset.day)?'':b.dataset.day; renderQcQuick(); $('#qcNameG').focus(); }));
+  tEl.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ $('#qcTime').value = ($('#qcTime').value===b.dataset.time)?'':b.dataset.time; renderQcQuick(); $('#qcNameG').focus(); }));
+  if(day){
+    const d=new Date(day+'T00:00');
+    mEl.innerHTML=`${IC.calendar} Meeting ${DOW[(d.getDay()+6)%7]} ${fmtDay(day)}${time?' · '+time:' · pick a time'} → Calendar <a>open</a>`;
+    mEl.querySelector('a').addEventListener('click',()=>qcOpenCalendar(day));
+  } else mEl.innerHTML= time? `${IC.clock} ${time} on the logged day → Calendar` : `${IC.calendar} Tap a day + time and the meeting lands on the Calendar`;
+}
+['#qcDay','#qcTime'].forEach(sel=>$(sel).addEventListener('change',renderQcQuick));
+renderQcQuick();
 function convertToBooked(id){
   const l=state.logs.find(x=>x.id===id); if(!l) return;
   l.type='g'; l.updated=Date.now(); linkClientForLog(l);
@@ -3060,20 +3181,22 @@ function qlAddEntry(type){
   const date=$('#qlDate').value || todayIso();
   const value= type==='g' ? (+$('#qcVal').value||0) : 0;
   const time= type==='g' ? $('#qcTime').value : '';
+  const mday= type==='g' ? $('#qcDay').value : '';
   const l={id:uid(), type, name, value, source:qlSource, note:'', date, created:Date.now(), updated:Date.now()};
   state.logs.push(l);
-  if(type==='g') linkClientForLog(l, time);
+  if(type==='g') linkClientForLog(l, time, mday);
   inp.value='';
-  if(type==='g'){ $('#qcVal').value=''; $('#qcTime').value=''; }
+  if(type==='g'){ $('#qcVal').value=''; $('#qcTime').value=''; $('#qcDay').value=''; renderQcQuick(); }
   if(date.slice(0,7)!==curMonth) curMonth=date.slice(0,7);
   save(); renderAll(); inp.focus();
-  toast(type==='g'?name+' → Booked · added to the Board':type==='y'?name+' → SMS sent':name+' → No');
+  const meetTxt=(mday||time)? ' · meeting '+(mday?fmtDay(mday):'today')+(time?' '+time:'')+' on the Calendar' : ' · added to the Board';
+  toast(type==='g'?name+' → Booked'+meetTxt:type==='y'?name+' → SMS sent':name+' → No');
 }
 document.querySelectorAll('.qc-go').forEach(b=>b.addEventListener('click',()=>qlAddEntry(b.dataset.add)));
 Object.entries(QL_NAME).forEach(([type,sel])=>{
   $(sel).addEventListener('keydown',e=>{ if(e.key==='Enter') qlAddEntry(type); });
 });
-['#qcVal','#qcTime'].forEach(sel=>$(sel).addEventListener('keydown',e=>{ if(e.key==='Enter') qlAddEntry('g'); }));
+['#qcVal','#qcTime','#qcDay'].forEach(sel=>$(sel).addEventListener('keydown',e=>{ if(e.key==='Enter') qlAddEntry('g'); }));
 $('#qlSourceSeg').addEventListener('click',e=>{
   const b=e.target.closest('button[data-src]'); if(!b) return;
   qlSource=b.dataset.src; renderQLCards();
@@ -3084,58 +3207,158 @@ $('#qlDate').addEventListener('change',()=>{
   else renderQLCards();
 });
 
-/* ---------- callbacks ---------- */
-function renderWarm(){
-  const el=$('#warmList'); el.innerHTML='';
-  const list=[...state.warm].sort((a,b)=> (a.done-b.done) || b.created-a.created);
-  if(!list.length){ el.innerHTML='<div class="empty-note">No warm leads waiting. Nice and clean.</div>'; return; }
-  list.forEach(w=>{
-    const row=document.createElement('div'); row.className='warm-item'+(w.done?' done':'');
-    row.innerHTML=`<button class="w-check" title="Mark called">${w.done?IC.check:''}</button>
-      <div><div class="w-name">${esc(w.name)}</div>
-      ${w.note?`<div class="w-note">${esc(w.note)}</div>`:''}</div>
-      ${w.phone?`<a class="w-phone" href="tel:${esc(w.phone)}">${esc(w.phone)}</a>`:''}
-      <button class="item-x" title="Remove">${IC.x}</button>`;
-    row.querySelector('.w-check').addEventListener('click',()=>{ w.done=!w.done; save(); renderWarm(); });
-    row.querySelector('.item-x').addEventListener('click',()=>{ state.warm=state.warm.filter(x=>x.id!==w.id); save(); renderWarm(); });
-    el.appendChild(row);
+/* ---------- callbacks 2.0 — exact numbers on top, three groups, one-tap outcomes ---------- */
+const cbMonthKey=()=>todayIso().slice(0,7);
+/* The numbers: warm leads not yet called + scheduled ones overdue or due this month = "left to call now" */
+function cbCounts(){
+  const cm=cbMonthKey();
+  const warm=state.warm||[], sched=state.sched||[];
+  const warmLeft=warm.filter(w=>!w.done).length, warmDone=warm.filter(w=>w.done).length;
+  const open=sched.filter(s=>!s.done);
+  const over=open.filter(s=>s.month && s.month<cm).length;
+  const cur=open.filter(s=>s.month===cm).length;
+  const later=open.filter(s=>!s.month || s.month>cm).length;
+  const schedDone=sched.filter(s=>s.done).length;
+  return { warmLeft, warmDone, over, cur, later, schedDone, now:warmLeft+over+cur, called:warmDone+schedDone, total:warm.length+sched.length };
+}
+const cbWaitDays=t=>Math.max(0,Math.floor((Date.now()-(t||Date.now()))/864e5));
+function renderCbBanner(){
+  const el=$('#cbBanner'); if(!el) return;
+  const n=cbCounts();
+  const pct=n.total? Math.round(n.called/n.total*100):0;
+  const mn=MONTHS[+cbMonthKey().slice(5,7)-1];
+  el.innerHTML=`
+    <div class="cell now"><div class="k">${IC.phone} Left to call now</div><div class="big">${n.now}</div><div class="sub">${n.warmLeft} warm · ${n.over} overdue · ${n.cur} due in ${mn}</div></div>
+    <div class="cell"><div class="k">${IC.fire} Warm leads</div><div class="big">${n.warmLeft}</div><div class="sub">${n.warmDone} already called</div></div>
+    <div class="cell over"><div class="k">${IC.flag} Overdue</div><div class="big">${n.over}</div><div class="sub">from earlier months</div></div>
+    <div class="cell"><div class="k">${IC.calendar} Due in ${mn}</div><div class="big">${n.cur}</div><div class="sub">said «call me this month»</div></div>
+    <div class="cell"><div class="k">${IC.clock} Later</div><div class="big">${n.later}</div><div class="sub">coming months</div></div>
+    <div class="cell done"><div class="k">${IC.check} Called</div><div class="big">${n.called}<span style="font-size:15px;opacity:.6;"> / ${n.total}</span></div><div class="bar"><i style="width:${pct}%"></i></div></div>`;
+}
+function cbRefresh(){ renderWarm(); renderSched(); renderHome(); }
+/* One-tap outcome: Booked / No writes the call into Quick Log for today (so the statistics stay honest) and ticks the callback */
+function cbOutcome(item, listName, type){
+  const date=todayIso();
+  const l={id:uid(), type, name:item.name, value:0, source:qlSource||'cold', note:item.note||'', date, created:Date.now(), updated:Date.now()};
+  state.logs.push(l);
+  if(type==='g') linkClientForLog(l);
+  item.done=true; item.doneAt=Date.now();
+  if(date.slice(0,7)!==curMonth) curMonth=date.slice(0,7);
+  save(); renderAll();
+  toast(type==='g'? item.name+' → Booked · on the Board (add € and the meeting time in Quick Log)' : item.name+' → No · logged for today');
+}
+function cbItemEl(item, cls, listName){
+  const row=document.createElement('div'); row.className='cb-item '+cls+(item.done?' done':'');
+  const wait=cbWaitDays(item.created);
+  const meta=[];
+  if(item.note) meta.push(`<span>${esc(item.note)}</span>`);
+  if(item.phone) meta.push(`<a class="w-phone" href="tel:${esc(item.phone)}">${IC.phone}${esc(item.phone)}</a>`);
+  if(listName==='warm' && !item.done) meta.push(`<span class="w-wait${wait>=7?' hot':''}">${wait===0?'added today':wait===1?'waiting 1 day':'waiting '+wait+' days'}</span>`);
+  if(listName==='sched' && !item.done && cls==='over') meta.push(`<span class="w-wait hot">was due ${item.month?fmtMonth(item.month):'—'}</span>`);
+  if(item.done && item.doneAt) meta.push(`<span class="w-wait">called ${fmtDay(isoDate(new Date(item.doneAt)))}</span>`);
+  row.innerHTML=`<button class="w-check" title="${item.done?'Not called yet — put it back':'Mark called'}">${item.done?IC.check:''}</button>
+    <div class="w-main"><div class="w-name">${esc(item.name)}</div>${meta.length?`<div class="w-meta">${meta.join('')}</div>`:''}</div>
+    <div class="cb-acts">
+      ${item.done?'':`<button class="a-book" title="They said yes — logs a Booked call for today and adds them to the Board">${IC.check}Booked</button>
+      <button class="a-no" title="They said no — logs the no for today">${IC.x}No</button>
+      ${listName==='warm'?`<button class="a-later" title="Not now — move to Scheduled callbacks for a later month">${IC.calendar}Later</button>`:`<button class="a-now" title="Call in the next days — move to Warm leads">${IC.fire}Now</button>`}`}
+      <button class="a-x" title="Remove">${IC.x}</button>
+    </div>`;
+  row.querySelector('.w-check').addEventListener('click',()=>{ item.done=!item.done; item.doneAt=item.done?Date.now():null; save(); cbRefresh(); });
+  row.querySelector('.a-x').addEventListener('click',()=>{ state[listName]=state[listName].filter(x=>x.id!==item.id); save(); cbRefresh(); });
+  const bk=row.querySelector('.a-book'); if(bk) bk.addEventListener('click',()=>cbOutcome(item, listName, 'g'));
+  const no=row.querySelector('.a-no'); if(no) no.addEventListener('click',()=>cbOutcome(item, listName, 'r'));
+  const lt=row.querySelector('.a-later'); if(lt) lt.addEventListener('click',()=>{
+    const cm=cbMonthKey(); const [y,m]=cm.split('-').map(Number); const next=(m===12?(y+1)+'-01':y+'-'+pad(m+1));
+    const v=prompt('Call '+item.name+' in which month? (YYYY-MM)', next); if(v===null) return;
+    const mk=v.trim(); if(!/^\d{4}-\d{2}$/.test(mk)){ toast('Write the month like 2026-10'); return; }
+    state.warm=state.warm.filter(x=>x.id!==item.id);
+    state.sched.push({id:uid(), name:item.name, phone:item.phone||'', month:mk, note:item.note||'', done:false, created:Date.now()});
+    save(); cbRefresh(); toast(item.name+' → call in '+fmtMonth(mk));
   });
+  const nw=row.querySelector('.a-now'); if(nw) nw.addEventListener('click',()=>{
+    state.sched=state.sched.filter(x=>x.id!==item.id);
+    state.warm.push({id:uid(), name:item.name, phone:item.phone||'', note:item.note||'', done:false, created:Date.now()});
+    save(); cbRefresh(); toast(item.name+' → warm leads · call in the next days');
+  });
+  return row;
+}
+function cbCalledGroup(items, listName){
+  const g=document.createElement('div'); g.className='cb-group';
+  state.meta||={};
+  const open=!!state.meta['cbCalledOpen_'+listName];
+  g.innerHTML=`<div class="cb-group-h calledh" title="${open?'Hide':'Show'} the called ones">${IC.check2} Called <span class="n">${items.length}</span><button class="cb-clear" title="Remove every called entry from this list">Clear called</button></div>`;
+  const h=g.querySelector('.cb-group-h');
+  h.addEventListener('click',e=>{ if(e.target.closest('.cb-clear')) return; state.meta['cbCalledOpen_'+listName]=!open; save(); listName==='warm'?renderWarm():renderSched(); });
+  h.querySelector('.cb-clear').addEventListener('click',()=>{ if(!confirm('Remove the '+items.length+' called entries? The calls stay in Quick Log.')) return; state[listName]=state[listName].filter(x=>!x.done); save(); cbRefresh(); });
+  if(open) items.forEach(it=>g.appendChild(cbItemEl(it,'done',listName)));
+  return g;
+}
+function renderWarm(){
+  const el=$('#warmList'); if(!el) return; el.innerHTML='';
+  state.warm||=[];
+  const open=state.warm.filter(w=>!w.done).sort((a,b)=>(a.created||0)-(b.created||0));
+  const done=state.warm.filter(w=>w.done).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
+  const hn=$('#warmHeadN'); if(hn) hn.innerHTML=`<b>${open.length}</b><small>left to call</small>`;
+  if(!open.length && !done.length){ el.innerHTML='<div class="empty-note">No warm leads waiting. Nice and clean.</div>'; renderCbBanner(); return; }
+  if(open.length){
+    const g=document.createElement('div'); g.className='cb-group';
+    g.innerHTML=`<div class="cb-group-h warmh">${IC.fire} To call — oldest waiting first <span class="n">${open.length}</span></div>`;
+    open.forEach(w=>g.appendChild(cbItemEl(w,'warm','warm')));
+    el.appendChild(g);
+  } else el.innerHTML='<div class="empty-note">Everyone called. Nice and clean.</div>';
+  if(done.length) el.appendChild(cbCalledGroup(done,'warm'));
+  renderCbBanner();
 }
 $('#warmAdd').addEventListener('click',()=>{
   const name=$('#warmName').value.trim(); if(!name){ $('#warmName').focus(); return; }
   state.warm.push({id:uid(), name, phone:$('#warmPhone').value.trim(), note:$('#warmNote').value.trim(), done:false, created:Date.now()});
   ['#warmName','#warmPhone','#warmNote'].forEach(s=>$(s).value='');
-  save(); renderWarm(); toast('Warm lead saved'); $('#warmName').focus();
+  save(); cbRefresh(); toast('Warm lead saved'); $('#warmName').focus();
 });
-['warmName','warmNote'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#warmAdd').click();}));
+['warmName','warmPhone','warmNote'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#warmAdd').click();}));
 
+/* month chips under the form — one tap instead of typing a month */
+function renderSchedChips(){
+  const el=$('#schedChips'); if(!el) return;
+  const cm=cbMonthKey(); const [y,m]=cm.split('-').map(Number);
+  const keys=[0,1,2,3,4,5].map(k=>{ const mm=m+k; const yy=y+Math.floor((mm-1)/12); const m2=((mm-1)%12)+1; return yy+'-'+pad(m2); });
+  const cur=$('#schedMonth').value;
+  el.innerHTML='<span>Call in</span>'+keys.map((k,i)=>`<button type="button" data-m="${k}" class="${cur===k?'on':''}" title="${fmtMonth(k)}">${i===0?'This month':i===1?'Next month':MONTHS[+k.slice(5,7)-1].slice(0,3)+' '+k.slice(2,4)}</button>`).join('');
+  el.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ $('#schedMonth').value=b.dataset.m; renderSchedChips(); $('#schedName').focus(); }));
+}
 function renderSched(){
-  const el=$('#schedList'); el.innerHTML='';
-  if(!state.sched.length){ el.innerHTML='<div class="empty-note">Nothing scheduled. Add "call in September" leads here.</div>'; return; }
-  const groups={};
-  state.sched.forEach(s=>{ (groups[s.month] ||= []).push(s); });
-  Object.keys(groups).sort().forEach(m=>{
-    const g=document.createElement('div'); g.className='month-group';
-    g.innerHTML=`<h4>${fmtMonth(m)} <span class="count">${groups[m].length}</span></h4>`;
-    groups[m].forEach(s=>{
-      const row=document.createElement('div'); row.className='sched-item';
-      row.innerHTML=`<div><div class="w-name">${esc(s.name)}</div>${s.note?`<div class="w-note">${esc(s.note)}</div>`:''}</div>
-        <button class="item-x" title="Remove">${IC.x}</button>`;
-      row.querySelector('.item-x').addEventListener('click',()=>{ state.sched=state.sched.filter(x=>x.id!==s.id); save(); renderSched(); });
-      g.appendChild(row);
-    });
-    el.appendChild(g);
-  });
+  const el=$('#schedList'); if(!el) return; el.innerHTML='';
+  state.sched||=[];
+  renderSchedChips();
+  const cm=cbMonthKey();
+  const open=state.sched.filter(s=>!s.done);
+  const done=state.sched.filter(s=>s.done).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
+  const hn=$('#schedHeadN'); if(hn) hn.innerHTML=`<b>${open.length}</b><small>to call</small>`;
+  if(!open.length && !done.length){ el.innerHTML='<div class="empty-note">Nothing scheduled. Add the "call me in October" people here.</div>'; renderCbBanner(); return; }
+  const over=open.filter(s=>s.month && s.month<cm).sort((a,b)=>String(a.month).localeCompare(String(b.month)));
+  const cur=open.filter(s=>s.month===cm).sort((a,b)=>(a.created||0)-(b.created||0));
+  const later=open.filter(s=>!s.month || s.month>cm);
+  const grp=(cls,title,items)=>{ const g=document.createElement('div'); g.className='cb-group'; g.innerHTML=`<div class="cb-group-h ${cls}">${title} <span class="n">${items.length}</span></div>`; items.forEach(s=>g.appendChild(cbItemEl(s,cls,'sched'))); return g; };
+  if(over.length) el.appendChild(grp('over', IC.flag+' Overdue — should have been called already', over));
+  const curG=grp('cur', IC.calendar+' '+fmtMonth(cm)+' — due this month', cur);
+  if(!cur.length){ const n=document.createElement('div'); n.className='empty-note'; n.style.padding='2px 10px 12px'; n.textContent='Nobody due this month.'; curG.appendChild(n); }
+  el.appendChild(curG);
+  const months={}; later.forEach(s=>{ (months[s.month||'zz'] ||= []).push(s); });
+  Object.keys(months).sort().forEach(mk=> el.appendChild(grp('later', IC.clock+' '+(mk==='zz'?'No month set':fmtMonth(mk)), months[mk])));
+  if(done.length) el.appendChild(cbCalledGroup(done,'sched'));
+  renderCbBanner();
 }
 $('#schedAdd').addEventListener('click',()=>{
   const name=$('#schedName').value.trim(); const m=$('#schedMonth').value;
   if(!name){ $('#schedName').focus(); return; }
-  if(!m){ toast('Pick a month first'); $('#schedMonth').focus(); return; }
-  state.sched.push({id:uid(), name, month:m, note:$('#schedNote').value.trim(), created:Date.now()});
-  $('#schedName').value=''; $('#schedNote').value='';
-  save(); renderSched(); toast('Callback scheduled for '+fmtMonth(m)); $('#schedName').focus();
+  if(!m){ toast('Pick a month first — tap one of the chips'); $('#schedMonth').focus(); return; }
+  state.sched.push({id:uid(), name, phone:$('#schedPhone').value.trim(), month:m, note:$('#schedNote').value.trim(), done:false, created:Date.now()});
+  $('#schedName').value=''; $('#schedPhone').value=''; $('#schedNote').value='';
+  save(); cbRefresh(); toast('Callback scheduled for '+fmtMonth(m)); $('#schedName').focus();
 });
-['schedName','schedNote'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#schedAdd').click();}));
+$('#schedMonth').addEventListener('change',renderSchedChips);
+['schedName','schedPhone','schedNote'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#schedAdd').click();}));
 
 /* ---------- renewals ---------- */
 let rnYear=now.getFullYear();
@@ -4082,6 +4305,7 @@ function renderHome(){
   const hiNotes=state.todos.filter(n=>!n.done && (n.prio||'medium')==='high');
   const hiClients=state.clients.filter(c=>c.prio==='high' && !isTrashed(c));
   const hiCount=hiNotes.length + hiClients.length;
+  const cbNow=cbCounts().now;   /* callbacks left to call now */
   // hero
   const rem=mTotal-mPaid;
   const mGenerated=generatedForMonth(curMonth), mt=monthTarget(curMonth);
@@ -4117,9 +4341,10 @@ function renderHome(){
           <div class="hs"><div class="k">${monthName} net profit</div><div class="v ${mNet>=0?'g':'c'}">${fmtMoney2(Math.round(mNet))}</div></div>
         </div>
       </div>
-      <div class="hg attention${(overdue.length+thinkDue.length+hiCount)?' hot':''}">
-        <div class="hg-title">${IC.flag} Attention <span class="hg-note">${(overdue.length+thinkDue.length+hiCount)? (overdue.length+thinkDue.length+hiCount)+' open' : 'all clear'}</span></div>
+      <div class="hg attention${(overdue.length+thinkDue.length+hiCount+cbNow)?' hot':''}">
+        <div class="hg-title">${IC.flag} Attention <span class="hg-note">${(overdue.length+thinkDue.length+hiCount+cbNow)? (overdue.length+thinkDue.length+hiCount+cbNow)+' open' : 'all clear'}</span></div>
         <div class="hero-stats">
+          <div class="hs" data-goto="callbacks" style="cursor:pointer" title="Warm leads + overdue + due this month — opens Callbacks"><div class="k">Calls to make</div><div class="v ${cbNow?'c':'g'}">${cbNow}</div></div>
           <div class="hs"><div class="k">Overdue renewals</div><div class="v ${overdue.length?'c':'g'}">${overdue.length}</div></div>
           <div class="hs"><div class="k">Chase after meeting</div><div class="v ${thinkDue.length?'c':'g'}">${thinkDue.length}</div></div>
           <div class="hs"><div class="k">High priority</div><div class="v ${hiCount?'c':'g'}">${hiCount}</div></div>
@@ -4316,9 +4541,13 @@ function runSearch(q){
   if(sb.length){ html+='<div class="sr-group">Monthly</div>';
     sb.forEach(s=> html+=`<div class="sr-item" data-goto="monthly"><span class="sr-dot" style="background:var(--green)"></span><div class="sr-main"><div class="sr-name">${esc(s.name)}</div><div class="sr-meta">${fmtMoney2(s.value)}/month</div></div></div>`);
   }
-  const wm=state.warm.filter(w=>hit(w.name)||hit(w.note)).slice(0,4);
+  const wm=state.warm.filter(w=>!w.done && (hit(w.name)||hit(w.note))).slice(0,4);
   if(wm.length){ html+='<div class="sr-group">Warm leads</div>';
     wm.forEach(w=> html+=`<div class="sr-item" data-goto="callbacks"><span class="sr-dot" style="background:var(--orange)"></span><div class="sr-main"><div class="sr-name">${esc(w.name)}</div><div class="sr-meta">${esc(w.note||'')}</div></div></div>`);
+  }
+  const sc=(state.sched||[]).filter(s=>!s.done && (hit(s.name)||hit(s.note))).slice(0,4);
+  if(sc.length){ html+='<div class="sr-group">Scheduled callbacks</div>';
+    sc.forEach(s=> html+=`<div class="sr-item" data-goto="callbacks"><span class="sr-dot" style="background:var(--violet)"></span><div class="sr-main"><div class="sr-name">${esc(s.name)}</div><div class="sr-meta">${s.month?'call in '+fmtMonth(s.month):''}${s.note?' · '+esc(s.note):''}</div></div></div>`);
   }
   box.innerHTML= html || '<div class="sr-empty">No matches for "'+esc(q)+'"</div>';
   box.classList.add('open');
@@ -4707,7 +4936,7 @@ function exportYearReport(){
 
   /* ---------------- callbacks ---------------- */
   const warm=(state.warm||[]).filter(w=>!w.done);
-  const sched=[...(state.sched||[])].sort((a,b)=>String(a.month).localeCompare(String(b.month)));
+  const sched=(state.sched||[]).filter(s=>!s.done).sort((a,b)=>String(a.month).localeCompare(String(b.month)));
   h+=`<section class="rp-sec"><div class="rp-h">Callbacks <span class="hc">· ${warm.length + sched.length} people to chase</span></div>
     <div class="rp-hs">Warm leads to call back, and the ones who said "call me later"</div>`;
   if(warm.length){
@@ -5007,12 +5236,14 @@ function demoSeed(){
   idea('Αυτόματο email μετά την παράδοση','Ζητάει κριτική στο Google 3 μέρες μετά','doing');
   idea('Νέα σελίδα υπηρεσιών','Ξεχωριστή landing ανά κλάδο','done');
   idea('Πρόγραμμα συστάσεων','−50€ στην ανανέωση για κάθε σύσταση','someday');
-  const warm=(name,note,done)=>S.warm.push({id:uid(), name, phone:phone(), note, done:!!done, created:Date.now()-ri(1,9)*864e5});
-  warm('Ταβέρνα '+pick(brand),'Κάλεσε Τρίτη μετά τις 5');
-  warm('Οδοντιατρείο '+pick(last),'Θέλει να δει δείγματα πρώτα');
-  warm('Γυμναστήριο '+pick(brand),'Ενδιαφέρεται για Οκτώβριο');
-  warm('Κομμωτήριο '+pick(last),'Ρώτησε για τιμή ανανέωσης',true);
-  [1,2,2,4].forEach(k=>S.sched.push({id:uid(), name:bizName(), month:keyOf(Y,M+k), note:pick(['«Πάρε με μετά τις διακοπές»','Ανοίγει νέο κατάστημα','Θα έχει μπάτζετ τότε','']), created:Date.now()}));
+  const warm=(name,note,done,days)=>S.warm.push({id:uid(), name, phone:phone(), note, done:!!done, doneAt:done?Date.now()-864e5:null, created:Date.now()-(days!=null?days:ri(1,9))*864e5});
+  warm('Ταβέρνα '+pick(brand),'Κάλεσε Τρίτη μετά τις 5',false,9);
+  warm('Οδοντιατρείο '+pick(last),'Θέλει να δει δείγματα πρώτα',false,4);
+  warm('Γυμναστήριο '+pick(brand),'Ενδιαφέρεται για Οκτώβριο',false,1);
+  warm('Λογιστικό γραφείο '+pick(last),'Ζήτησε τιμή για e-shop',false,0);
+  warm('Κομμωτήριο '+pick(last),'Ρώτησε για τιμή ανανέωσης',true,6);
+  [-1,0,0,1,2,2,4].forEach((k,i)=>S.sched.push({id:uid(), name:bizName(), phone:phone(), month:keyOf(Y,M+k), note:pick(['«Πάρε με μετά τις διακοπές»','Ανοίγει νέο κατάστημα','Θα έχει μπάτζετ τότε','']), done:false, created:Date.now()-ri(10,60)*864e5}));
+  S.sched.push({id:uid(), name:bizName(), phone:phone(), month:keyOf(Y,M), note:'Είπε ναι — κλείσαμε ραντεβού', done:true, doneAt:Date.now()-2*864e5, created:Date.now()-30*864e5});
   [['Πάρε τον '+pick(first)+' για την πληρωμή',true],['Στείλε το draft στο ζαχαροπλαστείο',false],['Ανανέωσε τα domains που λήγουν αυτόν τον μήνα',false],['Γράψε 3 posts για Instagram',false]].forEach(([text,hot],i)=>S.asap.push({id:uid(), text, hot, done:false, created:Date.now(), sort:i}));
   for(let m=1;m<=12;m++) S.targets.monthly[Y+'-'+pad(m)]= m<=M ? pick([3000,3200,3500,3500,4000]) : 3500;
   return S;
