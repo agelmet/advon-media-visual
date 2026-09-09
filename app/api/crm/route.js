@@ -90,7 +90,55 @@ async function gh(conf, path, init = {}) {
       ...(init.headers || {}),
     },
   });
+  // GitHub returns this on every fine-grained-PAT request. Remember it so the
+  // CRM can warn before the token lapses instead of only after it breaks.
+  const exp = res.headers.get('github-authentication-token-expiration');
+  if (exp) conf.tokenExpiry = exp;
   return res;
+}
+
+// Turn a GitHub failure into something a human can act on.
+// `code` is what the CRM keys off; `message` is what it shows if it does not
+// recognise the code.
+function ghFailure(status, text) {
+  const body = String(text || '');
+  if (status === 401) {
+    return Object.assign(
+      new Error(
+        'The GitHub token for CRM sync has expired or been revoked. ' +
+          'Create a new one and update CRM_GH_TOKEN in Netlify, then redeploy.'
+      ),
+      { code: 'token_expired' }
+    );
+  }
+  if (status === 403) {
+    return Object.assign(
+      new Error(
+        'GitHub refused the CRM sync token (no Contents write access on the ' +
+          'data repo, or a rate limit). Check the token permissions.'
+      ),
+      { code: 'token_forbidden' }
+    );
+  }
+  if (status === 404) {
+    return Object.assign(
+      new Error(
+        'The data repo in CRM_GH_REPO was not found, or the token cannot see it.'
+      ),
+      { code: 'repo_not_found' }
+    );
+  }
+  return Object.assign(new Error(`GitHub error ${status}: ${body.slice(0, 200)}`), {
+    code: 'github_error',
+  });
+}
+
+// Days left on the token, or null if GitHub did not say (e.g. classic PAT).
+function tokenDaysLeft(conf) {
+  if (!conf.tokenExpiry) return null;
+  const t = Date.parse(conf.tokenExpiry);
+  if (!Number.isFinite(t)) return null;
+  return Math.floor((t - Date.now()) / 86400000);
 }
 
 function b64encode(str) {
@@ -104,8 +152,7 @@ async function readData(conf) {
   const res = await gh(conf, `${DATA_PATH}?ref=${encodeURIComponent(conf.branch)}&t=${Date.now()}`);
   if (res.status === 404) return { exists: false, sha: null, payload: null };
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`GitHub read failed (${res.status}): ${text.slice(0, 300)}`);
+    throw ghFailure(res.status, await res.text());
   }
   const meta = await res.json();
   let payload = null;
@@ -126,8 +173,7 @@ async function writeFile(conf, path, contentStr, sha, message) {
   if (sha) body.sha = sha;
   const res = await gh(conf, path, { method: 'PUT', body: JSON.stringify(body) });
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`GitHub write failed (${res.status}): ${text.slice(0, 300)}`);
+    throw ghFailure(res.status, await res.text());
   }
   return res.json();
 }
@@ -177,8 +223,9 @@ export async function GET(req) {
 
   try {
     const { exists, sha, payload } = await readData(conf);
+    const tokenDays = tokenDaysLeft(conf);
     if (!exists) {
-      return json({ empty: true, sha: null, updatedAt: null, data: null });
+      return json({ empty: true, sha: null, updatedAt: null, data: null, tokenDays });
     }
     return json({
       empty: false,
@@ -186,9 +233,17 @@ export async function GET(req) {
       updatedAt: payload.updatedAt || null,
       deviceId: payload.deviceId || null,
       data: payload.data || null,
+      tokenDays,
     });
   } catch (e) {
-    return json({ error: 'backend_error', message: String(e.message || e) }, 502);
+    return json(
+      {
+        error: 'backend_error',
+        code: e.code || 'github_error',
+        message: String(e.message || e),
+      },
+      502
+    );
   }
 }
 
@@ -270,7 +325,14 @@ export async function PUT(req) {
 
     return json({ ok: true, sha: written.content?.sha || null, updatedAt: stamp });
   } catch (e) {
-    return json({ error: 'backend_error', message: String(e.message || e) }, 502);
+    return json(
+      {
+        error: 'backend_error',
+        code: e.code || 'github_error',
+        message: String(e.message || e),
+      },
+      502
+    );
   }
 }
 

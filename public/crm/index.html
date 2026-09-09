@@ -2017,10 +2017,37 @@ const Sync={
   busy:false,
   conflictOpen:false,
 
+  tokenDays:null,     /* days left on the GitHub sync token, null = unknown */
+
   headers(){
     const h={'Content-Type':'application/json'};
     if(SYNC_TOKEN) h['x-crm-auth']=SYNC_TOKEN;
     return h;
+  },
+
+  /* Turn a server response into something worth reading. The raw GitHub JSON
+     that used to land in the banner told you nothing about what to do. */
+  explain(payload, res){
+    const code = payload && payload.code;
+    if(code==='token_expired')
+      return 'the GitHub sync token has expired \u2014 make a new one and update CRM_GH_TOKEN in Netlify';
+    if(code==='token_forbidden')
+      return 'GitHub refused the sync token \u2014 check it still has Contents: read and write on advon-crm-data';
+    if(code==='repo_not_found')
+      return 'the sync data repo could not be found \u2014 check CRM_GH_REPO in Netlify';
+    const msg = payload && payload.message;
+    if(msg && /bad credentials/i.test(msg))
+      return 'the GitHub sync token has expired \u2014 make a new one and update CRM_GH_TOKEN in Netlify';
+    return msg || ('server error '+((res&&res.status)||'?'));
+  },
+
+  /* Warn while there is still time to act, not after sync is already dead. */
+  expiryWarning(){
+    const d=this.tokenDays;
+    if(d===null||d===undefined) return null;
+    if(d<0)   return 'The GitHub sync token has expired.';
+    if(d<=14) return 'The GitHub sync token expires in '+d+' day'+(d===1?'':'s')+'. Renew it in Netlify (CRM_GH_TOKEN) before it lapses.';
+    return null;
   },
 
   setState(s, msg){
@@ -2049,7 +2076,13 @@ const Sync={
         bt.textContent='A change has not reached the server yet. Retrying…';
         banner.classList.add('show');
       }else{
-        banner.classList.remove('show');
+        const warn=this.expiryWarning();
+        if(warn){
+          bt.textContent=warn;
+          banner.classList.add('show');
+        }else{
+          banner.classList.remove('show');
+        }
       }
     }
   },
@@ -2103,7 +2136,9 @@ const Sync={
     const {res, payload}=out;
     if(res.status===401){ this.setState('error','the server rejected this device (check CRM_AUTH_HASH)'); return; }
     if(res.status===503){ this.setState('off'); return; }
-    if(!res.ok){ this.setState('error', (payload&&payload.message)||('server error '+res.status)); return; }
+    if(!res.ok){ this.setState('error', this.explain(payload,res)); return; }
+
+    if(payload && payload.tokenDays!==undefined) this.tokenDays=payload.tokenDays;
 
     const meta=syncMeta();
 
@@ -2173,7 +2208,7 @@ const Sync={
         return;
       }
       if(res.status===503){ this.setState('off'); this.busy=false; return; }
-      if(!res.ok){ throw new Error((payload&&payload.message)||('server error '+res.status)); }
+      if(!res.ok){ throw new Error(Sync.explain(payload,res)); }
       setSyncMeta({sha:payload.sha, updatedAt:payload.updatedAt, lastSyncAt:new Date().toISOString()});
       this.setPending(false);
       this.retryDelay=5000;
