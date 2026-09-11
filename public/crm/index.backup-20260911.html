@@ -528,28 +528,6 @@ body.dark .cb-item .w-wait{background:rgba(255,255,255,.08);}
 .rn-undo{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700; color:var(--muted); background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:5px 9px; opacity:0;}
 .rn-row.paid:hover .rn-undo{opacity:1;}
 .rn-undo:hover{color:var(--red); border-color:rgba(255,77,94,.4); background:var(--red-soft);}
-/* lost — won't renew */
-.rn-lost{margin-top:14px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
-.rn-lost > .rn-mh{background:linear-gradient(120deg,#10141F,#2A1418 140%); color:#fff; border-bottom:none; cursor:pointer; user-select:none;}
-.rn-lost > .rn-mh .ico{width:36px; height:36px; border-radius:11px; display:grid; place-items:center; background:rgba(255,77,94,.18); color:#FF8A96; font-size:16px; flex-shrink:0;}
-.rn-lost > .rn-mh p{color:rgba(255,255,255,.62);}
-.rn-lost > .rn-mh .rn-msum .k{color:rgba(255,255,255,.55);}
-.rn-lost > .rn-mh .rn-msum .v{color:rgba(255,255,255,.6); text-decoration:line-through; text-decoration-thickness:2px; text-decoration-color:rgba(255,77,94,.7);}
-.rn-lost > .rn-mh .chev{transition:transform .18s; color:rgba(255,255,255,.6); display:grid; font-size:16px;}
-.rn-lost.open > .rn-mh .chev{transform:rotate(90deg);}
-.rn-lost-body{display:none; padding:10px 12px 12px; flex-direction:column; gap:6px;}
-.rn-lost.open .rn-lost-body{display:flex;}
-.rn-row.lost{border-left-color:#B4BAC8; grid-template-columns:1fr auto auto auto;}
-.rn-row.lost .rn-name{text-decoration:line-through; text-decoration-color:rgba(255,77,94,.55);}
-.rn-row.lost .rn-val{color:var(--muted); cursor:default;}
-.rn-row.lost .rn-val:hover{border-bottom-color:transparent;}
-.rn-row.lost .rn-days{background:var(--surface); color:var(--muted); text-transform:none; letter-spacing:0; font-weight:600;}
-.rn-restore{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700; color:var(--muted); background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:5px 9px; white-space:nowrap;}
-.rn-restore:hover{color:#0A8F55; border-color:rgba(14,198,115,.45); background:var(--green-soft);}
-.rn-lostbtn{display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:9px; background:var(--surface); border:1px solid var(--line); color:var(--muted); opacity:0; transition:opacity .12s;}
-.rn-row:hover .rn-lostbtn{opacity:1;}
-.rn-lostbtn:hover{color:var(--red); border-color:rgba(255,77,94,.4); background:var(--red-soft);}
-@media(max-width:640px){ .rn-lostbtn{opacity:.8;} .rn-row.lost{grid-template-columns:1fr auto;} .rn-row.lost .rn-restore{grid-column:1 / -1; justify-self:end;} }
 @media(max-width:760px){
   .rn-row{grid-template-columns:1fr auto; gap:7px 10px;}
   .rn-row .rn-date{grid-column:1; justify-self:start;}
@@ -1714,7 +1692,6 @@ body.dark .btn-ghost:hover{background:var(--bg);}
   <section class="rn-overdue" id="rnOverdue"></section>
   <div class="rn-months" id="rnList"></div>
   <section class="rn-paid" id="rnPaid"></section>
-  <section class="rn-lost" id="rnLost"></section>
 </main>
 
 <!-- REMAINING — every euro still out there, month by month -->
@@ -2511,8 +2488,6 @@ function ensureRenewals(){
   if(!Array.isArray(state.renewals)) state.renewals=[];
   state.renewals.forEach(r=>{ if(!Array.isArray(r.history)) r.history=[]; });
 }
-/* lost renewals (r.lost) — clients who will not renew: kept for the record, counted in no total (past payments stay in the income) */
-function liveRenewals(){ ensureRenewals(); return state.renewals.filter(r=>!r.lost); }
 function renewalHistory(){ ensureRenewals(); const out=[]; state.renewals.forEach(r=>r.history.forEach(h=>out.push({r,h}))); return out; }
 function renewalsPaidForMonth(key){ return renewalHistory().reduce((a,x)=>a+(((x.h.at||'').slice(0,7)===key)?(+x.h.value||0):0),0); }
 function renewalsPaidForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=renewalsPaidForMonth(y+'-'+pad(m)); return sum; }
@@ -2884,7 +2859,7 @@ function renderYear(){
     card.querySelector('.tgt-set').addEventListener('click',e=>{ e.stopPropagation(); editMonthTarget(key); });
     grid.appendChild(card);
   }
-  const rTotal=liveRenewals().filter(r=>r.date&&r.date.startsWith(String(curYear))).reduce((a,r)=>a+(+r.value||0),0);
+  const rTotal=state.renewals.filter(r=>r.date&&r.date.startsWith(String(curYear))).reduce((a,r)=>a+(+r.value||0),0);
   const subCollected=state.subs.reduce((a,s)=>{
     let n=0; for(let m=1;m<=12;m++){ if(s.paid && s.paid[curYear+'-'+pad(m)]) n++; }
     return a+n*(+s.value||0);
@@ -3426,7 +3401,6 @@ $('#schedMonth').addEventListener('change',renderSchedChips);
 /* ---------- renewals ---------- */
 let rnYear=now.getFullYear();
 let rnPaidOpen=true;
-let rnLostOpen=false;
 const rnDays=(date,today)=>Math.round((Date.parse(date+'T00:00')-Date.parse(today+'T00:00'))/864e5);
 function rnDaysChip(r,today){
   if(!r.date) return {cls:'', txt:'no date'};
@@ -3459,7 +3433,7 @@ function renderRenewals(){
   ensureRenewals();
   const today=todayIso();
   const in90=isoDate(new Date(Date.now()+90*864e5));
-  const all=[...liveRenewals()].sort((a,b)=>(a.date||'9999')<(b.date||'9999')?-1:1);
+  const all=[...state.renewals].sort((a,b)=>(a.date||'9999')<(b.date||'9999')?-1:1);
   const withDate=all.filter(r=>r.date), noDate=all.filter(r=>!r.date);
   const overdue=withDate.filter(r=>r.date<today);
   const due90=withDate.filter(r=>r.date>=today && r.date<=in90);
@@ -3476,7 +3450,7 @@ function renderRenewals(){
     <div class="cell hot"><div class="k">${IC.clock} Next 90 days</div><div class="big">${fmtMoney(sum(due90))}</div><div class="k sub">${due90.length} renewal${due90.length===1?'':'s'} coming up</div></div>
     <div class="cell paid"><div class="k">${IC.check2} Renewed ${rnYear}</div><div class="big">${fmtMoney(paidYear)}</div><div class="k sub">${paidCount} paid · counts in Money made</div></div>
     <div class="cell"><div class="k">${IC.repeat} Still due ${rnYear}</div><div class="big">${fmtMoney(sum(dueYear))}</div><div class="k sub">${dueYear.length} left in the year</div></div>
-    <div class="cell"><div class="k">${IC.users} Clients renewing</div><div class="big">${all.length}</div><div class="k sub">${fmtMoney(sum(all))} / year in total</div></div>`;
+    <div class="cell"><div class="k">${IC.users} Clients renewing</div><div class="big">${state.renewals.length}</div><div class="k sub">${fmtMoney(sum(all))} / year in total</div></div>`;
   /* year bar + 12-month strip */
   $('#rnYearLabel').textContent=rnYear;
   const strip=$('#rnStrip');
@@ -3508,7 +3482,7 @@ function renderRenewals(){
   } else { ov.style.display='none'; ov.innerHTML=''; }
   /* the twelve months of the chosen year */
   const list=$('#rnList'); list.innerHTML='';
-  if(!all.length){ list.innerHTML='<div class="empty-note">No renewals yet — add your first client above (name, € per year, next renewal date).</div>'; }
+  if(!state.renewals.length){ list.innerHTML='<div class="empty-note">No renewals yet — add your first client above (name, € per year, next renewal date).</div>'; }
   else { let emptyRun=[];
   const flushEmpty=()=>{ if(!emptyRun.length) return;
     const sec=document.createElement('section'); sec.className='rn-month empty'; sec.id='rnm-'+emptyRun[0];
@@ -3539,30 +3513,6 @@ function renderRenewals(){
     sec.innerHTML=`<div class="rn-mh"><div class="rmh-txt"><h3>No date yet</h3><p>Click the date on each row to set when they renew.</p></div><div class="rn-msum"><span class="k">value</span><span class="v">${fmtMoney(sum(noDate))}</span></div></div><div class="rn-body"></div>`;
     const body=sec.querySelector('.rn-body'); noDate.forEach(r=>body.appendChild(rnRow(r,today)));
     list.appendChild(sec);
-  }
-  /* lost — won't renew: out of every total, restore any time */
-  const lostSec=$('#rnLost');
-  if(lostSec){
-    const lostR=state.renewals.filter(r=>r.lost).sort((a,b)=>(a.lostAt||'')<(b.lostAt||'')?1:-1);
-    if(!lostR.length){ lostSec.style.display='none'; lostSec.innerHTML=''; }
-    else {
-      lostSec.style.display='';
-      lostSec.classList.toggle('open', rnLostOpen);
-      lostSec.innerHTML=`<div class="rn-mh"><span class="ico">${IC.ban}</span><div class="rmh-txt"><h3>Lost · won't renew</h3><p>Clients who will not renew — let their domains expire. Not counted in any renewal total. Press Restore if they change their mind.</p></div>
-        <div class="rn-msum"><span class="k">${lostR.length} lost</span><span class="v">${fmtMoney(sum(lostR))}</span></div><span class="chev">${IC.chevRight}</span></div>
-        <div class="rn-lost-body"></div>`;
-      lostSec.querySelector('.rn-mh').addEventListener('click',()=>{ rnLostOpen=!rnLostOpen; lostSec.classList.toggle('open',rnLostOpen); });
-      const lb=lostSec.querySelector('.rn-lost-body');
-      lostR.forEach(r=>{
-        const row=document.createElement('div'); row.className='rn-row lost';
-        row.innerHTML=`<div class="rn-main"><div class="rn-name">${esc(r.name)}</div><div class="rn-sub">${r.lostAt?`<span class="hist">lost ${fmtDate(r.lostAt)}</span>`:''}${r.note?`<span>${esc(r.note)}</span>`:''}</div></div>
-          <span class="rn-val">${fmtMoney(r.value||0)}</span>
-          <span class="rn-days">${r.date?'would renew '+fmtDate(r.date):'no date'}</span>
-          <button class="rn-restore" title="They will renew after all — put them back">${IC.undo} Restore</button>`;
-        row.querySelector('.rn-restore').addEventListener('click',()=>{ delete r.lost; delete r.lostAt; r.updated=Date.now(); save(); renderAll(); toast(r.name+' is back in renewals'); });
-        lb.appendChild(row);
-      });
-    }
   }
   /* the renewed pot — income, grouped by the month it was paid */
   const pot=$('#rnPaid');
@@ -3616,14 +3566,9 @@ function rnRow(r,today){
     <span class="rn-days">${chip.txt}</span>
     <div class="rn-acts">
       <button class="rn-done" title="They paid — collect ${fmtMoney(r.value||0)} and move them one year ahead">${IC.check} Renewed</button>
-      <button class="rn-lostbtn" title="Won't renew — move to Lost">${IC.ban}</button>
       <button class="item-x" title="Remove this client from renewals">${IC.x}</button>
     </div>`;
   row.querySelector('.rn-done').addEventListener('click',()=>markRenewed(r));
-  row.querySelector('.rn-lostbtn').addEventListener('click',()=>{
-    if(!confirm(`Move "${r.name}" to Lost · won't renew?\n\nThey leave every renewal total. You can restore them any time.`)) return;
-    r.lost=true; r.lostAt=todayIso(); r.updated=Date.now(); save(); renderAll(); toast(r.name+' moved to Lost · won\'t renew');
-  });
   row.querySelector('.rn-val').addEventListener('click',()=>{
     const nv=prompt('Renewal amount (€ / year) for '+r.name+':', r.value||0);
     if(nv===null) return;
@@ -4384,7 +4329,7 @@ function renderHome(){
   // this-month collect
   const mc=state.clients.filter(c=>c.month===curMonth && notLost(c));
   const mTotal=mc.reduce((a,c)=>a+cval(c),0), mPaid=mc.filter(c=>c.stage==='paid').reduce((a,c)=>a+cval(c),0);
-  const overdue=liveRenewals().filter(r=>r.date && r.date<todayI).sort((a,b)=>a.date<b.date?-1:1);
+  const overdue=state.renewals.filter(r=>r.date && r.date<todayI).sort((a,b)=>a.date<b.date?-1:1);
   const in7=isoDate(new Date(Date.now()+7*864e5));
   const subsDue=state.subs.filter(s=>{
     if(!s.renewDay) return false;
@@ -4628,7 +4573,7 @@ function runSearch(q){
   }
   const rn=state.renewals.filter(r=>hit(r.name)).slice(0,4);
   if(rn.length){ html+='<div class="sr-group">Renewals</div>';
-    rn.forEach(r=> html+=`<div class="sr-item" data-goto="renewals"><span class="sr-dot" style="background:var(--cyan)"></span><div class="sr-main"><div class="sr-name">${esc(r.name)}</div><div class="sr-meta">${r.date?fmtDate(r.date):'no date'} · ${fmtMoney2(r.value)}${r.lost?' · lost':''}</div></div></div>`);
+    rn.forEach(r=> html+=`<div class="sr-item" data-goto="renewals"><span class="sr-dot" style="background:var(--cyan)"></span><div class="sr-main"><div class="sr-name">${esc(r.name)}</div><div class="sr-meta">${r.date?fmtDate(r.date):'no date'} · ${fmtMoney2(r.value)}</div></div></div>`);
   }
   const sb=state.subs.filter(s=>hit(s.name)).slice(0,4);
   if(sb.length){ html+='<div class="sr-group">Monthly</div>';
@@ -4868,7 +4813,7 @@ function exportYearReport(){
   const LS=lossStats();
   let sold=0; months.forEach(m=>sold+=websitesSold(m));
 
-  const openRenewals=(state.renewals||[]).filter(r=>r.date && !r.lost).sort((a,b)=>a.date<b.date?-1:1);
+  const openRenewals=(state.renewals||[]).filter(r=>r.date).sort((a,b)=>a.date<b.date?-1:1);
   const dueSoon=openRenewals.filter(r=>{const d=rpDaysLeft(r.date); return d!==null && d<=90;});
   const subsTotal=(state.subs||[]).reduce((a,s)=>a+(+s.value||0),0);
 
