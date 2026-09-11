@@ -116,7 +116,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .month-label{font-family:'Sora'; font-weight:700; font-size:15.5px; padding:0 10px; min-width:160px; text-align:center; letter-spacing:-.01em;}
 .today-btn{font-size:12px; font-weight:700; color:var(--brand); padding:6px 12px; border-radius:9px;}
 .today-btn:hover{background:var(--blue-soft);}
-.stat-pills{display:grid; grid-template-columns:repeat(6,minmax(96px,1fr)); gap:10px; margin-left:auto;}
+.stat-pills{display:grid; grid-template-columns:repeat(5,minmax(96px,1fr)); gap:10px; margin-left:auto;}
 .stat-pill{background:#fff; border:1px solid var(--line); border-radius:14px; padding:9px 16px 10px; box-shadow:var(--shadow); text-align:right; display:flex; flex-direction:column; justify-content:flex-end; min-width:0;}
 .stat-pill .k{font-size:10.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted);}
 .stat-pill .v{font-family:'Sora'; font-weight:800; font-size:20px; letter-spacing:-.02em; font-variant-numeric:tabular-nums;}
@@ -124,10 +124,6 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .stat-pill.paid-pill{background:linear-gradient(135deg,var(--green),#0AA55F); border:none; box-shadow:0 6px 18px rgba(14,198,115,.35);}
 .stat-pill.paid-pill .k{color:rgba(255,255,255,.85);}
 .stat-pill.paid-pill .v{color:#fff;}
-/* renewals collected this month — blue, right next to Collected */
-.stat-pill.renew-pill{background:linear-gradient(135deg,#3D8BF0,#1A5FC8); border:none; box-shadow:0 6px 18px rgba(47,127,224,.35); cursor:pointer;}
-.stat-pill.renew-pill .k,.stat-pill.renew-pill .tgt-meta{color:rgba(255,255,255,.85);}
-.stat-pill.renew-pill .v{color:#fff;}
 .stat-pill.target-pill{cursor:pointer; min-width:120px; transition:border-color .12s;}
 .stat-pill.target-pill:hover{border-color:#BFD4F2;}
 .stat-pill.target-pill.unset{border-style:dashed;}
@@ -263,14 +259,13 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .stagebar div{height:100%;}
 .m-legend{display:flex; flex-wrap:wrap; gap:5px;}
 .m-legend .chip{font-size:10px; padding:2px 7px;}
-.year-banner{background:linear-gradient(120deg,#10141F 20%,#1B3A6B 70%,#2F7FE0 130%); color:#fff; border-radius:var(--radius); padding:22px 26px; margin-bottom:20px; display:grid; grid-template-columns:repeat(6,1fr); gap:20px 26px; align-items:start; box-shadow:var(--shadow-lg);}
+.year-banner{background:linear-gradient(120deg,#10141F 20%,#1B3A6B 70%,#2F7FE0 130%); color:#fff; border-radius:var(--radius); padding:22px 26px; margin-bottom:20px; display:grid; grid-template-columns:repeat(5,1fr); gap:20px 26px; align-items:start; box-shadow:var(--shadow-lg);}
 .year-banner .cell{min-width:0;}
-.year-banner .big{font-family:'Sora'; font-weight:800; font-size:clamp(24px,2.05vw,32px); letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1.1; margin-top:4px;}
+.year-banner .big{font-family:'Sora'; font-weight:800; font-size:32px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1.1; margin-top:4px;}
 .year-banner .k{font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.6);}
 .year-banner .cell.paid .big{color:#4BE8A0;}
-.year-banner .cell.renew{cursor:pointer;}
-.year-banner .cell.renew .big{color:#6FB4FF;}
-@media(max-width:1180px){.year-banner{grid-template-columns:repeat(3,1fr);} .year-banner .big{font-size:30px;}}
+.year-banner .cell.renew .big{color:#7FD9F5;}
+@media(max-width:1180px){.year-banner{grid-template-columns:repeat(3,1fr);}}
 @media(max-width:640px){
   .year-banner{grid-template-columns:repeat(2,1fr); gap:16px 18px; padding:18px 16px;}
   .year-banner .big{font-size:23px;}
@@ -1229,8 +1224,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
   .stat-pills{margin-left:0; width:100%; grid-template-columns:repeat(2,minmax(0,1fr));}
   .stat-pill{padding:8px 13px 9px;}
   .stat-pill .v{font-size:18px;}
-  .stat-pill.target-pill{grid-column:auto;}
-  body[data-view="quicklog"] .stat-pill.target-pill{grid-column:span 2;}
+  .stat-pill.target-pill{grid-column:span 2;}
   /* on the phone, Quick Log keeps only the target pill so the logging cards stay above the fold */
   body[data-view="quicklog"] .stat-pills .stat-pill:not(.target-pill){display:none;}
   .tabs{order:3; width:100%; max-width:100%; overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch;}
@@ -1430,7 +1424,6 @@ body.dark .btn-ghost:hover{background:var(--bg);}
     <div class="stat-pill"><div class="k">Booked this month</div><div class="v" id="statCount">0</div></div>
     <div class="stat-pill pipe"><div class="k">Month pipeline</div><div class="v" id="statTotal">€0</div></div>
     <div class="stat-pill paid-pill"><div class="k">Collected</div><div class="v" id="statPaid">€0</div></div>
-    <div class="stat-pill renew-pill" id="statRenewPill" title="Renewals paid this month — click to open Renewals"><div class="k">Renewals <span class="tgt-meta" id="statRenewMeta"></span></div><div class="v" id="statRenew">€0</div></div>
     <div class="stat-pill"><div class="k">To collect</div><div class="v" id="statRem" style="color:var(--coral);">€0</div></div>
     <div class="stat-pill target-pill" id="statTargetPill" title="Click to set this month's target">
       <div class="k">Target · generated <span class="tgt-meta" id="statTargetMeta"></span></div>
@@ -2539,13 +2532,6 @@ function editMonthTarget(key){
   save(); renderAll(); toast('Target updated');
 }
 
-/* Board «Renewals» pill → Renewals tab, scrolled to the month you are looking at */
-function openRenewalsMonth(key){
-  rnYear=+key.slice(0,4); switchView('renewals');
-  setTimeout(()=>{ let k=key, el=null; for(let i=0;i<12 && !el;i++){ el=document.getElementById('rnm-'+k); if(!el){ let [y,m]=k.split('-').map(Number); m--; if(m<1) break; k=y+'-'+pad(m); } }
-    if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); },60);
-}
-document.addEventListener('click',e=>{ if(e.target.closest && e.target.closest('#statRenewPill')) openRenewalsMonth(curMonth); });
 function renderStats(){
   $('#monthLabel').textContent=fmtMonth(curMonth);
   const mc=state.clients.filter(c=>c.month===curMonth && notLost(c));
@@ -2555,14 +2541,6 @@ function renderStats(){
   $('#statTotal').textContent=fmtMoney(tot);
   $('#statPaid').textContent=fmtMoney(paid);
   $('#statRem').textContent=fmtMoney(tot-paid);
-  /* renewals pill — renewal money paid in this month (same figure as the Renewals tab), kept apart from Collected */
-  const rnPaidM=renewalsPaidForMonth(curMonth);
-  const rnPaidN=renewalHistory().filter(x=>(x.h.at||'').slice(0,7)===curMonth).length;
-  const rnDueM=liveRenewals().filter(r=>r.date && r.date.slice(0,7)===curMonth);
-  const rnDueV=rnDueM.reduce((a,r)=>a+(+r.value||0),0);
-  $('#statRenew').textContent=fmtMoney(rnPaidM);
-  $('#statRenewMeta').textContent= rnPaidN? rnPaidN+' paid' : (rnDueM.length? rnDueM.length+' due' : '');
-  $('#statRenewPill').title=fmtMoney(rnPaidM)+' renewed in '+fmtMonth(curMonth)+(rnPaidN?' ('+rnPaidN+' paid)':'')+(rnDueM.length?' · '+fmtMoney(rnDueV)+' still due ('+rnDueM.length+')':'')+' — click to open Renewals';
   // target pill — measured against GENERATED income (booked value + subs), not collected
   const generated=generatedForMonth(curMonth);
   const mt=monthTarget(curMonth);
@@ -2889,11 +2867,9 @@ function renderYear(){
   $('#yearBanner').innerHTML=`
     <div class="cell"><div class="k">Generated ${curYear}</div><div class="big">${fmtMoney2(yTotal)}</div></div>
     <div class="cell paid"><div class="k">Money made ${curYear}</div><div class="big">${fmtMoney2(ytd)}</div><div class="k" style="margin-top:4px;">${fmtMoney2(yPaid)} new clients + ${fmtMoney2(subCollected)} monthly + ${fmtMoney2(rPaid)} renewals</div></div>
-    <div class="cell renew" id="yRenewCell" title="Open the Renewals tab"><div class="k">Renewals ${curYear}</div><div class="big">${fmtMoney2(rPaid)}</div><div class="k" style="margin-top:4px;">${renewalsPaidCountForYear(curYear)} paid · ${fmtMoney2(rTotal)} still due</div></div>
     <div class="cell"><div class="k">To collect</div><div class="big" style="color:#FFB39F;">${fmtMoney2(Math.max(0,yTotal-yPaid-yGiven))}</div>${yGiven?`<div class="k" style="margin-top:4px;">${fmtMoney2(yGiven)} given up (orange/red) is not counted</div>`:''}</div>
     <div class="cell"><div class="k">Clients</div><div class="big">${yCount}</div></div>
     ${targetCell}`;
-  { const yc=$('#yRenewCell'); if(yc) yc.addEventListener('click',()=>{ rnYear=curYear; switchView('renewals'); }); }
   renderYearFinance(yGenerated, yExp, yNet, rTotal, {yPaid, subCollected, rPaid, ytd, toCollect:Math.max(0,yTotal-yPaid-yGiven), givenUp:yGiven, rCount:renewalsPaidCountForYear(curYear)});
   renderYearStats();
 }
