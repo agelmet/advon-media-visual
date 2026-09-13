@@ -1304,110 +1304,6 @@ body.dark .bk-act button,body.dark .bk-tag{background:var(--surface);}
   .mgrid{gap:4px;}
   .mcell{min-height:64px;}
 }
-
-/* ---------- LEADS — call mode (13 Sept 2026) ---------- */
-.ld-banner{background:linear-gradient(120deg,#10141F 10%,#0E2A45 55%,#2F7FE0 140%); color:#fff; border-radius:var(--radius); padding:20px 26px; margin-bottom:16px; display:grid; grid-template-columns:1.5fr repeat(5,1fr); gap:16px 20px; align-items:start; box-shadow:var(--shadow-lg);}
-.ld-banner .cell{min-width:0;}
-.ld-banner .k{font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.62); display:flex; align-items:center; gap:6px;}
-.ld-banner .k .ic{width:12px; height:12px;}
-.ld-banner .big{font-size:30px; font-weight:800; letter-spacing:-.03em; margin-top:4px; line-height:1;}
-.ld-banner .sub{font-size:11.5px; color:rgba(255,255,255,.7); margin-top:5px; font-weight:500;}
-.ld-banner .cell.now .big{font-size:40px;}
-.ld-banner .cell.ok .big{color:#7CF5B8;} .ld-banner .cell.sms .big{color:#FFD86B;} .ld-banner .cell.no .big{color:#FF9AA5;} .ld-banner .cell.na .big{color:#C9D6E8;}
-.ld-tools{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:14px;}
-.ld-tools input[type=search]{flex:1; min-width:180px; border:1px solid var(--line); border-radius:11px; padding:9px 12px; background:#fff; box-shadow:var(--shadow);}
-.ld-tools select{border:1px solid var(--line); border-radius:11px; padding:9px 10px; background:#fff; box-shadow:var(--shadow); font-weight:600; color:var(--ink); max-width:210px;}
-.ld-tools .btn-callmode{background:var(--grad); color:#fff; border:none; box-shadow:0 6px 18px rgba(47,127,224,.35);}
-.ld-tools .btn-callmode.on{background:linear-gradient(120deg,#10141F,#2A3548);}
-.ld-tools .ld-import{margin-left:auto; display:flex; gap:6px;}
-/* focus card — one lead at a time, four huge buttons */
-.ld-focus{background:#fff; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow-lg); padding:26px 28px; margin-bottom:16px; display:none; position:relative; overflow:hidden;}
-.ld-focus.on{display:block;}
-.ld-focus:before{content:''; position:absolute; left:0; top:0; bottom:0; width:6px; background:var(--grad);}
-.ld-focus .f-top{display:flex; gap:14px; align-items:flex-start; flex-wrap:wrap;}
-.ld-focus .f-name{font-size:28px; font-weight:800; letter-spacing:-.02em; line-height:1.1;}
-.ld-focus .f-spec{font-size:14px; color:var(--muted); font-weight:600; margin-top:4px;}
-.ld-focus .f-phone{display:inline-flex; align-items:center; gap:8px; font-size:34px; font-weight:800; letter-spacing:.02em; color:var(--brand); text-decoration:none; font-variant-numeric:tabular-nums; margin-top:10px;}
-.ld-focus .f-phone .ic{width:26px; height:26px;}
-.ld-focus .f-meta{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; align-items:center;}
-.ld-focus .f-meta .chip{font-size:12px; padding:5px 10px;}
-.ld-focus .f-meta a.chip{color:var(--brand); background:var(--blue-soft); font-weight:700;}
-.ld-focus .f-right{margin-left:auto; text-align:right; font-size:12px; color:var(--muted); font-weight:600;}
-.ld-focus .f-right b{display:block; font-size:22px; color:var(--ink); font-weight:800;}
-.ld-focus .f-script{margin-top:16px; background:var(--bg); border-radius:12px; padding:12px 14px; font-size:13px; line-height:1.55; color:var(--ink);}
-.ld-focus .f-script b{color:var(--brand);}
-.ld-focus .f-acts{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:16px;}
-.ld-focus .f-acts button{padding:18px 10px; border-radius:14px; font-size:16px; font-weight:800; color:#fff; display:flex; flex-direction:column; align-items:center; gap:4px; transition:transform .1s, box-shadow .12s; box-shadow:var(--shadow);}
-.ld-focus .f-acts button small{font-size:10.5px; font-weight:600; opacity:.8;}
-.ld-focus .f-acts button:hover{transform:translateY(-2px); box-shadow:var(--shadow-lg);}
-.ld-focus .f-acts button:active{transform:scale(.98);}
-.ld-focus .f-acts .g{background:linear-gradient(120deg,var(--green),#0AA55F);}
-.ld-focus .f-acts .y{background:linear-gradient(120deg,#FFC400,#F5A700); color:#4A3B00;}
-.ld-focus .f-acts .r{background:linear-gradient(120deg,var(--red),#E7364A);}
-.ld-focus .f-acts .n{background:linear-gradient(120deg,#5B6B84,#3C4A60);}
-.ld-focus .f-foot{display:flex; gap:10px; align-items:center; margin-top:12px; font-size:12px; color:var(--muted);}
-.ld-focus .f-foot button{font-weight:700; color:var(--brand); background:var(--blue-soft); border-radius:8px; padding:5px 10px;}
-.ld-focus .f-foot .keys{margin-left:auto;}
-.ld-focus .f-foot kbd{font-family:inherit; font-size:10.5px; font-weight:800; border:1px solid var(--line); border-radius:5px; padding:1px 5px; background:#fff; margin:0 1px;}
-/* booked mini-picker inside the focus card / row */
-.ld-book{background:var(--green-soft); border:1px solid rgba(14,198,115,.3); border-radius:12px; padding:12px 14px; margin-top:12px; display:none;}
-.ld-book.on{display:block;}
-.ld-book .row{display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin-top:6px;}
-.ld-book .row button{font-size:12px; font-weight:700; padding:6px 10px; border-radius:8px; background:#fff; border:1px solid var(--line); color:var(--ink);}
-.ld-book .row button.on{background:var(--green); color:#fff; border-color:var(--green);}
-.ld-book .row input{width:90px; border:1px solid var(--line); border-radius:8px; padding:6px 8px; background:#fff;}
-.ld-book .go{background:var(--green); color:#fff; font-weight:800; border-radius:9px; padding:8px 14px;}
-.ld-book .lbl{font-size:11px; font-weight:700; color:var(--deep); text-transform:uppercase; letter-spacing:.08em;}
-/* lists */
-.ld-grid{display:grid; grid-template-columns:1.35fr 1fr; gap:16px; align-items:start;}
-.ld-grid .panel-body{max-height:70vh;}
-.ld-item{display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:12px; margin-bottom:6px; border:1px solid var(--line); background:#fff;}
-.ld-item.na{background:var(--bg);}
-.ld-item.done{opacity:.6;}
-.ld-item .w-main{min-width:0; flex:1;}
-.ld-item .w-name{font-weight:700; font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.ld-item .w-meta{display:flex; flex-wrap:wrap; gap:4px 10px; align-items:center; font-size:12px; color:var(--muted); margin-top:2px;}
-.ld-item .w-phone{display:inline-flex; align-items:center; gap:3px; color:var(--brand); font-weight:700; font-variant-numeric:tabular-nums;}
-.ld-item .w-phone .ic{width:1em; height:1em;}
-.ld-item .w-rev{font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:99px; background:var(--yellow-soft); color:#8A6400; white-space:nowrap;}
-.ld-item .w-try{font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:99px; background:rgba(0,0,0,.06); color:var(--muted); white-space:nowrap;}
-.ld-item .w-try.hot{background:var(--red-soft); color:#C21F33;}
-.ld-item .w-out{font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:99px; white-space:nowrap;}
-.ld-item .w-out.g{background:var(--green-soft); color:var(--deep);} .ld-item .w-out.y{background:var(--yellow-soft); color:#8A6400;} .ld-item .w-out.r{background:var(--red-soft); color:#C21F33;}
-.ld-acts{display:flex; gap:4px; flex-shrink:0;}
-.ld-acts button{font-size:11px; font-weight:800; border-radius:8px; padding:6px 9px; display:inline-flex; align-items:center; gap:3px; white-space:nowrap; border:1px solid var(--line); background:var(--surface); color:var(--ink);}
-.ld-acts .a-g{background:var(--green); border-color:var(--green); color:#fff;}
-.ld-acts .a-y{background:var(--yellow); border-color:var(--yellow); color:#4A3B00;}
-.ld-acts .a-r{background:var(--red-soft); border-color:transparent; color:#C21F33;}
-.ld-acts .a-n{background:var(--bg); color:var(--muted);}
-.ld-acts .a-focus{color:var(--brand); border-color:#BFD4F2;}
-.ld-acts .a-undo{color:var(--muted);}
-.ld-group-h{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); display:flex; align-items:center; gap:6px; margin:10px 2px 6px; cursor:pointer;}
-.ld-group-h .n{background:var(--bg); border-radius:99px; padding:1px 8px; color:var(--ink);}
-.ld-group-h .ic{width:12px; height:12px;}
-.ld-more{width:100%; text-align:center; font-size:12px; font-weight:700; color:var(--brand); padding:9px; border-radius:10px; background:var(--blue-soft); margin-top:4px;}
-body.dark .ld-item,body.dark .ld-focus,body.dark .ld-tools input,body.dark .ld-tools select{background:var(--surface);}
-body.dark .ld-item.na{background:rgba(255,255,255,.03);}
-body.dark .ld-book .row button,body.dark .ld-book .row input{background:var(--surface);}
-@media(max-width:900px){ .ld-banner{grid-template-columns:repeat(3,1fr);} .ld-grid{grid-template-columns:1fr;} }
-@media(max-width:760px){
-  body.ld-call .ld-banner, body.ld-call .ld-tools select, body.ld-call .ld-tools input, body.ld-call .ld-import{display:none;}
-  .ld-item{flex-wrap:wrap; row-gap:6px;} .ld-acts{flex-basis:100%;} .ld-acts button{flex:1; justify-content:center; padding:9px 6px; font-size:12px;}
-  .ld-focus{padding:18px 16px 18px 20px;} .ld-focus .f-name{font-size:22px;} .ld-focus .f-phone{font-size:26px;}
-  .ld-focus .f-acts{grid-template-columns:1fr 1fr;} .ld-focus .f-acts button{padding:14px 8px; font-size:15px;}
-  .ld-focus .f-foot .keys{display:none;}
-}
-/* cash forecast — Home */
-.cf-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
-.cf-col{background:var(--bg); border-radius:12px; padding:12px 13px;}
-.cf-col .k{font-size:10.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
-.cf-col .v{font-size:24px; font-weight:800; letter-spacing:-.02em; margin-top:3px; color:var(--deep); font-variant-numeric:tabular-nums;}
-.cf-col .v small{font-size:12px; font-weight:700; color:var(--muted); letter-spacing:0;}
-.cf-col .lines{margin-top:8px; display:flex; flex-direction:column; gap:3px; font-size:11.5px; color:var(--muted); font-weight:600;}
-.cf-col .lines span b{color:var(--ink);}
-.cf-note{font-size:11px; color:var(--muted); margin-top:10px; font-weight:500;}
-@media(max-width:760px){ .cf-grid{grid-template-columns:1fr;} }
-
 </style>
 <style>
 /* ---------- sync status + conflict UI ---------- */
@@ -1539,7 +1435,6 @@ body.dark .btn-ghost:hover{background:var(--bg);}
     <nav class="tabs" role="tablist">
       <button class="tab active" data-view="home">Home</button>
       <button class="tab" data-view="quicklog">Quick Log</button>
-      <button class="tab" data-view="leads">Leads</button>
       <button class="tab" data-view="board">Board</button>
       <button class="tab" data-view="calendar">Calendar</button>
       <button class="tab" data-view="todo">To Do</button>
@@ -1649,10 +1544,6 @@ body.dark .btn-ghost:hover{background:var(--bg);}
     <section class="home-card wide">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--yellow-soft);color:#B8860B" data-ic="clock"></span><h3>Follow up after the meeting</h3><button class="hc-link" data-goto="board">Board</button></div>
       <div class="home-card-body" id="homeThink"></div>
-    </section>
-    <section class="home-card wide cash-card">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--green-soft);color:var(--deep)" data-ic="wallet"></span><h3>Cash forecast</h3><span class="hc-hint">What should come in, from what is already on the Board</span><button class="hc-link" data-goto="remaining">Remaining</button></div>
-      <div class="home-card-body" id="homeCash"></div>
     </section>
     <section class="home-card wide subs-card">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--green-soft);color:var(--deep)" data-ic="calendar"></span><h3>Subscriptions due this week</h3><button class="hc-link" data-goto="monthly">Monthly</button></div>
@@ -1838,52 +1729,6 @@ body.dark .btn-ghost:hover{background:var(--bg);}
       </div>
       <div class="cb-chips" id="schedChips"></div>
       <div class="panel-body" id="schedList"></div>
-    </section>
-  </div>
-</main>
-
-<!-- LEADS — cold-calling list with one-tap outcomes (13 Sept 2026) -->
-<main class="view" id="view-leads">
-  <div class="ld-banner" id="ldBanner"></div>
-  <div class="ld-tools">
-    <button class="btn btn-callmode" id="ldCallMode" title="One lead at a time, four big buttons">Call mode</button>
-    <input type="search" id="ldSearch" placeholder="Search name, city, phone…" autocomplete="off">
-    <select id="ldSpec" title="Specialty"><option value="">All specialties</option></select>
-    <select id="ldCity" title="City / area"><option value="">All cities</option></select>
-    <select id="ldSort" title="Order">
-      <option value="reviews">Most reviews first</option>
-      <option value="added">Newest first</option>
-      <option value="name">Name A–Ω</option>
-    </select>
-    <div class="ld-import">
-      <button class="btn btn-ghost" id="ldPull" title="Fetch new leads from the weekly harvest">Pull new leads</button>
-      <button class="btn btn-ghost" id="ldImport" title="Import a CSV (name, spec, phone, city, address, reviews, url)">Import CSV</button>
-      <input type="file" id="ldImportFile" accept=".csv,text/csv" style="display:none">
-    </div>
-  </div>
-  <section class="ld-focus" id="ldFocus"></section>
-  <div class="ld-grid">
-    <section class="panel">
-      <div class="panel-head">
-        <div class="ico" style="background:var(--blue-soft);color:var(--brand)" data-ic="phone"></div>
-        <div><h3>To call</h3><p>Every lead has a phone and no website · one tap logs the outcome into Quick Log</p></div>
-        <div class="cb-head-n" id="ldHeadN"><b>0</b><small>to call</small></div>
-      </div>
-      <div class="panel-body" id="ldList"></div>
-    </section>
-    <section class="panel">
-      <div class="panel-head">
-        <div class="ico" style="background:var(--yellow-soft);color:#B8860B" data-ic="hourglass"></div>
-        <div><h3>No answer — try again</h3><p>Parked with the date you called · call them on another day</p></div>
-        <div class="cb-head-n" id="ldNaHeadN"><b>0</b><small>waiting</small></div>
-      </div>
-      <div class="panel-body" id="ldNaList"></div>
-      <div class="panel-head" style="border-top:1px solid var(--line);border-bottom:none;">
-        <div class="ico" style="background:var(--green-soft);color:var(--deep)" data-ic="check"></div>
-        <div><h3>Called</h3><p>Booked · SMS sent · No — also in Quick Log</p></div>
-        <div class="cb-head-n" id="ldDoneHeadN"><b>0</b><small>done</small></div>
-      </div>
-      <div class="panel-body" id="ldDoneList" style="max-height:40vh;"></div>
     </section>
   </div>
 </main>
@@ -2332,7 +2177,7 @@ async function loadDecrypted(){
     if(legacy && legacy.clients){ state=legacy; try{localStorage.removeItem('advon_crm_v3');}catch(e){} }
     else state=JSON.parse(await aesDec(CUR_KEY, VAULT.iv, VAULT.ct));
   }
-  state.clients||=[]; state.logs||=[]; state.asap||=[]; state.meta||={}; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={}; state.ideas||=[]; state.workdays||={}; state.leads||=[]; ensureExpenses(); ensureLogs();
+  state.clients||=[]; state.logs||=[]; state.asap||=[]; state.meta||={}; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={}; state.ideas||=[]; state.workdays||={}; ensureExpenses(); ensureLogs();
   state.clients.forEach(c=>{ if(OLD_STAGE_MAP[c.stage]) c.stage=OLD_STAGE_MAP[c.stage]; });
   /* Re-persisting what we just loaded is not an edit: keep the original
      timestamp and do not push, or merely opening the app on a device would
@@ -2610,7 +2455,6 @@ const Sync={
       this.setPending(false);
       this.retryDelay=5000;
       this.setState('ok');
-      setTimeout(()=>Brief.send(false), 800);
     }catch(e){
       /* the edit stays in localStorage; keep retrying with backoff */
       this.setPending(true);
@@ -2901,7 +2745,7 @@ function dropHandlers(el, stageId){
     const id=e.dataTransfer.getData('text/plain');
     const cl=state.clients.find(x=>x.id===id);
     if(cl && cl.stage!==stageId){
-      cl.stage=stageId; cl.updated=Date.now(); cl.stageAt=Date.now();
+      cl.stage=stageId; cl.updated=Date.now();
       if(stageId==='lost'){ cl.lostAt=Date.now(); lostOpen=true; }
       else { delete cl.lostReason; cl.lostAt=null; }
       if(stageId==='thinking'){ if(!cl.thinkAt) cl.thinkAt=Date.now(); thinkOpen=true; }
@@ -5226,7 +5070,7 @@ $('#mSave').addEventListener('click',()=>{
   if(editingId){
     const tgt=state.clients.find(x=>x.id===editingId)||{};
     const wasLost=tgt.stage==='lost';
-    const stageWas=tgt.stage; Object.assign(tgt, data, {updated:Date.now()}); if(data.stage && data.stage!==stageWas) tgt.stageAt=Date.now();
+    Object.assign(tgt, data, {updated:Date.now()});
     if(data.stage==='lost' && !wasLost){ tgt.lostAt=Date.now(); }
     else if(data.stage!=='lost' && wasLost){ delete tgt.lostReason; tgt.lostAt=null; }
     if(data.stage==='thinking'){ if(!tgt.thinkAt) tgt.thinkAt=Date.now(); }
@@ -5262,391 +5106,13 @@ $('#todayBtn').addEventListener('click',()=>{ curMonth=new Date().toISOString().
 $('#prevY').addEventListener('click',()=>{curYear--; renderYear();});
 $('#nextY').addEventListener('click',()=>{curYear++; renderYear();});
 
-
-/* ---------- LEADS — cold-calling list + call mode (13 Sept 2026) ----------
-   state.leads = [{id,key,name,spec,city,addr,phone,reviews,score,url,added,src,
-                   status:'new'|'na'|'g'|'y'|'r'|'x', tries:[iso…], logId, clientId, doneAt}]
-   'na' = no answer (parked with the dates called), 'x' = dropped after repeated no-answers.
-   Every Booked / SMS / No writes a Quick Log entry for today, so the statistics stay honest.
-   New leads arrive from leads/pool.json in the data repo (/api/pool) — the weekly harvest appends there. */
-const POOL_URL='/api/pool';
-const LD_PAGE=60;
-const LD_SCRIPT='<b>Καλησπέρα σας, ο Άγγελος από την Advon Media.</b> Σας βρήκα στο doctoranytime — βλέπω ότι έχετε <b>{reviews} εξαιρετικές αξιολογήσεις</b> αλλά δεν έχετε δική σας ιστοσελίδα. Φτιάχνουμε ιστοσελίδες για {spec} <b>χωρίς κόστος κατασκευής</b>: πληρώνετε μόνο τη φιλοξενία (130€/χρόνο) όταν δείτε το πρώτο δείγμα και σας αρέσει. Έχετε 2 λεπτά να σας πω πώς δουλεύει;';
-let ldFilter={q:'', spec:'', city:'', sort:'reviews'};
-let ldCallMode=false, ldShown=LD_PAGE, ldBookingFor=null, ldBookPick={day:'', time:'', value:''};
-function ensureLeads(){
-  if(!Array.isArray(state.leads)) state.leads=[];
-  ensureMeta(); if(!state.meta.ld || typeof state.meta.ld!=='object') state.meta.ld={};
-  if(!state.meta.ld.skip) state.meta.ld.skip={};
-  state.leads.forEach(l=>{ if(!l.status) l.status='new'; if(!Array.isArray(l.tries)) l.tries=[]; if(!l.id) l.id=uid(); });
-  return state.meta.ld;
-}
-const ldSpecShort=l=>String(l.spec||'').split('/')[0].trim();
-const ldLastTry=l=>l.tries.length? l.tries[l.tries.length-1] : '';
-const ldOpen=l=>l.status==='new'||l.status==='na';
-/* merge a batch of pool/CSV leads — only keys we have never seen */
-function ldMerge(list, src){
-  ensureLeads();
-  const have=new Set(state.leads.map(l=>l.key));
-  let n=0;
-  (list||[]).forEach(p=>{
-    if(!p || !p.key || !p.name || !p.phone || have.has(p.key)) return;
-    have.add(p.key); n++;
-    state.leads.push({id:uid(), key:p.key, name:String(p.name).trim(), spec:String(p.spec||'').trim(), city:String(p.city||'').trim(), addr:String(p.addr||'').trim(), phone:String(p.phone).replace(/\D/g,''), reviews:+p.reviews||0, score:p.score!=null?+p.score:null, url:String(p.url||''), added:p.added||todayIso(), src:p.src||src||'import', status:'new', tries:[], created:Date.now()});
-  });
-  return n;
-}
-const Leads={
-  lastAt:0, busy:false,
-  async pull(manual){
-    if(this.busy) return; if(!SYNC_TOKEN){ if(manual) toast('Unlock sync first to fetch leads'); return; }
-    this.busy=true; if(manual) toast('Fetching new leads…');
-    try{
-      const res=await fetch(POOL_URL+'?t='+Date.now(), {headers:{'x-crm-auth':SYNC_TOKEN}, cache:'no-store'});
-      if(!res.ok) throw new Error('server '+res.status);
-      const data=await res.json();
-      const n=ldMerge(data.leads||[], 'harvest');
-      this.lastAt=Date.now();
-      ensureLeads(); state.meta.ld.poolAt=data.updated||''; state.meta.ld.pulledAt=Date.now();
-      if(n){ save(); renderLeads(); renderHome(); toast(n+' new lead'+(n>1?'s':'')+' added to the list'); }
-      else { if(manual) toast('No new leads since the last harvest'); renderLdBanner(); }
-    }catch(e){ if(manual) toast('Could not fetch leads: '+(e.message||'network')); }
-    finally{ this.busy=false; }
-  }
-};
-/* ---- CSV import (Greek or English headers, comma or semicolon) ---- */
-function ldParseCSV(text){
-  const rows=[]; let row=[], cell='', q=false;
-  const delim=(text.split('\n')[0].split(';').length>text.split('\n')[0].split(',').length)?';':',';
-  for(let i=0;i<text.length;i++){
-    const ch=text[i];
-    if(q){ if(ch==='"'){ if(text[i+1]==='"'){ cell+='"'; i++; } else q=false; } else cell+=ch; }
-    else if(ch==='"') q=true;
-    else if(ch===delim){ row.push(cell); cell=''; }
-    else if(ch==='\n'||ch==='\r'){ if(ch==='\r'&&text[i+1]==='\n') i++; row.push(cell); rows.push(row); row=[]; cell=''; }
-    else cell+=ch;
-  }
-  if(cell||row.length){ row.push(cell); rows.push(row); }
-  return rows.filter(r=>r.some(c=>String(c).trim()));
-}
-function ldImportCSV(text){
-  const rows=ldParseCSV(text); if(rows.length<2){ toast('CSV looks empty'); return; }
-  const H=rows[0].map(h=>String(h).toLowerCase().trim());
-  const col=(...names)=>{ for(const n of names){ const i=H.findIndex(h=>h.includes(n)); if(i>=0) return i; } return -1; };
-  const iName=col('ονοματ','name','όνομα'), iSpec=col('ειδικ','spec'), iPhone=col('τηλ','phone'), iCity=col('πόλη','πολη','city','περιοχ'), iAddr=col('διευθ','addr'), iRev=col('αξιολ','review'), iScore=col('βαθμ','score'), iUrl=col('προφίλ','προφιλ','url','link');
-  if(iName<0||iPhone<0){ toast('CSV needs at least a name and a phone column'); return; }
-  const list=rows.slice(1).map(r=>{ const url=iUrl>=0?String(r[iUrl]||'').trim():''; const phone=String(r[iPhone]||'').replace(/\D/g,''); const name=String(r[iName]||'').trim();
-    return {key: url? 'dat:'+url.replace(/\/+$/,'').split('/').pop() : 'tel:'+phone+':'+name, name, spec:iSpec>=0?r[iSpec]:'', phone, city:iCity>=0?r[iCity]:'', addr:iAddr>=0?r[iAddr]:'', reviews:iRev>=0?parseInt(r[iRev],10)||0:0, score:iScore>=0?parseFloat(String(r[iScore]).replace(',','.'))||null:null, url, added:todayIso()}; }).filter(l=>l.name&&l.phone.length>=8);
-  const n=ldMerge(list,'csv'); save(); renderLeads(); renderHome(); toast(n+' new lead'+(n===1?'':'s')+' imported ('+(list.length-n)+' already known)');
-}
-/* ---- filtering / ordering ---- */
-function ldFiltered(){
-  ensureLeads();
-  const q=ldFilter.q.trim().toLowerCase();
-  let list=state.leads.filter(l=>{
-    if(ldFilter.spec && ldSpecShort(l)!==ldFilter.spec) return false;
-    if(ldFilter.city && l.city!==ldFilter.city) return false;
-    if(q && !(l.name.toLowerCase().includes(q)||l.city.toLowerCase().includes(q)||l.phone.includes(q)||String(l.spec).toLowerCase().includes(q))) return false;
-    return true;
-  });
-  const skip=state.meta.ld.skip||{};
-  const cmp={reviews:(a,b)=>(b.reviews-a.reviews)||a.name.localeCompare(b.name,'el'), added:(a,b)=>(b.added||'').localeCompare(a.added||'')||(b.created||0)-(a.created||0), name:(a,b)=>a.name.localeCompare(b.name,'el')}[ldFilter.sort]||(()=>0);
-  list.sort((a,b)=>((skip[a.id]?1:0)-(skip[b.id]?1:0))||cmp(a,b));
-  return list;
-}
-/* the queue for call mode: fresh leads first, then the no-answers not tried today */
-function ldQueue(){
-  const t=todayIso(); const f=ldFiltered();
-  return f.filter(l=>l.status==='new').concat(f.filter(l=>l.status==='na' && ldLastTry(l)!==t).sort((a,b)=>ldLastTry(a).localeCompare(ldLastTry(b))));
-}
-function ldFillSelects(){
-  const specs={}, cities={};
-  state.leads.forEach(l=>{ if(!ldOpen(l)) return; const s=ldSpecShort(l); if(s) specs[s]=(specs[s]||0)+1; if(l.city) cities[l.city]=(cities[l.city]||0)+1; });
-  const fill=(sel, map, all, cur)=>{ const el=$(sel); if(!el) return; const opts=Object.entries(map).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`<option value="${esc(k)}"${cur===k?' selected':''}>${esc(k)} (${n})</option>`).join(''); el.innerHTML=`<option value="">${all}</option>`+opts; };
-  fill('#ldSpec', specs, 'All specialties', ldFilter.spec); fill('#ldCity', cities, 'All cities', ldFilter.city);
-}
-/* ---- outcomes ---- */
-function ldLogNote(l){ return [ldSpecShort(l), l.city].filter(Boolean).join(' · '); }
-function ldOutcome(l, type){
-  ensureLeads();
-  const date=todayIso();
-  if(type==='n'){
-    l.tries.push(date); l.status='na'; l.updated=Date.now();
-    save(); ldAfter(l); toast(l.name+' → no answer · parked for another day ('+l.tries.length+(l.tries.length===1?' try)':' tries)')); return;
-  }
-  if(type==='x'){ l.status='x'; l.doneAt=Date.now(); save(); ldAfter(l); toast(l.name+' dropped'); return; }
-  if(type==='g'){ ldOpenBooking(l); return; }
-  const log={id:uid(), type, name:l.name, value:0, source:'cold', note:ldLogNote(l), date, created:Date.now(), updated:Date.now(), leadId:l.id};
-  state.logs.push(log); l.status=type; l.logId=log.id; l.doneAt=Date.now();
-  if(date.slice(0,7)!==curMonth) curMonth=date.slice(0,7);
-  save(); ldAfter(l); toast(l.name+(type==='y'?' → SMS sent':' → No')+' · logged in Quick Log');
-}
-function ldBookConfirm(l){
-  const date=todayIso(); const {day,time,value}=ldBookPick;
-  const log={id:uid(), type:'g', name:l.name, value:+value||0, source:'cold', note:ldLogNote(l), date, created:Date.now(), updated:Date.now(), leadId:l.id};
-  state.logs.push(log); linkClientForLog(log, time, day);
-  const c=state.clients.find(x=>x.id===log.clientId);
-  if(c){ if(!c.phone) c.phone=l.phone; c.notes=[ldLogNote(l), l.addr, l.url].filter(Boolean).join('\n'); c.fromLead=l.id; }
-  l.status='g'; l.logId=log.id; l.clientId=log.clientId; l.doneAt=Date.now();
-  if(date.slice(0,7)!==curMonth) curMonth=date.slice(0,7);
-  ldBookingFor=null; ldBookPick={day:'',time:'',value:''};
-  save(); ldAfter(l);
-  toast(l.name+' → Booked'+((day||time)?' · meeting '+(day?fmtDay(day):'today')+(time?' '+time:'')+' on the Calendar':' · on the Board'));
-}
-function ldOpenBooking(l){ ldBookingFor=l.id; ldBookPick={day:'',time:'',value:''}; renderLeads(); const el=document.querySelector('.ld-book.on input'); if(el) el.focus(); }
-function ldUndo(l){
-  if(l.logId){ const log=state.logs.find(x=>x.id===l.logId); if(log && log.type==='g' && log.clientId){ const ci=state.clients.findIndex(c=>c.id===log.clientId && c.stage==='booked'); if(ci>=0) state.clients.splice(ci,1); } state.logs=state.logs.filter(x=>x.id!==l.logId); }
-  l.status= l.tries.length? 'na':'new'; delete l.logId; delete l.clientId; delete l.doneAt; l.updated=Date.now();
-  save(); renderAll(); toast(l.name+' back in the list');
-}
-function ldSkip(l){ ensureLeads(); state.meta.ld.skip[l.id]=Date.now(); save(); renderLeads(); }
-function ldAfter(l){ ensureLeads(); delete state.meta.ld.skip[l.id]; renderAll(); }
-/* ---- rendering ---- */
-function ldBookEl(l){
-  const box=document.createElement('div'); box.className='ld-book on';
-  const days=qcQuickDays();
-  box.innerHTML=`<div class="lbl">${IC.calendar} Meeting — when? (optional, one tap)</div>
-    <div class="row" data-days>${days.map(o=>`<button type="button" data-day="${o.k}" class="${ldBookPick.day===o.k?'on':''}" title="${fmtDate(o.k)}">${o.t}</button>`).join('')}<input type="date" data-dayinput value="${ldBookPick.day}" style="width:auto" title="Another day"></div>
-    <div class="row" data-times>${QC_TIMES.map(t=>`<button type="button" data-time="${t}" class="${ldBookPick.time===t?'on':''}">${t}</button>`).join('')}<input type="time" data-timeinput value="${ldBookPick.time}" style="width:auto" title="Another time"></div>
-    <div class="row"><input type="number" data-val placeholder="€ value" value="${ldBookPick.value}" min="0"><button type="button" class="go" data-go>${IC.check} Confirm booked</button><button type="button" data-cancel style="background:transparent;border:none;color:var(--muted);">Cancel</button></div>`;
-  box.querySelectorAll('[data-day]').forEach(b=>b.addEventListener('click',()=>{ ldBookPick.day= ldBookPick.day===b.dataset.day?'':b.dataset.day; renderLeads(); }));
-  box.querySelectorAll('[data-time]').forEach(b=>b.addEventListener('click',()=>{ ldBookPick.time= ldBookPick.time===b.dataset.time?'':b.dataset.time; renderLeads(); }));
-  box.querySelector('[data-dayinput]').addEventListener('change',e=>{ ldBookPick.day=e.target.value; renderLeads(); });
-  box.querySelector('[data-timeinput]').addEventListener('change',e=>{ ldBookPick.time=e.target.value; renderLeads(); });
-  box.querySelector('[data-val]').addEventListener('input',e=>{ ldBookPick.value=e.target.value; });
-  box.querySelector('[data-val]').addEventListener('keydown',e=>{ if(e.key==='Enter') ldBookConfirm(l); });
-  box.querySelector('[data-go]').addEventListener('click',()=>ldBookConfirm(l));
-  box.querySelector('[data-cancel]').addEventListener('click',()=>{ ldBookingFor=null; renderLeads(); });
-  return box;
-}
-function ldActs(l){
-  const a=document.createElement('div'); a.className='ld-acts';
-  const open=ldOpen(l);
-  if(open){
-    a.innerHTML=`<button class="a-g" title="Booked a meeting (1)">${IC.check} Booked</button><button class="a-y" title="Sent SMS / info (2)">${IC.message} SMS</button><button class="a-r" title="Not interested (3)">${IC.x} No</button><button class="a-n" title="Didn't pick up (4)">${IC.hourglass} No answer</button>${l.tries.length>=3?`<button class="a-undo" title="Stop trying">${IC.ban} Drop</button>`:''}${ldCallMode?'':`<button class="a-focus" title="Open in call mode">${IC.arrowRight}</button>`}`;
-    a.querySelector('.a-g').addEventListener('click',()=>ldOutcome(l,'g'));
-    a.querySelector('.a-y').addEventListener('click',()=>ldOutcome(l,'y'));
-    a.querySelector('.a-r').addEventListener('click',()=>ldOutcome(l,'r'));
-    a.querySelector('.a-n').addEventListener('click',()=>ldOutcome(l,'n'));
-    const d=a.querySelector('.a-undo'); if(d) d.addEventListener('click',()=>ldOutcome(l,'x'));
-    const f=a.querySelector('.a-focus'); if(f) f.addEventListener('click',()=>{ ldCallMode=true; ensureLeads(); state.meta.ld.focus=l.id; renderLeads(); window.scrollTo({top:0,behavior:'smooth'}); });
-  } else {
-    a.innerHTML=`<button class="a-undo" title="Put back in the list">${IC.undo} Undo</button>`;
-    a.querySelector('.a-undo').addEventListener('click',()=>ldUndo(l));
-  }
-  return a;
-}
-function ldItemEl(l){
-  const row=document.createElement('div'); row.className='ld-item'+(l.status==='na'?' na':'')+(ldOpen(l)?'':' done');
-  const meta=[];
-  if(l.spec) meta.push(`<span>${esc(ldSpecShort(l))}</span>`);
-  if(l.city) meta.push(`<span>${esc(l.city)}</span>`);
-  meta.push(`<a class="w-phone" href="tel:+30${esc(l.phone)}">${IC.phone}${esc(l.phone.replace(/(\d{3})(\d{3})(\d{4})/,'$1 $2 $3'))}</a>`);
-  if(l.reviews) meta.push(`<span class="w-rev">★ ${l.reviews}${l.score?' · '+l.score:''}</span>`);
-  if(l.url) meta.push(`<a href="${esc(l.url)}" target="_blank" rel="noopener" style="color:var(--brand);font-weight:700;">doctoranytime ↗</a>`);
-  if(l.status==='na'){ const n=l.tries.length; meta.push(`<span class="w-try${n>=3?' hot':''}">${IC.hourglass} called ${l.tries.map(fmtDay).join(', ')} · ${n} ${n===1?'try':'tries'}</span>`); }
-  if(!ldOpen(l)){ const t={g:'Booked',y:'SMS sent',r:'No',x:'Dropped'}[l.status]; meta.push(`<span class="w-out ${l.status==='x'?'':l.status}">${t}${l.doneAt?' · '+fmtDay(isoDate(new Date(l.doneAt))):''}</span>`); }
-  row.innerHTML=`<div class="w-main"><div class="w-name">${esc(l.name)}</div><div class="w-meta">${meta.join('')}</div></div>`;
-  row.appendChild(ldActs(l));
-  if(ldBookingFor===l.id && !ldCallMode){ const wrap=document.createElement('div'); wrap.style.flexBasis='100%'; wrap.appendChild(ldBookEl(l)); row.appendChild(wrap); }
-  return row;
-}
-function ldCounts(){
-  ensureLeads(); const t=todayIso();
-  const c={new:0, na:0, g:0, y:0, r:0, x:0, today:0, total:state.leads.length};
-  state.leads.forEach(l=>{ c[l.status]=(c[l.status]||0)+1; if((l.doneAt && isoDate(new Date(l.doneAt))===t) || ldLastTry(l)===t) c.today++; });
-  return c;
-}
-function renderLdBanner(){
-  const el=$('#ldBanner'); if(!el) return;
-  const n=ldCounts(); const f=ldFiltered().filter(ldOpen).length;
-  const filt=(ldFilter.q||ldFilter.spec||ldFilter.city);
-  const pulled=state.meta.ld && state.meta.ld.pulledAt? 'checked '+new Date(state.meta.ld.pulledAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : 'never fetched';
-  el.innerHTML=`
-    <div class="cell now"><div class="k">${IC.phone} Left to call</div><div class="big">${n.new+n.na}</div><div class="sub">${n.new} fresh · ${n.na} to retry${filt?' · '+f+' in this filter':''}</div></div>
-    <div class="cell ok"><div class="k">${IC.check} Booked</div><div class="big">${n.g}</div><div class="sub">meetings from this list</div></div>
-    <div class="cell sms"><div class="k">${IC.message} SMS sent</div><div class="big">${n.y}</div><div class="sub">info sent, follow up</div></div>
-    <div class="cell no"><div class="k">${IC.x} No</div><div class="big">${n.r}</div><div class="sub">${n.x?n.x+' dropped':'not interested'}</div></div>
-    <div class="cell na"><div class="k">${IC.hourglass} No answer</div><div class="big">${n.na}</div><div class="sub">call another day</div></div>
-    <div class="cell"><div class="k">${IC.fire} Today</div><div class="big">${n.today}</div><div class="sub">${n.total} leads · harvest ${pulled}</div></div>`;
-}
-function renderLdFocus(){
-  const el=$('#ldFocus'); if(!el) return;
-  el.classList.toggle('on', ldCallMode); document.body.classList.toggle('ld-call', ldCallMode); $('#ldCallMode').classList.toggle('on', ldCallMode); $('#ldCallMode').textContent= ldCallMode? 'Exit call mode':'Call mode';
-  if(!ldCallMode){ el.innerHTML=''; return; }
-  const q=ldQueue(); const ld=state.meta.ld||{};
-  let l = ld.focus? q.find(x=>x.id===ld.focus) : null; if(!l) l=q[0];
-  if(!l){ el.innerHTML=`<div class="empty-note" style="padding:30px 10px;">Nobody left to call in this filter. Pull new leads, widen the filter, or take the day off — you earned it.</div>`; return; }
-  ensureLeads(); state.meta.ld.focus=l.id;
-  const idx=q.indexOf(l);
-  const script=LD_SCRIPT.replace('{reviews}', l.reviews? l.reviews : 'πολύ καλές').replace('{spec}','επαγγελματίες υγείας');
-  el.innerHTML=`<div class="f-top"><div>
-      <div class="f-name">${esc(l.name)}</div>
-      <div class="f-spec">${esc(l.spec||'')}${l.city?' · '+esc(l.city):''}${l.addr?' · '+esc(l.addr):''}</div>
-      <a class="f-phone" href="tel:+30${esc(l.phone)}">${IC.phone}${esc(l.phone.replace(/(\d{3})(\d{3})(\d{4})/,'$1 $2 $3'))}</a>
-      <div class="f-meta">${l.reviews?`<span class="chip">★ ${l.reviews} reviews${l.score?' · '+l.score+'/10':''}</span>`:''}${l.url?`<a class="chip" href="${esc(l.url)}" target="_blank" rel="noopener">doctoranytime profile ↗</a>`:''}${l.status==='na'?`<span class="chip" style="background:var(--yellow-soft);color:#8A6400;">no answer on ${l.tries.map(fmtDay).join(', ')}</span>`:''}</div>
-    </div><div class="f-right">next in line<b>${q.length-idx-1}</b>left after this one</div></div>
-    <div class="f-script">${script}</div>
-    <div class="f-acts"><button class="g">${IC.check} Booked<small>1 · meeting set</small></button><button class="y">${IC.message} SMS sent<small>2 · wants info</small></button><button class="r">${IC.x} No<small>3 · not interested</small></button><button class="n">${IC.hourglass} No answer<small>4 · try another day</small></button></div>
-    <div class="ld-book" id="ldFocusBook"></div>
-    <div class="f-foot"><button data-skip>Skip for now</button>${l.url?`<a href="${esc(l.url)}" target="_blank" rel="noopener" style="font-weight:700;color:var(--brand);">Open profile</a>`:''}<span class="keys">keys <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> · <kbd>S</kbd> skip</span></div>`;
-  el.querySelector('.f-acts .g').addEventListener('click',()=>ldOutcome(l,'g'));
-  el.querySelector('.f-acts .y').addEventListener('click',()=>ldOutcome(l,'y'));
-  el.querySelector('.f-acts .r').addEventListener('click',()=>ldOutcome(l,'r'));
-  el.querySelector('.f-acts .n').addEventListener('click',()=>ldOutcome(l,'n'));
-  el.querySelector('[data-skip]').addEventListener('click',()=>{ ldSkip(l); });
-  if(ldBookingFor===l.id){ const b=$('#ldFocusBook'); b.replaceWith(ldBookEl(l)); }
-}
-function ldGroup(title, icon, items, key, cls){
-  const g=document.createElement('div'); ensureLeads();
-  const open=state.meta.ld['open_'+key]!==false;
-  g.innerHTML=`<div class="ld-group-h">${icon} ${title} <span class="n">${items.length}</span> ${open?IC.arrowDown:IC.chevRight}</div>`;
-  g.querySelector('.ld-group-h').addEventListener('click',()=>{ state.meta.ld['open_'+key]=!open; save(); renderLeads(); });
-  if(open) items.forEach(l=>g.appendChild(ldItemEl(l)));
-  return g;
-}
-function renderLeads(){
-  if(!state || !$('#ldList')) return;
-  ensureLeads(); ldFillSelects(); renderLdBanner(); renderLdFocus();
-  const f=ldFiltered();
-  const fresh=f.filter(l=>l.status==='new'), na=f.filter(l=>l.status==='na').sort((a,b)=>ldLastTry(a).localeCompare(ldLastTry(b))), done=f.filter(l=>!ldOpen(l)).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
-  const el=$('#ldList'); el.innerHTML='';
-  $('#ldHeadN').innerHTML=`<b>${fresh.length}</b><small>to call</small>`;
-  if(!fresh.length) el.innerHTML=`<div class="empty-note">${state.leads.length?'Everyone in this filter has been called. Pull new leads or clear the filter.':'No leads yet — press «Pull new leads» (needs sync unlocked) or import a CSV.'}</div>`;
-  else { fresh.slice(0,ldShown).forEach(l=>el.appendChild(ldItemEl(l))); if(fresh.length>ldShown){ const m=document.createElement('button'); m.className='ld-more'; m.textContent='Show '+Math.min(LD_PAGE,fresh.length-ldShown)+' more · '+(fresh.length-ldShown)+' left'; m.addEventListener('click',()=>{ ldShown+=LD_PAGE; renderLeads(); }); el.appendChild(m); } }
-  const na_el=$('#ldNaList'); na_el.innerHTML='';
-  $('#ldNaHeadN').innerHTML=`<b>${na.length}</b><small>waiting</small>`;
-  if(!na.length) na_el.innerHTML='<div class="empty-note">Nobody parked. When someone doesn\'t pick up, tap «No answer» and they land here with the date.</div>';
-  else { const t=todayIso(); const again=na.filter(l=>ldLastTry(l)!==t), todayNa=na.filter(l=>ldLastTry(l)===t);
-    if(again.length) na_el.appendChild(ldGroup('Try again', IC.phone, again, 'again'));
-    if(todayNa.length) na_el.appendChild(ldGroup('Called today · no answer', IC.hourglass, todayNa, 'today')); }
-  const d_el=$('#ldDoneList'); d_el.innerHTML='';
-  $('#ldDoneHeadN').innerHTML=`<b>${done.length}</b><small>done</small>`;
-  if(!done.length) d_el.innerHTML='<div class="empty-note">Outcomes show up here (and in Quick Log).</div>';
-  else { const by={g:[],y:[],r:[],x:[]}; done.forEach(l=>by[l.status]&&by[l.status].push(l));
-    if(by.g.length) d_el.appendChild(ldGroup('Booked', IC.check, by.g, 'g'));
-    if(by.y.length) d_el.appendChild(ldGroup('SMS sent', IC.message, by.y, 'y'));
-    if(by.r.length) d_el.appendChild(ldGroup('No', IC.x, by.r, 'r'));
-    if(by.x.length) d_el.appendChild(ldGroup('Dropped', IC.ban, by.x, 'x')); }
-}
-$('#ldCallMode').addEventListener('click',()=>{ ldCallMode=!ldCallMode; ldBookingFor=null; renderLeads(); });
-$('#ldSearch').addEventListener('input',()=>{ ldFilter.q=$('#ldSearch').value; ldShown=LD_PAGE; renderLeads(); });
-$('#ldSpec').addEventListener('change',()=>{ ldFilter.spec=$('#ldSpec').value; ldShown=LD_PAGE; ensureLeads(); delete state.meta.ld.focus; renderLeads(); });
-$('#ldCity').addEventListener('change',()=>{ ldFilter.city=$('#ldCity').value; ldShown=LD_PAGE; ensureLeads(); delete state.meta.ld.focus; renderLeads(); });
-$('#ldSort').addEventListener('change',()=>{ ldFilter.sort=$('#ldSort').value; renderLeads(); });
-$('#ldPull').addEventListener('click',()=>Leads.pull(true));
-$('#ldImport').addEventListener('click',()=>$('#ldImportFile').click());
-$('#ldImportFile').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>ldImportCSV(String(r.result)); r.readAsText(f,'utf-8'); e.target.value=''; });
-document.addEventListener('keydown',e=>{
-  if(curView!=='leads' || !ldCallMode || !state) return;
-  const tag=(e.target.tagName||'').toLowerCase(); if(tag==='input'||tag==='textarea'||tag==='select'||e.metaKey||e.ctrlKey||e.altKey) return;
-  const q=ldQueue(); const l=q.find(x=>x.id===(state.meta.ld||{}).focus)||q[0]; if(!l) return;
-  const map={'1':'g','2':'y','3':'r','4':'n'};
-  if(map[e.key]){ e.preventDefault(); ldOutcome(l,map[e.key]); }
-  else if(e.key==='s'||e.key==='S'){ e.preventDefault(); ldSkip(l); }
-  else if(e.key==='Enter' && ldBookingFor===l.id){ e.preventDefault(); ldBookConfirm(l); }
-});
-
-/* ---------- CASH FORECAST — Home (13 Sept 2026) ----------
-   What is realistically coming in over the next 30 / 60 / 90 days, from things already in the CRM:
-   clients waiting to pay, drafts under review, sites being built (at the 70% draft→paid gate),
-   renewals due in the window, and the monthly subscriptions. Money already given up on
-   (orange/red flags, Trash, Lost) never counts. */
-function cashForecast(){
-  const t=new Date(); t.setHours(0,0,0,0); const todayI=isoDate(t);
-  const at=n=>isoDate(new Date(t.getTime()+n*864e5));
-  const win={30:at(30),60:at(60),90:at(90)};
-  const out={30:{sum:0,lines:{}},60:{sum:0,lines:{}},90:{sum:0,lines:{}}};
-  const add=(w,key,label,amount,count)=>{ amount=Math.round(amount); const o=out[w]; o.sum+=amount; const L=o.lines[key]||(o.lines[key]={label,n:0,v:0}); L.n+=count; L.v+=amount; };
-  const ok=c=>isUnpaid(c) && c.stage!=='thinking' && !(c.remFlag==='orange'||c.remFlag==='red');
-  state.clients.filter(ok).forEach(c=>{
-    const v=cval(c); if(!v) return;
-    if(c.stage==='pay'){ [30,60,90].forEach(w=>add(w,'pay','waiting payment',v,1)); }
-    else if(c.stage==='review'||c.stage==='changes'){ [60,90].forEach(w=>add(w,'draft','draft out · changes',v,1)); }
-    else { const e=Math.round(v*0.7); add(90,'build','building · booked (70%)',e,1); }
-  });
-  liveRenewals().forEach(r=>{ if(!r.date || !(+r.value)) return; if(r.date<todayI){ [30,60,90].forEach(w=>add(w,'ren','renewals',+r.value,1)); return; } [30,60,90].forEach(w=>{ if(r.date<=win[w]) add(w,'ren','renewals',+r.value,1); }); });
-  const subs=(state.subs||[]).reduce((a,s)=>a+(+s.value||0),0); const subsN=(state.subs||[]).length;
-  if(subs){ const m=t.getMonth(); const paidNow=(state.subs||[]).filter(s=>s.paid&&s.paid[curMonth]).reduce((a,s)=>a+(+s.value||0),0);
-    add(30,'subs','subscriptions',Math.max(0,subs-paidNow),subsN); add(60,'subs','subscriptions',Math.max(0,subs-paidNow)+subs,subsN); add(90,'subs','subscriptions',Math.max(0,subs-paidNow)+subs*2,subsN); }
-  return out;
-}
-function renderCashForecast(){
-  const el=$('#homeCash'); if(!el) return;
-  const f=cashForecast();
-  const col=(w,title)=>{ const o=f[w]; const lines=Object.values(o.lines).map(L=>`<span><b>${fmtMoney(L.v)}</b> · ${L.n} ${L.label}</span>`).join('')||'<span>nothing due yet</span>';
-    return `<div class="cf-col"><div class="k">${title}</div><div class="v">${fmtMoney(o.sum)}<small> expected</small></div><div class="lines">${lines}</div></div>`; };
-  el.innerHTML=`<div class="cf-grid">${col(30,'Next 30 days')}${col(60,'Next 60 days')}${col(90,'Next 90 days')}</div><div class="cf-note">Counts clients waiting to pay, drafts out, sites in progress at the 70% gate, renewals due and your subscriptions. Anything flagged orange/red, in Trash or Lost is left out.</div>`;
-}
-
-/* ---------- MORNING BRIEF export (13 Sept 2026) ----------
-   The vault stays encrypted; what leaves the browser here is a small PLAIN summary
-   (names, stages, amounts due) written to brief/today.json in the private data repo
-   through /api/brief, so the 08:30 morning-brief agent can read it and message Angelo.
-   Sent after a successful sync at most every 5 minutes, and only when something changed. */
-const BRIEF_URL='/api/brief';
-const Brief={ lastAt:0, lastHash:'', busy:false,
-  daysSince(ts){ return ts? Math.max(0, Math.floor((Date.now()-ts)/864e5)) : 0; },
-  build(){
-    const t=todayIso(); const yd=isoDate(new Date(Date.now()-864e5)); const tm=isoDate(new Date(Date.now()+864e5));
-    const in14=isoDate(new Date(Date.now()+14*864e5)); const in7=isoDate(new Date(Date.now()+7*864e5));
-    const stName=id=>(STAGES.find(s=>s.id===id)||{}).name||id;
-    const since=c=>c.stageAt||c.updated||c.created||0;
-    const cl=state.clients.filter(c=>notLost(c) && !isTrashed(c));
-    const row=c=>({name:c.name, stage:stName(c.stage), value:cval(c), days:this.daysSince(since(c)), flag:c.remFlag||'', phone:c.phone||'', month:c.month||''});
-    const unpaid=cl.filter(c=>c.stage==='pay' && !(c.remFlag==='orange'||c.remFlag==='red')).map(row).sort((a,b)=>b.value-a.value);
-    const materials=cl.filter(c=>c.stage==='needinfo').map(row).sort((a,b)=>b.days-a.days);
-    const feedback=cl.filter(c=>c.stage==='review').map(row).sort((a,b)=>b.days-a.days);
-    const changes=cl.filter(c=>c.stage==='changes').map(row);
-    const building=cl.filter(c=>c.stage==='building').map(row);
-    const thinking=cl.filter(c=>isThinking(c)).map(c=>({...row(c), days:thinkDays(c)})).sort((a,b)=>b.days-a.days);
-    const flagged=cl.filter(c=>isUnpaid(c) && (c.remFlag==='orange'||c.remFlag==='red')).map(row);
-    const meetings=cl.filter(c=>c.day && c.day>=t && c.day<=in7).sort((a,b)=>(a.day+(a.time||''))<(b.day+(b.time||''))?-1:1).map(c=>({name:c.name, day:c.day, time:c.time||'', phone:c.phone||'', stage:stName(c.stage), value:cval(c)}));
-    const ren=liveRenewals().filter(r=>r.date && r.date<=in14).sort((a,b)=>a.date<b.date?-1:1).map(r=>({name:r.name, date:r.date, value:+r.value||0, overdue:r.date<t}));
-    const subsDue=(state.subs||[]).filter(s=>s.renewDay && !(s.paid&&s.paid[curMonth])).map(s=>({name:s.name, value:+s.value||0, day:s.renewDay}));
-    const n=cbCounts();
-    const schedDue=(state.sched||[]).filter(s=>!s.done && s.month && s.month<=t.slice(0,7)).map(s=>({name:s.name, phone:s.phone||'', month:s.month, note:s.note||''}));
-    const warm=(state.warm||[]).filter(w=>!w.done).map(w=>({name:w.name, phone:w.phone||'', note:w.note||'', days:this.daysSince(w.created)}));
-    ensureLeads(); const lc=ldCounts();
-    const naRetry=state.leads.filter(l=>l.status==='na' && ldLastTry(l)!==t).length;
-    const ydLeads={booked:0,sms:0,no:0,noanswer:0}; state.leads.forEach(l=>{ if(l.doneAt && isoDate(new Date(l.doneAt))===yd){ if(l.status==='g') ydLeads.booked++; else if(l.status==='y') ydLeads.sms++; else if(l.status==='r') ydLeads.no++; } if(l.tries.includes(yd)) ydLeads.noanswer++; });
-    const ydStats=dayStats(yd,true); const mStats=monthLogStats(curMonth);
-    const earned=earnedForMonth(curMonth); const target=monthTarget(curMonth).value;
-    const toCollect=cl.filter(c=>isUnpaid(c) && c.stage!=='thinking' && !(c.remFlag==='orange'||c.remFlag==='red')).reduce((a,c)=>a+cval(c),0);
-    const asap=(state.asap||[]).filter(a=>!a.done).sort((a,b)=>(a.sort||0)-(b.sort||0)).map(a=>({text:a.text, hot:!!a.hot}));
-    const todosHigh=(state.todos||[]).filter(x=>!x.done && x.prio==='high').map(x=>x.text).slice(0,12);
-    const fc=cashForecast();
-    return { updated:new Date().toISOString(), today:t, month:curMonth,
-      money:{ earned, target, toCollect, forecast30:fc[30].sum, forecast60:fc[60].sum, forecast90:fc[90].sum },
-      chase:{ unpaid, materials, feedback, changes, building, thinking, flagged },
-      meetings, renewals:ren, subsDue,
-      callbacks:{ leftNow:n.now, warm, scheduledDue:schedDue },
-      leads:{ fresh:lc.new, retry:naRetry, noAnswerParked:lc.na, booked:lc.g, sms:lc.y, no:lc.r, total:lc.total, yesterday:ydLeads },
-      calls:{ yesterday:{date:yd, calls:ydStats.calls, booked:ydStats.booked, sms:ydStats.sms, no:ydStats.nos}, month:{calls:mStats.calls||0, booked:mStats.booked||0, rate:mStats.callConv||0, workingDays:mStats.workingDays||0} },
-      asap, todosHigh };
-  },
-  async send(force){
-    if(!SYNC_TOKEN || !state || this.busy) return;
-    if(!force && Date.now()-this.lastAt<5*60*1000) return;
-    let brief, body; try{ brief=this.build(); body=JSON.stringify(brief); }catch(e){ return; }
-    const h=body.length+':'+body.slice(0,4000);
-    if(!force && h===this.lastHash) return;
-    this.busy=true;
-    try{
-      const res=await fetch(BRIEF_URL,{method:'POST', headers:{'Content-Type':'application/json','x-crm-auth':SYNC_TOKEN}, body});
-      if(res.ok){ this.lastAt=Date.now(); this.lastHash=h; }
-    }catch(e){} finally{ this.busy=false; }
-  }
-};
-
 function switchView(v){
   curView=v;
   document.body.dataset.view=v;
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
   document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el.id==='view-'+v));
   /* the money strip also sits on Home, Calendar and To Do (the Calendar keeps its own month arrows, so the strip's are hidden there via CSS) */
-  $('#strip').style.display = (v==='year'||v==='renewals'||v==='ideas'||v==='monthly'||v==='remaining'||v==='leads') ? 'none' : 'flex';
-  if(v==='leads' && Date.now()-Leads.lastAt>10*60*1000) Leads.pull(false);
+  $('#strip').style.display = (v==='year'||v==='renewals'||v==='ideas'||v==='monthly'||v==='remaining') ? 'none' : 'flex';
   renderAll();
 }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchView(t.dataset.view)));
@@ -5654,7 +5120,7 @@ $('#bkRefresh').addEventListener('click',()=>Bookings.pull(true));
 
 function renderAll(){
   if(!state) return;
-  renderHome(); renderStats(); renderBoard(); renderCalendar(); renderYear(); renderQuickLog(); renderWarm(); renderSched(); renderRenewals(); renderRemaining(); renderTodo(); renderIdeas(); renderMonthly(); renderExpenses(); renderLeads(); renderCashForecast();
+  renderHome(); renderStats(); renderBoard(); renderCalendar(); renderYear(); renderQuickLog(); renderWarm(); renderSched(); renderRenewals(); renderRemaining(); renderTodo(); renderIdeas(); renderMonthly(); renderExpenses();
 }
 
 /* ---------- export ---------- */
@@ -6013,7 +5479,7 @@ $('#restoreFile').addEventListener('change',e=>{
       const data=JSON.parse(r.result);
       if(!data.clients) throw 0;
       if(confirm('Replace everything with this backup? Current data will be overwritten.')){
-        state=data; state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={}; state.ideas||=[]; state.workdays||={}; state.leads||=[]; ensureExpenses(); ensureLogs();
+        state=data; state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={}; state.ideas||=[]; state.workdays||={}; ensureExpenses(); ensureLogs();
         state.clients.forEach(c=>{ if(OLD_STAGE_MAP[c.stage]) c.stage=OLD_STAGE_MAP[c.stage]; });
         save(); renderAll(); toast('Backup restored');
       }
@@ -6026,7 +5492,7 @@ $('#restoreFile').addEventListener('change',e=>{
 /* ---------- init ---------- */
 function unlockUI(){ $('#loginScreen').style.display='none'; document.body.classList.remove('locked'); }
 function lockUI(){ $('#loginScreen').style.display='grid'; document.body.classList.add('locked'); $('#loginErr').style.display='none'; $('#loginPass').value=''; setTimeout(()=>$('#loginUser').focus(),50); }
-function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); if(migrateCallStats()){ save(); setTimeout(()=>toast('Cold-call statistics cleared — every month and the year start from your next logged call'),900); } renderAll(); Bookings.start(); setTimeout(()=>Leads.pull(false),1500); setTimeout(()=>Brief.send(false),4000); }
+function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); if(migrateCallStats()){ save(); setTimeout(()=>toast('Cold-call statistics cleared — every month and the year start from your next logged call'),900); } renderAll(); Bookings.start(); }
 let loggingIn=false;
 async function tryLogin(){
   if(loggingIn) return;
@@ -6130,7 +5596,6 @@ function wireSyncEvents(){
   window.addEventListener('focus',()=>{
     if(Date.now()-Sync.lastCheck>4000) Sync.pull(true);
     if(Date.now()-Bookings.lastAt>120000) Bookings.pull(false);
-    if(Date.now()-Leads.lastAt>10*60*1000) Leads.pull(false);
   });
   /* back online → flush anything that failed while offline */
   window.addEventListener('online',()=>{ if(Sync.pendingFlag()) Sync.push(false); else Sync.pull(true); });
