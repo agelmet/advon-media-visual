@@ -1097,6 +1097,29 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 .home-row.warn{background:var(--coral-soft);} .home-row.warn .hr-val{color:var(--coral);}
 .home-row .hr-sub{font-size:11px; color:var(--muted);}
 .home-empty{padding:20px 12px; text-align:center; color:var(--muted); font-size:12.5px;}
+/* Home · Online bookings — meetings booked on the Zoho page or the Google booking page */
+.bk-card .home-card-body{display:flex; flex-direction:column; gap:6px;}
+.bk-row{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; background:var(--bg); flex-wrap:wrap;}
+.bk-row.fresh{background:linear-gradient(90deg,var(--green-soft),var(--bg) 70%); border:1px solid rgba(14,198,115,.35);}
+.bk-when{font-family:'Sora'; font-weight:800; font-size:12px; color:var(--brand); min-width:132px; font-variant-numeric:tabular-nums;}
+.bk-name{font-weight:700; font-size:13.5px; flex:1; min-width:140px;}
+.bk-tag{font-size:9.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; padding:2px 7px; border-radius:99px; background:#fff; border:1px solid var(--line); color:var(--muted); white-space:nowrap;}
+.bk-tag.zoho{background:var(--violet-soft); color:var(--violet); border-color:transparent;}
+.bk-tag.google{background:var(--blue-soft); color:var(--brand); border-color:transparent;}
+.bk-tag.done{background:var(--green-soft); color:var(--deep); border-color:transparent;}
+.bk-contact{display:flex; gap:8px; flex-wrap:wrap;}
+.bk-contact a{font-size:11.5px; font-weight:600; color:var(--muted); text-decoration:none;}
+.bk-contact a:hover{color:var(--brand); text-decoration:underline;}
+.bk-act{display:flex; gap:6px; margin-left:auto;}
+.bk-act button{font-size:11.5px; font-weight:700; padding:6px 11px; border-radius:9px; border:1px solid var(--line); background:#fff; color:var(--ink); white-space:nowrap;}
+.bk-act button.go{background:var(--green); border-color:transparent; color:#fff;}
+.bk-act button:hover{border-color:#BFD4F2;}
+.bk-sub{font-size:11.5px; color:var(--muted); font-weight:500; width:100%;}
+.bk-err{padding:10px 12px; border-radius:12px; background:var(--coral-soft); color:var(--coral); font-size:12.5px; font-weight:600;}
+.bk-groupline{font-size:10.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin:8px 2px 0;}
+.bk-auto{display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:var(--muted); cursor:pointer;}
+.bk-auto input{accent-color:var(--brand);}
+body.dark .bk-act button,body.dark .bk-tag{background:var(--surface);}
 /* Home · Booked meetings — one block per day, the date written out */
 .meetings-card .home-card-body{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:10px 16px; align-items:start;}
 .hm-day{background:var(--bg); border-radius:14px; padding:10px 10px 6px; border:1px solid transparent;}
@@ -1498,6 +1521,10 @@ body.dark .btn-ghost:hover{background:var(--bg);}
 <main class="view active" id="view-home">
   <div class="home-hero" id="homeHero"></div>
   <div class="home-grid">
+    <section class="home-card wide bk-card" id="bkCard">
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--brand)" data-ic="calendar"></span><h3>Online bookings</h3><span class="hc-hint" id="bkHint"></span><button class="hc-link" id="bkRefresh">Check now</button></div>
+      <div class="home-card-body" id="bkBody"></div>
+    </section>
     <section class="home-card wide asap-card">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft);color:var(--red)" data-ic="flag"></span><h3>Do ASAP</h3><span class="hc-hint">Click a line to edit · 🔥 = super-high priority · drag ⋮⋮ to reorder</span></div>
       <div class="home-card-body asap-body" id="homeAsap"></div>
@@ -4605,6 +4632,7 @@ function renderHome(){
   const hs=$('#homeSubs');
   hs.innerHTML= subsDue.length? subsDue.map(s=>`<div class="home-row" data-goto="monthly"><span class="hr-name">${esc(s.name)}</span><span class="hr-sub">day ${s.renewDay}</span><span class="hr-val">${fmtMoney2(s.value)}</span></div>`).join('') : '<div class="home-empty">No subscriptions due in the next 7 days.</div>';
   renderAsap();
+  renderBookings();
   // high-priority notes
   const ht=$('#homeThink');
   ht.innerHTML = thinking.length
@@ -4621,6 +4649,166 @@ function renderHome(){
   $('#view-home').querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>switchView(el.dataset.goto)));
 }
 
+
+/* ================= online bookings =================================
+   Every meeting booked online — the Zoho Bookings page and the Google
+   Calendar booking page — is written into the Google Calendar "Advon Media".
+   /api/bookings reads that calendar with the private iCal address kept in
+   Netlify and hands back clean rows. Anything new goes straight onto the
+   Board as a Booked client, so a booking is never typed twice. Each one can
+   be undone, and matching an existing client fills in its day and phone
+   instead of making a second card.
+   =================================================================== */
+const BOOKINGS_URL='/api/bookings';
+let BK_LIST=[];     /* what the calendar says right now */
+let BK_DONE=[];     /* added/matched in this session, newest first — for Undo */
+function ensureBk(){
+  ensureMeta();
+  if(!state.meta.bk || typeof state.meta.bk!=='object') state.meta.bk={};
+  const b=state.meta.bk;
+  if(!b.seen || typeof b.seen!=='object') b.seen={};
+  if(typeof b.auto!=='boolean') b.auto=true;
+  return b;
+}
+const bkNorm=s=>String(s||'').toLowerCase().replace(/[^0-9a-zα-ωά-ώ]+/gi,'');
+/* the same person already on the Board? same email, or same name on the same day */
+function bkMatchClient(b){
+  const n=bkNorm(b.name), e=String(b.email||'').toLowerCase();
+  return state.clients.find(c=>{
+    if(isTrashed(c)) return false;
+    if(c.fromBooking===b.uid) return true;
+    if(e && String(c.email||'').toLowerCase()===e) return true;
+    return n && bkNorm(c.name)===n && (!b.day || !c.day || c.day===b.day);
+  })||null;
+}
+function bkNew(){ const s=ensureBk().seen; return BK_LIST.filter(b=>b.uid && !s[b.uid]); }
+function bkLabel(b){
+  if(!b.day) return 'No date';
+  const d=new Date(b.day+'T00:00');
+  const t=b.day===todayIso()?'Today':(b.day===isoDate(new Date(Date.now()+864e5))?'Tomorrow':d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}));
+  return t+(b.time?' · '+b.time:'');
+}
+/* put one booking on the Board (or complete the client that is already there) */
+function bkPut(b){
+  const bk=ensureBk();
+  const hit=bkMatchClient(b);
+  if(hit){
+    let changed=false;
+    if(b.day && !hit.day){ hit.day=b.day; hit.time=b.time||hit.time; changed=true; }
+    if(b.phone && !hit.phone){ hit.phone=b.phone; changed=true; }
+    if(b.email && !hit.email){ hit.email=b.email; changed=true; }
+    if(!hit.fromBooking){ hit.fromBooking=b.uid; changed=true; }
+    if(changed) hit.updated=Date.now();
+    bk.seen[b.uid]='matched';
+    BK_DONE=BK_DONE.filter(x=>x.uid!==b.uid);
+    BK_DONE.unshift({uid:b.uid, clientId:hit.id, name:b.name, when:bkLabel(b), matched:true});
+    return 'matched';
+  }
+  const notes=[b.service?('Κράτηση: '+b.service):'', b.ref?('#'+b.ref):'', b.meet||''].filter(Boolean).join(' · ');
+  const c={id:uid(), name:b.name, value:0, day:b.day||'', time:b.time||'', stage:'booked',
+    month:(b.day||todayIso()).slice(0,7), notes, phone:b.phone||'', email:b.email||'',
+    fromBooking:b.uid, created:Date.now(), updated:Date.now()};
+  state.clients.push(c);
+  bk.seen[b.uid]='added';
+  BK_DONE=BK_DONE.filter(x=>x.uid!==b.uid);
+  BK_DONE.unshift({uid:b.uid, clientId:c.id, name:b.name, when:bkLabel(b), matched:false});
+  return 'added';
+}
+function bkUndo(uid_){
+  const bk=ensureBk(), row=BK_DONE.find(x=>x.uid===uid_);
+  if(!row) return;
+  if(!row.matched) state.clients=state.clients.filter(c=>c.id!==row.clientId);
+  delete bk.seen[uid_];
+  BK_DONE=BK_DONE.filter(x=>x.uid!==uid_);
+  save(); renderAll(); toast('Put back — '+row.name+' is waiting again');
+}
+const Bookings={
+  state:'idle',  /* idle | loading | ok | error | off */
+  err:'', lastAt:0, busy:false, timer:null,
+  async pull(manual){
+    if(this.busy || !state) return;
+    if(window.DEMO_BOOKINGS){
+      BK_LIST=window.DEMO_BOOKINGS.slice(); this.state='ok'; this.lastAt=Date.now(); this.settle(manual); return;
+    }
+    if(!SYNC_TOKEN){ this.state='off'; renderBookings(); return; }
+    this.busy=true; if(manual){ this.state='loading'; renderBookings(); }
+    try{
+      const res=await fetch(BOOKINGS_URL+'?t='+Date.now(), {headers:{'x-crm-auth':SYNC_TOKEN}, cache:'no-store'});
+      let p={}; try{ p=await res.json(); }catch(e){}
+      if(!res.ok || !p.ok){ this.state='error'; this.err=(p&&p.error)||('the server answered '+res.status); }
+      else { BK_LIST=Array.isArray(p.bookings)?p.bookings:[]; this.state='ok'; this.err=''; this.lastAt=Date.now(); }
+    }catch(e){ this.state='error'; this.err=String((e&&e.message)||e); }
+    this.busy=false;
+    this.settle(manual);
+  },
+  /* auto-add only what is still to come; anything older waits for one tap */
+  settle(manual){
+    if(this.state==='ok' && ensureBk().auto){
+      const t=todayIso();
+      let added=0, matched=0;
+      bkNew().filter(b=>b.day>=t).forEach(b=>{ const r=bkPut(b); if(r==='added') added++; else matched++; });
+      if(added||matched){
+        save();
+        if(added) toast(added+' new booking'+(added===1?'':'s')+' added to the Board');
+        else if(matched) toast('Booking matched to a client already on the Board');
+      }
+    }
+    if(manual && this.state==='ok') toast('Calendar checked');
+    renderAll();
+  },
+  start(){
+    this.pull(false);
+    clearInterval(this.timer);
+    this.timer=setInterval(()=>this.pull(false), 10*60*1000);
+  }
+};
+function renderBookings(){
+  const body=$('#bkBody'), hint=$('#bkHint'); if(!body) return;
+  ensureBk();
+  const auto=state.meta.bk.auto;
+  const t=todayIso();
+  const waiting=bkNew().sort((a,b)=>(a.day+(a.time||'')).localeCompare(b.day+(b.time||'')));
+  const parts=[];
+  if(hint){
+    const when = Bookings.state==='loading' ? 'checking…'
+      : Bookings.lastAt ? 'checked '+relTime(new Date(Bookings.lastAt).toISOString())
+      : (Bookings.state==='off' ? 'sign in with sync to read the calendar' : 'not checked yet');
+    hint.innerHTML=`${esc(when)} · <label class="bk-auto"><input type="checkbox" id="bkAuto" ${auto?'checked':''}> add new ones on their own</label>`;
+  }
+  if(Bookings.state==='error') parts.push(`<div class="bk-err">Could not read the calendar — ${esc(Bookings.err)}</div>`);
+  if(Bookings.state==='off') parts.push('<div class="home-empty">Sign in on this device so the CRM can read your booking calendar.</div>');
+  BK_DONE.slice(0,6).forEach(x=>{
+    parts.push(`<div class="bk-row fresh"><span class="bk-when">${esc(x.when)}</span><span class="bk-name">${esc(x.name)}</span>
+      <span class="bk-tag done">${x.matched?'matched':'on the Board'}</span>
+      <span class="bk-act"><button data-open-bk="${esc(x.clientId)}">Open</button><button data-undo-bk="${esc(x.uid)}">Undo</button></span></div>`);
+  });
+  if(waiting.length){
+    parts.push(`<div class="bk-groupline">${auto?'Older bookings — add the ones you want':'Waiting to be added'}</div>`);
+    waiting.forEach(b=>{
+      const contact=[b.phone?`<a href="tel:${esc(b.phone)}">${esc(b.phone)}</a>`:'', b.email?`<a href="mailto:${esc(b.email)}">${esc(b.email)}</a>`:''].filter(Boolean).join('');
+      parts.push(`<div class="bk-row"><span class="bk-when">${esc(bkLabel(b))}</span><span class="bk-name">${esc(b.name)}</span>
+        <span class="bk-tag ${b.source==='zoho'?'zoho':'google'}">${b.source==='zoho'?'Zoho':'Google'}</span>
+        <span class="bk-act"><button class="go" data-add-bk="${esc(b.uid)}">Add to Board</button><button data-skip-bk="${esc(b.uid)}">Hide</button></span>
+        <span class="bk-sub bk-contact">${esc(b.service||'')}${contact?' · ':''}${contact}</span></div>`);
+    });
+  }
+  if(!parts.length){
+    parts.push(BK_LIST.length
+      ? '<div class="home-empty">Every online booking is already on the Board.</div>'
+      : '<div class="home-empty">No online bookings yet. Anything booked on your Zoho page or your Google booking page lands here on its own.</div>');
+  }
+  body.innerHTML=parts.join('');
+  const a=$('#bkAuto'); if(a) a.addEventListener('change',()=>{ ensureBk().auto=a.checked; save(); Bookings.settle(false); });
+  body.querySelectorAll('[data-add-bk]').forEach(el=>el.addEventListener('click',()=>{
+    const b=BK_LIST.find(x=>x.uid===el.dataset.addBk); if(!b) return;
+    const r=bkPut(b); save(); renderAll(); toast(r==='added'? b.name+' added to the Board' : b.name+' matched to a client you already had');
+  }));
+  body.querySelectorAll('[data-skip-bk]').forEach(el=>el.addEventListener('click',()=>{
+    ensureBk().seen[el.dataset.skipBk]='skipped'; save(); renderAll();
+  }));
+  body.querySelectorAll('[data-undo-bk]').forEach(el=>el.addEventListener('click',()=>bkUndo(el.dataset.undoBk)));
+  body.querySelectorAll('[data-open-bk]').forEach(el=>el.addEventListener('click',()=>openModal(el.dataset.openBk)));
+}
 
 /* ---------- Do ASAP — numbered quick list on Home (free text, 🔥 = super-high priority) ---------- */
 let dragAsapId=null;
@@ -4928,6 +5116,7 @@ function switchView(v){
   renderAll();
 }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchView(t.dataset.view)));
+$('#bkRefresh').addEventListener('click',()=>Bookings.pull(true));
 
 function renderAll(){
   if(!state) return;
@@ -5303,7 +5492,7 @@ $('#restoreFile').addEventListener('change',e=>{
 /* ---------- init ---------- */
 function unlockUI(){ $('#loginScreen').style.display='none'; document.body.classList.remove('locked'); }
 function lockUI(){ $('#loginScreen').style.display='grid'; document.body.classList.add('locked'); $('#loginErr').style.display='none'; $('#loginPass').value=''; setTimeout(()=>$('#loginUser').focus(),50); }
-function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); if(migrateCallStats()){ save(); setTimeout(()=>toast('Cold-call statistics cleared — every month and the year start from your next logged call'),900); } renderAll(); }
+function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); if(migrateCallStats()){ save(); setTimeout(()=>toast('Cold-call statistics cleared — every month and the year start from your next logged call'),900); } renderAll(); Bookings.start(); }
 let loggingIn=false;
 async function tryLogin(){
   if(loggingIn) return;
@@ -5406,6 +5595,7 @@ function wireSyncEvents(){
   });
   window.addEventListener('focus',()=>{
     if(Date.now()-Sync.lastCheck>4000) Sync.pull(true);
+    if(Date.now()-Bookings.lastAt>120000) Bookings.pull(false);
   });
   /* back online → flush anything that failed while offline */
   window.addEventListener('online',()=>{ if(Sync.pendingFlag()) Sync.push(false); else Sync.pull(true); });
