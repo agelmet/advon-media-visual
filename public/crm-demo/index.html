@@ -1328,6 +1328,29 @@ body.dark .bk-act button,body.dark .bk-tag{background:var(--surface);}
 .ld-tools .btn-callmode{background:var(--grad); color:#fff; border:none; box-shadow:0 6px 18px rgba(47,127,224,.35);}
 .ld-tools .btn-callmode.on{background:linear-gradient(120deg,#10141F,#2A3548);}
 .ld-tools .ld-import{margin-left:auto; display:flex; gap:6px;}
+/* lead categories — New leads (harvest) and Angelo's own lists (Excel) */
+.ld-lists{display:flex; gap:6px; flex-wrap:wrap; margin:-4px 0 14px; align-items:center;}
+.ld-lists button{font-size:12.5px; font-weight:700; padding:7px 12px; border-radius:999px; border:1px solid var(--line); background:var(--surface); color:var(--ink); box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:6px; transition:transform .1s;}
+.ld-lists button:hover{transform:translateY(-1px);}
+.ld-lists button .n{font-size:11px; font-weight:800; background:var(--bg); border-radius:999px; padding:1px 7px; color:var(--muted);}
+.ld-lists button.on{background:linear-gradient(120deg,#10141F,#2A3548); color:#fff; border-color:transparent;}
+.ld-lists button.on .n{background:rgba(255,255,255,.18); color:#fff;}
+.ld-lists button.chk{border-style:dashed;}
+.ld-lists .hint{font-size:11.5px; color:var(--muted); font-weight:600; margin-left:4px;}
+.ld-item .w-look{color:var(--brand); font-weight:700; display:inline-flex; align-items:center; gap:3px;}
+.ld-item .w-look .ic{width:1em; height:1em;}
+.ld-item .w-nophone{color:#B8860B; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;}
+.ld-item .w-nophone .ic{width:1em; height:1em;}
+.ld-item .w-nophone input{width:140px; border:1px solid var(--line); border-radius:7px; padding:3px 7px; font:inherit; font-weight:700;}
+.ld-item .w-list{background:var(--bg); border-radius:99px; padding:1px 8px; font-weight:700;}
+.ld-item .w-note{color:var(--muted); font-style:italic;}
+.ld-acts .a-t{color:var(--muted); padding:6px 8px;}
+.ld-acts .a-t:hover{color:var(--red); border-color:rgba(255,77,94,.5); background:var(--red-soft);}
+.ld-group-h .sub{text-transform:none; letter-spacing:0; font-weight:600; color:var(--muted); opacity:.85;}
+.ld-focus .f-nophone{margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; font-size:13px; font-weight:700; color:#B8860B;}
+.ld-focus .f-nophone input{border:1px solid var(--line); border-radius:9px; padding:8px 10px; font:inherit; font-weight:700; width:180px;}
+.ld-focus .f-nophone button{background:var(--brand); color:#fff; border-radius:9px; padding:8px 12px; font-weight:800;}
+.ld-focus .f-foot .t{color:var(--red); background:var(--red-soft);}
 /* focus card — one lead at a time, four huge buttons */
 .ld-focus{background:#fff; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow-lg); padding:26px 28px; margin-bottom:16px; display:none; position:relative; overflow:hidden;}
 .ld-focus.on{display:block;}
@@ -1858,12 +1881,13 @@ body.dark .btn-ghost:hover{background:var(--bg);}
       <input type="file" id="ldImportFile" accept=".csv,text/csv" style="display:none">
     </div>
   </div>
+  <div class="ld-lists" id="ldLists"></div>
   <section class="ld-focus" id="ldFocus"></section>
   <div class="ld-grid">
     <section class="panel">
       <div class="panel-head">
         <div class="ico" style="background:var(--blue-soft);color:var(--brand)" data-ic="phone"></div>
-        <div><h3>To call</h3><p>Every lead has a phone and no website · one tap logs the outcome into Quick Log</p></div>
+        <div><h3>To call</h3><p>New leads from the harvest and your own lists · one tap logs the outcome into Quick Log</p></div>
         <div class="cb-head-n" id="ldHeadN"><b>0</b><small>to call</small></div>
       </div>
       <div class="panel-body" id="ldList"></div>
@@ -1877,7 +1901,7 @@ body.dark .btn-ghost:hover{background:var(--bg);}
       <div class="panel-body" id="ldNaList"></div>
       <div class="panel-head" style="border-top:1px solid var(--line);border-bottom:none;">
         <div class="ico" style="background:var(--green-soft);color:var(--deep)" data-ic="check"></div>
-        <div><h3>Called</h3><p>Booked · SMS sent · No — also in Quick Log</p></div>
+        <div><h3>Called</h3><p>Booked · SMS sent · No · Trash — also in Quick Log</p></div>
         <div class="cb-head-n" id="ldDoneHeadN"><b>0</b><small>done</small></div>
       </div>
       <div class="panel-body" id="ldDoneList" style="max-height:40vh;"></div>
@@ -5232,14 +5256,31 @@ $('#nextY').addEventListener('click',()=>{curYear++; renderYear();});
    New leads arrive from leads/pool.json in the data repo (/api/pool) — the weekly harvest appends there. */
 const POOL_URL='/api/pool';
 const LD_PAGE=60;
-const LD_SCRIPT='<b>Καλησπέρα σας, ο Άγγελος από την Advon Media.</b> Σας βρήκα στο doctoranytime — βλέπω ότι έχετε <b>{reviews} εξαιρετικές αξιολογήσεις</b> αλλά δεν έχετε δική σας ιστοσελίδα. Φτιάχνουμε ιστοσελίδες για {spec} <b>χωρίς κόστος κατασκευής</b>: πληρώνετε μόνο τη φιλοξενία (130€/χρόνο) όταν δείτε το πρώτο δείγμα και σας αρέσει. Έχετε 2 λεπτά να σας πω πώς δουλεύει;';
-let ldFilter={q:'', spec:'', city:'', sort:'reviews'};
+/* demo: the call script stays private — nothing is shown here */
+let ldFilter={q:'', spec:'', city:'', sort:'reviews', list:null};
+let ldShownBy={};
+/* CATEGORIES. 'new' = pulled from the harvest (or a CSV) — always its own category.
+   Every other key comes from leads/lists.json in the data repo (Angelo's own lists, e.g. the dentists from his Excel):
+   {lists:{key:{t:'title', sub:'what it is', check:true}}, leads:[{key,name,list,ord,phone?,city,spec,note}]}.
+   A list with check:true holds names still to be looked up (usually no phone yet, might already have a website) —
+   the Trash button removes such a name for good (remembered in meta.ld.trash so a later pull never brings it back). */
+const LD_LISTS={new:{t:'New leads', sub:'pulled from the harvest · phone + no website'}};
+function ldLists(){ ensureLeads(); return Object.assign({}, LD_LISTS, state.meta.ld.lists||{}); }
+const ldListOf=l=>l.list||'new';
+function ldListInfo(k){ const L=ldLists(); return L[k]||{t:k}; }
+const ldIsCheck=l=>!!ldListInfo(ldListOf(l)).check;
+const ldLookup=l=>'https://www.google.com/search?q='+encodeURIComponent([l.name, ldSpecShort(l)||'', l.city||''].filter(Boolean).join(' '));
+const ldMaps=l=>'https://www.google.com/maps/search/'+encodeURIComponent([l.name, l.city||''].filter(Boolean).join(' '));
+const ldFmtPhone=p=>String(p||'').replace(/(\d{3})(\d{3})(\d{4})/,'$1 $2 $3');
 let ldCallMode=false, ldShown=LD_PAGE, ldBookingFor=null, ldBookPick={day:'', time:'', value:''};
 function ensureLeads(){
   if(!Array.isArray(state.leads)) state.leads=[];
   ensureMeta(); if(!state.meta.ld || typeof state.meta.ld!=='object') state.meta.ld={};
   if(!state.meta.ld.skip) state.meta.ld.skip={};
-  state.leads.forEach(l=>{ if(!l.status) l.status='new'; if(!Array.isArray(l.tries)) l.tries=[]; if(!l.id) l.id=uid(); });
+  if(!state.meta.ld.trash || typeof state.meta.ld.trash!=='object') state.meta.ld.trash={};
+  if(!Array.isArray(state.meta.ld.trashed)) state.meta.ld.trashed=[];
+  if(!state.meta.ld.lists || typeof state.meta.ld.lists!=='object') state.meta.ld.lists={};
+  state.leads.forEach(l=>{ if(!l.status) l.status='new'; if(!Array.isArray(l.tries)) l.tries=[]; if(!l.id) l.id=uid(); if(!l.list) l.list='new'; if(l.phone==null) l.phone=''; });
   return state.meta.ld;
 }
 const ldSpecShort=l=>String(l.spec||'').split('/')[0].trim();
@@ -5248,12 +5289,14 @@ const ldOpen=l=>l.status==='new'||l.status==='na';
 /* merge a batch of pool/CSV leads — only keys we have never seen */
 function ldMerge(list, src){
   ensureLeads();
-  const have=new Set(state.leads.map(l=>l.key));
+  const have=new Set(state.leads.map(l=>l.key)); const trash=state.meta.ld.trash||{};
   let n=0;
   (list||[]).forEach(p=>{
-    if(!p || !p.key || !p.name || !p.phone || have.has(p.key)) return;
+    if(!p || !p.key || !p.name || have.has(p.key) || trash[p.key]) return;
+    const phone=String(p.phone||'').replace(/\D/g,''); const lk=String(p.list||'').trim();
+    if(!phone && !lk) return;   /* harvest leads must carry a phone; names on Angelo's own lists may still be looked up */
     have.add(p.key); n++;
-    state.leads.push({id:uid(), key:p.key, name:String(p.name).trim(), spec:String(p.spec||'').trim(), city:String(p.city||'').trim(), addr:String(p.addr||'').trim(), phone:String(p.phone).replace(/\D/g,''), reviews:+p.reviews||0, score:p.score!=null?+p.score:null, url:String(p.url||''), added:p.added||todayIso(), src:p.src||src||'import', status:'new', tries:[], created:Date.now()});
+    state.leads.push({id:uid(), key:p.key, name:String(p.name).trim(), spec:String(p.spec||'').trim(), city:String(p.city||'').trim(), addr:String(p.addr||'').trim(), phone, reviews:+p.reviews||0, score:p.score!=null?+p.score:null, url:String(p.url||''), added:p.added||todayIso(), src:p.src||src||'import', list:lk||'new', ord:p.ord!=null?+p.ord:null, note:String(p.note||'').trim(), status:'new', tries:[], created:Date.now()});
   });
   return n;
 }
@@ -5266,10 +5309,12 @@ const Leads={
       const res=await fetch(POOL_URL+'?t='+Date.now(), {headers:{'x-crm-auth':SYNC_TOKEN}, cache:'no-store'});
       if(!res.ok) throw new Error('server '+res.status);
       const data=await res.json();
+      ensureLeads(); let changed=false;
+      if(data.lists && typeof data.lists==='object' && JSON.stringify(data.lists)!==JSON.stringify(state.meta.ld.lists||{})){ state.meta.ld.lists=data.lists; changed=true; }
       const n=ldMerge(data.leads||[], 'harvest');
       this.lastAt=Date.now();
-      ensureLeads(); state.meta.ld.poolAt=data.updated||''; state.meta.ld.pulledAt=Date.now();
-      if(n){ save(); renderLeads(); renderHome(); toast(n+' new lead'+(n>1?'s':'')+' added to the list'); }
+      state.meta.ld.poolAt=data.updated||''; state.meta.ld.pulledAt=Date.now();
+      if(n||changed){ save(); renderLeads(); renderHome(); if(n) toast(n+' new lead'+(n>1?'s':'')+' added'+(n===1?'':' — see the categories above the list')); }
       else { if(manual) toast('No new leads since the last harvest'); renderLdBanner(); }
     }catch(e){ if(manual) toast('Could not fetch leads: '+(e.message||'network')); }
     finally{ this.busy=false; }
@@ -5305,13 +5350,15 @@ function ldFiltered(){
   ensureLeads();
   const q=ldFilter.q.trim().toLowerCase();
   let list=state.leads.filter(l=>{
+    if(ldFilter.list && ldListOf(l)!==ldFilter.list) return false;
     if(ldFilter.spec && ldSpecShort(l)!==ldFilter.spec) return false;
     if(ldFilter.city && l.city!==ldFilter.city) return false;
     if(q && !(l.name.toLowerCase().includes(q)||l.city.toLowerCase().includes(q)||l.phone.includes(q)||String(l.spec).toLowerCase().includes(q))) return false;
     return true;
   });
   const skip=state.meta.ld.skip||{};
-  const cmp={reviews:(a,b)=>(b.reviews-a.reviews)||a.name.localeCompare(b.name,'el'), added:(a,b)=>(b.added||'').localeCompare(a.added||'')||(b.created||0)-(a.created||0), name:(a,b)=>a.name.localeCompare(b.name,'el')}[ldFilter.sort]||(()=>0);
+  const ord=l=>l.ord!=null?l.ord:1e9;
+  const cmp={reviews:(a,b)=>(b.reviews-a.reviews)||(ord(a)-ord(b))||a.name.localeCompare(b.name,'el'), added:(a,b)=>(b.added||'').localeCompare(a.added||'')||(b.created||0)-(a.created||0), name:(a,b)=>a.name.localeCompare(b.name,'el')}[ldFilter.sort]||(()=>0);
   list.sort((a,b)=>((skip[a.id]?1:0)-(skip[b.id]?1:0))||cmp(a,b));
   return list;
 }
@@ -5361,6 +5408,34 @@ function ldUndo(l){
   save(); renderAll(); toast(l.name+' back in the list');
 }
 function ldSkip(l){ ensureLeads(); state.meta.ld.skip[l.id]=Date.now(); save(); renderLeads(); }
+/* Trash = this name is not a lead (has a website, wrong number, closed). Gone from every list, remembered by key
+   so the next pull never re-adds it; kept in a small Trash group with a Restore button in case of a slip. */
+function ldTrash(l){
+  ensureLeads(); state.meta.ld.trash[l.key]=Date.now();
+  state.leads=state.leads.filter(x=>x.id!==l.id);
+  state.meta.ld.trashed.unshift(Object.assign({}, l, {trashedAt:Date.now()})); if(state.meta.ld.trashed.length>80) state.meta.ld.trashed.length=80;
+  delete state.meta.ld.skip[l.id]; if(state.meta.ld.focus===l.id) delete state.meta.ld.focus; if(ldBookingFor===l.id) ldBookingFor=null;
+  save(); renderAll(); toast(l.name+' → Trash');
+}
+function ldRestore(t){
+  ensureLeads(); delete state.meta.ld.trash[t.key]; state.meta.ld.trashed=state.meta.ld.trashed.filter(x=>x.id!==t.id);
+  const l=Object.assign({}, t); delete l.trashedAt; state.leads.push(l); save(); renderAll(); toast(l.name+' back in '+(ldListInfo(ldListOf(l)).t||'the list'));
+}
+function ldSetPhone(l, v){
+  const p=String(v||'').replace(/\D/g,'').replace(/^0030/,'').replace(/^30(?=\d{10}$)/,'');
+  if(p.length<10){ toast('Type the full number — 10 digits'); return false; }
+  l.phone=p; l.updated=Date.now(); save(); renderLeads(); toast('Phone saved for '+l.name); return true;
+}
+function ldPhoneInput(l, cls){
+  const box=document.createElement('span'); box.className=cls;
+  box.innerHTML=`<input type="tel" placeholder="69… / 21…" autocomplete="off" aria-label="Phone for ${esc(l.name)}">`;
+  const inp=box.querySelector('input'); let done=false;
+  const commit=()=>{ if(done) return; done=true; if(inp.value.trim()){ if(!ldSetPhone(l, inp.value)){ done=false; inp.focus(); } } else renderLeads(); };
+  inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); commit(); } if(e.key==='Escape'){ done=true; renderLeads(); } });
+  inp.addEventListener('blur',()=>setTimeout(commit,120));
+  setTimeout(()=>inp.focus(),0);
+  return box;
+}
 function ldAfter(l){ ensureLeads(); delete state.meta.ld.skip[l.id]; renderAll(); }
 /* ---- rendering ---- */
 function ldBookEl(l){
@@ -5384,12 +5459,13 @@ function ldActs(l){
   const a=document.createElement('div'); a.className='ld-acts';
   const open=ldOpen(l);
   if(open){
-    a.innerHTML=`<button class="a-g" title="Booked a meeting (1)">${IC.check} Booked</button><button class="a-y" title="Sent SMS / info (2)">${IC.message} SMS</button><button class="a-r" title="Not interested (3)">${IC.x} No</button><button class="a-n" title="Didn't pick up (4)">${IC.hourglass} No answer</button>${l.tries.length>=3?`<button class="a-undo" title="Stop trying">${IC.ban} Drop</button>`:''}${ldCallMode?'':`<button class="a-focus" title="Open in call mode">${IC.arrowRight}</button>`}`;
+    a.innerHTML=`<button class="a-g" title="Booked a meeting (1)">${IC.check} Booked</button><button class="a-y" title="Sent SMS / info (2)">${IC.message} SMS</button><button class="a-r" title="Not interested (3)">${IC.x} No</button><button class="a-n" title="Didn't pick up (4)">${IC.hourglass} No answer</button>${l.tries.length>=3?`<button class="a-undo" title="Stop trying">${IC.ban} Drop</button>`:''}<button class="a-t" title="Trash — has a website already / not a lead. Gone for good (Restore is in the Called panel)">${IC.trash}</button>${ldCallMode?'':`<button class="a-focus" title="Open in call mode">${IC.arrowRight}</button>`}`;
     a.querySelector('.a-g').addEventListener('click',()=>ldOutcome(l,'g'));
     a.querySelector('.a-y').addEventListener('click',()=>ldOutcome(l,'y'));
     a.querySelector('.a-r').addEventListener('click',()=>ldOutcome(l,'r'));
     a.querySelector('.a-n').addEventListener('click',()=>ldOutcome(l,'n'));
     const d=a.querySelector('.a-undo'); if(d) d.addEventListener('click',()=>ldOutcome(l,'x'));
+    a.querySelector('.a-t').addEventListener('click',()=>ldTrash(l));
     const f=a.querySelector('.a-focus'); if(f) f.addEventListener('click',()=>{ ldCallMode=true; ensureLeads(); state.meta.ld.focus=l.id; renderLeads(); window.scrollTo({top:0,behavior:'smooth'}); });
   } else {
     a.innerHTML=`<button class="a-undo" title="Put back in the list">${IC.undo} Undo</button>`;
@@ -5402,12 +5478,17 @@ function ldItemEl(l){
   const meta=[];
   if(l.spec) meta.push(`<span>${esc(ldSpecShort(l))}</span>`);
   if(l.city) meta.push(`<span>${esc(l.city)}</span>`);
-  meta.push(`<a class="w-phone" href="tel:+30${esc(l.phone)}">${IC.phone}${esc(l.phone.replace(/(\d{3})(\d{3})(\d{4})/,'$1 $2 $3'))}</a>`);
+  if(l.phone) meta.push(`<a class="w-phone" href="tel:+30${esc(l.phone)}">${IC.phone}${esc(ldFmtPhone(l.phone))}</a>`);
+  else meta.push(`<span class="w-nophone" data-addphone title="No phone yet — click to type it">${IC.phone} no phone yet · add</span>`);
   if(l.reviews) meta.push(`<span class="w-rev">★ ${l.reviews}${l.score?' · '+l.score:''}</span>`);
   if(l.url) meta.push(`<a href="${esc(l.url)}" target="_blank" rel="noopener" style="color:var(--brand);font-weight:700;">doctoranytime ↗</a>`);
+  if(ldIsCheck(l) || !l.url) meta.push(`<a class="w-look" href="${esc(ldLookup(l))}" target="_blank" rel="noopener" title="Google this name — website or not?">${IC.search} Google</a><a class="w-look" href="${esc(ldMaps(l))}" target="_blank" rel="noopener" title="Google Maps — phone + website">Maps</a>`);
+  if(!ldFilter.list && ldListOf(l)!=='new' && ldOpen(l)) meta.push(`<span class="w-list">${esc(ldListInfo(ldListOf(l)).t||'')}</span>`);
+  if(l.note) meta.push(`<span class="w-note">${esc(l.note)}</span>`);
   if(l.status==='na'){ const n=l.tries.length; meta.push(`<span class="w-try${n>=3?' hot':''}">${IC.hourglass} called ${l.tries.map(fmtDay).join(', ')} · ${n} ${n===1?'try':'tries'}</span>`); }
   if(!ldOpen(l)){ const t={g:'Booked',y:'SMS sent',r:'No',x:'Dropped'}[l.status]; meta.push(`<span class="w-out ${l.status==='x'?'':l.status}">${t}${l.doneAt?' · '+fmtDay(isoDate(new Date(l.doneAt))):''}</span>`); }
   row.innerHTML=`<div class="w-main"><div class="w-name">${esc(l.name)}</div><div class="w-meta">${meta.join('')}</div></div>`;
+  const ap=row.querySelector('[data-addphone]'); if(ap) ap.addEventListener('click',()=>{ ap.replaceWith(ldPhoneInput(l,'w-nophone')); });
   row.appendChild(ldActs(l));
   if(ldBookingFor===l.id && !ldCallMode){ const wrap=document.createElement('div'); wrap.style.flexBasis='100%'; wrap.appendChild(ldBookEl(l)); row.appendChild(wrap); }
   return row;
@@ -5424,7 +5505,7 @@ function renderLdBanner(){
   const filt=(ldFilter.q||ldFilter.spec||ldFilter.city);
   const pulled=state.meta.ld && state.meta.ld.pulledAt? 'checked '+new Date(state.meta.ld.pulledAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : 'never fetched';
   el.innerHTML=`
-    <div class="cell now"><div class="k">${IC.phone} Left to call</div><div class="big">${n.new+n.na}</div><div class="sub">${n.new} fresh · ${n.na} to retry${filt?' · '+f+' in this filter':''}</div></div>
+    <div class="cell now"><div class="k">${IC.phone} Left to call</div><div class="big">${n.new+n.na}</div><div class="sub">${n.new} fresh · ${n.na} to retry${ldFilter.list?' · '+esc(ldListInfo(ldFilter.list).t||'')+': '+f:(filt?' · '+f+' in this filter':'')}</div></div>
     <div class="cell ok"><div class="k">${IC.check} Booked</div><div class="big">${n.g}</div><div class="sub">meetings from this list</div></div>
     <div class="cell sms"><div class="k">${IC.message} SMS sent</div><div class="big">${n.y}</div><div class="sub">info sent, follow up</div></div>
     <div class="cell no"><div class="k">${IC.x} No</div><div class="big">${n.r}</div><div class="sub">${n.x?n.x+' dropped':'not interested'}</div></div>
@@ -5440,41 +5521,71 @@ function renderLdFocus(){
   if(!l){ el.innerHTML=`<div class="empty-note" style="padding:30px 10px;">Nobody left to call in this filter. Pull new leads, widen the filter, or take the day off — you earned it.</div>`; return; }
   ensureLeads(); state.meta.ld.focus=l.id;
   const idx=q.indexOf(l);
-  const script=LD_SCRIPT.replace('{reviews}', l.reviews? l.reviews : 'πολύ καλές').replace('{spec}','επαγγελματίες υγείας');
   el.innerHTML=`<div class="f-top"><div>
       <div class="f-name">${esc(l.name)}</div>
       <div class="f-spec">${esc(l.spec||'')}${l.city?' · '+esc(l.city):''}${l.addr?' · '+esc(l.addr):''}</div>
-      <a class="f-phone" href="tel:+30${esc(l.phone)}">${IC.phone}${esc(l.phone.replace(/(\d{3})(\d{3})(\d{4})/,'$1 $2 $3'))}</a>
-      <div class="f-meta">${l.reviews?`<span class="chip">★ ${l.reviews} reviews${l.score?' · '+l.score+'/10':''}</span>`:''}${l.url?`<a class="chip" href="${esc(l.url)}" target="_blank" rel="noopener">doctoranytime profile ↗</a>`:''}${l.status==='na'?`<span class="chip" style="background:var(--yellow-soft);color:#8A6400;">no answer on ${l.tries.map(fmtDay).join(', ')}</span>`:''}</div>
+      ${l.phone?`<a class="f-phone" href="tel:+30${esc(l.phone)}">${IC.phone}${esc(ldFmtPhone(l.phone))}</a>`:`<div class="f-nophone" id="ldFocusPhone">${IC.phone} No phone yet — look it up, then type it: <input type="tel" placeholder="69… / 21…" autocomplete="off"><button type="button">Save</button></div>`}
+      <div class="f-meta">${l.reviews?`<span class="chip">★ ${l.reviews} reviews${l.score?' · '+l.score+'/10':''}</span>`:''}${l.url?`<a class="chip" href="${esc(l.url)}" target="_blank" rel="noopener">doctoranytime profile ↗</a>`:''}${(ldIsCheck(l)||!l.url)?`<a class="chip" href="${esc(ldLookup(l))}" target="_blank" rel="noopener">${IC.search} Google ↗</a><a class="chip" href="${esc(ldMaps(l))}" target="_blank" rel="noopener">Maps ↗</a>`:''}<span class="chip">${esc(ldListInfo(ldListOf(l)).t||'')}</span>${l.note?`<span class="chip">${esc(l.note)}</span>`:''}${l.status==='na'?`<span class="chip" style="background:var(--yellow-soft);color:#8A6400;">no answer on ${l.tries.map(fmtDay).join(', ')}</span>`:''}</div>
     </div><div class="f-right">next in line<b>${q.length-idx-1}</b>left after this one</div></div>
-    <div class="f-script">${script}</div>
     <div class="f-acts"><button class="g">${IC.check} Booked<small>1 · meeting set</small></button><button class="y">${IC.message} SMS sent<small>2 · wants info</small></button><button class="r">${IC.x} No<small>3 · not interested</small></button><button class="n">${IC.hourglass} No answer<small>4 · try another day</small></button></div>
     <div class="ld-book" id="ldFocusBook"></div>
-    <div class="f-foot"><button data-skip>Skip for now</button>${l.url?`<a href="${esc(l.url)}" target="_blank" rel="noopener" style="font-weight:700;color:var(--brand);">Open profile</a>`:''}<span class="keys">keys <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> · <kbd>S</kbd> skip</span></div>`;
+    <div class="f-foot"><button data-skip>Skip for now</button><button class="t" data-trash title="Has a website / not a lead — remove for good">${IC.trash} Trash</button>${l.url?`<a href="${esc(l.url)}" target="_blank" rel="noopener" style="font-weight:700;color:var(--brand);">Open profile</a>`:''}<span class="keys">keys <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> · <kbd>S</kbd> skip · <kbd>T</kbd> trash</span></div>`;
   el.querySelector('.f-acts .g').addEventListener('click',()=>ldOutcome(l,'g'));
   el.querySelector('.f-acts .y').addEventListener('click',()=>ldOutcome(l,'y'));
   el.querySelector('.f-acts .r').addEventListener('click',()=>ldOutcome(l,'r'));
   el.querySelector('.f-acts .n').addEventListener('click',()=>ldOutcome(l,'n'));
   el.querySelector('[data-skip]').addEventListener('click',()=>{ ldSkip(l); });
+  el.querySelector('[data-trash]').addEventListener('click',()=>{ ldTrash(l); });
+  const fp=el.querySelector('#ldFocusPhone'); if(fp){ const inp=fp.querySelector('input'); fp.querySelector('button').addEventListener('click',()=>ldSetPhone(l, inp.value)); inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); ldSetPhone(l, inp.value); } }); }
   if(ldBookingFor===l.id){ const b=$('#ldFocusBook'); b.replaceWith(ldBookEl(l)); }
 }
-function ldGroup(title, icon, items, key, cls){
-  const g=document.createElement('div'); ensureLeads();
+function ldGroup(title, icon, items, key, opts){
+  opts=opts||{}; const g=document.createElement('div'); ensureLeads();
   const open=state.meta.ld['open_'+key]!==false;
-  g.innerHTML=`<div class="ld-group-h">${icon} ${title} <span class="n">${items.length}</span> ${open?IC.arrowDown:IC.chevRight}</div>`;
+  g.innerHTML=`<div class="ld-group-h">${icon} ${esc(title)} <span class="n">${items.length}</span>${opts.sub?` <span class="sub">· ${esc(opts.sub)}</span>`:''} ${open?IC.arrowDown:IC.chevRight}</div>`;
   g.querySelector('.ld-group-h').addEventListener('click',()=>{ state.meta.ld['open_'+key]=!open; save(); renderLeads(); });
-  if(open) items.forEach(l=>g.appendChild(ldItemEl(l)));
+  if(open){
+    const lim=opts.page? (ldShownBy[key]||LD_PAGE) : items.length;
+    items.slice(0,lim).forEach(l=>g.appendChild(ldItemEl(l)));
+    if(items.length>lim){ const m=document.createElement('button'); m.className='ld-more'; m.textContent='Show '+Math.min(LD_PAGE,items.length-lim)+' more · '+(items.length-lim)+' left'; m.addEventListener('click',()=>{ ldShownBy[key]=lim+LD_PAGE; renderLeads(); }); g.appendChild(m); }
+  }
   return g;
+}
+function ldTrashGroup(items){
+  const g=document.createElement('div'); ensureLeads(); const open=state.meta.ld.open_trash===true;
+  g.innerHTML=`<div class="ld-group-h">${IC.trash} Trash <span class="n">${items.length}</span> <span class="sub">· not leads (website / wrong number) · Restore if it was a slip</span> ${open?IC.arrowDown:IC.chevRight}</div>`;
+  g.querySelector('.ld-group-h').addEventListener('click',()=>{ state.meta.ld.open_trash=!open; save(); renderLeads(); });
+  if(open) items.forEach(t=>{ const row=document.createElement('div'); row.className='ld-item done';
+    row.innerHTML=`<div class="w-main"><div class="w-name">${esc(t.name)}</div><div class="w-meta"><span class="w-list">${esc(ldListInfo(ldListOf(t)).t||'')}</span>${t.city?`<span>${esc(t.city)}</span>`:''}<span>trashed ${fmtDay(isoDate(new Date(t.trashedAt||Date.now())))}</span></div></div><div class="ld-acts"><button class="a-undo" title="Put back in its list">${IC.undo} Restore</button></div>`;
+    row.querySelector('.a-undo').addEventListener('click',()=>ldRestore(t)); g.appendChild(row); });
+  return g;
+}
+/* the category pills above the list — one tap shows only that category (call mode follows it too) */
+function renderLdLists(){
+  const el=$('#ldLists'); if(!el) return; ensureLeads();
+  const L=ldLists(); const cnt={}; let all=0;
+  state.leads.forEach(l=>{ if(!ldOpen(l)) return; all++; const k=ldListOf(l); cnt[k]=(cnt[k]||0)+1; });
+  const keys=Object.keys(L).concat(Object.keys(cnt).filter(k=>!L[k]));
+  el.innerHTML=`<button class="${ldFilter.list?'':'on'}" data-list="">All <span class="n">${all}</span></button>`+
+    keys.map(k=>`<button class="${ldFilter.list===k?'on':''}${L[k]&&L[k].check?' chk':''}" data-list="${esc(k)}" title="${esc((L[k]&&L[k].sub)||'')}">${esc((L[k]&&L[k].t)||k)} <span class="n">${cnt[k]||0}</span></button>`).join('')+
+    (ldFilter.list && L[ldFilter.list] && L[ldFilter.list].sub? `<span class="hint">${esc(L[ldFilter.list].sub)}</span>`:'');
+  el.querySelectorAll('[data-list]').forEach(b=>b.addEventListener('click',()=>{ ldFilter.list=b.dataset.list; state.meta.ld.list=ldFilter.list; ldShown=LD_PAGE; ldShownBy={}; ldBookingFor=null; delete state.meta.ld.focus; save(); renderLeads(); }));
 }
 function renderLeads(){
   if(!state || !$('#ldList')) return;
-  ensureLeads(); ldFillSelects(); renderLdBanner(); renderLdFocus();
+  ensureLeads(); if(ldFilter.list===null) ldFilter.list=state.meta.ld.list||'';
+  if(ldFilter.list && !state.leads.some(l=>ldListOf(l)===ldFilter.list && ldOpen(l)) && !ldLists()[ldFilter.list]) ldFilter.list='';
+  ldFillSelects(); renderLdLists(); renderLdBanner(); renderLdFocus();
   const f=ldFiltered();
   const fresh=f.filter(l=>l.status==='new'), na=f.filter(l=>l.status==='na').sort((a,b)=>ldLastTry(a).localeCompare(ldLastTry(b))), done=f.filter(l=>!ldOpen(l)).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
   const el=$('#ldList'); el.innerHTML='';
   $('#ldHeadN').innerHTML=`<b>${fresh.length}</b><small>to call</small>`;
-  if(!fresh.length) el.innerHTML=`<div class="empty-note">${state.leads.length?'Everyone in this filter has been called. Pull new leads or clear the filter.':'No leads yet — press «Pull new leads» (needs sync unlocked) or import a CSV.'}</div>`;
-  else { fresh.slice(0,ldShown).forEach(l=>el.appendChild(ldItemEl(l))); if(fresh.length>ldShown){ const m=document.createElement('button'); m.className='ld-more'; m.textContent='Show '+Math.min(LD_PAGE,fresh.length-ldShown)+' more · '+(fresh.length-ldShown)+' left'; m.addEventListener('click',()=>{ ldShown+=LD_PAGE; renderLeads(); }); el.appendChild(m); } }
+  if(!fresh.length) el.innerHTML=`<div class="empty-note">${state.leads.length?'Everyone in this category has been called. Pull new leads, pick another category or clear the filter.':'No leads yet — press «Pull new leads» (needs sync unlocked) or import a CSV.'}</div>`;
+  else if(ldFilter.list){ fresh.slice(0,ldShown).forEach(l=>el.appendChild(ldItemEl(l))); if(fresh.length>ldShown){ const m=document.createElement('button'); m.className='ld-more'; m.textContent='Show '+Math.min(LD_PAGE,fresh.length-ldShown)+' more · '+(fresh.length-ldShown)+' left'; m.addEventListener('click',()=>{ ldShown+=LD_PAGE; renderLeads(); }); el.appendChild(m); } }
+  else { /* all categories: one collapsible group per category, New leads first */
+    const L=ldLists(); const by={}; fresh.forEach(l=>{ const k=ldListOf(l); (by[k]||(by[k]=[])).push(l); });
+    Object.keys(L).concat(Object.keys(by).filter(k=>!L[k])).forEach(k=>{ if(by[k] && by[k].length) el.appendChild(ldGroup((L[k]&&L[k].t)||k, L[k]&&L[k].check?IC.search:IC.phone, by[k], 'list_'+k, {sub:L[k]&&L[k].sub, page:true})); });
+  }
   const na_el=$('#ldNaList'); na_el.innerHTML='';
   $('#ldNaHeadN').innerHTML=`<b>${na.length}</b><small>waiting</small>`;
   if(!na.length) na_el.innerHTML='<div class="empty-note">Nobody parked. When someone doesn\'t pick up, tap «No answer» and they land here with the date.</div>';
@@ -5489,6 +5600,8 @@ function renderLeads(){
     if(by.y.length) d_el.appendChild(ldGroup('SMS sent', IC.message, by.y, 'y'));
     if(by.r.length) d_el.appendChild(ldGroup('No', IC.x, by.r, 'r'));
     if(by.x.length) d_el.appendChild(ldGroup('Dropped', IC.ban, by.x, 'x')); }
+  const trashed=(state.meta.ld.trashed||[]).filter(t=>!ldFilter.list || ldListOf(t)===ldFilter.list);
+  if(trashed.length){ if(!done.length) d_el.innerHTML=''; d_el.appendChild(ldTrashGroup(trashed)); }
 }
 $('#ldCallMode').addEventListener('click',()=>{ ldCallMode=!ldCallMode; ldBookingFor=null; renderLeads(); });
 $('#ldSearch').addEventListener('input',()=>{ ldFilter.q=$('#ldSearch').value; ldShown=LD_PAGE; renderLeads(); });
@@ -5505,6 +5618,7 @@ document.addEventListener('keydown',e=>{
   const map={'1':'g','2':'y','3':'r','4':'n'};
   if(map[e.key]){ e.preventDefault(); ldOutcome(l,map[e.key]); }
   else if(e.key==='s'||e.key==='S'){ e.preventDefault(); ldSkip(l); }
+  else if(e.key==='t'||e.key==='T'){ e.preventDefault(); ldTrash(l); }
   else if(e.key==='Enter' && ldBookingFor===l.id){ e.preventDefault(); ldBookConfirm(l); }
 });
 
@@ -6119,8 +6233,14 @@ function demoSeed(){
       let status='new';
       if(i<4){ status='na'; tries.push(isoDate(new Date(today.getTime()-ri(1,4)*864e5))); }
       else if(i<7){ status=['g','y','r'][i-4]; }
-      S.leads.push({id:'ld'+i, key:'dat:demo-'+i, name, spec, city:pick(areas), addr:pick(['Λεωφ. Αλεξάνδρας '+ri(10,200),'Πλατεία '+ri(1,30),'Βιντεοκλήση','Κολοκοτρώνη '+ri(1,90)]), phone:'21'+ri(10000000,99999999), reviews:ri(5,320), score:(9+ri(3,10)/10).toFixed(1)*1, url:'https://www.doctoranytime.gr/', added:isoDate(new Date(today.getTime()-ri(1,20)*864e5)), src:'demo', status, tries, doneAt: status==='new'||status==='na'? undefined : Date.now()-ri(1,5)*864e5});
+      S.leads.push({id:'ld'+i, key:'dat:demo-'+i, name, spec, city:pick(areas), addr:pick(['Λεωφ. Αλεξάνδρας '+ri(10,200),'Πλατεία '+ri(1,30),'Βιντεοκλήση','Κολοκοτρώνη '+ri(1,90)]), phone:'21'+ri(10000000,99999999), reviews:ri(5,320), score:(9+ri(3,10)/10).toFixed(1)*1, url:'https://www.doctoranytime.gr/', added:isoDate(new Date(today.getTime()-ri(1,20)*864e5)), src:'demo', status, tries, doneAt: status==='new'||status==='na'? undefined : Date.now()-ri(1,5)*864e5, list:'new'});
     }
+    /* your own lists — e.g. dentists from a spreadsheet: call-backs with a phone, and names still to be looked up */
+    S.meta.ld={lists:{'dent-athens':{t:'Οδοντίατροι Αθήνα', sub:'call back — did not answer the first time'}, 'dent-thess':{t:'Οδοντίατροι Θεσσαλονίκη', sub:'look up first: website or not? then call or trash', check:true}, 'dent-crete':{t:'Οδοντίατροι Κρήτη', sub:'look up first: website or not? then call or trash', check:true}}};
+    const dAreas=['Παγκράτι','Κηφισιά','Γλυφάδα','Χαλάνδρι','Μαρούσι','Νέα Σμύρνη','Περιστέρι','Ηλιούπολη'];
+    for(let i=0;i<10;i++) S.leads.push({id:'ldA'+i, key:'xls:demo-a-'+i, name:pick(last)+' '+pick(first), spec:'Οδοντίατρος', city:pick(dAreas), addr:'', phone:'69'+ri(10000000,99999999), reviews:0, score:null, url:'', added:isoDate(today), src:'excel', list:'dent-athens', ord:i+1, note:'no answer last time', status:'new', tries:[]});
+    for(let i=0;i<8;i++) S.leads.push({id:'ldT'+i, key:'xls:demo-t-'+i, name:pick(last)+' '+pick(first), spec:'Οδοντίατρος', city:'Θεσσαλονίκη', addr:'', phone:'', reviews:0, score:null, url:'', added:isoDate(today), src:'excel', list:'dent-thess', ord:i+1, note:'', status:'new', tries:[]});
+    for(let i=0;i<6;i++) S.leads.push({id:'ldK'+i, key:'xls:demo-k-'+i, name:pick(last)+' '+pick(first), spec:'Οδοντίατρος', city:pick(['Ηράκλειο','Χανιά','Ρέθυμνο']), addr:'', phone:'', reviews:0, score:null, url:'', added:isoDate(today), src:'excel', list:'dent-crete', ord:i+1, note:'', status:'new', tries:[]});
   })();
   return S;
 }

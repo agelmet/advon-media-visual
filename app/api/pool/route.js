@@ -2,8 +2,9 @@
 //
 // Lead pool for the CRM's Leads tab (13 Sept 2026).
 //
-//   GET  /api/pool  (CRM, x-crm-auth) — returns leads/pool.json from the private data repo:
-//                                       { updated, leads:[{key,name,spec,phone,city,addr,reviews,score,url,added,src}] }
+//   GET  /api/pool  (CRM, x-crm-auth) — returns leads/pool.json from the private data repo plus leads/lists.json
+//                                       (Angelo's own lists with a category each): { updated, lists:{key:{t,sub,check}},
+//                                       leads:[{key,name,spec,phone,city,addr,reviews,score,url,added,src,list?,ord?,note?}] }
 //   POST /api/pool?k=<read key>        — APPEND-ONLY: body {leads:[...]} from the harvest script running inside
 //                                       a doctoranytime tab (CORS-allowed for that origin). Unknown keys are added,
 //                                       nothing is ever removed or changed. Answers {added, total}.
@@ -48,6 +49,17 @@ async function authorized(req, c) {
   return safeEqual(await sha256Hex(token), String(c.authHash).trim().toLowerCase());
 }
 
+const LISTS_PATH = 'leads/lists.json';
+async function readLists(c) {
+  try {
+    const r = await fetch(`https://api.github.com/repos/${c.repo}/contents/${LISTS_PATH}?ref=${encodeURIComponent(c.branch)}&t=${Date.now()}`, {
+      cache: 'no-store',
+      headers: { Authorization: `Bearer ${c.token}`, Accept: 'application/vnd.github.raw+json', 'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'advon-pool' },
+    });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch { return null; }
+}
 export async function GET(req) {
   const c = cfg();
   if (!c.token || !c.repo) return json({ error: 'storage not configured' }, 503);
@@ -63,11 +75,15 @@ export async function GET(req) {
         'User-Agent': 'advon-pool',
       },
     });
-    if (res.status === 404) return json({ updated: null, leads: [] });
-    if (!res.ok) return json({ error: `GitHub read failed (${res.status})` }, 502);
-    const data = await res.json();
+    if (res.status === 404 && !(await readLists(c))) return json({ updated: null, leads: [], lists: {} });
+    if (!res.ok && res.status !== 404) return json({ error: `GitHub read failed (${res.status})` }, 502);
+    const data = res.ok ? await res.json() : { updated: null, leads: [] };
     const leads = Array.isArray(data.leads) ? data.leads : [];
-    return json({ updated: data.updated || null, leads });
+    // Angelo's own lists (leads/lists.json — e.g. the dentists from his Excel) ride along with their category names
+    const own = await readLists(c);
+    const lists = own && own.lists && typeof own.lists === 'object' ? own.lists : {};
+    const extra = own && Array.isArray(own.leads) ? own.leads : [];
+    return json({ updated: data.updated || null, leads: leads.concat(extra), lists });
   } catch (e) {
     return json({ error: e.message || 'read failed' }, 502);
   }
