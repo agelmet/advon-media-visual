@@ -78,13 +78,18 @@ async function authorize(req, conf) {
 // ---------- GitHub Contents API helpers ----------
 
 async function gh(conf, path, init = {}) {
-  const url = `https://api.github.com/repos/${conf.repo}/contents/${path}`;
+  return ghAt(conf, `contents/${path}`, init);
+}
+
+// Any endpoint under the repo (contents/…, git/blobs/…), with a chosen Accept.
+async function ghAt(conf, subpath, init = {}, accept = 'application/vnd.github+json') {
+  const url = `https://api.github.com/repos/${conf.repo}/${subpath}`;
   const res = await fetch(url, {
     ...init,
     cache: 'no-store',
     headers: {
       Authorization: `Bearer ${conf.token}`,
-      Accept: 'application/vnd.github+json',
+      Accept: accept,
       'X-GitHub-Api-Version': '2022-11-28',
       'User-Agent': 'advon-crm-sync',
       ...(init.headers || {}),
@@ -155,13 +160,48 @@ async function readData(conf) {
     throw ghFailure(res.status, await res.text());
   }
   const meta = await res.json();
+  const text = await readContent(conf, meta);
   let payload = null;
   try {
-    payload = JSON.parse(b64decode(meta.content.replace(/\n/g, '')));
+    payload = JSON.parse(text);
   } catch {
-    throw new Error('Stored data is not valid JSON');
+    throw Object.assign(
+      new Error(
+        `Stored data is not valid JSON (${meta.size || 0} bytes on the server, ` +
+          `${text.length} bytes read). The last good copy is in snapshots/ in the data repo.`
+      ),
+      { code: 'bad_json' }
+    );
   }
   return { exists: true, sha: meta.sha, payload };
+}
+
+// The text of a file the Contents API just described.
+// Files up to 1 MB arrive inline as base64. Anything larger comes back with
+// encoding "none" and no content at all, so it is read through the Git blob
+// API instead (that one goes up to 100 MB).
+async function readContent(conf, meta) {
+  if (meta && meta.encoding === 'base64' && meta.content) {
+    return b64decode(String(meta.content).replace(/\n/g, ''));
+  }
+  if (!meta || !meta.sha) return '';
+  const res = await ghAt(
+    conf,
+    `git/blobs/${meta.sha}`,
+    { cache: 'no-store' },
+    'application/vnd.github.raw'
+  );
+  if (!res.ok) throw ghFailure(res.status, await res.text());
+  const ctype = res.headers.get('content-type') || '';
+  if (ctype.includes('application/json')) {
+    // Older hosts ignore the raw media type and answer with the JSON envelope.
+    const b = await res.json();
+    if (b && b.content && b.encoding === 'base64') {
+      return b64decode(String(b.content).replace(/\n/g, ''));
+    }
+    return '';
+  }
+  return res.text();
 }
 
 async function writeFile(conf, path, contentStr, sha, message) {

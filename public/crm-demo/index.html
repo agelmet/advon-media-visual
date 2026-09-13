@@ -4812,14 +4812,22 @@ function ensureBk(){
   return b;
 }
 const bkNorm=s=>String(s||'').toLowerCase().replace(/[^0-9a-zα-ωά-ώ]+/gi,'');
-/* the same person already on the Board? same email, or same name on the same day */
+/* «Σοφία Γουβιώτου» and «Γουβιώτου Σοφία» are the same person */
+const bkName=s=>String(s||'').toLowerCase().replace(/[^0-9a-zα-ωά-ώ\s]+/gi,' ').split(/\s+/).filter(Boolean).sort().join(' ');
+const bkTel=s=>{ const d=String(s||'').replace(/\D/g,''); return d.length>=9? d.slice(-9) : ''; };
+/* The same person already on the Board? Same email, same phone, or the same
+   name — in any word order. The day only has to agree for a booking still to
+   come: an old one belongs to whoever already carries that name, which is why
+   a meeting he has already had never asks to be added a second time. */
 function bkMatchClient(b){
-  const n=bkNorm(b.name), e=String(b.email||'').toLowerCase();
+  const n=bkName(b.name), e=String(b.email||'').toLowerCase(), tel=bkTel(b.phone);
+  const past=!b.day || b.day<todayIso();
   return state.clients.find(c=>{
     if(isTrashed(c)) return false;
     if(c.fromBooking===b.uid) return true;
     if(e && String(c.email||'').toLowerCase()===e) return true;
-    return n && bkNorm(c.name)===n && (!b.day || !c.day || c.day===b.day);
+    if(tel && bkTel(c.phone)===tel) return true;
+    return n && bkName(c.name)===n && (past || !c.day || c.day===b.day);
   })||null;
 }
 function bkNew(){ const s=ensureBk().seen; return BK_LIST.filter(b=>b.uid && !s[b.uid]); }
@@ -4830,7 +4838,7 @@ function bkLabel(b){
   return t+(b.time?' · '+b.time:'');
 }
 /* put one booking on the Board (or complete the client that is already there) */
-function bkPut(b){
+function bkPut(b, quiet){
   const bk=ensureBk();
   const hit=bkMatchClient(b);
   if(hit){
@@ -4842,7 +4850,7 @@ function bkPut(b){
     if(changed) hit.updated=Date.now();
     bk.seen[b.uid]='matched';
     BK_DONE=BK_DONE.filter(x=>x.uid!==b.uid);
-    BK_DONE.unshift({uid:b.uid, clientId:hit.id, name:b.name, when:bkLabel(b), matched:true});
+    if(!quiet) BK_DONE.unshift({uid:b.uid, clientId:hit.id, name:b.name, when:bkLabel(b), matched:true});
     return 'matched';
   }
   const notes=[b.service?('Κράτηση: '+b.service):'', b.ref?('#'+b.ref):'', b.meet||''].filter(Boolean).join(' · ');
@@ -4882,16 +4890,24 @@ const Bookings={
     this.busy=false;
     this.settle(manual);
   },
-  /* auto-add only what is still to come; anything older waits for one tap */
+  /* Anyone already on the Board is folded into their card straight away —
+     a meeting must never ask to be added a second time. What is left is new:
+     still to come, it goes on the Board on its own; already past, it waits
+     for one tap so an old no-show is not resurrected by accident. */
   settle(manual){
-    if(this.state==='ok' && ensureBk().auto){
-      const t=todayIso();
+    if(this.state==='ok'){
+      let folded=0;
+      bkNew().forEach(b=>{ if(bkMatchClient(b)){ bkPut(b, true); folded++; } });
       let added=0, matched=0;
-      bkNew().filter(b=>b.day>=t).forEach(b=>{ const r=bkPut(b); if(r==='added') added++; else matched++; });
-      if(added||matched){
+      if(ensureBk().auto){
+        const t=todayIso();
+        bkNew().filter(b=>b.day>=t).forEach(b=>{ const r=bkPut(b); if(r==='added') added++; else matched++; });
+      }
+      if(added||matched||folded){
         save();
         if(added) toast(added+' new booking'+(added===1?'':'s')+' added to the Board');
         else if(matched) toast('Booking matched to a client already on the Board');
+        else if(folded && manual) toast(folded+' booking'+(folded===1?' was':'s were')+' already on the Board');
       }
     }
     if(manual && this.state==='ok') toast('Calendar checked');

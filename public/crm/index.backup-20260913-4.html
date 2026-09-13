@@ -2379,38 +2379,6 @@ async function saveNow(opts){
 }
 function save(){ memStore=state; touchActivity(); saveNow(); }
 
-/* ------------------------------------------------------------------
-   What gets sent to the server.
-   This device keeps everything in localStorage. The synced copy leaves
-   out the leads that are still untouched AND came from the server
-   (the weekly doctoranytime harvest and Angelo's own Excel lists):
-   /api/pool hands those back to every device on the next pull, so
-   storing them again in the encrypted blob only made it enormous —
-   past 1 MB it could not be read back at all.
-   A lead is kept the moment it is worked on in any way: called, sorted,
-   parked, booked, skipped, trashed, or edited (a phone typed by hand).
-   ------------------------------------------------------------------ */
-function ldFromServer(l){ return /^harvest/.test(l.src||'') || l.src==='excel'; }
-function ldTouched(l, ld){
-  if(!l) return true;
-  if(l.status && l.status!=='new') return true;
-  if(Array.isArray(l.tries) && l.tries.length) return true;
-  if(l.updated || l.doneAt || l.clientId || l.logId || l.note2) return true;
-  if(ld && ((ld.skip&&ld.skip[l.id]) || ld.focus===l.id)) return true;
-  return !ldFromServer(l);
-}
-function syncState(){
-  try{
-    if(!state || !Array.isArray(state.leads) || !state.leads.length) return state;
-    const ld=(state.meta&&state.meta.ld)||{};
-    const keep=state.leads.filter(l=>ldTouched(l, ld));
-    if(keep.length===state.leads.length) return state;
-    return Object.assign({}, state, {leads:keep, meta:Object.assign({}, state.meta, {
-      ld:Object.assign({}, ld, {pooled:state.leads.length-keep.length})
-    })});
-  }catch(e){ return state; }
-}
-
 /* ==================================================================
    CROSS-DEVICE SYNC
    ------------------------------------------------------------------
@@ -2650,7 +2618,7 @@ const Sync={
     this.busy=true; this.setState('syncing');
     try{
       const stamp=LOCAL_UPDATED_AT||new Date().toISOString();
-      const blob=await aesEnc(CUR_KEY, JSON.stringify(syncState()));
+      const blob=await aesEnc(CUR_KEY, JSON.stringify(state));
       const {res, payload}=await this.request('PUT',{
         data:blob, updatedAt:stamp, deviceId:deviceId(),
         baseSha:syncMeta().sha||null, force:!!force
@@ -4883,22 +4851,14 @@ function ensureBk(){
   return b;
 }
 const bkNorm=s=>String(s||'').toLowerCase().replace(/[^0-9a-zα-ωά-ώ]+/gi,'');
-/* «Σοφία Γουβιώτου» and «Γουβιώτου Σοφία» are the same person */
-const bkName=s=>String(s||'').toLowerCase().replace(/[^0-9a-zα-ωά-ώ\s]+/gi,' ').split(/\s+/).filter(Boolean).sort().join(' ');
-const bkTel=s=>{ const d=String(s||'').replace(/\D/g,''); return d.length>=9? d.slice(-9) : ''; };
-/* The same person already on the Board? Same email, same phone, or the same
-   name — in any word order. The day only has to agree for a booking still to
-   come: an old one belongs to whoever already carries that name, which is why
-   a meeting he has already had never asks to be added a second time. */
+/* the same person already on the Board? same email, or same name on the same day */
 function bkMatchClient(b){
-  const n=bkName(b.name), e=String(b.email||'').toLowerCase(), tel=bkTel(b.phone);
-  const past=!b.day || b.day<todayIso();
+  const n=bkNorm(b.name), e=String(b.email||'').toLowerCase();
   return state.clients.find(c=>{
     if(isTrashed(c)) return false;
     if(c.fromBooking===b.uid) return true;
     if(e && String(c.email||'').toLowerCase()===e) return true;
-    if(tel && bkTel(c.phone)===tel) return true;
-    return n && bkName(c.name)===n && (past || !c.day || c.day===b.day);
+    return n && bkNorm(c.name)===n && (!b.day || !c.day || c.day===b.day);
   })||null;
 }
 function bkNew(){ const s=ensureBk().seen; return BK_LIST.filter(b=>b.uid && !s[b.uid]); }
@@ -4909,7 +4869,7 @@ function bkLabel(b){
   return t+(b.time?' · '+b.time:'');
 }
 /* put one booking on the Board (or complete the client that is already there) */
-function bkPut(b, quiet){
+function bkPut(b){
   const bk=ensureBk();
   const hit=bkMatchClient(b);
   if(hit){
@@ -4921,7 +4881,7 @@ function bkPut(b, quiet){
     if(changed) hit.updated=Date.now();
     bk.seen[b.uid]='matched';
     BK_DONE=BK_DONE.filter(x=>x.uid!==b.uid);
-    if(!quiet) BK_DONE.unshift({uid:b.uid, clientId:hit.id, name:b.name, when:bkLabel(b), matched:true});
+    BK_DONE.unshift({uid:b.uid, clientId:hit.id, name:b.name, when:bkLabel(b), matched:true});
     return 'matched';
   }
   const notes=[b.service?('Κράτηση: '+b.service):'', b.ref?('#'+b.ref):'', b.meet||''].filter(Boolean).join(' · ');
@@ -4961,24 +4921,16 @@ const Bookings={
     this.busy=false;
     this.settle(manual);
   },
-  /* Anyone already on the Board is folded into their card straight away —
-     a meeting must never ask to be added a second time. What is left is new:
-     still to come, it goes on the Board on its own; already past, it waits
-     for one tap so an old no-show is not resurrected by accident. */
+  /* auto-add only what is still to come; anything older waits for one tap */
   settle(manual){
-    if(this.state==='ok'){
-      let folded=0;
-      bkNew().forEach(b=>{ if(bkMatchClient(b)){ bkPut(b, true); folded++; } });
+    if(this.state==='ok' && ensureBk().auto){
+      const t=todayIso();
       let added=0, matched=0;
-      if(ensureBk().auto){
-        const t=todayIso();
-        bkNew().filter(b=>b.day>=t).forEach(b=>{ const r=bkPut(b); if(r==='added') added++; else matched++; });
-      }
-      if(added||matched||folded){
+      bkNew().filter(b=>b.day>=t).forEach(b=>{ const r=bkPut(b); if(r==='added') added++; else matched++; });
+      if(added||matched){
         save();
         if(added) toast(added+' new booking'+(added===1?'':'s')+' added to the Board');
         else if(matched) toast('Booking matched to a client already on the Board');
-        else if(folded && manual) toast(folded+' booking'+(folded===1?' was':'s were')+' already on the Board');
       }
     }
     if(manual && this.state==='ok') toast('Calendar checked');
@@ -5374,23 +5326,6 @@ const ldSpecShort=l=>String(l.spec||'').split('/')[0].trim();
 const ldLastTry=l=>l.tries.length? l.tries[l.tries.length-1] : '';
 const ldOpen=l=>l.status==='new'||l.status==='na';
 /* merge a batch of pool/CSV leads — only keys we have never seen */
-/* a state that just came from the server: put back the untouched leads that
-   were left out of the blob, so nothing appears to vanish before the next pull */
-function ldRehydrate(incoming, mine){
-  try{
-    if(!incoming || !Array.isArray(mine) || !mine.length) return incoming;
-    if(!Array.isArray(incoming.leads)) incoming.leads=[];
-    const have=new Set(incoming.leads.map(l=>l&&l.key).filter(Boolean));
-    const ld=(incoming.meta&&incoming.meta.ld)||{};
-    const trash=ld.trash||{};
-    mine.forEach(l=>{
-      if(!l || !l.key || have.has(l.key) || trash[l.key]) return;
-      if(ldTouched(l, ld)) return;          /* worked-on leads live in the blob itself */
-      have.add(l.key); incoming.leads.push(l);
-    });
-  }catch(e){}
-  return incoming;
-}
 function ldMerge(list, src){
   ensureLeads();
   const have=new Set(state.leads.map(l=>l.key)); const trash=state.meta.ld.trash||{};
