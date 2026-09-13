@@ -108,7 +108,25 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .month-label{font-family:'Sora'; font-weight:700; font-size:15.5px; padding:0 10px; min-width:160px; text-align:center; letter-spacing:-.01em;}
 .today-btn{font-size:12px; font-weight:700; color:var(--brand); padding:6px 12px; border-radius:9px;}
 .today-btn:hover{background:var(--blue-soft);}
-.stat-pills{display:grid; grid-template-columns:repeat(6,minmax(96px,1fr)); gap:10px; margin-left:auto;}
+.stat-pills{display:flex; flex-wrap:wrap; gap:10px; margin-left:auto; flex:1 1 auto; justify-content:flex-end;}
+.stat-pills .stat-pill{flex:1 1 112px; max-width:190px;}
+.stat-pills .stat-pill.earned-pill{flex-basis:168px; max-width:240px;}
+@media(max-width:1100px){.stat-pills{justify-content:stretch;} .stat-pills .stat-pill{max-width:none;}}
+/* the Calendar has its own month arrows — hide the strip's there */
+body[data-view="calendar"] .strip .month-nav, body[data-view="calendar"] .strip .today-btn{display:none;}
+/* monthly subscriptions collected this month — violet, beside Renewals */
+.stat-pill.subs-pill{background:linear-gradient(135deg,#8B5CF6,#6D3FD6); border:none; box-shadow:0 6px 18px rgba(109,63,214,.30); cursor:pointer;}
+.stat-pill.subs-pill .k,.stat-pill.subs-pill .tgt-meta{color:rgba(255,255,255,.85);}
+.stat-pill.subs-pill .v{color:#fff;}
+/* everything earned this month — dark card with the three colours under the number */
+.stat-pill.earned-pill{background:linear-gradient(120deg,#10141F 10%,#1B3A6B 90%); border:none; box-shadow:0 8px 22px rgba(16,20,31,.35);}
+.stat-pill.earned-pill .k{color:rgba(255,255,255,.72);}
+.stat-pill.earned-pill .v{color:#fff; font-size:22px;}
+.earned-split{display:flex; justify-content:flex-end; gap:5px; margin-top:5px; flex-wrap:wrap;}
+.earned-split .es{font-size:10px; font-weight:800; letter-spacing:.01em; padding:2px 7px; border-radius:99px; color:#fff; font-variant-numeric:tabular-nums; line-height:1.4;}
+.earned-split .es.new{background:#0EC673;} .earned-split .es.ren{background:#3D8BF0;} .earned-split .es.sub{background:#8B5CF6;}
+/* costs + net */
+.stat-pill.exp-pill{cursor:pointer;} .stat-pill.exp-pill .v{color:var(--coral);} .stat-pill.exp-pill .exp-net{font-size:10px; font-weight:800; margin-top:1px;}
 .stat-pill{background:#fff; border:1px solid var(--line); border-radius:14px; padding:9px 16px 10px; box-shadow:var(--shadow); text-align:right; display:flex; flex-direction:column; justify-content:flex-end; min-width:0;}
 .stat-pill .k{font-size:10.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted);}
 .stat-pill .v{font-family:'Sora'; font-weight:800; font-size:20px; letter-spacing:-.02em; font-variant-numeric:tabular-nums;}
@@ -245,7 +263,23 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .ycard .m-count{font-size:12px; color:var(--muted); font-weight:500; margin-bottom:12px;}
 .ycard .m-total{font-family:'Sora'; font-weight:800; font-size:26px; letter-spacing:-.03em; color:var(--deep); font-variant-numeric:tabular-nums; margin-bottom:12px;}
 .ycard .m-total.zero{color:#C6CBD8;}
-.ycard .m-net{font-size:11.5px; font-weight:600; color:var(--muted); margin:-6px 0 10px; font-variant-numeric:tabular-nums;}
+/* earned this month = new (green) + renewals (blue) + monthly (violet) */
+.ycard .m-earned{display:flex; align-items:baseline; gap:8px; margin:-4px 0 8px;}
+.ycard .m-earned .lbl{font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);}
+.ycard .m-earned b{font-family:'Sora'; font-weight:800; font-size:26px; letter-spacing:-.03em; color:var(--ink); font-variant-numeric:tabular-nums;}
+.ycard .m-earned.zero b{color:#C6CBD8;}
+.ycard .m-split{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;}
+.ycard .ms{display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:700; color:var(--muted); padding:3px 8px 3px 6px; border-radius:99px; background:var(--bg); font-variant-numeric:tabular-nums; white-space:nowrap;}
+.ycard .ms i{width:8px; height:8px; border-radius:99px; display:inline-block;}
+.ycard .ms b{font-weight:800;}
+.ycard .ms.new i{background:#0EC673;} .ycard .ms.new b{color:#0A9A5A;}
+.ycard .ms.ren i{background:#3D8BF0;} .ycard .ms.ren b{color:#1F66CF;}
+.ycard .ms.sub i{background:#8B5CF6;} .ycard .ms.sub b{color:#6D3FD6;}
+.ycard .m-net{font-size:11.5px; font-weight:600; color:var(--muted); margin:-2px 0 10px; font-variant-numeric:tabular-nums;}
+.ycard .m-net-sub{font-weight:500; opacity:.7;}
+.year-banner .ysplit{display:flex; gap:6px; flex-wrap:wrap;}
+.year-banner .ys{font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:99px; color:#fff; font-variant-numeric:tabular-nums; text-transform:none; letter-spacing:0;}
+.year-banner .ys.new{background:#0EC673;} .year-banner .ys.ren{background:#3D8BF0;} .year-banner .ys.sub{background:#8B5CF6;}
 .ycard .m-net b.pos{color:var(--deep);} .ycard .m-net b.neg{color:var(--coral);}
 .ycard .m-target{display:flex; align-items:center; gap:7px; margin:0 0 10px; font-size:11.5px; font-weight:700; color:var(--muted); font-variant-numeric:tabular-nums;}
 .ycard .m-target .tgt-set{margin-left:auto; font-size:11px; font-weight:800; color:var(--brand); background:var(--blue-soft); border-radius:8px; padding:5px 10px; white-space:nowrap;}
@@ -1027,7 +1061,7 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 .home-hero h2{font-size:24px; font-weight:800; letter-spacing:-.02em; margin-bottom:3px;}
 .home-hero p{font-size:13px; color:rgba(255,255,255,.72); font-weight:500;}
 /* three calm groups instead of one long row: Calls · Money · Attention */
-.hero-groups{display:grid; grid-template-columns:3.6fr 4.7fr 2.9fr; gap:12px; margin-top:18px;}
+.hero-groups{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:18px;}  /* Money lives in the strip above the hero now */
 @media(max-width:1100px){.hero-groups{grid-template-columns:1fr 1fr;} .hero-groups .hg.attention{grid-column:1 / -1;}}
 @media(max-width:640px){.hero-groups{grid-template-columns:1fr;}}
 .hg{background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.11); border-radius:14px; padding:12px 15px 13px; min-width:0; backdrop-filter:blur(4px);}
@@ -1062,6 +1096,19 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 .home-row.warn{background:var(--coral-soft);} .home-row.warn .hr-val{color:var(--coral);}
 .home-row .hr-sub{font-size:11px; color:var(--muted);}
 .home-empty{padding:20px 12px; text-align:center; color:var(--muted); font-size:12.5px;}
+/* Home · Booked meetings — one block per day, the date written out */
+.meetings-card .home-card-body{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:10px 16px; align-items:start;}
+.hm-day{background:var(--bg); border-radius:14px; padding:10px 10px 6px; border:1px solid transparent;}
+.hm-day.today{border-color:#BFD4F2; background:linear-gradient(180deg,var(--blue-soft),var(--bg) 70%);}
+.hm-date{display:flex; align-items:center; gap:8px; padding:0 2px 8px; flex-wrap:wrap;}
+.hm-dow{font-family:'Sora'; font-weight:800; font-size:13.5px; color:var(--ink); letter-spacing:-.01em;}
+.hm-tag{font-size:9.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:2px 7px; border-radius:99px; background:#fff; color:var(--brand); border:1px solid #BFD4F2;}
+.hm-tag.today{background:var(--brand); color:#fff; border-color:var(--brand);}
+.hm-n{margin-left:auto; font-size:11px; color:var(--muted); font-weight:600;}
+.hm-row{background:#fff; margin-bottom:5px;}
+.hm-time{font-family:'Sora'; font-weight:800; font-size:12px; color:var(--brand); min-width:44px; font-variant-numeric:tabular-nums;}
+.hm-stage{font-size:9.5px; font-weight:800; padding:2px 7px; border-radius:99px; letter-spacing:.03em; white-space:nowrap;}
+.hm-row .hr-name{flex:1; min-width:0; white-space:normal; line-height:1.3;}
 /* Do ASAP — numbered quick list on Home */
 .hc-hint{font-size:11px; color:var(--muted); font-weight:600; text-align:right;}
 .asap-body{max-height:none;}
@@ -1432,9 +1479,12 @@ body.dark .btn-ghost:hover{background:var(--bg);}
   <div class="stat-pills">
     <div class="stat-pill"><div class="k">Booked this month</div><div class="v" id="statCount">0</div></div>
     <div class="stat-pill pipe"><div class="k">Month pipeline</div><div class="v" id="statTotal">€0</div></div>
-    <div class="stat-pill paid-pill"><div class="k">Collected</div><div class="v" id="statPaid">€0</div></div>
+    <div class="stat-pill paid-pill" title="New websites &amp; extras paid this month"><div class="k">New · paid</div><div class="v" id="statPaid">€0</div></div>
     <div class="stat-pill renew-pill" id="statRenewPill" title="Renewals paid this month — click to open Renewals"><div class="k">Renewals <span class="tgt-meta" id="statRenewMeta"></span></div><div class="v" id="statRenew">€0</div></div>
+    <div class="stat-pill subs-pill" id="statSubsPill" title="Monthly subscriptions ticked as paid for this month — click to open Monthly"><div class="k">Monthly <span class="tgt-meta" id="statSubsMeta"></span></div><div class="v" id="statSubs">€0</div></div>
+    <div class="stat-pill earned-pill" id="statEarnedPill" title="Everything earned this month: new + renewals + monthly"><div class="k">Earned total</div><div class="v" id="statEarned">€0</div><div class="earned-split" id="statEarnedSplit"></div></div>
     <div class="stat-pill"><div class="k">To collect</div><div class="v" id="statRem" style="color:var(--coral);">€0</div></div>
+    <div class="stat-pill exp-pill" id="statExpPill" title="This month's costs (domains + fixed costs) and what is left after them — click to open Expenses"><div class="k">Expenses</div><div class="tgt-meta exp-net" id="statExpMeta"></div><div class="v" id="statExp">€0</div></div>
     <div class="stat-pill target-pill" id="statTargetPill" title="Click to set this month's target">
       <div class="k">Target · generated <span class="tgt-meta" id="statTargetMeta"></span></div>
       <div class="v" id="statTarget">Set →</div>
@@ -1451,8 +1501,8 @@ body.dark .btn-ghost:hover{background:var(--bg);}
       <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft);color:var(--red)" data-ic="flag"></span><h3>Do ASAP</h3><span class="hc-hint">Click a line to edit · 🔥 = super-high priority · drag ⋮⋮ to reorder</span></div>
       <div class="home-card-body asap-body" id="homeAsap"></div>
     </section>
-    <section class="home-card">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--blue)" data-ic="calendar"></span><h3>This week's meetings</h3><button class="hc-link" data-goto="calendar">Open calendar</button></div>
+    <section class="home-card wide meetings-card">
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--blue)" data-ic="calendar"></span><h3>Booked meetings</h3><span class="hc-hint" id="homeWeekHint"></span><button class="hc-link" data-goto="calendar">Open calendar</button></div>
       <div class="home-card-body" id="homeWeek"></div>
     </section>
     <section class="home-card">
@@ -1462,10 +1512,6 @@ body.dark .btn-ghost:hover{background:var(--bg);}
     <section class="home-card">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--cyan-soft);color:var(--cyan)" data-ic="repeat"></span><h3>Overdue renewals</h3><button class="hc-link" data-goto="renewals">Renewals</button></div>
       <div class="home-card-body" id="homeRenew"></div>
-    </section>
-    <section class="home-card">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft);color:var(--red)" data-ic="flag"></span><h3>High priority</h3><button class="hc-link" data-goto="todo">To Do</button></div>
-      <div class="home-card-body" id="homeNotes"></div>
     </section>
     <section class="home-card wide">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--yellow-soft);color:#B8860B" data-ic="clock"></span><h3>Follow up after the meeting</h3><button class="hc-link" data-goto="board">Board</button></div>
@@ -1602,7 +1648,7 @@ body.dark .btn-ghost:hover{background:var(--bg);}
     <span class="tl-item"><i style="background:var(--red)"></i> High</span>
     <span class="tl-item"><i style="background:var(--yellow)"></i> Medium</span>
     <span class="tl-item"><i style="background:var(--green)"></i> Low</span>
-    <span class="tl-hint">Tap a dot on any row to set the priority · tap the same dot again to clear it</span>
+    <span class="tl-hint">New tasks start red (high) · tap a dot on any row to change the priority · tap the same dot again to clear it</span>
   </div>
   <div class="todo-lanes" id="todoLanes"></div>
 </main>
@@ -2504,11 +2550,17 @@ const XTRA_PRESETS=['NFC review stand','Google Business Profile','Λογότυπ
 
 /* "Collected" = paid-stage client revenue + collected monthly-subscription income
    for the period — matches the Year tab's "Money made" figure. */
-function collectedForMonth(key){
-  const paid=state.clients.filter(c=>c.month===key && c.stage==='paid').reduce((a,c)=>a+cval(c),0);
-  const subs=state.subs.reduce((a,s)=>a+((s.paid && s.paid[key])?(+s.value||0):0),0);
-  return paid+subs+renewalsPaidForMonth(key);
+function newPaidForMonth(key){ return state.clients.filter(c=>c.month===key && c.stage==='paid').reduce((a,c)=>a+cval(c),0); }
+function newBookedForMonth(key){ return state.clients.filter(c=>c.month===key && notLost(c)).reduce((a,c)=>a+cval(c),0); }
+function subsPaidForMonth(key){ return state.subs.reduce((a,s)=>a+((s.paid && s.paid[key])?(+s.value||0):0),0); }
+/* The three pots of money actually EARNED in a month — new websites (paid stage), renewals
+   (pressed «Renewed») and monthly subscriptions (month box ticked) — and their total.
+   Board strip, Home, Year cards and the year banner all read this one function. */
+function earnedForMonth(key){
+  const n=newPaidForMonth(key), r=renewalsPaidForMonth(key), s=subsPaidForMonth(key);
+  return {new:n, renew:r, subs:s, total:n+r+s};
 }
+function collectedForMonth(key){ return earnedForMonth(key).total; }
 /* ---------- renewals income ----------
    Every time you press «Renewed» a line is written into r.history {at, value, due}.
    That money counts in the month it was PAID (at), as its own pot beside new-client
@@ -2528,25 +2580,44 @@ function collectedForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=collectedFo
 /* "Generated" = total booked value of every client that month (any payment stage)
    + monthly-subscription income recorded for that month. This is what the TARGET is
    measured against — separate from "Collected". */
-function generatedForMonth(key){
-  const booked=state.clients.filter(c=>c.month===key && notLost(c)).reduce((a,c)=>a+cval(c),0);
-  const subs=state.subs.reduce((a,s)=>a+((s.paid && s.paid[key])?(+s.value||0):0),0);
-  return booked+subs+renewalsPaidForMonth(key);
+function generatedPartsForMonth(key){
+  const b=newBookedForMonth(key), r=renewalsPaidForMonth(key), s=subsPaidForMonth(key);
+  return {booked:b, renew:r, subs:s, total:b+r+s};
 }
+function generatedForMonth(key){ return generatedPartsForMonth(key).total; }
 function generatedForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=generatedForMonth(y+'-'+pad(m)); return sum; }
+function generatedPartsForYear(y){
+  const t={booked:0,renew:0,subs:0,total:0};
+  for(let m=1;m<=12;m++){ const p=generatedPartsForMonth(y+'-'+pad(m)); t.booked+=p.booked; t.renew+=p.renew; t.subs+=p.subs; t.total+=p.total; }
+  return t;
+}
 /* ---------- expenses ---------- */
 function ensureExpenses(){
   if(!state.expenses || typeof state.expenses!=='object') state.expenses={};
   if(typeof state.expenses.perWebsite!=='number') state.expenses.perWebsite=9.30;
   if(!Array.isArray(state.expenses.recurring)) state.expenses.recurring=[
-    {id:uid(), name:'Claude', amount:23},
+    {id:uid(), name:'Claude', amount:18},
     {id:uid(), name:'Ασφάλιση / Insurance', amount:160},
   ];
+  state.expenses.recurring.forEach(r=>{ if(!r.months||typeof r.months!=='object') r.months={}; });
+  /* 13 Sept 2026 — Claude was €18/month until August and €88 in September 2026 only */
+  if(!state.expenses.claudeSept2026){
+    const c=state.expenses.recurring.find(r=>/claude/i.test(r.name||''));
+    if(c){ c.amount=18; c.months['2026-09']=88; }
+    state.expenses.claudeSept2026=true;
+  }
 }
-function recurringMonthly(){ ensureExpenses(); return state.expenses.recurring.reduce((a,r)=>a+(+r.amount||0),0); }
+/* A fixed cost can have a different amount in ONE specific month — r.months['2026-09']=88 —
+   while r.amount stays the usual figure. Every expense/net number asks recAmount(r,key). */
+function recAmount(r,key){
+  const o=(r && r.months && key!=null) ? r.months[key] : undefined;
+  return (o!=null && o!=='' && !isNaN(+o)) ? +o : (+r.amount||0);
+}
+function recHasOverride(r,key){ return !!(r && r.months && r.months[key]!=null && r.months[key]!==''); }
+function recurringMonthly(key){ ensureExpenses(); return state.expenses.recurring.reduce((a,r)=>a+recAmount(r,key),0); }
 /* websites sold in a period = clients that reached the 'paid' stage that month */
 function websitesSold(key){ return state.clients.filter(c=>c.month===key && c.stage==='paid').length; }
-function expensesForMonth(key){ ensureExpenses(); return websitesSold(key)*(+state.expenses.perWebsite||0) + recurringMonthly(); }
+function expensesForMonth(key){ ensureExpenses(); return websitesSold(key)*(+state.expenses.perWebsite||0) + recurringMonthly(key); }
 function expensesForYear(y){ let sum=0; for(let m=1;m<=12;m++) sum+=expensesForMonth(y+'-'+pad(m)); return sum; }
 function monthTarget(key){ /* monthly targets are the only ones you set by hand */
   ensureTargets();
@@ -2584,6 +2655,8 @@ function openRenewalsMonth(key){
     if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); },60);
 }
 document.addEventListener('click',e=>{ if(e.target.closest && e.target.closest('#statRenewPill')) openRenewalsMonth(curMonth); });
+document.addEventListener('click',e=>{ if(e.target.closest && e.target.closest('#statSubsPill')){ subYear=+curMonth.slice(0,4); switchView('monthly'); } });
+document.addEventListener('click',e=>{ if(e.target.closest && e.target.closest('#statExpPill')){ switchView('monthly'); setTimeout(()=>{ const p=document.getElementById('expensePanel'); if(p) p.scrollIntoView({behavior:'smooth',block:'start'}); },60); } });
 function renderStats(){
   $('#monthLabel').textContent=fmtMonth(curMonth);
   const mc=state.clients.filter(c=>c.month===curMonth && notLost(c));
@@ -2593,6 +2666,19 @@ function renderStats(){
   $('#statTotal').textContent=fmtMoney(tot);
   $('#statPaid').textContent=fmtMoney(paid);
   $('#statRem').textContent=fmtMoney(tot-paid);
+  /* earned = new (paid) + renewals (paid) + monthly (ticked) — the one number that says what the month really made */
+  const earned=earnedForMonth(curMonth);
+  const subsN=state.subs.filter(s=>s.paid && s.paid[curMonth]).length;
+  $('#statSubs').textContent=fmtMoney(earned.subs);
+  $('#statSubsMeta').textContent= subsN? subsN+' paid' : '';
+  $('#statEarned').textContent=fmtMoney(earned.total);
+  $('#statEarnedSplit').innerHTML=`<span class="es new" title="New websites paid">${fmtMoney(earned.new)}</span><span class="es ren" title="Renewals paid">${fmtMoney(earned.renew)}</span><span class="es sub" title="Monthly subscriptions paid">${fmtMoney(earned.subs)}</span>`;
+  $('#statEarnedPill').title=fmtMoney(earned.total)+' earned in '+fmtMonth(curMonth)+' — '+fmtMoney(earned.new)+' new + '+fmtMoney(earned.renew)+' renewals + '+fmtMoney(earned.subs)+' monthly';
+  const mExpS=expensesForMonth(curMonth), mNetS=earned.total-mExpS;
+  $('#statExp').textContent=fmtMoney(Math.round(mExpS));
+  $('#statExpMeta').textContent=(mNetS>=0?'+':'−')+fmtMoney(Math.abs(Math.round(mNetS)))+' net';
+  $('#statExpMeta').style.color= mNetS>=0 ? 'var(--deep)' : 'var(--coral)';
+  $('#statExpPill').title=fmtMoney(Math.round(mExpS))+' costs in '+fmtMonth(curMonth)+' · net after costs '+fmtMoney(Math.round(mNetS))+' (earned − costs) — click to open Expenses';
   /* renewals pill — renewal money paid in this month (same figure as the Renewals tab), kept apart from Collected */
   const rnPaidM=renewalsPaidForMonth(curMonth);
   const rnPaidN=renewalHistory().filter(x=>(x.h.at||'').slice(0,7)===curMonth).length;
@@ -2893,11 +2979,19 @@ function renderYear(){
       ? `<div class="m-target">${IC.target} <span>Target <b>${fmtMoney(Math.round(mt.value))}</b> · ${mpct}%</span><button class="tgt-set" title="Change ${MONTHS[m-1]}'s target">Edit</button></div>`
       : `<div class="m-target">${IC.target} <span>No target</span><button class="tgt-set" title="Set ${MONTHS[m-1]}'s target">Set target</button></div>`;
     const mExp=expensesForMonth(key), mNet=mGenerated-mExp;
-    const mNetLine = items.length ? `<div class="m-net">− ${fmtMoney(Math.round(mExp))} costs · <b class="${mNet>=0?'pos':'neg'}">${fmtMoney(Math.round(mNet))} net</b></div>` : '';
+    const mNetLine = (items.length || earnedForMonth(key).total) ? `<div class="m-net">− ${fmtMoney(Math.round(mExp))} costs · <b class="${mNet>=0?'pos':'neg'}">${fmtMoney(Math.round(mNet))} net</b> <span class="m-net-sub">(generated − costs)</span></div>` : '';
+    const earned=earnedForMonth(key);
+    const subsN=state.subs.filter(s=>s.paid && s.paid[key]).length;
+    const rnN=renewalHistory().filter(x=>(x.h.at||'').slice(0,7)===key).length;
     card.innerHTML=`
       <h3>${MONTHS[m-1]}</h3>
-      <div class="m-count">${items.length} client${items.length===1?'':'s'}${paid?` · ${fmtMoney(paid)} collected`:''}${mToCollect>0?` · <b style="color:var(--coral)">${fmtMoney(mToCollect)} to collect</b>`:''}${given>0?` · <b style="color:var(--red)">${fmtMoney(given)} given up</b>`:''}${renewalsPaidForMonth(key)?` · <b style="color:#0F8BA8">${fmtMoney(renewalsPaidForMonth(key))} renewals</b>`:''}</div>
-      <div class="m-total ${total?'':'zero'}">${fmtMoney(total)}</div>
+      <div class="m-count">${items.length} client${items.length===1?'':'s'} · ${fmtMoney(total)} booked${mToCollect>0?` · <b style="color:var(--coral)">${fmtMoney(mToCollect)} to collect</b>`:''}${given>0?` · <b style="color:var(--red)">${fmtMoney(given)} given up</b>`:''}</div>
+      <div class="m-earned ${earned.total?'':'zero'}"><span class="lbl">Earned</span><b>${fmtMoney(earned.total)}</b></div>
+      <div class="m-split">
+        <span class="ms new" title="New websites &amp; extras paid in ${MONTHS[m-1]}"><i></i>New <b>${fmtMoney(earned.new)}</b></span>
+        <span class="ms ren" title="Renewals paid in ${MONTHS[m-1]}${rnN?' ('+rnN+')':''}"><i></i>Renewals <b>${fmtMoney(earned.renew)}</b></span>
+        <span class="ms sub" title="Monthly subscriptions ticked for ${MONTHS[m-1]}${subsN?' ('+subsN+')':''}"><i></i>Monthly <b>${fmtMoney(earned.subs)}</b></span>
+      </div>
       ${mNetLine}
       ${mTargetLine}
       ${mprog}
@@ -2913,7 +3007,7 @@ function renderYear(){
   },0);
   const rPaid=renewalsPaidForYear(curYear);
   const ytd=yPaid+subCollected+rPaid;
-  const yGenerated=generatedForYear(curYear), yExp=expensesForYear(curYear), yNet=yGenerated-yExp;
+  const yGenerated=generatedForYear(curYear), yParts=generatedPartsForYear(curYear), yExp=expensesForYear(curYear), yNet=yGenerated-yExp;
   /* the yearly target is derived — never prompted for; it is the sum of the monthly ones */
   const ytVal=yearTarget(curYear), ypct=progPct(yGenerated,ytVal), ycls=progClass(ypct);
   const monthsSet=monthsWithTarget(curYear);
@@ -2925,8 +3019,8 @@ function renderYear(){
       : `<div class="k" style="margin-top:5px; color:rgba(255,255,255,.5);">set a month's target below</div>`}
     </div>`;
   $('#yearBanner').innerHTML=`
-    <div class="cell"><div class="k">Generated ${curYear}</div><div class="big">${fmtMoney2(yTotal)}</div></div>
-    <div class="cell paid"><div class="k">Money made ${curYear}</div><div class="big">${fmtMoney2(ytd)}</div><div class="k" style="margin-top:4px;">${fmtMoney2(yPaid)} new clients + ${fmtMoney2(subCollected)} monthly + ${fmtMoney2(rPaid)} renewals</div></div>
+    <div class="cell"><div class="k">Generated ${curYear}</div><div class="big">${fmtMoney2(yGenerated)}</div><div class="k ysplit" style="margin-top:4px;"><span class="ys new">${fmtMoney2(yParts.booked)} new</span> <span class="ys ren">${fmtMoney2(yParts.renew)} renewals</span> <span class="ys sub">${fmtMoney2(yParts.subs)} monthly</span></div></div>
+    <div class="cell paid"><div class="k">Earned ${curYear} · money made</div><div class="big">${fmtMoney2(ytd)}</div><div class="k ysplit" style="margin-top:4px;"><span class="ys new">${fmtMoney2(yPaid)} new</span> <span class="ys ren">${fmtMoney2(rPaid)} renewals</span> <span class="ys sub">${fmtMoney2(subCollected)} monthly</span></div></div>
     <div class="cell renew" id="yRenewCell" title="Open the Renewals tab"><div class="k">Renewals ${curYear}</div><div class="big">${fmtMoney2(rPaid)}</div><div class="k" style="margin-top:4px;">${renewalsPaidCountForYear(curYear)} paid · ${fmtMoney2(rTotal)} still due</div></div>
     <div class="cell"><div class="k">To collect</div><div class="big" style="color:#FFB39F;">${fmtMoney2(Math.max(0,yTotal-yPaid-yGiven))}</div>${yGiven?`<div class="k" style="margin-top:4px;">${fmtMoney2(yGiven)} given up (orange/red) is not counted</div>`:''}</div>
     <div class="cell"><div class="k">Clients</div><div class="big">${yCount}</div></div>
@@ -2945,8 +3039,12 @@ function renderYearFinance(yGenerated, yExp, yNet, rTotal, pots){
   let sold=0; for(let m=1;m<=12;m++) sold+=websitesSold(curYear+'-'+pad(m));
   const domainCost=sold*rate;
   const recRows=state.expenses.recurring.map(r=>{
-    const yearly=(+r.amount||0)*12;
-    return `<div class="fin-row"><div><div class="fr-name">${esc(r.name)}<span class="fr-sub">${fmtMoney2(+r.amount||0)} / month × 12</span></div></div><span class="fr-amt cost">${fmtMoney2(Math.round(yearly))}</span></div>`;
+    let yearly=0; const diff=[];
+    for(let m=1;m<=12;m++){ const k=curYear+'-'+pad(m); yearly+=recAmount(r,k); if(recHasOverride(r,k)) diff.push(MONTHS[m-1].slice(0,3)+' '+fmtMoney2(recAmount(r,k))); }
+    const sub = diff.length
+      ? `usually ${fmtMoney2(+r.amount||0)} / month · <b style="color:var(--coral)">${diff.join(' · ')}</b>`
+      : `${fmtMoney2(+r.amount||0)} / month × 12`;
+    return `<div class="fin-row"><div><div class="fr-name">${esc(r.name)}<span class="fr-sub">${sub}</span></div></div><span class="fr-amt cost">${fmtMoney2(Math.round(yearly))}</span></div>`;
   }).join('');
   el.innerHTML=`
     <div class="stats-sec-head">
@@ -4019,7 +4117,7 @@ function renderTodo(){
       const t=inp.value.trim(); if(!t) return;
       const now=Date.now();
       const minSort=Math.min(0,...state.todos.filter(n=>n.cat===cat).map(n=>n.sort||0));
-      state.todos.push({id:uid(), text:t, note:'', cat, prio:'none', done:false, sort:minSort-1, created:now, updated:now});
+      state.todos.push({id:uid(), text:t, note:'', cat, prio:'high', done:false, sort:minSort-1, created:now, updated:now});  /* every new task starts red (high) — tap the dot to lower it */
       pendingFocusCat=cat; save(); renderTodo();
     });
     lane.appendChild(addWrap);
@@ -4299,14 +4397,14 @@ function renderMonthly(){
     row.querySelectorAll('.sub-cell').forEach(cell=>cell.addEventListener('click',()=>{
       const k=cell.dataset.k;
       if(s.paid[k]) delete s.paid[k]; else s.paid[k]=true;
-      save(); renderMonthly(); renderYear();
+      save(); renderAll();
     }));
     row.querySelector('.sub-price').addEventListener('click',e=>{
       if(e.target.closest('.sub-day')) return;
       const nv=prompt('Exact € per month for '+s.name+' (e.g. 11.5):', s.value||0);
       if(nv===null) return;
       const n=parseFloat(String(nv).replace(',','.'));
-      if(!isNaN(n)&&n>=0){ s.value=Math.round(n*100)/100; save(); renderMonthly(); renderYear(); toast(s.name+' — '+fmtMoney2(s.value)+'/month'); }
+      if(!isNaN(n)&&n>=0){ s.value=Math.round(n*100)/100; save(); renderAll(); toast(s.name+' — '+fmtMoney2(s.value)+'/month'); }
       else toast('Enter a number, e.g. 11.5');
     });
     const dayEl=row.querySelector('.sub-day');
@@ -4329,7 +4427,7 @@ $('#subAdd').addEventListener('click',()=>{
   const n=$('#subName').value.trim(); if(!n){ $('#subName').focus(); return; }
   state.subs.push({id:uid(), name:n, value:Math.round((+$('#subVal').value||0)*100)/100, paid:{}, created:Date.now()});
   $('#subName').value=''; $('#subVal').value='';
-  save(); renderMonthly(); renderYear(); toast('Subscription added'); $('#subName').focus();
+  save(); renderAll(); toast('Subscription added'); $('#subName').focus();
 });
 $('#subName').addEventListener('keydown',e=>{if(e.key==='Enter')$('#subAdd').click();});
 $('#subPrevY').addEventListener('click',()=>{subYear--; renderMonthly();});
@@ -4341,18 +4439,21 @@ function renderExpenses(){
   const body=$('#expenseBody'); if(!body) return;
   const rate=+state.expenses.perWebsite||0;
   const soldThis=websitesSold(curMonth);
-  const rec=recurringMonthly();
+  const rec=recurringMonthly(curMonth);
   const monthTot=expensesForMonth(curMonth);
-  let html=`<div class="exp-hint">Costs for <b>${fmtMonth(curMonth)}</b> — change the month in another tab's strip to see other months.</div>`;
+  let html=`<div class="exp-hint">Costs for <b>${fmtMonth(curMonth)}</b> — change the month in the strip of the Board to see other months. Click an amount to set it for <b>this month only</b>; use ✎ to change the usual monthly figure.</div>`;
   html+=`<div class="exp-row" data-edit="rate">
       <div><div class="exp-name">Domain per website</div><div class="exp-sub">${soldThis} website${soldThis===1?'':'s'} sold (paid) this month · ${fmtMoney2(rate)} each</div></div>
       <span class="exp-amt" title="Click to edit the per-website rate">${fmtMoney2(rate)}</span>
       <button class="exp-edit" title="Edit rate">${IC.edit}</button>
     </div>`;
   state.expenses.recurring.forEach(r=>{
-    html+=`<div class="exp-row" data-id="${r.id}">
-      <div class="exp-name">${esc(r.name)}<span class="exp-sub" style="display:block;">recurring monthly</span></div>
-      <span class="exp-amt" title="Click to edit">${fmtMoney2(+r.amount||0)}/m</span>
+    const ov=recHasOverride(r,curMonth), amt=recAmount(r,curMonth);
+    const others=Object.keys(r.months||{}).filter(k=>k!==curMonth && r.months[k]!=null && r.months[k]!=='').sort();
+    html+=`<div class="exp-row${ov?' override':''}" data-id="${r.id}">
+      <div class="exp-name">${esc(r.name)}<span class="exp-sub" style="display:block;">${ov?`<b style="color:var(--coral)">${MONTHS[+curMonth.slice(5,7)-1]} only</b> · usually ${fmtMoney2(+r.amount||0)}/m`:'usual monthly amount'}${others.length?` · also different in ${others.map(k=>MONTHS[+k.slice(5,7)-1].slice(0,3)+' '+k.slice(0,4)+' ('+fmtMoney2(+r.months[k])+')').join(', ')}`:''}</span></div>
+      <span class="exp-amt" title="Click to set the amount for ${fmtMonth(curMonth)} only">${fmtMoney2(amt)}${ov?'':'/m'}</span>
+      <button class="exp-edit" title="Change the usual monthly amount">${IC.edit}</button>
       <button class="item-x" title="Remove">${IC.x}</button>
     </div>`;
   });
@@ -4366,11 +4467,21 @@ function renderExpenses(){
   body.querySelectorAll('.exp-row[data-id]').forEach(row=>{
     const r=state.expenses.recurring.find(x=>x.id===row.dataset.id); if(!r) return;
     row.querySelector('.exp-amt').addEventListener('click',()=>{
-      const nv=prompt('Monthly amount (€) for '+r.name+':', r.amount||0);
+      const nv=prompt(r.name+' — amount for '+fmtMonth(curMonth)+' ONLY (€).\nUsual is '+fmtMoney2(+r.amount||0)+'/month — leave empty to go back to the usual amount:', recHasOverride(r,curMonth)? r.months[curMonth] : '');
+      if(nv===null) return;
+      r.months ||= {};
+      const t=String(nv).trim();
+      if(t===''){ delete r.months[curMonth]; state.expenses.updated=Date.now(); save(); renderAll(); toast(r.name+' — back to the usual '+fmtMoney2(+r.amount||0)+' in '+fmtMonth(curMonth)); return; }
+      const n=parseFloat(t.replace(',','.'));
+      if(!isNaN(n)&&n>=0){ r.months[curMonth]=Math.round(n*100)/100; state.expenses.updated=Date.now(); save(); renderAll(); toast(r.name+' — '+fmtMoney2(r.months[curMonth])+' in '+fmtMonth(curMonth)+' only'); }
+      else toast('Enter a number, e.g. 88');
+    });
+    row.querySelector('.exp-edit').addEventListener('click',()=>{
+      const nv=prompt('USUAL monthly amount (€) for '+r.name+' — applies to every month that has no amount of its own:', r.amount||0);
       if(nv===null) return;
       const n=parseFloat(String(nv).replace(',','.'));
-      if(!isNaN(n)&&n>=0){ r.amount=Math.round(n*100)/100; state.expenses.updated=Date.now(); save(); renderAll(); toast(r.name+' — '+fmtMoney2(r.amount)+'/month'); }
-      else toast('Enter a number, e.g. 23');
+      if(!isNaN(n)&&n>=0){ r.amount=Math.round(n*100)/100; state.expenses.updated=Date.now(); save(); renderAll(); toast(r.name+' — usually '+fmtMoney2(r.amount)+'/month'); }
+      else toast('Enter a number, e.g. 18');
     });
     row.querySelector('.item-x').addEventListener('click',()=>{
       if(confirm('Remove monthly cost "'+r.name+'"?')){ state.expenses.recurring=state.expenses.recurring.filter(x=>x.id!==r.id); state.expenses.updated=Date.now(); save(); renderAll(); }
@@ -4419,9 +4530,8 @@ function renderHome(){
   escalateThinking();
   const thinking=state.clients.filter(c=>isThinking(c) && !isTrashed(c)).sort((a,b)=>thinkDays(b)-thinkDays(a));
   const thinkDue=thinking.filter(thinkOverdue);
-  const hiNotes=state.todos.filter(n=>!n.done && (n.prio||'medium')==='high');
-  const hiClients=state.clients.filter(c=>c.prio==='high' && !isTrashed(c));
-  const hiCount=hiNotes.length + hiClients.length;
+  const openTodos=(state.todos||[]).filter(n=>!n.done).length;   /* every new task is high now, so count what is open instead */
+  const hiCount=openTodos;
   const cbNow=cbCounts().now;   /* callbacks left to call now */
   // hero
   const rem=mTotal-mPaid;
@@ -4446,16 +4556,7 @@ function renderHome(){
           <div class="hs"><div class="k">Cold calls today</div><div class="v b">${todayCalls.calls}</div></div>
           <div class="hs"><div class="k">${monthName} cold calls</div><div class="v b">${mStats.calls}</div></div>
           <div class="hs"><div class="k">Call → booking</div><div class="v ${callConv>=40?'g':callConv>=20?'':'c'}">${callConv}%</div></div>
-          <div class="hs"><div class="k">Meetings this week</div><div class="v b">${weekMeetings.length}</div></div>
-        </div>
-      </div>
-      <div class="hg money">
-        <div class="hg-title">${IC.euro} Money <span class="hg-note">${monthName} ${curMonth.slice(0,4)}</span></div>
-        <div class="hero-stats">
-          <div class="hs"><div class="k">${fmtMonth(curMonth)} to collect</div><div class="v c">${fmtMoney2(rem)}</div></div>
-          ${targetHs}
-          <div class="hs"><div class="k">${monthName} expenses</div><div class="v c">${fmtMoney2(Math.round(mExp))}</div></div>
-          <div class="hs"><div class="k">${monthName} net profit</div><div class="v ${mNet>=0?'g':'c'}">${fmtMoney2(Math.round(mNet))}</div></div>
+          <div class="hs" data-goto="calendar" style="cursor:pointer"><div class="k">Meetings this week</div><div class="v b">${weekMeetings.length}</div></div>
         </div>
       </div>
       <div class="hg attention${(overdue.length+thinkDue.length+hiCount+cbNow)?' hot':''}">
@@ -4464,17 +4565,30 @@ function renderHome(){
           <div class="hs" data-goto="callbacks" style="cursor:pointer" title="Warm leads + overdue + due this month — opens Callbacks"><div class="k">Calls to make</div><div class="v ${cbNow?'c':'g'}">${cbNow}</div></div>
           <div class="hs"><div class="k">Overdue renewals</div><div class="v ${overdue.length?'c':'g'}">${overdue.length}</div></div>
           <div class="hs"><div class="k">Chase after meeting</div><div class="v ${thinkDue.length?'c':'g'}">${thinkDue.length}</div></div>
-          <div class="hs"><div class="k">High priority</div><div class="v ${hiCount?'c':'g'}">${hiCount}</div></div>
+          <div class="hs" data-goto="todo" style="cursor:pointer" title="Open tasks on the To Do board"><div class="k">Open to-dos</div><div class="v ${hiCount?'c':'g'}">${hiCount}</div></div>
         </div>
       </div>
     </div>`;
   // week
+  /* every meeting that is booked from today on — grouped by day, the date spelled out */
   const hw=$('#homeWeek');
-  if(!weekMeetings.length) hw.innerHTML='<div class="home-empty">No meetings booked this week.</div>';
-  else hw.innerHTML=weekMeetings.map(c=>{
-    const d=new Date(c.day+'T00:00'); const dn=DOW[(d.getDay()+6)%7];
-    return `<div class="home-row" data-open="${c.id}"><span class="hr-day">${dn} ${d.getDate()}</span><span class="hr-name">${esc(c.name)}${c.time?` · ${c.time}`:''}</span>${cval(c)?`<span class="hr-val">${fmtMoney(cval(c))}</span>`:''}</div>`;
-  }).join('');
+  const allMeet=state.clients.filter(c=>c.day && /^\d{4}-\d{2}-\d{2}$/.test(c.day) && !isTrashed(c) && c.day>=todayI)
+    .sort((a,b)=>(a.day+(a.time||'99'))<(b.day+(b.time||'99'))?-1:1);
+  const hint=$('#homeWeekHint'); if(hint) hint.textContent= allMeet.length? allMeet.length+' booked · '+weekMeetings.length+' this week' : '';
+  if(!allMeet.length) hw.innerHTML='<div class="home-empty">No meetings booked from today on. Book one from Quick Log or the Calendar.</div>';
+  else {
+    const tomorrowI=isoDate(new Date(Date.now()+864e5));
+    const groups=[]; allMeet.forEach(c=>{ let g=groups[groups.length-1]; if(!g||g.day!==c.day){ g={day:c.day, items:[]}; groups.push(g); } g.items.push(c); });
+    hw.innerHTML=groups.map(g=>{
+      const d=new Date(g.day+'T00:00');
+      const tag= g.day===todayI?'<span class="hm-tag today">Today</span>' : g.day===tomorrowI?'<span class="hm-tag">Tomorrow</span>' : (g.day<=weekEndI?'<span class="hm-tag">This week</span>':'');
+      const label=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+      return `<div class="hm-day${g.day===todayI?' today':''}">
+        <div class="hm-date"><span class="hm-dow">${label}</span>${tag}<span class="hm-n">${g.items.length} meeting${g.items.length===1?'':'s'}</span></div>
+        ${g.items.map(c=>`<div class="home-row hm-row" data-open="${c.id}"><span class="hm-time">${c.time||'—'}</span><span class="hr-name">${esc(c.name)}</span><span class="hm-stage" style="background:${stageById(c.stage).cs};color:${stageById(c.stage).hex}">${stageById(c.stage).name}</span>${cval(c)?`<span class="hr-val">${fmtMoney(cval(c))}</span>`:''}</div>`).join('')}
+      </div>`;
+    }).join('');
+  }
   // collect per month (only months with remaining)
   const hc=$('#homeCollect');
   const remByMonth={};
@@ -4501,12 +4615,6 @@ function renderHome(){
         </div>`;
       }).join('')
     : '<div class="home-empty">Nobody is waiting on a decision.</div>';
-  const hn=$('#homeNotes');
-  const hiRows=[
-    ...hiClients.map(c=>`<div class="home-row" data-open="${c.id}"><span class="hr-name">${IC.user} ${esc(c.name)}</span></div>`),
-    ...hiNotes.map(n=>`<div class="home-row" data-goto="todo"><span class="hr-name">${IC.flag} ${esc(n.text)}</span></div>`),
-  ];
-  hn.innerHTML= hiRows.length? hiRows.join('') : '<div class="home-empty">Nothing flagged high priority right now.</div>';
   // wire
   $('#view-home').querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click',()=>openModal(el.dataset.open)));
   $('#view-home').querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>switchView(el.dataset.goto)));
@@ -4814,7 +4922,8 @@ function switchView(v){
   document.body.dataset.view=v;
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
   document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el.id==='view-'+v));
-  $('#strip').style.display = (v==='year'||v==='renewals'||v==='calendar'||v==='todo'||v==='ideas'||v==='monthly'||v==='home'||v==='remaining') ? 'none' : 'flex';
+  /* the money strip also sits on Home, Calendar and To Do (the Calendar keeps its own month arrows, so the strip's are hidden there via CSS) */
+  $('#strip').style.display = (v==='year'||v==='renewals'||v==='ideas'||v==='monthly'||v==='remaining') ? 'none' : 'flex';
   renderAll();
 }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchView(t.dataset.view)));
