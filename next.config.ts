@@ -55,6 +55,7 @@ const nextConfig = {
       { source: '/api/brief', headers: NO_STORE },
       { source: '/api/pool', headers: NO_STORE },
       { source: '/api/intake', headers: NO_STORE },
+      { source: '/api/watchdog', headers: NO_STORE },
       { source: '/img/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] },
       { source: '/og/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=604800' }] },
     ];
