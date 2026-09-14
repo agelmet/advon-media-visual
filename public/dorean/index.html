@@ -152,7 +152,7 @@ h2{font-size:clamp(1.9rem,3.8vw,3rem);letter-spacing:-.03em;line-height:1.05;fon
 .work a:hover{transform:translateY(-4px);border-color:rgba(71,200,245,.4);box-shadow:0 30px 50px -30px rgba(71,200,245,.4)}
 .work .bar{height:22px;background:#151C29;display:flex;align-items:center;gap:5px;padding:0 10px;border-bottom:1px solid var(--line)}
 .work .bar i{width:7px;height:7px;border-radius:50%;background:#2B3446}
-.work img{aspect-ratio:800/458;object-fit:cover;object-position:top;width:100%;transition:transform .6s ease}
+.work img{aspect-ratio:800/458;height:auto;object-fit:cover;object-position:top;width:100%;transition:transform .6s ease}
 .work a:hover img{transform:scale(1.03)}
 .work .meta{padding:14px 16px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .work .meta b{display:block;font-size:14.5px}
@@ -216,7 +216,8 @@ h2{font-size:clamp(1.9rem,3.8vw,3rem);letter-spacing:-.03em;line-height:1.05;fon
 .panel h3{font-size:1.5rem;letter-spacing:-.025em;margin-bottom:8px}
 .panel p{color:var(--ink2);font-size:15.5px}
 .panel.form p{color:#3B4453}
-.panel .btn{align-self:flex-start;margin-top:auto}
+.panel .btn{align-self:flex-start}
+.panel:not(.form){justify-content:center}
 .book-bul{list-style:none;margin:18px 0 26px;display:grid;gap:10px}
 .book-bul li{display:flex;gap:10px;font-size:15px;color:var(--ink2)}
 .book-bul li::before{content:'→';color:var(--cyan);font-weight:800}
