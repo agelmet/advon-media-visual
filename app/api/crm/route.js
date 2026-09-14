@@ -8,8 +8,8 @@
 // expose client records — only the passphrase can decrypt them.
 //
 // Storage backend: a PRIVATE GitHub repo, written through the Contents API.
-// Every write is a git commit, so history is durable and recoverable, and a
-// dated snapshot file is kept for at least 30 days.
+// Every write is ONE git commit (data + hourly snapshot + old-snapshot prunes, see
+// lib/ghdata.js), so history is durable and recoverable and saves never race each other.
 //
 // Required environment variables. Set these on the host that actually serves
 // advonmedia.com, which is NETLIFY:
@@ -21,6 +21,8 @@
 //   CRM_AUTH_HASH  hex SHA-256 of the sync token the browser derives from your
 //                  passphrase. The CRM shows you this value under Sync setup.
 //                  The passphrase itself is never stored anywhere.
+
+import { commit as ghCommit } from '@/lib/ghdata';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -204,49 +206,13 @@ async function readContent(conf, meta) {
   return res.text();
 }
 
-async function writeFile(conf, path, contentStr, sha, message) {
-  const body = {
-    message,
-    content: b64encode(contentStr),
-    branch: conf.branch,
-  };
-  if (sha) body.sha = sha;
-  const res = await gh(conf, path, { method: 'PUT', body: JSON.stringify(body) });
-  if (!res.ok) {
-    throw ghFailure(res.status, await res.text());
-  }
-  return res.json();
-}
-
-// Keep dated snapshots for at least SNAPSHOT_RETENTION_DAYS; delete older ones.
-// Failures here are non-fatal — never block a save because pruning failed.
-async function pruneSnapshots(conf) {
-  try {
-    const res = await gh(
-      conf,
-      `${SNAPSHOT_DIR}?ref=${encodeURIComponent(conf.branch)}&t=${Date.now()}`
-    );
-    if (!res.ok) return;
-    const list = await res.json();
-    if (!Array.isArray(list)) return;
-    const cutoff = Date.now() - SNAPSHOT_RETENTION_DAYS * 86400000;
-    for (const f of list) {
-      const m = /^(\d{4}-\d{2}-\d{2})T/.exec(f.name || '');
-      if (!m) continue;
-      if (new Date(m[1] + 'T00:00:00Z').getTime() >= cutoff) continue;
-      await gh(conf, `${SNAPSHOT_DIR}/${f.name}`, {
-        method: 'DELETE',
-        body: JSON.stringify({
-          message: `chore(crm): prune snapshot ${f.name}`,
-          sha: f.sha,
-          branch: conf.branch,
-        }),
-      });
-    }
-  } catch {
-    /* non-fatal */
-  }
-}
+// ---------- Writing: one commit per save, retried on branch races (14 Sept 2026) ----------
+// See lib/ghdata.js. The old Contents-API path made three kinds of commit per save
+// (data, snapshot, background prunes) that raced each other and every other route for
+// the branch head — GitHub answered «409 … is at X but expected Y» and the CRM showed it.
+const SNAPSHOT_MAX_PRUNE = 120;      // deletions folded into one save commit, at most
+let lastPruneAt = 0;                 // per function instance — pruning is best effort
+class Conflict extends Error { constructor(remote) { super('conflict'); this.remote = remote; } }
 
 // ---------- Handlers ----------
 
@@ -308,69 +274,60 @@ export async function PUT(req) {
     return json({ error: 'bad_request', message: 'Body must be JSON' }, 400);
   }
 
-  const { data, updatedAt, deviceId, baseSha, force } = body || {};
+  const { data, updatedAt, deviceId, baseSha, baseUpdatedAt, force } = body || {};
   if (!data || typeof data.iv !== 'string' || typeof data.ct !== 'string') {
     return json({ error: 'bad_request', message: 'data must be {iv, ct}' }, 400);
   }
 
+  const stamp = updatedAt || new Date().toISOString();
+  const payload = { version: 4, updatedAt: stamp, deviceId: deviceId || 'unknown', data };
+  const contentStr = JSON.stringify(payload, null, 2);
+  const snapName = `${SNAPSHOT_DIR}/${stamp.slice(0, 13).replace(/[:.]/g, '-')}.json`;   // one snapshot per hour
+
   try {
-    const current = await readData(conf);
-
-    // Optimistic concurrency: refuse to clobber a newer remote copy.
-    if (current.exists && !force && current.sha !== baseSha) {
-      return json(
-        {
-          error: 'conflict',
-          message: 'The stored copy changed since this device loaded it.',
-          sha: current.sha,
-          updatedAt: current.payload?.updatedAt || null,
-          deviceId: current.payload?.deviceId || null,
-          data: current.payload?.data || null,
-        },
-        409
-      );
-    }
-
-    const stamp = updatedAt || new Date().toISOString();
-    const payload = {
-      version: 4,
-      updatedAt: stamp,
-      deviceId: deviceId || 'unknown',
-      data,
-    };
-    const contentStr = JSON.stringify(payload, null, 2);
-
-    const written = await writeFile(
-      conf,
-      DATA_PATH,
-      contentStr,
-      current.exists ? current.sha : null,
-      `crm: save from ${deviceId || 'unknown device'} at ${stamp}`
-    );
-
-    // Dated snapshot — one file per save, pruned after 30 days.
-    const snapName = `${stamp.replace(/[:.]/g, '-')}.json`;
-    try {
-      await writeFile(
-        conf,
-        `${SNAPSHOT_DIR}/${snapName}`,
-        contentStr,
-        null,
-        `crm: snapshot ${stamp}`
-      );
-    } catch {
-      /* snapshot failure must not fail the save */
-    }
-    pruneSnapshots(conf).catch(() => {});
-
-    return json({ ok: true, sha: written.content?.sha || null, updatedAt: stamp });
+    const out = await ghCommit(conf, `crm: save from ${deviceId || 'unknown device'} at ${stamp}`, async (ctx) => {
+      const cur = await ctx.readJson(DATA_PATH, null);
+      if (cur.badJson) {
+        throw Object.assign(new Error('Stored data is not valid JSON. The last good copy is in snapshots/ in the data repo.'), { code: 'bad_json' });
+      }
+      // Optimistic concurrency, but only for a REAL conflict: another device wrote a
+      // newer copy since this one last synced. A stale sha on its own (this device's
+      // own earlier save, a lost response) is not a reason to block the save.
+      if (cur.sha && !force && cur.sha !== baseSha) {
+        const remote = cur.data || {};
+        const otherDevice = remote.deviceId && remote.deviceId !== (deviceId || 'unknown');
+        const newer = !baseUpdatedAt || !remote.updatedAt || remote.updatedAt > baseUpdatedAt;
+        if (otherDevice && newer) throw new Conflict({ sha: cur.sha, updatedAt: remote.updatedAt || null, deviceId: remote.deviceId || null, data: remote.data || null });
+      }
+      const files = [
+        { path: DATA_PATH, content: contentStr },
+        { path: snapName, content: contentStr },
+      ];
+      // Prune snapshots older than 30 days inside the SAME commit, at most every 6 hours.
+      if (Date.now() - lastPruneAt > 6 * 3600 * 1000) {
+        try {
+          const cutoff = Date.now() - SNAPSHOT_RETENTION_DAYS * 86400000;
+          const list = await ctx.listDir(SNAPSHOT_DIR);
+          let n = 0;
+          for (const f of list) {
+            const m = /^(\d{4}-\d{2}-\d{2})T/.exec(f.path || '');
+            if (!m || f.type !== 'blob') continue;
+            if (new Date(m[1] + 'T00:00:00Z').getTime() >= cutoff) continue;
+            files.push({ path: `${SNAPSHOT_DIR}/${f.path}`, content: null });
+            if (++n >= SNAPSHOT_MAX_PRUNE) break;
+          }
+          if (n < SNAPSHOT_MAX_PRUNE) lastPruneAt = Date.now();   // more left → prune again on the next save
+        } catch { /* pruning is never allowed to fail a save */ }
+      }
+      return files;
+    });
+    return json({ ok: true, sha: out.blobs[DATA_PATH] || null, updatedAt: stamp, commit: out.commit });
   } catch (e) {
+    if (e instanceof Conflict) {
+      return json({ error: 'conflict', message: 'The stored copy changed since this device loaded it.', ...e.remote }, 409);
+    }
     return json(
-      {
-        error: 'backend_error',
-        code: e.code || 'github_error',
-        message: String(e.message || e),
-      },
+      { error: 'backend_error', code: e.code || 'github_error', message: String(e.message || e) },
       502
     );
   }

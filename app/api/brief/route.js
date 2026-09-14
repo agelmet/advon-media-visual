@@ -12,6 +12,8 @@
 // The 08:30 morning-brief agent reads brief/today.json straight from GitHub with its
 // own read-only token, so nothing here is public. Same env vars as /api/crm.
 
+import { commit as ghCommit } from '@/lib/ghdata';
+
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
@@ -165,19 +167,12 @@ export async function POST(req) {
   const text = JSON.stringify(brief, null, 1);
   if (text.length > MAX_BYTES) return json({ error: 'brief too large' }, 413);
   try {
-    // today.json — retried once on a concurrent write
-    for (let attempt = 0; attempt < 2; attempt++) {
-      const { sha } = await readFile(c, BRIEF_PATH);
-      try { await writeFile(c, BRIEF_PATH, text, sha, `brief: ${brief.updated}`); break; }
-      catch (e) { if (attempt === 1 || !(e.status === 409 || e.status === 422)) throw e; }
-    }
-    // one dated copy per day (best effort — never fails the request)
-    try {
-      const day = String(brief.today || brief.updated).slice(0, 10);
-      const hp = `${HISTORY_DIR}/${day}.json`;
-      const { sha } = await readFile(c, hp);
-      await writeFile(c, hp, text, sha, `brief history ${day}`);
-    } catch {}
+    // today.json + the dated copy in ONE commit, retried on branch races (lib/ghdata.js)
+    const day = String(brief.today || brief.updated).slice(0, 10);
+    await ghCommit(c, `brief: ${brief.updated}`, async () => [
+      { path: BRIEF_PATH, content: text },
+      { path: `${HISTORY_DIR}/${day}.json`, content: text },
+    ]);
     return json({ ok: true, updated: brief.updated });
   } catch (e) {
     return json({ error: e.message || 'write failed' }, 502);

@@ -12,6 +12,8 @@
 // The pool is appended by the weekly doctoranytime harvest (it writes to GitHub directly);
 // the CRM merges anything with a key it has not seen. Same env vars as /api/crm.
 
+import { mutateJson } from '@/lib/ghdata';
+
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
@@ -99,12 +101,6 @@ function cors(req) {
   return h;
 }
 export async function OPTIONS(req) { return new Response(null, { status: 204, headers: cors(req) }); }
-async function ghRaw(c, path, init = {}) {
-  return fetch(`https://api.github.com/repos/${c.repo}/contents/${path}`, {
-    ...init, cache: 'no-store',
-    headers: { Authorization: `Bearer ${c.token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'advon-pool', ...(init.headers || {}) },
-  });
-}
 const clean = (v, max) => String(v ?? '').replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, max);
 export async function POST(req) {
   const c = cfg();
@@ -117,24 +113,20 @@ export async function POST(req) {
     key: clean(l.key, 120), name: clean(l.name, 120), spec: clean(l.spec, 80), phone: clean(l.phone, 20).replace(/\D/g, ''), city: clean(l.city, 80), addr: clean(l.addr, 160),
     reviews: Math.max(0, parseInt(l.reviews, 10) || 0), score: l.score == null ? null : (parseFloat(l.score) || null), url: clean(l.url, 300), added: clean(l.added, 10) || new Date().toISOString().slice(0, 10), src: clean(l.src, 40) || 'harvest',
   })).filter((l) => l.key && l.name && l.phone.length >= 8);
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const res = await ghRaw(c, `${POOL_PATH}?ref=${encodeURIComponent(c.branch)}&t=${Date.now()}`);
-    let sha = null, pool = { updated: null, leads: [] };
-    if (res.ok) {
-      const meta = await res.json(); sha = meta.sha;
-      let text = '';
-      if (meta.content) text = Buffer.from(String(meta.content).replace(/\n/g, ''), 'base64').toString('utf8');
-      else { const raw = await ghRaw(c, `${POOL_PATH}?ref=${encodeURIComponent(c.branch)}&t=${Date.now()}`, { headers: { Accept: 'application/vnd.github.raw+json' } }); if (raw.ok) text = await raw.text(); }   // files over 1MB come back without content
-      try { pool = JSON.parse(text); } catch {}
-    }
-    else if (res.status !== 404) return new Response(JSON.stringify({ error: `GitHub read failed (${res.status})` }), { status: 502, headers: { ...NO_STORE, ...h } });
-    if (!Array.isArray(pool.leads)) pool.leads = [];
-    const have = new Set(pool.leads.map((l) => l.key));
-    const add = incoming.filter((l) => !have.has(l.key));
-    if (!add.length) return new Response(JSON.stringify({ added: 0, total: pool.leads.length }), { status: 200, headers: { ...NO_STORE, ...h } });
-    pool.leads.push(...add); pool.updated = new Date().toISOString();
-    const put = await ghRaw(c, POOL_PATH, { method: 'PUT', body: JSON.stringify({ message: `leads: +${add.length} from harvest`, content: Buffer.from(JSON.stringify(pool)).toString('base64'), branch: c.branch, ...(sha ? { sha } : {}) }) });
-    if (put.ok) return new Response(JSON.stringify({ added: add.length, total: pool.leads.length }), { status: 200, headers: { ...NO_STORE, ...h } });
-    if (!(put.status === 409 || put.status === 422) || attempt === 2) return new Response(JSON.stringify({ error: `GitHub write failed (${put.status})` }), { status: 502, headers: { ...NO_STORE, ...h } });
+  let added = 0, total = 0;
+  try {
+    await mutateJson(c, POOL_PATH, (pool) => {
+      if (!pool || typeof pool !== 'object') pool = { updated: null, leads: [] };
+      if (!Array.isArray(pool.leads)) pool.leads = [];
+      const have = new Set(pool.leads.map((l) => l.key));
+      const add = incoming.filter((l) => !have.has(l.key));
+      total = pool.leads.length + add.length; added = add.length;
+      if (!add.length) return undefined;                       // nothing new → no commit
+      pool.leads.push(...add); pool.updated = new Date().toISOString();
+      return pool;
+    }, `leads: +${incoming.length} from harvest`, { updated: null, leads: [] });
+  } catch (e) {
+    return new Response(JSON.stringify({ error: `GitHub write failed (${e.status || ''})`.trim() }), { status: 502, headers: { ...NO_STORE, ...h } });
   }
+  return new Response(JSON.stringify({ added, total }), { status: 200, headers: { ...NO_STORE, ...h } });
 }

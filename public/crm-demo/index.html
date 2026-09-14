@@ -1106,7 +1106,34 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 .home-row .hr-sub{font-size:11px; color:var(--muted);}
 .home-empty{padding:20px 12px; text-align:center; color:var(--muted); font-size:12.5px;}
 /* Home · Online bookings — meetings booked on the Zoho page or the Google booking page */
-.bk-card .home-card-body{display:flex; flex-direction:column; gap:6px;}
+.bk-strip{display:flex; flex-direction:column; gap:6px; padding:0 14px 14px;}
+/* Home · Client material — what clients sent through advonmedia.com/ylika */
+.intake-card .home-card-body{display:flex; flex-direction:column; gap:6px;}
+.in-row{display:grid; grid-template-columns:auto 1fr auto; gap:6px 12px; align-items:center; padding:10px 12px; border-radius:12px; background:var(--bg);}
+.in-row.new{background:linear-gradient(90deg,var(--violet-soft),var(--bg) 70%); border:1px solid rgba(124,92,255,.25);}
+.in-row .in-name{font-weight:800; font-size:13.5px;}
+.in-row .in-when{font-size:11.5px; color:var(--muted); font-weight:700; white-space:nowrap;}
+.in-row .in-sub{grid-column:2/4; font-size:12px; color:var(--muted); display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+.in-row .in-sub .note{color:var(--ink); font-style:italic;}
+.in-row .in-act{display:flex; gap:6px;}
+.in-row .in-act button,.in-row .in-act a{font-size:11.5px; font-weight:800; padding:6px 10px; border-radius:9px; border:1px solid var(--line); background:#fff; color:var(--ink); white-space:nowrap;}
+.in-row .in-act .go{background:var(--brand); color:#fff; border-color:transparent;}
+.in-tag{font-size:9.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; padding:2px 7px; border-radius:99px; background:var(--violet-soft); color:var(--violet);}
+.in-tag.done{background:var(--green-soft); color:var(--deep);}
+.intake-modal{max-width:860px;}
+.intake-modal .modal-body{max-height:78vh; overflow-y:auto;}
+.in-note{white-space:pre-wrap; background:var(--bg); border-radius:12px; padding:12px 14px; font-size:13.5px; line-height:1.5;}
+.in-files{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px;}
+.in-file{border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--bg); display:flex; flex-direction:column; min-height:120px;}
+.in-file .th{aspect-ratio:4/3; display:grid; place-items:center; background:#0F1420; color:#fff; font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; overflow:hidden;}
+.in-file .th img{width:100%; height:100%; object-fit:contain; display:block;}
+.in-file .fn{font-size:11px; padding:7px 9px; display:flex; justify-content:space-between; gap:6px; align-items:center;}
+.in-file .fn span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.in-file .fn a{font-weight:800; color:var(--brand); white-space:nowrap;}
+.in-foot{display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:12px; color:var(--muted);}
+.in-foot a,.in-foot button{font-size:12px; font-weight:800; padding:7px 11px; border-radius:9px; border:1px solid var(--line); background:#fff; color:var(--ink);}
+body.dark .in-row .in-act button,body.dark .in-row .in-act a,body.dark .in-foot a,body.dark .in-foot button{background:var(--surface);}
+.bk-strip:empty{display:none;}
 .bk-row{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; background:var(--bg); flex-wrap:wrap;}
 .bk-row.fresh{background:linear-gradient(90deg,var(--green-soft),var(--bg) 70%); border:1px solid rgba(14,198,115,.35);}
 .bk-when{font-family:'Sora'; font-weight:800; font-size:12px; color:var(--brand); min-width:132px; font-variant-numeric:tabular-nums;}
@@ -1336,6 +1363,10 @@ body.dark .bk-act button,body.dark .bk-tag{background:var(--surface);}
 .ld-lists button.on{background:linear-gradient(120deg,#10141F,#2A3548); color:#fff; border-color:transparent;}
 .ld-lists button.on .n{background:rgba(255,255,255,.18); color:#fff;}
 .ld-lists button.chk{border-style:dashed;}
+.ld-lists button.fresh{border-color:var(--green); box-shadow:0 0 0 3px var(--green-soft);}
+.ld-lists button.fresh .new{font-size:9px; font-weight:900; letter-spacing:.08em; background:var(--green); color:#fff; border-radius:99px; padding:2px 6px; margin-right:2px;}
+.ld-lists button.hot{border-color:var(--red); background:var(--red-soft); color:var(--red);}
+.ld-lists button.hot.on{background:var(--red); color:#fff;}
 .ld-lists .hint{font-size:11.5px; color:var(--muted); font-weight:600; margin-left:4px;}
 .ld-item .w-look{color:var(--brand); font-weight:700; display:inline-flex; align-items:center; gap:3px;}
 .ld-item .w-look .ic{width:1em; height:1em;}
@@ -1646,17 +1677,18 @@ body.dark .btn-ghost:hover{background:var(--bg);}
 <main class="view active" id="view-home">
   <div class="home-hero" id="homeHero"></div>
   <div class="home-grid">
-    <section class="home-card wide bk-card" id="bkCard">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--brand)" data-ic="calendar"></span><h3>Online bookings</h3><span class="hc-hint" id="bkHint"></span><button class="hc-link" id="bkRefresh">Check now</button></div>
-      <div class="home-card-body" id="bkBody"></div>
-    </section>
     <section class="home-card wide asap-card">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft);color:var(--red)" data-ic="flag"></span><h3>Do ASAP</h3><span class="hc-hint">Click a line to edit · 🔥 = super-high priority · drag ⋮⋮ to reorder</span></div>
       <div class="home-card-body asap-body" id="homeAsap"></div>
     </section>
     <section class="home-card wide meetings-card">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--blue)" data-ic="calendar"></span><h3>Booked meetings</h3><span class="hc-hint" id="homeWeekHint"></span><button class="hc-link" data-goto="calendar">Open calendar</button></div>
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--blue)" data-ic="calendar"></span><h3>Booked meetings</h3><span class="hc-hint" id="homeWeekHint"></span><button class="hc-link" id="bkRefresh" title="Read the booking calendar again now">Check calendar</button><button class="hc-link" data-goto="calendar">Open calendar</button></div>
       <div class="home-card-body" id="homeWeek"></div>
+      <div id="bkBody" class="bk-strip"></div>
+    </section>
+    <section class="home-card wide intake-card" id="intakeCard">
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--violet-soft);color:var(--violet)" data-ic="folder"></span><h3>Client material</h3><span class="hc-hint" id="intakeHint"></span><button class="hc-link" id="intakeRefresh" title="Look for new submissions now">Check now</button><a class="hc-link" href="/ylika" target="_blank" rel="noopener">Open /ylika ↗</a></div>
+      <div class="home-card-body" id="intakeBody"></div>
     </section>
     <section class="home-card">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--coral-soft);color:var(--coral)" data-ic="euro"></span><h3>Remaining to collect</h3><button class="hc-link" data-goto="remaining">Remaining</button></div>
@@ -2032,6 +2064,12 @@ body.dark .btn-ghost:hover{background:var(--bg);}
 </div>
 
 <!-- CONFLICT: the stored copy changed since this device loaded -->
+<div class="overlay" id="intakeOverlay">
+  <div class="modal intake-modal">
+    <div class="modal-head"><h3 id="intakeTitle">Material</h3><button class="modal-close" id="intakeClose" title="Close">✕</button></div>
+    <div class="modal-body" id="intakeModalBody"></div>
+  </div>
+</div>
 <div class="overlay" id="conflictOverlay">
   <div class="modal">
     <div class="modal-head">
@@ -4743,7 +4781,7 @@ function renderHome(){
   const hw=$('#homeWeek');
   const allMeet=state.clients.filter(c=>c.day && /^\d{4}-\d{2}-\d{2}$/.test(c.day) && !isTrashed(c) && c.day>=todayI)
     .sort((a,b)=>(a.day+(a.time||'99'))<(b.day+(b.time||'99'))?-1:1);
-  const hint=$('#homeWeekHint'); if(hint) hint.textContent= allMeet.length? allMeet.length+' booked · '+weekMeetings.length+' this week' : '';
+  const hint=$('#homeWeekHint'); if(hint){ hint.dataset.base= allMeet.length? allMeet.length+' booked · '+weekMeetings.length+' this week' : ''; hint.textContent=hint.dataset.base; }
   if(!allMeet.length) hw.innerHTML='<div class="home-empty">No meetings booked from today on. Book one from Quick Log or the Calendar.</div>';
   else {
     const tomorrowI=isoDate(new Date(Date.now()+864e5));
@@ -4754,7 +4792,7 @@ function renderHome(){
       const label=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
       return `<div class="hm-day${g.day===todayI?' today':''}">
         <div class="hm-date"><span class="hm-dow">${label}</span>${tag}<span class="hm-n">${g.items.length} meeting${g.items.length===1?'':'s'}</span></div>
-        ${g.items.map(c=>`<div class="home-row hm-row" data-open="${c.id}"><span class="hm-time">${c.time||'—'}</span><span class="hr-name">${esc(c.name)}</span><span class="hm-stage" style="background:${stageById(c.stage).cs};color:${stageById(c.stage).hex}">${stageById(c.stage).name}</span>${cval(c)?`<span class="hr-val">${fmtMoney(cval(c))}</span>`:''}</div>`).join('')}
+        ${g.items.map(c=>`<div class="home-row hm-row" data-open="${c.id}"><span class="hm-time">${c.time||'—'}</span><span class="hr-name">${esc(c.name)}</span>${c.fromBooking?`<span class="bk-tag ${c.bookingSrc==='zoho'?'zoho':'google'}" title="Booked online">${c.bookingSrc==='zoho'?'Zoho':c.bookingSrc==='google'?'Google':'Online'}</span>`:''}<span class="hm-stage" style="background:${stageById(c.stage).cs};color:${stageById(c.stage).hex}">${stageById(c.stage).name}</span>${cval(c)?`<span class="hr-val">${fmtMoney(cval(c))}</span>`:''}</div>`).join('')}
       </div>`;
     }).join('');
   }
@@ -4774,6 +4812,7 @@ function renderHome(){
   hs.innerHTML= subsDue.length? subsDue.map(s=>`<div class="home-row" data-goto="monthly"><span class="hr-name">${esc(s.name)}</span><span class="hr-sub">day ${s.renewDay}</span><span class="hr-val">${fmtMoney2(s.value)}</span></div>`).join('') : '<div class="home-empty">No subscriptions due in the next 7 days.</div>';
   renderAsap();
   renderBookings();
+  renderIntake();
   // high-priority notes
   const ht=$('#homeThink');
   ht.innerHTML = thinking.length
@@ -4811,9 +4850,19 @@ function ensureBk(){
   if(typeof b.auto!=='boolean') b.auto=true;
   return b;
 }
-const bkNorm=s=>String(s||'').toLowerCase().replace(/[^0-9a-zα-ωά-ώ]+/gi,'');
-/* «Σοφία Γουβιώτου» and «Γουβιώτου Σοφία» are the same person */
-const bkName=s=>String(s||'').toLowerCase().replace(/[^0-9a-zα-ωά-ώ\s]+/gi,' ').split(/\s+/).filter(Boolean).sort().join(' ');
+const bkFold=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ς/g,'σ');
+const bkNorm=s=>bkFold(s).replace(/[^0-9a-zα-ω]+/gi,'');
+/* «Σοφία Γουβιώτου» and «Γουβιώτου Σοφία» are the same person — accents ignored */
+const bkWords=s=>bkFold(s).replace(/[^0-9a-zα-ω\s]+/gi,' ').split(/\s+/).filter(w=>w.length>1);
+const bkName=s=>bkWords(s).sort().join(' ');
+/* the same person when every word of the shorter name is in the longer one and at least
+   one shared word is a real surname-length word: «Γουβιώτου» ⊂ «Σοφία Γουβιώτου» */
+function bkSamePerson(a,b){
+  const A=bkWords(a), B=bkWords(b); if(!A.length||!B.length) return false;
+  if(A.slice().sort().join(' ')===B.slice().sort().join(' ')) return true;
+  const [sh,lo]=A.length<=B.length?[A,B]:[B,A];
+  return sh.every(w=>lo.includes(w)) && sh.some(w=>w.length>=4);
+}
 const bkTel=s=>{ const d=String(s||'').replace(/\D/g,''); return d.length>=9? d.slice(-9) : ''; };
 /* The same person already on the Board? Same email, same phone, or the same
    name — in any word order. The day only has to agree for a booking still to
@@ -4827,7 +4876,7 @@ function bkMatchClient(b){
     if(c.fromBooking===b.uid) return true;
     if(e && String(c.email||'').toLowerCase()===e) return true;
     if(tel && bkTel(c.phone)===tel) return true;
-    return n && bkName(c.name)===n && (past || !c.day || c.day===b.day);
+    return n && bkSamePerson(c.name, b.name) && (past || !c.day || c.day===b.day);
   })||null;
 }
 function bkNew(){ const s=ensureBk().seen; return BK_LIST.filter(b=>b.uid && !s[b.uid]); }
@@ -4847,6 +4896,7 @@ function bkPut(b, quiet){
     if(b.phone && !hit.phone){ hit.phone=b.phone; changed=true; }
     if(b.email && !hit.email){ hit.email=b.email; changed=true; }
     if(!hit.fromBooking){ hit.fromBooking=b.uid; changed=true; }
+    if(!hit.bookingSrc && b.source){ hit.bookingSrc=b.source; changed=true; }
     if(changed) hit.updated=Date.now();
     bk.seen[b.uid]='matched';
     BK_DONE=BK_DONE.filter(x=>x.uid!==b.uid);
@@ -4856,7 +4906,7 @@ function bkPut(b, quiet){
   const notes=[b.service?('Κράτηση: '+b.service):'', b.ref?('#'+b.ref):'', b.meet||''].filter(Boolean).join(' · ');
   const c={id:uid(), name:b.name, value:0, day:b.day||'', time:b.time||'', stage:'booked',
     month:(b.day||todayIso()).slice(0,7), notes, phone:b.phone||'', email:b.email||'',
-    fromBooking:b.uid, created:Date.now(), updated:Date.now()};
+    fromBooking:b.uid, bookingSrc:b.source||'', created:Date.now(), updated:Date.now()};
   state.clients.push(c);
   bk.seen[b.uid]='added';
   BK_DONE=BK_DONE.filter(x=>x.uid!==b.uid);
@@ -4898,12 +4948,14 @@ const Bookings={
     if(this.state==='ok'){
       let folded=0;
       bkNew().forEach(b=>{ if(bkMatchClient(b)){ bkPut(b, true); folded++; } });
-      let added=0, matched=0;
-      if(ensureBk().auto){
-        const t=todayIso();
-        bkNew().filter(b=>b.day>=t).forEach(b=>{ const r=bkPut(b); if(r==='added') added++; else matched++; });
-      }
-      if(added||matched||folded){
+      let added=0, matched=0, past=0;
+      const t=todayIso();
+      /* every booking still to come goes straight on the Board — Booked meetings is the one place for all of them */
+      bkNew().filter(b=>b.day>=t).forEach(b=>{ const r=bkPut(b); if(r==='added') added++; else matched++; });
+      /* an older booking nobody on the Board carries (a meeting already had before the calendar was
+         connected, a no-show) is filed as seen — it stays in the calendar, it never asks to be added */
+      bkNew().filter(b=>!b.day || b.day<t).forEach(b=>{ ensureBk().seen[b.uid]='past'; past++; });
+      if(added||matched||folded||past){
         save();
         if(added) toast(added+' new booking'+(added===1?'':'s')+' added to the Board');
         else if(matched) toast('Booking matched to a client already on the Board');
@@ -4920,52 +4972,121 @@ const Bookings={
   }
 };
 function renderBookings(){
-  const body=$('#bkBody'), hint=$('#bkHint'); if(!body) return;
+  const body=$('#bkBody'), hint=$('#homeWeekHint'); if(!body) return;
   ensureBk();
-  const auto=state.meta.bk.auto;
-  const t=todayIso();
-  const waiting=bkNew().sort((a,b)=>(a.day+(a.time||'')).localeCompare(b.day+(b.time||'')));
   const parts=[];
   if(hint){
-    const when = Bookings.state==='loading' ? 'checking…'
-      : Bookings.lastAt ? 'checked '+relTime(new Date(Bookings.lastAt).toISOString())
-      : (Bookings.state==='off' ? 'sign in with sync to read the calendar' : 'not checked yet');
-    hint.innerHTML=`${esc(when)} · <label class="bk-auto"><input type="checkbox" id="bkAuto" ${auto?'checked':''}> add new ones on their own</label>`;
+    const when = Bookings.state==='loading' ? 'checking the calendar…'
+      : Bookings.lastAt ? 'calendar checked '+relTime(new Date(Bookings.lastAt).toISOString())
+      : (Bookings.state==='off' ? 'sign in with sync to read the booking calendar' : 'calendar not checked yet');
+    const base=hint.dataset.base||'';
+    hint.textContent=(base?base+' · ':'')+when;
   }
-  if(Bookings.state==='error') parts.push(`<div class="bk-err">Could not read the calendar — ${esc(Bookings.err)}</div>`);
-  if(Bookings.state==='off') parts.push('<div class="home-empty">Sign in on this device so the CRM can read your booking calendar.</div>');
-  BK_DONE.slice(0,6).forEach(x=>{
-    parts.push(`<div class="bk-row fresh"><span class="bk-when">${esc(x.when)}</span><span class="bk-name">${esc(x.name)}</span>
-      <span class="bk-tag done">${x.matched?'matched':'on the Board'}</span>
-      <span class="bk-act"><button data-open-bk="${esc(x.clientId)}">Open</button><button data-undo-bk="${esc(x.uid)}">Undo</button></span></div>`);
-  });
-  if(waiting.length){
-    parts.push(`<div class="bk-groupline">${auto?'Older bookings — add the ones you want':'Waiting to be added'}</div>`);
-    waiting.forEach(b=>{
-      const contact=[b.phone?`<a href="tel:${esc(b.phone)}">${esc(b.phone)}</a>`:'', b.email?`<a href="mailto:${esc(b.email)}">${esc(b.email)}</a>`:''].filter(Boolean).join('');
-      parts.push(`<div class="bk-row"><span class="bk-when">${esc(bkLabel(b))}</span><span class="bk-name">${esc(b.name)}</span>
-        <span class="bk-tag ${b.source==='zoho'?'zoho':'google'}">${b.source==='zoho'?'Zoho':'Google'}</span>
-        <span class="bk-act"><button class="go" data-add-bk="${esc(b.uid)}">Add to Board</button><button data-skip-bk="${esc(b.uid)}">Hide</button></span>
-        <span class="bk-sub bk-contact">${esc(b.service||'')}${contact?' · ':''}${contact}</span></div>`);
+  if(Bookings.state==='error') parts.push(`<div class="bk-err">Could not read the booking calendar — ${esc(Bookings.err)}</div>`);
+  if(Bookings.state==='off') parts.push('<div class="bk-err" style="background:var(--yellow-soft);color:#8a6d00">Sign in on this device so the CRM can read your booking calendar (Zoho + Google).</div>');
+  if(BK_DONE.length){
+    parts.push(`<div class="bk-groupline">Just in from the calendar</div>`);
+    BK_DONE.slice(0,6).forEach(x=>{
+      parts.push(`<div class="bk-row fresh"><span class="bk-when">${esc(x.when)}</span><span class="bk-name">${esc(x.name)}</span>
+        <span class="bk-tag done">${x.matched?'matched a client you had':'added to the Board'}</span>
+        <span class="bk-act"><button data-open-bk="${esc(x.clientId)}">Open</button><button data-undo-bk="${esc(x.uid)}">Undo</button></span></div>`);
     });
   }
-  if(!parts.length){
-    parts.push(BK_LIST.length
-      ? '<div class="home-empty">Every online booking is already on the Board.</div>'
-      : '<div class="home-empty">No online bookings yet. Anything booked on your Zoho page or your Google booking page lands here on its own.</div>');
-  }
   body.innerHTML=parts.join('');
-  const a=$('#bkAuto'); if(a) a.addEventListener('change',()=>{ ensureBk().auto=a.checked; save(); Bookings.settle(false); });
-  body.querySelectorAll('[data-add-bk]').forEach(el=>el.addEventListener('click',()=>{
-    const b=BK_LIST.find(x=>x.uid===el.dataset.addBk); if(!b) return;
-    const r=bkPut(b); save(); renderAll(); toast(r==='added'? b.name+' added to the Board' : b.name+' matched to a client you already had');
-  }));
-  body.querySelectorAll('[data-skip-bk]').forEach(el=>el.addEventListener('click',()=>{
-    ensureBk().seen[el.dataset.skipBk]='skipped'; save(); renderAll();
-  }));
+  body.style.display=parts.length?'':'none';
   body.querySelectorAll('[data-undo-bk]').forEach(el=>el.addEventListener('click',()=>bkUndo(el.dataset.undoBk)));
   body.querySelectorAll('[data-open-bk]').forEach(el=>el.addEventListener('click',()=>openModal(el.dataset.openBk)));
 }
+
+/* ---------- CLIENT MATERIAL (14 Sept 2026) ----------
+   Everything a client sends through advonmedia.com/ylika (last name + files + a note) lands in the
+   PRIVATE data repo, folder intake/<lastname-date>/. This card lists every submission (from
+   intake/queue.json via /api/intake?list=1) and opens the files right here — images as thumbnails,
+   everything else as a download — so nothing has to be looked up on GitHub. «Done» marks it handled
+   (written back to the queue, so the phone shows the same). */
+const INTAKE_URL='/api/intake';
+const Intake={ list:[], state:'idle', err:'', lastAt:0, busy:false, timer:null, urls:{},
+  async pull(manual){
+    if(this.busy) return;
+    if(window.DEMO_INTAKE){ this.list=window.DEMO_INTAKE.slice(); this.state='ok'; this.lastAt=Date.now(); renderIntake(); return; }
+    if(!SYNC_TOKEN){ this.state='off'; renderIntake(); return; }
+    this.busy=true; if(manual){ this.state='loading'; renderIntake(); }
+    try{
+      const res=await fetch(INTAKE_URL+'?list=1&t='+Date.now(), {headers:{'x-crm-auth':SYNC_TOKEN}, cache:'no-store'});
+      let p={}; try{ p=await res.json(); }catch(e){}
+      if(!res.ok || !p.ok){ this.state='error'; this.err=(p&&p.error)||('the server answered '+res.status); }
+      else { const before=new Set(this.list.map(x=>x.id)); this.list=Array.isArray(p.queue)?p.queue:[]; this.state='ok'; this.err=''; this.lastAt=Date.now();
+        const fresh=this.list.filter(x=>x.status==='new' && !before.has(x.id) && before.size); if(fresh.length) toast(fresh.length+' new material submission'+(fresh.length===1?'':'s')+' — '+fresh.map(x=>x.name).join(', ')); }
+    }catch(e){ this.state='error'; this.err=String((e&&e.message)||e); }
+    this.busy=false; if(manual && this.state==='ok') toast('Checked for new material');
+    renderIntake();
+  },
+  async setStatus(id, status){
+    const x=this.list.find(e=>e.id===id); if(!x) return; x.status=status; renderIntake();
+    if(window.DEMO_INTAKE || !SYNC_TOKEN) return;
+    try{ await fetch(INTAKE_URL+'?status=1', {method:'POST', headers:{'x-crm-auth':SYNC_TOKEN,'Content-Type':'application/json'}, body:JSON.stringify({id, status})}); }catch(e){ toast('Could not save that — will show again on the next check'); }
+  },
+  /* the files are private: fetched with the sync token and shown from memory */
+  async fileUrl(path){
+    if(this.urls[path]) return this.urls[path];
+    if(window.DEMO_INTAKE) return '';
+    const res=await fetch(INTAKE_URL+'?file='+encodeURIComponent(path), {headers:{'x-crm-auth':SYNC_TOKEN}, cache:'no-store'});
+    if(!res.ok) throw new Error('file '+res.status);
+    const u=URL.createObjectURL(await res.blob()); this.urls[path]=u; return u;
+  },
+  start(){ this.pull(false); clearInterval(this.timer); this.timer=setInterval(()=>this.pull(false), 15*60*1000); }
+};
+const inIsImg=n=>/\.(jpe?g|png|webp|gif|bmp|svg)$/i.test(String(n||''));
+function renderIntake(){
+  const body=$('#intakeBody'), hint=$('#intakeHint'); if(!body) return;
+  const list=Intake.list||[]; const open=list.filter(x=>x.status==='new');
+  if(hint) hint.textContent= Intake.state==='loading'?'checking…' : Intake.state==='off'?'sign in with sync to see submissions' : (open.length? open.length+' waiting' : (list.length? 'all handled' : ''))+(Intake.lastAt?' · checked '+relTime(new Date(Intake.lastAt).toISOString()):'');
+  const parts=[];
+  if(Intake.state==='error') parts.push(`<div class="bk-err">Could not read the submissions — ${esc(Intake.err)}</div>`);
+  const shown=list.slice(0,12);
+  if(!shown.length && Intake.state==='ok') parts.push('<div class="home-empty">Nothing sent yet. When a client uses advonmedia.com/ylika, their files and note appear here — and the Intake builder starts the first draft.</div>');
+  shown.forEach(x=>{
+    const n=+x.files||0;
+    parts.push(`<div class="in-row${x.status==='new'?' new':''}">
+      <span class="in-when">${esc(relTime(x.at))}</span>
+      <span class="in-name">${esc(x.name)}${x.spec?` <span style="font-weight:600;color:var(--muted)">· ${esc(x.spec)}</span>`:''} <span class="in-tag${x.status==='done'?' done':''}">${x.status==='done'?'handled':'new'}</span></span>
+      <span class="in-act"><button class="go" data-in-open="${esc(x.id)}">Open</button>${x.status==='done'?`<button data-in-status="new" data-id="${esc(x.id)}">Reopen</button>`:`<button data-in-status="done" data-id="${esc(x.id)}">Done</button>`}</span>
+      <span class="in-sub"><span>${n} file${n===1?'':'s'}</span>${x.transfer?`<a href="${esc(x.link||'#')}" target="_blank" rel="noopener" style="font-weight:800;color:var(--brand)">transfer link ↗</a>`:''}${x.note?`<span class="note">“${esc(String(x.note).slice(0,140))}${String(x.note).length>140?'…':''}”</span>`:''}</span>
+    </div>`);
+  });
+  if(list.length>12) parts.push(`<div class="home-empty">${list.length-12} older submission${list.length-12===1?'':'s'} not shown</div>`);
+  body.innerHTML=parts.join('');
+  body.querySelectorAll('[data-in-open]').forEach(el=>el.addEventListener('click',()=>openIntake(el.dataset.inOpen)));
+  body.querySelectorAll('[data-in-status]').forEach(el=>el.addEventListener('click',()=>Intake.setStatus(el.dataset.id, el.dataset.inStatus)));
+}
+async function openIntake(id){
+  const x=(Intake.list||[]).find(e=>e.id===id); if(!x) return;
+  const ov=$('#intakeOverlay'), b=$('#intakeModalBody'); $('#intakeTitle').textContent=x.name+' · '+relTime(x.at);
+  const files=Array.isArray(x.list)?x.list:[];
+  const client=state.clients.find(c=>!isTrashed(c) && bkSamePerson(c.name, x.name));
+  b.innerHTML=`${x.note?`<div class="in-note">${esc(x.note)}</div>`:'<div class="home-empty">No note — just the files.</div>'}
+    ${x.transfer?`<div class="in-foot"><a href="${esc(x.link||'#')}" target="_blank" rel="noopener">Open the transfer link ↗</a><span>large files were sent by link</span></div>`:''}
+    <div class="in-files">${files.map((f,i)=>`<div class="in-file" data-i="${i}"><div class="th">${inIsImg(f.name)?'…':esc((String(f.name).split('.').pop()||'file').slice(0,5))}</div><div class="fn"><span title="${esc(f.name)}">${esc(f.name)}</span><a href="#" data-dl="${i}">↓</a></div></div>`).join('')||'<div class="home-empty">No files in this submission.</div>'}</div>
+    <div class="in-foot">
+      ${client?`<button data-open-client="${esc(client.id)}">Open ${esc(client.name)} on the Board</button>`:''}
+      <a href="https://github.com/agelmet/advon-crm-data/tree/main/intake/${esc(x.id)}" target="_blank" rel="noopener">See the folder on GitHub ↗</a>
+      ${x.status==='done'?`<button data-in-status="new">Mark as new</button>`:`<button data-in-status="done" style="background:var(--brand);color:#fff;border-color:transparent">Done — handled</button>`}
+      <span>${files.length} file${files.length===1?'':'s'} · id ${esc(x.id)}</span>
+    </div>`;
+  ov.classList.add('open');
+  const oc=b.querySelector('[data-open-client]'); if(oc) oc.addEventListener('click',()=>{ ov.classList.remove('open'); openModal(oc.dataset.openClient); });
+  b.querySelectorAll('[data-in-status]').forEach(el=>el.addEventListener('click',()=>{ Intake.setStatus(x.id, el.dataset.inStatus); ov.classList.remove('open'); }));
+  b.querySelectorAll('[data-dl]').forEach(el=>el.addEventListener('click',async e=>{ e.preventDefault(); const f=files[+el.dataset.dl]; try{ const u=await Intake.fileUrl(f.path); if(!u) return; const a=document.createElement('a'); a.href=u; a.download=f.name; document.body.appendChild(a); a.click(); a.remove(); }catch(err){ toast('Could not fetch that file'); } }));
+  /* thumbnails, lazily */
+  for(const [i,f] of files.entries()){
+    if(!inIsImg(f.name)) continue;
+    const th=b.querySelector(`.in-file[data-i="${i}"] .th`); if(!th) continue;
+    try{ const u=await Intake.fileUrl(f.path); if(u) th.innerHTML=`<img src="${u}" alt="">`; else th.textContent='IMG'; }catch(err){ th.textContent='IMG'; }
+  }
+}
+$('#intakeClose').addEventListener('click',()=>$('#intakeOverlay').classList.remove('open'));
+$('#intakeOverlay').addEventListener('click',e=>{ if(e.target.id==='intakeOverlay') e.currentTarget.classList.remove('open'); });
+$('#intakeRefresh').addEventListener('click',()=>Intake.pull(true));
 
 /* ---------- Do ASAP — numbered quick list on Home (free text, 🔥 = super-high priority) ---------- */
 let dragAsapId=null;
@@ -5280,9 +5401,23 @@ let ldShownBy={};
    {lists:{key:{t:'title', sub:'what it is', check:true}}, leads:[{key,name,list,ord,phone?,city,spec,note}]}.
    A list with check:true holds names still to be looked up (usually no phone yet, might already have a website) —
    the Trash button removes such a name for good (remembered in meta.ld.trash so a later pull never brings it back). */
-const LD_LISTS={new:{t:'New leads', sub:'pulled from the harvest · phone + no website'}};
-function ldLists(){ ensureLeads(); return Object.assign({}, LD_LISTS, state.meta.ld.lists||{}); }
-const ldListOf=l=>l.list||'new';
+/* Built-in categories. 'ads' = people who filled in the form on the ads page (advonmedia.com/dorean) —
+   the hottest leads there are, call within 5 minutes. 'new' = the harvest, but every harvest is shown
+   as ITS OWN category by date («Newly scraped · 21 Sept», then «Scraped 12 Sept»…) so a fresh batch
+   is never mixed into the older ones. */
+const LD_LISTS={ads:{t:'From the ads', sub:'filled in the form on the ads page · call within 5 minutes', hot:true}, new:{t:'New leads', sub:'pulled from the harvest · phone + no website'}};
+const ldBatchKey=l=>'new:'+l.batch;
+function ldBatchTitle(d, newest){ const dt=new Date(d+'T00:00'); const lab=isNaN(dt)?d:dt.toLocaleDateString('en-GB',{day:'numeric',month:'short'}); return (newest?'Newly scraped · ':'Scraped ')+lab; }
+function ldLists(){
+  ensureLeads();
+  const L={ads:LD_LISTS.ads};
+  /* one category per harvest date, newest first; the newest open batch is the highlighted one */
+  const dates=[...new Set(state.leads.filter(l=>(l.list||'new')==='new' && l.batch && ldOpen(l)).map(l=>l.batch))].sort().reverse();
+  dates.forEach((d,i)=>{ L['new:'+d]={t:ldBatchTitle(d,i===0), sub:'pulled from the harvest on '+fmtDay(d)+' · phone + no website', fresh:i===0, batch:d}; });
+  if(state.leads.some(l=>(l.list||'new')==='new' && !l.batch)) L.new=LD_LISTS.new;
+  return Object.assign(L, state.meta.ld.lists||{});
+}
+const ldListOf=l=>((l.list||'new')==='new' && l.batch) ? ldBatchKey(l) : (l.list||'new');
 function ldListInfo(k){ const L=ldLists(); return L[k]||{t:k}; }
 const ldIsCheck=l=>!!ldListInfo(ldListOf(l)).check;
 const ldLookup=l=>'https://www.google.com/search?q='+encodeURIComponent([l.name, ldSpecShort(l)||'', l.city||''].filter(Boolean).join(' '));
@@ -5296,7 +5431,9 @@ function ensureLeads(){
   if(!state.meta.ld.trash || typeof state.meta.ld.trash!=='object') state.meta.ld.trash={};
   if(!Array.isArray(state.meta.ld.trashed)) state.meta.ld.trashed=[];
   if(!state.meta.ld.lists || typeof state.meta.ld.lists!=='object') state.meta.ld.lists={};
-  state.leads.forEach(l=>{ if(!l.status) l.status='new'; if(!Array.isArray(l.tries)) l.tries=[]; if(!l.id) l.id=uid(); if(!l.list) l.list='new'; if(l.phone==null) l.phone=''; });
+  state.leads.forEach(l=>{ if(!l.status) l.status='new'; if(!Array.isArray(l.tries)) l.tries=[]; if(!l.id) l.id=uid(); if(!l.list) l.list='new'; if(l.phone==null) l.phone='';
+    /* every harvest lead belongs to the batch of the day it was scraped */
+    if(l.list==='new' && !l.batch) l.batch=String(l.added||'').slice(0,10)||todayIso(); });
   return state.meta.ld;
 }
 const ldSpecShort=l=>String(l.spec||'').split('/')[0].trim();
@@ -5312,7 +5449,8 @@ function ldMerge(list, src){
     const phone=String(p.phone||'').replace(/\D/g,''); const lk=String(p.list||'').trim();
     if(!phone && !lk) return;   /* harvest leads must carry a phone; names on Angelo's own lists may still be looked up */
     have.add(p.key); n++;
-    state.leads.push({id:uid(), key:p.key, name:String(p.name).trim(), spec:String(p.spec||'').trim(), city:String(p.city||'').trim(), addr:String(p.addr||'').trim(), phone, reviews:+p.reviews||0, score:p.score!=null?+p.score:null, url:String(p.url||''), added:p.added||todayIso(), src:p.src||src||'import', list:lk||'new', ord:p.ord!=null?+p.ord:null, note:String(p.note||'').trim(), status:'new', tries:[], created:Date.now()});
+    const added=String(p.added||todayIso()).slice(0,10);
+    state.leads.push({id:uid(), key:p.key, name:String(p.name).trim(), spec:String(p.spec||'').trim(), city:String(p.city||'').trim(), addr:String(p.addr||'').trim(), phone, reviews:+p.reviews||0, score:p.score!=null?+p.score:null, url:String(p.url||''), added, src:p.src||src||'import', list:lk||'new', batch:(lk||'new')==='new'?added:undefined, at:p.at||'', ord:p.ord!=null?+p.ord:null, note:String(p.note||'').trim(), status:'new', tries:[], created:Date.now()});
   });
   return n;
 }
@@ -5330,7 +5468,7 @@ const Leads={
       const n=ldMerge(data.leads||[], 'harvest');
       this.lastAt=Date.now();
       state.meta.ld.poolAt=data.updated||''; state.meta.ld.pulledAt=Date.now();
-      if(n||changed){ save(); renderLeads(); renderHome(); if(n) toast(n+' new lead'+(n>1?'s':'')+' added'+(n===1?'':' — see the categories above the list')); }
+      if(n||changed){ save(); renderLeads(); renderHome(); if(n){ const L=ldLists(); const fresh=Object.keys(L).find(k=>L[k].fresh); const ads=state.leads.filter(l=>l.list==='ads'&&ldOpen(l)&&Date.now()-(l.created||0)<60000).length; toast(n+' new lead'+(n>1?'s':'')+' added'+(ads?' — '+ads+' from the ads, call now':(fresh?' — in their own category «'+L[fresh].t+'»':''))); } }
       else { if(manual) toast('No new leads since the last harvest'); renderLdBanner(); }
     }catch(e){ if(manual) toast('Could not fetch leads: '+(e.message||'network')); }
     finally{ this.busy=false; }
@@ -5500,6 +5638,7 @@ function ldItemEl(l){
   if(l.url) meta.push(`<a href="${esc(l.url)}" target="_blank" rel="noopener" style="color:var(--brand);font-weight:700;">doctoranytime ↗</a>`);
   if(ldIsCheck(l) || !l.url) meta.push(`<a class="w-look" href="${esc(ldLookup(l))}" target="_blank" rel="noopener" title="Google this name — website or not?">${IC.search} Google</a><a class="w-look" href="${esc(ldMaps(l))}" target="_blank" rel="noopener" title="Google Maps — phone + website">Maps</a>`);
   if(!ldFilter.list && ldListOf(l)!=='new' && ldOpen(l)) meta.push(`<span class="w-list">${esc(ldListInfo(ldListOf(l)).t||'')}</span>`);
+  if(l.list==='ads' && l.at){ const m=Math.max(0,Math.round((Date.now()-Date.parse(l.at))/60000)); meta.push(`<span class="w-try${m<=15?' hot':''}" title="Filled in the ads form">🔥 ads form · ${m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'} ago${m<=5?' · CALL NOW':''}</span>`); }
   if(l.note) meta.push(`<span class="w-note">${esc(l.note)}</span>`);
   if(l.status==='na'){ const n=l.tries.length; meta.push(`<span class="w-try${n>=3?' hot':''}">${IC.hourglass} called ${l.tries.map(fmtDay).join(', ')} · ${n} ${n===1?'try':'tries'}</span>`); }
   if(!ldOpen(l)){ const t={g:'Booked',y:'SMS sent',r:'No',x:'Dropped'}[l.status]; meta.push(`<span class="w-out ${l.status==='x'?'':l.status}">${t}${l.doneAt?' · '+fmtDay(isoDate(new Date(l.doneAt))):''}</span>`); }
@@ -5583,7 +5722,7 @@ function renderLdLists(){
   state.leads.forEach(l=>{ if(!ldOpen(l)) return; all++; const k=ldListOf(l); cnt[k]=(cnt[k]||0)+1; });
   const keys=Object.keys(L).concat(Object.keys(cnt).filter(k=>!L[k]));
   el.innerHTML=`<button class="${ldFilter.list?'':'on'}" data-list="">All <span class="n">${all}</span></button>`+
-    keys.map(k=>`<button class="${ldFilter.list===k?'on':''}${L[k]&&L[k].check?' chk':''}" data-list="${esc(k)}" title="${esc((L[k]&&L[k].sub)||'')}">${esc((L[k]&&L[k].t)||k)} <span class="n">${cnt[k]||0}</span></button>`).join('')+
+    keys.filter(k=>cnt[k] || (L[k]&&!L[k].batch&&k!=='ads') || (ldFilter.list===k)).map(k=>`<button class="${ldFilter.list===k?'on':''}${L[k]&&L[k].check?' chk':''}${L[k]&&L[k].fresh?' fresh':''}${L[k]&&L[k].hot?' hot':''}" data-list="${esc(k)}" title="${esc((L[k]&&L[k].sub)||'')}">${L[k]&&L[k].fresh?'<b class="new">NEW</b>':''}${L[k]&&L[k].hot?'🔥 ':''}${esc((L[k]&&L[k].t)||k)} <span class="n">${cnt[k]||0}</span></button>`).join('')+
     (ldFilter.list && L[ldFilter.list] && L[ldFilter.list].sub? `<span class="hint">${esc(L[ldFilter.list].sub)}</span>`:'');
   el.querySelectorAll('[data-list]').forEach(b=>b.addEventListener('click',()=>{ ldFilter.list=b.dataset.list; state.meta.ld.list=ldFilter.list; ldShown=LD_PAGE; ldShownBy={}; ldBookingFor=null; delete state.meta.ld.focus; save(); renderLeads(); }));
 }
@@ -6056,7 +6195,7 @@ $('#restoreFile').addEventListener('change',e=>{
 /* ---------- init ---------- */
 function unlockUI(){ $('#loginScreen').style.display='none'; document.body.classList.remove('locked'); }
 function lockUI(){ $('#loginScreen').style.display='grid'; document.body.classList.add('locked'); $('#loginErr').style.display='none'; $('#loginPass').value=''; setTimeout(()=>$('#loginUser').focus(),50); }
-function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); if(migrateCallStats()){ save(); setTimeout(()=>toast('Cold-call statistics cleared — every month and the year start from your next logged call'),900); } renderAll(); Bookings.start(); }
+function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); if(migrateCallStats()){ save(); setTimeout(()=>toast('Cold-call statistics cleared — every month and the year start from your next logged call'),900); } renderAll(); Bookings.start(); setTimeout(()=>Intake.start(),2500); }
 let loggingIn=false;
 async function tryLogin(){
   if(loggingIn) return;
@@ -6096,6 +6235,13 @@ $('#logoutBtn').addEventListener('click',()=>{ state=demoSeed(); normalizeState(
    ============================================================ */
 function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
 /* the demo has no calendar behind it — these stand in for real online bookings */
+window.DEMO_INTAKE=(function(){
+  const ago=h=>new Date(Date.now()-h*3600e3).toISOString();
+  return [
+    {id:'papadopoulou-demo', name:'Παπαδοπούλου', spec:'', at:ago(3), files:6, transfer:false, status:'new', note:'Σας στέλνω 5 φωτογραφίες του ιατρείου και το λογότυπο. Θα ήθελα κάτι φωτεινό, όχι σκούρα χρώματα.', link:'', list:[{name:'iatreio-1.jpg'},{name:'iatreio-2.jpg'},{name:'iatreio-3.jpg'},{name:'portrait.jpg'},{name:'logo.png'},{name:'viografiko.pdf'}]},
+    {id:'nikolaou-demo', name:'Νικολάου', spec:'', at:ago(30), files:2, transfer:true, status:'done', note:'', link:'https://we.tl/example', list:[{name:'logo.svg'},{name:'keimena.docx'}]},
+  ];
+})();
 window.DEMO_BOOKINGS=(function(){
   const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   const day=n=>{ const d=new Date(); d.setDate(d.getDate()+n); return iso(d); };
