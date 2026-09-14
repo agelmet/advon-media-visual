@@ -88,7 +88,7 @@ export default function Reviews() {
                 {[1, 2, 3, 4, 5].map((s) => <GoogleStar key={s} className="w-6 h-6" />)}
               </div>
               <span className="text-[#5f6368] font-medium text-sm">
-                110+ {lang === 'el' ? 'αξιολογήσεις στη Google' : 'reviews on Google'}
+                120+ {lang === 'el' ? 'αξιολογήσεις στη Google' : 'reviews on Google'}
               </span>
             </div>
           </div>
@@ -122,8 +122,8 @@ export default function Reviews() {
           <div className="text-center mt-8">
             <span className="text-gray-500 text-xs">
               {lang === 'el'
-                ? 'Εμφανίζονται 110+ πραγματικές αξιολογήσεις από τη Google'
-                : 'Showing 110+ real reviews from Google'}
+                ? 'Εμφανίζονται 120+ πραγματικές αξιολογήσεις από τη Google'
+                : 'Showing 120+ real reviews from Google'}
             </span>
           </div>
         </ScrollReveal>

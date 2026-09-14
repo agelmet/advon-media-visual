@@ -1,4 +1,4 @@
-// components/ReviewsColumns.jsx — the 110+ review cards and their auto-scrolling columns.
+// components/ReviewsColumns.jsx — the 120+ review cards and their auto-scrolling columns.
 // Loaded on demand by Reviews.jsx only when the section is about to scroll into view, so the
 // home page's first paint no longer carries 220 cards of HTML and the 70KB review list.
 'use client';
