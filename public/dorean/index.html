@@ -279,7 +279,18 @@ footer nav a:hover{color:var(--ink)}
 .sprog i{display:block;height:100%;transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,#5AD4FF,var(--cyan) 40%,var(--blue));box-shadow:0 0 12px rgba(71,200,245,.8)}
 
 /* hero starfield + pointer spotlight */
-#stars{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.9}
+#starwrap{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+#stars{position:absolute;left:0;top:0;width:100%;height:200%;opacity:.9;animation:drift 120s linear infinite;will-change:transform}
+@keyframes drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-50%,0)}}
+.shoot{position:absolute;top:0;left:0;width:170px;height:1.6px;border-radius:2px;opacity:0;
+  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.9));transform-origin:100% 50%;
+  animation:shoot 14s cubic-bezier(.2,.4,.6,1) infinite}
+.shoot.b{animation-duration:19s;animation-delay:7s}
+@keyframes shoot{
+  0%{opacity:0;transform:translate3d(4vw,12vh,0) rotate(24deg) scaleX(.2)}
+  2%{opacity:.9}
+  9%{opacity:0;transform:translate3d(46vw,34vh,0) rotate(24deg) scaleX(1)}
+  100%{opacity:0;transform:translate3d(46vw,34vh,0) rotate(24deg) scaleX(1)}}
 .spot{position:absolute;width:760px;height:760px;border-radius:50%;z-index:2;pointer-events:none;opacity:0;transition:opacity .5s ease;
   background:radial-gradient(circle at center,rgba(71,200,245,.12),rgba(71,200,245,.05) 38%,transparent 68%);
   transform:translate3d(var(--sx,-999px),var(--sy,-999px),0) translate(-50%,-50%)}
@@ -337,9 +348,9 @@ h1 .grad{background:linear-gradient(120deg,#8BE3FF 0%,var(--cyan) 28%,#7FA8FF 50
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
 @media (prefers-reduced-motion:reduce){
-  h1 .grad,.badge-free,.btn-primary.pulse::before,.price .zero,.rc{animation:none}
+  h1 .grad,.badge-free,.btn-primary.pulse::before,.price .zero,.rc,#stars,.shoot{animation:none}
   .price .zero{background:none;-webkit-text-fill-color:currentColor;color:var(--coal)}
-  .spot,#stars{display:none}
+  .spot,#starwrap{display:none}
 }
 
 /* reveal */
@@ -369,7 +380,7 @@ h1 .grad{background:linear-gradient(120deg,#8BE3FF 0%,var(--cyan) 28%,#7FA8FF 50
 <section class="hero">
   <div class="orb a" aria-hidden="true"></div>
   <div class="orb b" aria-hidden="true"></div>
-  <canvas id="stars" aria-hidden="true"></canvas>
+  <div id="starwrap" aria-hidden="true"><canvas id="stars"></canvas><i class="shoot"></i><i class="shoot b"></i></div>
   <div class="spot" aria-hidden="true"></div>
   <div class="wrap">
     <div>
@@ -944,63 +955,34 @@ const UTM = (function(){
 })();
 
 /* ---------- hero starfield ----------
-   Small, cheap and honest: one sprite reused for every star, 30fps, paused the
-   moment the hero leaves the screen or the tab goes to the background. */
+   Painted ONCE into a canvas that is twice the hero's height (the same field drawn in
+   both halves), then drifted with a CSS transform. No animation loop, nothing repaints:
+   a permanent requestAnimationFrame here kept the whole hero re-compositing. */
 (function(){
   const c = document.getElementById('stars');
-  if (!c || matchMedia('(prefers-reduced-motion: reduce)').matches) { if (c) c.remove(); return; }
-  const ctx = c.getContext('2d', { alpha: true });
-  const hero = c.closest('.hero');
-  let w = 0, h = 0, dpr = Math.min(2, devicePixelRatio || 1), stars = [], shoot = null, running = true, last = 0, raf = 0;
-
-  const sprite = document.createElement('canvas'); sprite.width = sprite.height = 16;
-  (function(){ const s = sprite.getContext('2d'); const g = s.createRadialGradient(8, 8, 0, 8, 8, 8);
-    g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.35, 'rgba(200,235,255,.55)'); g.addColorStop(1, 'rgba(160,215,255,0)');
-    s.fillStyle = g; s.fillRect(0, 0, 16, 16); })();
-
-  function size(){
-    const r = hero.getBoundingClientRect(); w = r.width; h = r.height;
-    c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
-    c.style.width = w + 'px'; c.style.height = h + 'px';
+  if (!c || matchMedia('(prefers-reduced-motion: reduce)').matches) { const wr = document.getElementById('starwrap'); if (wr) wr.remove(); return; }
+  const hero = c.closest('.hero'), ctx = c.getContext('2d');
+  function paint(){
+    const r = hero.getBoundingClientRect();
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    const w = Math.max(320, r.width), h = Math.max(320, r.height);
+    c.width = Math.round(w * dpr); c.height = Math.round(h * 2 * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const n = Math.round(Math.min(110, (w * h) / 14000));
-    stars = Array.from({ length: n }, () => ({
-      x: Math.random() * w, y: Math.random() * h,
-      r: Math.random() * 1.5 + .5, a: Math.random() * .55 + .2,
-      tw: Math.random() * .012 + .004, p: Math.random() * Math.PI * 2, vy: Math.random() * .05 + .015,
-    }));
-  }
-  function frame(t){
-    raf = 0;
-    if (!running) return;
-    if (t - last > 33) {
-      last = t;
-      ctx.clearRect(0, 0, w, h);
-      for (const s of stars) {
-        s.p += s.tw; s.y -= s.vy; if (s.y < -4) { s.y = h + 4; s.x = Math.random() * w; }
-        const a = s.a * (.55 + .45 * Math.sin(s.p));
-        const d = s.r * 7;
-        ctx.globalAlpha = a;
-        ctx.drawImage(sprite, s.x - d / 2, s.y - d / 2, d, d);
-      }
-      ctx.globalAlpha = 1;
-      if (!shoot && Math.random() < .006) shoot = { x: Math.random() * w * .7, y: Math.random() * h * .45, len: 0, life: 0 };
-      if (shoot) {
-        shoot.life++; shoot.len = Math.min(150, shoot.len + 11); shoot.x += 9; shoot.y += 4.2;
-        const g = ctx.createLinearGradient(shoot.x, shoot.y, shoot.x - shoot.len, shoot.y - shoot.len * .46);
-        g.addColorStop(0, 'rgba(255,255,255,.85)'); g.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.strokeStyle = g; ctx.lineWidth = 1.6; ctx.beginPath();
-        ctx.moveTo(shoot.x, shoot.y); ctx.lineTo(shoot.x - shoot.len, shoot.y - shoot.len * .46); ctx.stroke();
-        if (shoot.life > 46 || shoot.x > w + 80) shoot = null;
+    ctx.clearRect(0, 0, w, h * 2);
+    const n = Math.round(Math.min(130, (w * h) / 12000));
+    for (let i = 0; i < n; i++) {
+      const x = Math.random() * w, y = Math.random() * h, rad = Math.random() * 1.25 + .35, a = Math.random() * .6 + .18;
+      for (const oy of [0, h]) {
+        const g = ctx.createRadialGradient(x, y + oy, 0, x, y + oy, rad * 3.4);
+        g.addColorStop(0, `rgba(255,255,255,${a})`);
+        g.addColorStop(.4, `rgba(205,236,255,${a * .45})`);
+        g.addColorStop(1, 'rgba(160,215,255,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y + oy, rad * 3.4, 0, 6.284); ctx.fill();
       }
     }
-    raf = requestAnimationFrame(frame);
   }
-  const start = () => { if (!raf && running) raf = requestAnimationFrame(frame); };
-  size(); start();
-  addEventListener('resize', () => { dpr = Math.min(2, devicePixelRatio || 1); size(); }, { passive: true });
-  document.addEventListener('visibilitychange', () => { running = !document.hidden; start(); });
-  if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { running = e.isIntersecting && !document.hidden; start(); }, { threshold: 0 }).observe(hero);
+  paint();
+  let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(paint, 250); }, { passive: true });
 })();
 
 /* ---------- the numbers count up when the band is reached ---------- */
