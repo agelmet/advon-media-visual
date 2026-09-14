@@ -100,7 +100,7 @@ h1 .grad{background:linear-gradient(120deg,#8BE3FF,var(--cyan) 45%,#7FA8FF);-web
 .frame.f1{z-index:2;opacity:.62;transform:translate3d(0,-22px,-90px) scale(.955)}
 .frame.f2{z-index:1;opacity:.32;transform:translate3d(0,-42px,-180px) scale(.91)}
 .frame.f3{z-index:0;opacity:0;transform:translate3d(0,-60px,-260px) scale(.86)}
-.stack .cap{position:absolute;left:14px;bottom:14px;z-index:4;background:rgba(7,11,18,.78);backdrop-filter:blur(8px);border:1px solid var(--line2);border-radius:12px;padding:8px 12px;font-size:12.5px;color:var(--ink2);display:flex;align-items:center;gap:8px;transition:opacity .4s}
+.stack .cap{position:absolute;left:14px;bottom:14px;z-index:4;transition:opacity .16s ease;background:rgba(7,11,18,.78);backdrop-filter:blur(8px);border:1px solid var(--line2);border-radius:12px;padding:8px 12px;font-size:12.5px;color:var(--ink2);display:flex;align-items:center;gap:8px}
 .stack .cap b{color:var(--ink)}
 .stack .cap i{width:6px;height:6px;border-radius:50%;background:var(--green)}
 .badge-free{position:absolute;right:-8px;top:-18px;z-index:5;background:var(--paper);color:var(--coal);border-radius:16px;padding:12px 16px;box-shadow:0 20px 40px -18px rgba(0,0,0,.9);transform:rotate(3deg);font-weight:800;line-height:1.05}
@@ -642,7 +642,9 @@ const REVIEWS = [
 const NICHES = ['Ψυχολόγοι','Οδοντίατροι','Παιδίατροι','Καρδιολόγοι','Παθολόγοι','Φυσικοθεραπευτές','Διαιτολόγοι','Λογοθεραπευτές','Ψυχοθεραπευτές','Δικηγόροι','Λογιστές','Κομμωτήρια','Εστίαση','Νευροχειρουργοί','Γυναικολόγοι'];
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const pic = (key, sizes, lazy) => `<picture><source type="image/avif" srcset="/img/work/${key}-600.avif 600w, /img/work/${key}-800.avif 800w, /img/work/${key}-1400.avif 1400w" sizes="${sizes}"><img src="/img/work/${key}-800.webp" srcset="/img/work/${key}-600.webp 600w, /img/work/${key}-800.webp 800w, /img/work/${key}-1400.webp 1400w" sizes="${sizes}" width="800" height="458" alt="" ${lazy?'loading="lazy" decoding="async"':'fetchpriority="high"'}></picture>`;
+/* `mode`: 'hero' = the first mockup (highest priority), 'eager' = the other hero frames
+   (they sit behind a 3D transform, where Chrome's lazy-loading never fires), 'lazy' = the grid. */
+const pic = (key, sizes, mode) => `<picture><source type="image/avif" srcset="/img/work/${key}-600.avif 600w, /img/work/${key}-800.avif 800w, /img/work/${key}-1400.avif 1400w" sizes="${sizes}"><img src="/img/work/${key}-800.webp" srcset="/img/work/${key}-600.webp 600w, /img/work/${key}-800.webp 800w, /img/work/${key}-1400.webp 1400w" sizes="${sizes}" width="800" height="458" alt="" ${mode==='lazy'?'loading="lazy" decoding="async"':mode==='hero'?'fetchpriority="high"':'decoding="async"'}></picture>`;
 
 /* ---------- hero stack — All Smiles and Πλέσσα first ---------- */
 (function(){
@@ -650,7 +652,7 @@ const pic = (key, sizes, lazy) => `<picture><source type="image/avif" srcset="/i
   const items = WORK.slice(0, 4);
   items.forEach((w, i) => {
     const f = document.createElement('div'); f.className = 'frame f' + i; f.dataset.i = i;
-    f.innerHTML = `<div class="bar"><i></i><i></i><i></i><span>${esc(w.url.replace(/^https?:\/\//,'').replace(/\/$/,''))}</span></div>${pic(w.key, '(min-width: 1024px) 600px, 92vw', i > 0)}`;
+    f.innerHTML = `<div class="bar"><i></i><i></i><i></i><span>${esc(w.url.replace(/^https?:\/\//,'').replace(/\/$/,''))}</span></div>${pic(w.key, '(min-width: 1024px) 600px, 92vw', i === 0 ? 'hero' : 'eager')}`;
     st.insertBefore(f, cap);
   });
   let cur = 0;
@@ -658,8 +660,9 @@ const pic = (key, sizes, lazy) => `<picture><source type="image/avif" srcset="/i
   function step(){
     cur = (cur + 1) % items.length;
     frames.forEach(f => { const i = +f.dataset.i; const pos = (i - cur + items.length) % items.length; f.className = 'frame f' + pos; });
+    const w = items[cur];
     cap.style.opacity = 0;
-    setTimeout(() => { const w = items[cur]; cap.querySelector('span').innerHTML = `<b>${esc(w.name)}</b> · ${esc(w.niche)}`; cap.style.opacity = 1; }, 350);
+    setTimeout(() => { cap.querySelector('span').innerHTML = `<b>${esc(w.name)}</b> · ${esc(w.niche)}`; cap.style.opacity = 1; }, 160);
   }
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(step, 4200);
   const hero = st.closest('.hero');
@@ -676,7 +679,7 @@ document.getElementById('track').innerHTML = NICHES.concat(NICHES).map(n => `<sp
 
 /* ---------- work grid ---------- */
 document.getElementById('work').innerHTML = WORK.map(w => {
-  const inner = `<div class="bar"><i></i><i></i><i></i></div>${pic(w.key, '(min-width: 900px) 33vw, (min-width: 560px) 50vw, 92vw', true)}<div class="meta"><div><b>${esc(w.name)}</b><small>${esc(w.niche)}</small></div><span class="go">Δείτε τη ζωντανά ↗</span></div>`;
+  const inner = `<div class="bar"><i></i><i></i><i></i></div>${pic(w.key, '(min-width: 900px) 33vw, (min-width: 560px) 50vw, 92vw', 'lazy')}<div class="meta"><div><b>${esc(w.name)}</b><small>${esc(w.niche)}</small></div><span class="go">Δείτε τη ζωντανά ↗</span></div>`;
   return `<a class="rv" href="${esc(w.url)}" target="_blank" rel="noopener">${inner}</a>`;
 }).join('');
 
