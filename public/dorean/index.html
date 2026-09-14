@@ -95,8 +95,7 @@ h1 .grad{background:linear-gradient(120deg,#8BE3FF,var(--cyan) 45%,#7FA8FF);-web
 .proof .dot{width:4px;height:4px;border-radius:50%;background:var(--ink3)}
 
 /* mockup stack */
-.stack{position:relative;aspect-ratio:800/458;width:100%;margin-left:auto;perspective:1500px;transform-style:preserve-3d;
-  transform:translate3d(0,var(--py,0px),0) rotateY(var(--ry,0deg)) rotateX(var(--rx,0deg));transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.stack{position:relative;aspect-ratio:800/458;width:100%;margin-left:auto;perspective:1500px;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
 .frame{position:absolute;inset:0;border-radius:14px;overflow:hidden;background:var(--bg3);border:1px solid var(--line2);box-shadow:0 40px 80px -30px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.04);transition:transform .9s cubic-bezier(.2,.7,.2,1),opacity .3s ease;transform-origin:50% 100%}
 .frame .bar{height:26px;background:#151C29;display:flex;align-items:center;gap:6px;padding:0 12px;border-bottom:1px solid var(--line)}
 .frame .bar i{width:8px;height:8px;border-radius:50%;background:#2B3446}.frame .bar i:first-child{background:#FF5F57}.frame .bar i:nth-child(2){background:#FEBC2E}.frame .bar i:nth-child(3){background:#28C840}
@@ -762,7 +761,13 @@ const pic = (key, sizes, mode) => `<picture><source type="image/avif" srcset="/i
      Both are CSS variables so the scroll parallax below can compose with them. */
   const hero = st.closest('.hero'), spot = hero.querySelector('.spot');
   if (matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    let raf = 0, mx = 0, my = 0;
+    let raf = 0, mx = 0, my = 0, rx = 0, ry = 0, py = 0, lifted = false;
+    /* the transform is written only while something is actually moving */
+    const apply = () => {
+      if (!rx && !ry && !py) { st.style.transform = ''; st.style.transformStyle = ''; lifted = false; return; }
+      if (!lifted) { st.style.transformStyle = 'preserve-3d'; lifted = true; }
+      st.style.transform = `translateY(${py.toFixed(1)}px) rotateY(${ry.toFixed(2)}deg) rotateX(${rx.toFixed(2)}deg)`;
+    };
     hero.addEventListener('mousemove', e => {
       mx = e.clientX; my = e.clientY;
       if (raf) return;
@@ -773,16 +778,15 @@ const pic = (key, sizes, mode) => `<picture><source type="image/avif" srcset="/i
         spot.style.setProperty('--sy', (my - h.top) + 'px');
         const r = st.getBoundingClientRect();
         const x = (mx - r.left) / r.width - .5, y = (my - r.top) / r.height - .5;
-        st.style.setProperty('--ry', (x * 7).toFixed(2) + 'deg');
-        st.style.setProperty('--rx', (-y * 5.5).toFixed(2) + 'deg');
+        ry = x * 7; rx = -y * 5.5; apply();
       });
     }, { passive: true });
-    hero.addEventListener('mouseleave', () => { st.style.setProperty('--ry', '0deg'); st.style.setProperty('--rx', '0deg'); });
+    hero.addEventListener('mouseleave', () => { ry = rx = 0; apply(); });
     /* and it drifts a little as the page scrolls */
     let sraf = 0;
     addEventListener('scroll', () => {
       if (sraf) return;
-      sraf = requestAnimationFrame(() => { sraf = 0; const y = Math.min(1, scrollY / 900); st.style.setProperty('--py', (y * -26).toFixed(1) + 'px'); });
+      sraf = requestAnimationFrame(() => { sraf = 0; py = Math.min(1, scrollY / 900) * -26; apply(); });
     }, { passive: true });
   }
 })();
