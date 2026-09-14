@@ -97,15 +97,15 @@ h1 .grad{background:linear-gradient(120deg,#8BE3FF,var(--cyan) 45%,#7FA8FF);-web
 /* mockup stack */
 .stack{position:relative;aspect-ratio:800/458;width:100%;margin-left:auto;perspective:1500px;transform-style:preserve-3d;
   transform:translate3d(0,var(--py,0px),0) rotateY(var(--ry,0deg)) rotateX(var(--rx,0deg));transition:transform .45s cubic-bezier(.2,.7,.2,1)}
-.frame{position:absolute;inset:0;border-radius:14px;overflow:hidden;background:var(--bg3);border:1px solid var(--line2);box-shadow:0 40px 80px -30px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.04);transition:transform .9s cubic-bezier(.2,.7,.2,1),opacity .9s ease;transform-origin:50% 100%}
+.frame{position:absolute;inset:0;border-radius:14px;overflow:hidden;background:var(--bg3);border:1px solid var(--line2);box-shadow:0 40px 80px -30px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.04);transition:transform .9s cubic-bezier(.2,.7,.2,1),opacity .3s ease;transform-origin:50% 100%}
 .frame .bar{height:26px;background:#151C29;display:flex;align-items:center;gap:6px;padding:0 12px;border-bottom:1px solid var(--line)}
 .frame .bar i{width:8px;height:8px;border-radius:50%;background:#2B3446}.frame .bar i:first-child{background:#FF5F57}.frame .bar i:nth-child(2){background:#FEBC2E}.frame .bar i:nth-child(3){background:#28C840}
 .frame .bar span{margin-left:10px;font-size:10px;color:var(--ink3);background:rgba(255,255,255,.04);border-radius:6px;padding:2px 10px;flex:1;text-align:center}
 .frame img{width:100%;height:calc(100% - 26px);object-fit:cover;object-position:top}
 .frame.f0{z-index:3;opacity:1;transform:translate3d(0,0,0) rotateX(0)}
 .frame.f1{z-index:2;opacity:.62;transform:translate3d(0,-22px,-90px) scale(.955)}
-.frame.f2{z-index:1;opacity:.32;transform:translate3d(0,-42px,-180px) scale(.91)}
-.frame.f3{z-index:0;opacity:0;transform:translate3d(0,-60px,-260px) scale(.86)}
+.frame.f2{z-index:1;opacity:.38;transform:translate3d(0,-42px,-180px) scale(.91)}
+.frame.f3{z-index:0;opacity:.22;transform:translate3d(0,-60px,-260px) scale(.86)}
 .stack .cap{position:absolute;left:14px;bottom:14px;z-index:4;transition:opacity .16s ease;background:rgba(7,11,18,.78);backdrop-filter:blur(8px);border:1px solid var(--line2);border-radius:12px;padding:8px 12px;font-size:12.5px;color:var(--ink2);display:flex;align-items:center;gap:8px}
 .stack .cap b{color:var(--ink)}
 .stack .cap i{width:6px;height:6px;border-radius:50%;background:var(--green)}
