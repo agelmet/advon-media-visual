@@ -1671,7 +1671,7 @@ body.dark .ch-pill.on{background:var(--brand);}
 .ch-send:not(:disabled):hover{transform:translateY(-1px);}
 .ch-send svg{width:19px; height:19px; transform:translateX(1px);}
 .ch-quick{position:relative;}
-.ch-quick-menu{position:absolute; bottom:48px; left:0; width:min(420px,80vw); background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow-lg); padding:6px; display:none; z-index:20;}
+.ch-quick-menu{position:absolute; bottom:48px; left:0; width:min(460px,80vw); max-height:60vh; overflow-y:auto; background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow-lg); padding:6px; display:none; z-index:20;}
 .ch-quick-menu.open{display:block;}
 .ch-quick-menu button{display:block; width:100%; text-align:left; padding:9px 11px; border-radius:9px; font-size:12.5px; line-height:1.4; color:var(--ink);}
 .ch-quick-menu button:hover{background:var(--bg);}
@@ -1710,6 +1710,9 @@ body.dark .ch-file{background:rgba(255,255,255,.06);}
 .ch-log{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;}
 .ch-log span{font-size:11px;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 10px;}
 .ch-log b{color:var(--violet);text-transform:uppercase;font-size:10px;letter-spacing:.05em;}
+.ch-quick-menu button.faq b{color:var(--violet);}
+.tab .tab-n{animation:chpulse 2.6s ease-in-out infinite;}
+@keyframes chpulse{0%,100%{box-shadow:0 2px 8px rgba(255,77,94,.4);}50%{box-shadow:0 2px 14px rgba(255,77,94,.75);}}
 </style>
 </head>
 <body>
@@ -6685,7 +6688,7 @@ window.DEMO_CHATS=(function(){
   const threads=[
     {slug:'papadopoulou', code:'papadopoulou-demo', log:[{at:ago(20),by:'claude',text:'2 αλλαγές έγιναν και ανέβηκαν (footer τηλέφωνο, φωτογραφία ρεσεψιόν)'},{at:ago(19),by:'system',text:'E-mail στον πελάτη για 1 νέο μήνυμα'}], name:'Παπαδοπούλου Μαρία', phone:'6941234567', email:'m.papadopoulou@example.gr', site:'https://agelmet.github.io/advon-drafts/papadopoulou/', stage:'changes', createdAt:ago(120), lastAt:ago(2), lastFrom:'client', lastText:'Μπορούμε να αλλάξουμε το χρώμα στο μενού σε πιο ανοιχτό μπλε; Και σας στέλνω 2 φωτογραφίες ακόμη.', n:6, unreadAdmin:2, unreadClient:0, clientSeenAt:ago(2), adminSeenAt:ago(20)},
     {slug:'nikolaou', code:'nikolaou-demo', name:'Νικολάου Γιώργος', phone:'6979876543', email:'', site:'', stage:'draft', createdAt:ago(70), lastAt:ago(26), lastFrom:'claude', lastText:'Το πρώτο draft της ιστοσελίδας σας είναι έτοιμο — δείτε το και γράψτε μου εδώ ό,τι αλλαγές θέλετε.', n:3, unreadAdmin:0, unreadClient:1, clientSeenAt:ago(40), adminSeenAt:ago(26)},
-    {slug:'lampridi', code:'lampridi-demo', name:'Οδοντιατρείο Λαμπρίδη', phone:'2101234567', email:'lampridi.dental@example.gr', site:'https://lampridi-dental.gr', stage:'changes', createdAt:ago(300), lastAt:ago(96), lastFrom:'advon', lastText:'Μια μικρή υπενθύμιση για την πληρωμή του hosting ώστε να προχωρήσουμε με τη δημοσίευση.', n:9, unreadAdmin:0, unreadClient:1, clientSeenAt:ago(100), adminSeenAt:ago(96)},
+    {slug:'lampridi', code:'lampridi-demo', name:'Οδοντιατρείο Λαμπρίδη', phone:'2101234567', email:'lampridi.dental@example.gr', site:'https://lampridi-dental.gr', stage:'changes', createdAt:ago(300), lastAt:ago(96), lastFrom:'advon', lastText:'Για να τη δημοσιεύσουμε χρειαζόμαστε το όνομα (domain) — στείλτε μου 2–3 επιλογές με σειρά προτίμησης.', n:9, unreadAdmin:0, unreadClient:1, clientSeenAt:ago(100), adminSeenAt:ago(96)},
     {slug:'rigas', code:'rigas-demo', name:'Φυσικοθεραπευτήριο Ρήγας', phone:'', email:'rigas.physio@example.gr', site:'https://rigas-physio.gr', stage:'live', createdAt:ago(900), lastAt:ago(400), lastFrom:'client', lastText:'Ευχαριστώ πολύ, είναι τέλεια! Έγραψα και την κριτική.', n:14, unreadAdmin:0, unreadClient:0, clientSeenAt:ago(400), adminSeenAt:ago(399)},
   ];
   const messages={
@@ -6703,9 +6706,9 @@ window.DEMO_CHATS=(function(){
       {id:'b3',from:'claude',text:'Το πρώτο draft της ιστοσελίδας σας είναι έτοιμο — δείτε το και γράψτε μου εδώ ό,τι αλλαγές θέλετε.',files:[],at:ago(26)},
     ],
     lampridi:[
-      {id:'c1',from:'client',text:'Η σελίδα είναι ακριβώς όπως τη θέλαμε. Πώς πληρώνουμε;',files:[],at:ago(100)},
-      {id:'c2',from:'advon',text:'Χαίρομαι πολύ! Στέλνω τα στοιχεία της κατάθεσης — μόλις γίνει, δημοσιεύουμε την ίδια μέρα.',files:[{name:'stoixeia-pliromis.pdf',bytes:91000,path:''}],at:ago(98)},
-      {id:'c3',from:'advon',text:'Μια μικρή υπενθύμιση για την πληρωμή του hosting ώστε να προχωρήσουμε με τη δημοσίευση.',files:[],at:ago(96)},
+      {id:'c1',from:'client',text:'Η σελίδα είναι ακριβώς όπως τη θέλαμε. Προχωράμε!',files:[],at:ago(100)},
+      {id:'c2',from:'advon',text:'Χαίρομαι πολύ! Σας στέλνω μια σύντομη λίστα με το τι θα χρειαστούμε για τη δημοσίευση.',files:[{name:'dimosiefsi-checklist.pdf',bytes:91000,path:''}],at:ago(98)},
+      {id:'c3',from:'advon',text:'Για να τη δημοσιεύσουμε χρειαζόμαστε το όνομα (domain) — στείλτε μου 2–3 επιλογές με σειρά προτίμησης.',files:[],at:ago(96)},
     ],
     rigas:[
       {id:'d1',from:'advon',text:'Η ιστοσελίδα σας είναι online! 🎉 https://rigas-physio.gr',files:[],at:ago(402)},
@@ -6726,11 +6729,18 @@ const CH_STAGE_MSG={draft:1, changes:2, live:5};   /* stage → CH_QUICK index o
 const CH_WELCOME='Καλώς ήρθατε! 👋 Φτιάξαμε αυτή τη σελίδα συνομιλίας ειδικά για εσάς, ώστε ό,τι αφορά την ιστοσελίδα σας να είναι σε ένα μέρος, οργανωμένο και προσωπικό: φωτογραφίες, κείμενα, αλλαγές, ερωτήσεις — όλα εδώ. Την βλέπω εγώ και η ομάδα μας, ώστε να σας βοηθάμε όσο πιο άμεσα γίνεται. Κρατήστε τον σύνδεσμο — είναι δικός σας. Στην επάνω γραμμή βλέπετε σε ποιο στάδιο είναι η σελίδα σας, και στον «Οδηγό» παραδείγματα για το τι μπορείτε να ζητήσετε.';
 const CH_QUICK=[
   ['Received','Έλαβα, ευχαριστώ πολύ! Θα το δω και θα σας ενημερώσω μέσα στην ημέρα.'],
-  ['First draft ready','Το πρώτο draft της ιστοσελίδας σας είναι έτοιμο: {site}\nΔείτε το με την ησυχία σας και γράψτε μου εδώ ό,τι αλλαγές θέλετε — όσες χρειαστούν μέχρι να είναι ακριβώς όπως τη φαντάζεστε.\nΣε αυτό το στάδιο γίνεται και η πληρωμή του hosting (130€/έτος ή 15€/μήνα) — θα σας στείλω τα στοιχεία.'],
-  ['Changes done','Οι αλλαγές έγιναν — ρίξτε μια ματιά: {site}\nΑν θέλετε κάτι ακόμη, γράψτε μου εδώ.'],
-  ['Payment reminder','Μια μικρή υπενθύμιση για την πληρωμή του hosting (130€ / έτος ή 15€ / μήνα), ώστε να προχωρήσουμε με τη δημοσίευση της ιστοσελίδας σας. Ευχαριστώ πολύ!'],
+  ['First draft ready','Το πρώτο draft της ιστοσελίδας σας είναι έτοιμο: {site}\nΔείτε το με την ησυχία σας και γράψτε μου εδώ ό,τι αλλαγές θέλετε — όσες χρειαστούν μέχρι να είναι ακριβώς όπως τη φαντάζεστε.'],
+  ['Changes done','Οι αλλαγές έγιναν — ρίξτε μια ματιά: {site}\nΑν θέλετε κάτι ακόμη, γράψτε μου εδώ. Αν είναι όλα όπως τα θέλετε, πείτε μου «προχωράμε».'],
+  ['Ask for the domain','Τέλεια, χαίρομαι που σας αρέσει! Για να τη δημοσιεύσουμε χρειαζόμαστε το όνομα της σελίδας (domain). Προτείνουμε κάτι απλό και επαγγελματικό, όπως epitheto-epaggelma.gr ή onoma-epitheto.gr — ή ό,τι άλλο θέλετε, εφόσον είναι διαθέσιμο. Στείλτε μου 2–3 επιλογές με σειρά προτίμησης και τις ελέγχω αμέσως.'],
   ['Need material','Για να προχωρήσω χρειάζομαι λίγο υλικό ακόμη: φωτογραφίες του χώρου, το λογότυπο (αν υπάρχει) και τα στοιχεία επικοινωνίας. Στείλτε τα εδώ όποτε σας βολεύει.'],
   ['Site is live','Η ιστοσελίδα σας είναι online! 🎉 {site}\nΑν μείνατε ευχαριστημένοι από τη συνεργασία μας, μια κριτική στο Google θα με βοηθούσε πολύ. Σας ευχαριστώ!'],
+  ['FAQ · changes after publishing','Μέχρι τη δημοσίευση οι αλλαγές είναι απεριόριστες. Μετά τη δημοσίευση, κάθε αίτημα αλλαγών κοστίζει 50€ και ολοκληρώνεται εντός 3 εργάσιμων ημερών — ένα αίτημα μπορεί να περιλαμβάνει πολλές αλλαγές μαζί. Εναλλακτικά, με τον Πίνακα Διαχείρισης (180€ εφάπαξ) αλλάζετε μόνοι σας κείμενα και εικόνες όποτε θέλετε.'],
+  ['FAQ · admin panel','Ο Πίνακας Διαχείρισης (180€ εφάπαξ) είναι μια απλή σελίδα διαχείρισης όπου αλλάζετε μόνοι σας κείμενα και εικόνες, όποτε θέλετε, χωρίς να χρειάζεστε εμάς — δωρεάν, έως 5 αλλαγές τον μήνα. Αν θέλετε, το ενσωματώνω στη σελίδα σας.'],
+  ['FAQ · articles section','Η Ενότητα Άρθρων / Σεμιναρίων (70€ εφάπαξ) είναι ένα δικό σας τμήμα στη σελίδα όπου ανεβάζετε και επεξεργάζεστε άρθρα, σεμινάρια ή εργαστήρια μόνοι σας, όποτε θέλετε.'],
+  ['FAQ · contact form','Η Φόρμα Επικοινωνίας (50€ εφάπαξ) μπαίνει μέσα στη σελίδα σας — κάθε φορά που κάποιος τη συμπληρώνει, λαμβάνετε αμέσως e-mail στη διεύθυνση που επιλέγετε.'],
+  ['FAQ · Google profile','Με το Google Business Profile (90€ εφάπαξ) στήνουμε ή διορθώνουμε το προφίλ σας στο Google Maps και την αναζήτηση, το συνδέουμε με τη σελίδα σας και σας δίνουμε κάρτα NFC ώστε οι πελάτες σας να αφήνουν κριτική με ένα άγγιγμα.'],
+  ['FAQ · how long','Από τη στιγμή που έχουμε όλο το υλικό, το πρώτο draft έρχεται σε 7–14 ημέρες. Από εκεί και πέρα κάνουμε όσες αλλαγές χρειαστούν μέχρι να είναι ακριβώς όπως τη θέλετε.'],
+  ['FAQ · domain','Το domain περιλαμβάνεται, χωρίς επιπλέον κόστος. Προτείνουμε κάτι απλό όπως epitheto-epaggelma.gr ή onoma-epitheto.gr — στείλτε μου 2–3 επιλογές με σειρά προτίμησης και ελέγχω τι είναι διαθέσιμο.'],
 ];
 const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, cache:{}, state:'idle', err:'', busy:false, tbusy:false, timer:null, ttimer:null, urls:{}, notify:null, online:[], filter:'all', q:'', queue:[], pending:[], lastAt:0, seenSent:null,
   hdr(){ return {'x-crm-auth':SYNC_TOKEN}; },
@@ -6870,7 +6880,7 @@ async function chShrink(file){
 }
 function renderChats(){ renderChatList(); renderChatThread(true); renderChatsBadge(); renderHomeChats(); }
 function renderChatsBadge(){
-  const n=chUnread(); const b=$('#chatsTabN'); if(b){ b.textContent=n; b.hidden=!n; }
+  const n=chWaiting().length; const b=$('#chatsTabN'); if(b){ b.textContent=n; b.hidden=!n; b.title=n+' chat'+(n===1?'':'s')+' waiting for your reply'; }
   const w=chWaiting().length; const wn=$('#chWaitN'); if(wn) wn.textContent=w?w:'';
   const hint=$('#chHint'); if(hint) hint.textContent=Chats.state==='loading'?'checking…':Chats.state==='off'?'sign in with sync':Chats.state==='error'?'offline':(w?w+' waiting for you':'all answered');
 }
@@ -7003,7 +7013,7 @@ function renderHomeChats(){
   $('#chFile').addEventListener('change',e=>{ chAddFiles([...e.target.files]); e.target.value=''; });
   $('#chTray').addEventListener('click',e=>{ const b=e.target.closest('[data-rm]'); if(!b) return; Chats.queue.splice(+b.dataset.rm,1); renderChatTray(); });
   const qm=$('#chQuickMenu');
-  $('#chQuickBtn').addEventListener('click',e=>{ e.stopPropagation(); const t=Chats.list.find(x=>x.slug===Chats.cur); qm.innerHTML=CH_QUICK.map((q,i)=>`<button data-q="${i}"><b>${esc(q[0])}</b>${esc(q[1].replace('{site}', t&&t.site?chSite(t):'…').slice(0,110))}${q[1].length>110?'…':''}</button>`).join(''); qm.classList.toggle('open'); });
+  $('#chQuickBtn').addEventListener('click',e=>{ e.stopPropagation(); const t=Chats.list.find(x=>x.slug===Chats.cur); qm.innerHTML=CH_QUICK.map((q,i)=>`<button data-q="${i}"${q[0].startsWith('FAQ')?' class="faq"':''}><b>${esc(q[0])}</b>${esc(q[1].replace('{site}', t&&t.site?chSite(t):'…').slice(0,110))}${q[1].length>110?'…':''}</button>`).join(''); qm.classList.toggle('open'); });
   qm.addEventListener('click',e=>{ const b=e.target.closest('[data-q]'); if(!b) return; const t=Chats.list.find(x=>x.slug===Chats.cur); txt.value=CH_QUICK[+b.dataset.q][1].replace('{site}', t&&t.site?chSite(t):''); txt.dispatchEvent(new Event('input')); qm.classList.remove('open'); txt.focus(); });
   document.addEventListener('click',()=>qm.classList.remove('open'));
   const feed=$('#chFeed');
