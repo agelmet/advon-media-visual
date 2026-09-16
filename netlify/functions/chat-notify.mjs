@@ -131,5 +131,6 @@ export default async (req) => {
       forgetHead();
     } catch (e) { report.error = e.message; }
   }
+  console.log(JSON.stringify({ sent: report.sent, skipped: report.skipped, telegram: canTg, email: canMail, error: report.error || null }));
   return Response.json(report);
 };
