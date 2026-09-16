@@ -67,7 +67,7 @@ export default async (req) => {
       if (!canTg && !canMail) { report.skipped.push(`${t.slug}: angelo (nothing configured)`); }
       else if (now - lastAt > 2 * DAY) { upd(t, { angeloNotifiedAt: t.lastAt }); }         // too old to ping now (keys were added later)
       else {
-        const text = `💬 ${t.name} (${STAGE_EL[t.stage] || t.stage}) — ${t.unreadAdmin || 0} νέο${(t.unreadAdmin || 0) === 1 ? '' : 'α'}\n«${(t.lastText || '').slice(0, 300)}»\n${SITE_URL}/crm/#chats`;
+        const text = `💬 ${t.name} (${STAGE_EL[t.stage] || t.stage}) — ${(t.unreadAdmin || 0) === 1 ? '1 νέο μήνυμα' : (t.unreadAdmin || 0) + ' νέα μηνύματα'}\n«${(t.lastText || '').slice(0, 300)}»\n${SITE_URL}/crm/#chats`;
         if (dry) { report.sent.push(`[dry] angelo ← ${t.slug}`); continue; }
         const a = await sendTelegram(mc, text);
         const b = canMail ? await sendEmail(mc, mc.notifyTo, `💬 ${t.name}: ${(t.lastText || '').slice(0, 60)}`, text) : { ok: false };
@@ -90,7 +90,7 @@ export default async (req) => {
         const mail = newMessageMail(t, text, files);
         if (dry) { report.sent.push(`[dry] client ${t.slug}`); continue; }
         const r = await sendEmail(mc, t.email, mail.subject, mail.text, mail.html);
-        if (r.ok) { upd(t, { clientNotifiedAt: t.lastAt }); log(t, `E-mail στον πελάτη για ${fresh.length} νέο${fresh.length === 1 ? '' : 'α'} μήνυμα`); report.sent.push(`client ${t.slug} (${fresh.length} msg)`); }
+        if (r.ok) { upd(t, { clientNotifiedAt: t.lastAt }); log(t, `E-mail στον πελάτη για ${fresh.length === 1 ? '1 νέο μήνυμα' : fresh.length + ' νέα μηνύματα'}`); report.sent.push(`client ${t.slug} (${fresh.length} msg)`); }
         else report.skipped.push(`${t.slug}: client e-mail (${r.why})`);
       }
     }
@@ -146,5 +146,6 @@ export default async (req) => {
       forgetHead();
     } catch (e) { report.error = e.message; }
   }
+  console.log(JSON.stringify({ sent: report.sent, skipped: report.skipped, telegram: canTg, email: canMail, error: report.error || null }));
   return Response.json(report);
 };
