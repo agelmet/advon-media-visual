@@ -1699,6 +1699,9 @@ body.dark .ch-file{background:rgba(255,255,255,.06);}
   .ch-head .info small{display:none;}
   .ch-head .acts select{display:none;}
 }
+.ch-log{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;}
+.ch-log span{font-size:11px;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 10px;}
+.ch-log b{color:var(--violet);text-transform:uppercase;font-size:10px;letter-spacing:.05em;}
 </style>
 </head>
 <body class="locked">
@@ -1892,7 +1895,7 @@ body.dark .ch-file{background:rgba(255,255,255,.06);}
           <div class="ch-input"><textarea id="chTxt" rows="1" placeholder="Write a message… (Enter sends · Shift+Enter new line)"></textarea></div>
           <button class="ch-send" id="chSend" disabled title="Send"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a1 1 0 0 0-1.38 1.13L3.7 11h7.3a1 1 0 1 1 0 2H3.7l-1.68 6.27A1 1 0 0 0 3.4 20.4z"/></svg></button>
         </div>
-        <div class="ch-hint"><span id="chNotify"></span><span>The client sees it on their page and gets an e-mail (if they have one)</span></div>
+        <div class="ch-hint"><span id="chNotify"></span><span>The client sees it on their page; an e-mail with the text goes out within 5 min (if they have an address)</span></div>
       </div>
     </section>
   </div>
@@ -6718,16 +6721,19 @@ function closeSyncSetup(){
    lands in chats/ of the private data repo through /api/chat and shows up here. Replies go back the same way
    (and by e-mail when the client has one). Messages tagged «Claude» were written by the chat agent. */
 const CHAT_URL='/api/chat';
-const CH_STAGES=[['yliko','Material'],['draft','First draft'],['changes','Changes'],['payment','Payment'],['live','Live']];
+const CH_STAGES=[['yliko','Material'],['draft','First draft'],['changes','Changes'],['live','Live']];
+const chStage=t=>t&&t.stage==='payment'?'changes':(t&&t.stage)||'yliko';
+const CH_STAGE_MSG={draft:1, changes:2, live:5};   /* stage → CH_QUICK index offered after a stage change */
+const CH_WELCOME='Καλώς ήρθατε! 👋 Φτιάξαμε αυτή τη σελίδα συνομιλίας ειδικά για εσάς, ώστε ό,τι αφορά την ιστοσελίδα σας να είναι σε ένα μέρος, οργανωμένο και προσωπικό: φωτογραφίες, κείμενα, αλλαγές, ερωτήσεις — όλα εδώ. Την βλέπω εγώ και η ομάδα μας, ώστε να σας βοηθάμε όσο πιο άμεσα γίνεται. Κρατήστε τον σύνδεσμο — είναι δικός σας. Στην επάνω γραμμή βλέπετε σε ποιο στάδιο είναι η σελίδα σας, και στον «Οδηγό» παραδείγματα για το τι μπορείτε να ζητήσετε.';
 const CH_QUICK=[
   ['Received','Έλαβα, ευχαριστώ πολύ! Θα το δω και θα σας ενημερώσω μέσα στην ημέρα.'],
-  ['First draft ready','Το πρώτο draft της ιστοσελίδας σας είναι έτοιμο: {site}\nΔείτε το με την ησυχία σας και γράψτε μου εδώ ό,τι αλλαγές θέλετε — όσες χρειαστούν μέχρι να είναι ακριβώς όπως τη φαντάζεστε.'],
+  ['First draft ready','Το πρώτο draft της ιστοσελίδας σας είναι έτοιμο: {site}\nΔείτε το με την ησυχία σας και γράψτε μου εδώ ό,τι αλλαγές θέλετε — όσες χρειαστούν μέχρι να είναι ακριβώς όπως τη φαντάζεστε.\nΣε αυτό το στάδιο γίνεται και η πληρωμή του hosting (130€/έτος ή 15€/μήνα) — θα σας στείλω τα στοιχεία.'],
   ['Changes done','Οι αλλαγές έγιναν — ρίξτε μια ματιά: {site}\nΑν θέλετε κάτι ακόμη, γράψτε μου εδώ.'],
   ['Payment reminder','Μια μικρή υπενθύμιση για την πληρωμή του hosting (130€ / έτος ή 15€ / μήνα), ώστε να προχωρήσουμε με τη δημοσίευση της ιστοσελίδας σας. Ευχαριστώ πολύ!'],
   ['Need material','Για να προχωρήσω χρειάζομαι λίγο υλικό ακόμη: φωτογραφίες του χώρου, το λογότυπο (αν υπάρχει) και τα στοιχεία επικοινωνίας. Στείλτε τα εδώ όποτε σας βολεύει.'],
   ['Site is live','Η ιστοσελίδα σας είναι online! 🎉 {site}\nΑν μείνατε ευχαριστημένοι από τη συνεργασία μας, μια κριτική στο Google θα με βοηθούσε πολύ. Σας ευχαριστώ!'],
 ];
-const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, state:'idle', err:'', busy:false, tbusy:false, timer:null, ttimer:null, urls:{}, notify:null, online:[], filter:'all', q:'', queue:[], pending:[], lastAt:0, seenSent:null,
+const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, cache:{}, state:'idle', err:'', busy:false, tbusy:false, timer:null, ttimer:null, urls:{}, notify:null, online:[], filter:'all', q:'', queue:[], pending:[], lastAt:0, seenSent:null,
   hdr(){ return {'x-crm-auth':SYNC_TOKEN}; },
   active(){ return curView==='chats' && document.visibilityState==='visible'; },
   async pull(manual){
@@ -6744,13 +6750,20 @@ const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, st
         this.list=Array.isArray(p.threads)?p.threads:[]; this.head=p.head; this.notify=p.notify||null; this.online=p.onlineSlugs||[]; this.state='ok'; this.err=''; this.lastAt=Date.now();
         const fresh=this.list.filter(t=>(t.unreadAdmin||0)>(before.get(t.slug)||0) && before.size);
         if(fresh.length){ toast('💬 '+fresh.map(t=>t.name).join(', ')+' wrote to you'); if(this.cur && fresh.some(t=>t.slug===this.cur)) this.pullThread(true); }
+        this.prefetch();
       } else { this.state='ok'; this.lastAt=Date.now(); }
     }catch(e){ this.state='error'; this.err=String((e&&e.message)||e); }
     this.busy=false; if(manual && this.state==='ok') toast('Checked for new messages');
     renderChats();
   },
+  /* warm the threads in the background so opening one is instant (each is one small JSON) */
+  async prefetch(){
+    if(window.DEMO_CHATS || !SYNC_TOKEN) return;
+    const want=this.list.filter(t=>!t.archived && t.slug!==this.cur).sort((a,b)=>String(b.lastAt).localeCompare(String(a.lastAt))).slice(0,15).filter(t=>!(this.cache[t.slug]&&this.cache[t.slug].head===this.head));
+    await Promise.all(want.map(async t=>{ try{ const res=await fetch(CHAT_URL+'?t='+encodeURIComponent(t.slug)+'&t_='+Date.now(), {headers:this.hdr(), cache:'no-store'}); const p=await res.json(); if(res.ok&&p.ok&&!p.same) this.cache[t.slug]={msgs:p.messages||[], head:p.head, thread:p.thread}; }catch(e){} }));
+  },
   async open(slug){
-    if(this.cur!==slug){ this.cur=slug; this.msgs=[]; this.thead=null; this.pending=[]; this.queue=[]; this.seenSent=null; $('#chTxt').value=''; }
+    if(this.cur!==slug){ this.cur=slug; const c=this.cache[slug]; this.msgs=c?c.msgs.slice():[]; this.thead=c?c.head:null; this.thread=c?c.thread:null; this.pending=[]; this.queue=[]; this.seenSent=null; $('#chTxt').value=''; }
     $('#chWrap').classList.add('open');
     renderChats();
     await this.pullThread(true);
@@ -6768,7 +6781,7 @@ const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, st
       let p={}; try{ p=await res.json(); }catch(e){}
       if(res.ok && p.ok && !p.same && this.cur===slug){
         const had=new Set(this.msgs.map(m=>m.id));
-        this.msgs=Array.isArray(p.messages)?p.messages:[]; this.thread=p.thread||null; this.thead=p.head;
+        this.msgs=Array.isArray(p.messages)?p.messages:[]; this.thread=p.thread||null; this.thead=p.head; this.cache[slug]={msgs:this.msgs.slice(), head:p.head, thread:p.thread};
         this.pending=this.pending.filter(pm=>!this.msgs.some(m=>m.id===pm.id));
         const i=this.list.findIndex(t=>t.slug===slug); if(i>=0 && p.thread) this.list[i]=p.thread;
         renderChatThread(had.size?true:false); renderChatList();
@@ -6874,7 +6887,7 @@ function renderChatList(){
   else if(!rows.length) box.innerHTML=`<div class="ch-empty">${Chats.list.length?'<b>Nothing here</b>Try another filter.':'<b>No chats yet</b>Press <b style="display:inline">New</b>, give the client a name, copy their private link and send it on Viber. From then on you talk here.'}</div>`;
   else box.innerHTML=rows.map(t=>`<div class="ch-row${t.slug===Chats.cur?' on':''}${(t.unreadAdmin||0)?' unread':''}" data-slug="${esc(t.slug)}">
       <div class="ch-av${Chats.online.includes(t.slug)?' online':''}" style="background:${chColor(t.name)}">${esc(chInitials(t.name))}<i></i></div>
-      <div><div class="n">${esc(t.name)}<span class="ch-stage">${esc((CH_STAGES.find(s=>s[0]===t.stage)||['','—'])[1])}</span></div><div class="p">${t.lastFrom==='client'?'':t.lastFrom==='claude'?'Claude: ':'You: '}${esc(t.lastText||(t.n?'':'link created — nothing sent yet'))}</div></div>
+      <div><div class="n">${esc(t.name)}<span class="ch-stage">${esc((CH_STAGES.find(s=>s[0]===chStage(t))||['','—'])[1])}</span></div><div class="p">${t.lastFrom==='client'?'':t.lastFrom==='claude'?'Claude: ':'You: '}${esc(t.lastText||(t.n?'':'link created — nothing sent yet'))}</div></div>
       <div class="r"><span class="t">${esc(chWhen(t.lastAt))}</span>${(t.unreadAdmin||0)?`<span class="ch-badge">${t.unreadAdmin}</span>`:chWaitChip(t)}</div>
     </div>`).join('');
   box.querySelectorAll('[data-slug]').forEach(el=>el.addEventListener('click',()=>Chats.open(el.dataset.slug)));
@@ -6895,19 +6908,20 @@ function renderChatThread(keep){
     <div class="ch-av${Chats.online.includes(t.slug)?' online':''}" style="background:${chColor(t.name)}">${esc(chInitials(t.name))}<i></i></div>
     <div class="info"><b>${esc(t.name)}${t.archived?' <span class="ch-stage">archived</span>':''}</b><small>${t.phone?`<a href="tel:${esc(t.phone)}">${esc(t.phone)}</a>`:''}${t.email?`<a href="mailto:${esc(t.email)}">${esc(t.email)}</a>`:''}${t.site?`<a href="${esc(chSite(t))}" target="_blank" rel="noopener">${esc(t.site.replace(/^https?:\/\//,''))} ↗</a>`:''}${Chats.online.includes(t.slug)?'<span style="color:var(--deep)">● online now</span>':''}</small></div>
     <div class="acts">
-      <select id="chStage" title="Where this client is — the client sees it as a progress bar">${CH_STAGES.map(s=>`<option value="${s[0]}"${t.stage===s[0]?' selected':''}>${s[1]}</option>`).join('')}</select>
+      <select id="chStage" title="Where this client is — the client sees it as a progress bar">${CH_STAGES.map(s=>`<option value="${s[0]}"${chStage(t)===s[0]?' selected':''}>${s[1]}</option>`).join('')}</select>
       ${client?`<button class="ch-ib" id="chBoard" title="Open on the Board">Board</button>`:''}
       <button class="ch-ib" id="chCopy" title="Copy the client's private link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>Link</button>
       <button class="ch-ib" id="chEdit" title="Name, phone, e-mail, site, archive">Edit</button>
     </div>`;
   $('#chBack').addEventListener('click',()=>Chats.close());
-  $('#chStage').addEventListener('change',async e=>{ try{ await Chats.meta(t.slug,{stage:e.target.value}); toast('Stage updated — the client sees it too'); }catch(err){ toast('Could not save the stage'); } });
+  $('#chStage').addEventListener('change',async e=>{ const v=e.target.value; try{ await Chats.meta(t.slug,{stage:v}); const qi=CH_STAGE_MSG[v]; const tx=$('#chTxt'); if(qi!=null && !tx.value.trim()){ const tt=Chats.list.find(x=>x.slug===t.slug)||t; tx.value=CH_QUICK[qi][1].replace('{site}', tt.site?chSite(tt):'…'); tx.dispatchEvent(new Event('input')); tx.focus(); toast('Stage saved — a ready message is in the box, edit it and press send'); } else toast('Stage updated — the client sees it too'); }catch(err){ toast('Could not save the stage'); } });
   const bd=$('#chBoard'); if(bd) bd.addEventListener('click',()=>openModal(client.id));
   $('#chCopy').addEventListener('click',()=>chCopy(chLink(t)));
   $('#chEdit').addEventListener('click',()=>chOpenModal(t));
   const nearBottom=feed.scrollHeight-feed.scrollTop-feed.clientHeight<160;
   const all=Chats.msgs.concat(Chats.pending).sort((a,b)=>a.at<b.at?-1:1);
   const out=[]; let lastDay='', prev=null;
+  const lg=(t.log||[]).slice(-4); if(lg.length) out.push(`<div class="ch-log">${lg.map(l=>`<span><b>${esc(l.by==='system'?'auto':l.by)}</b> ${esc(chWhen(l.at))} · ${esc(l.text)}</span>`).join('')}</div>`);
   if(!all.length) out.push(`<div class="ch-empty"><b>Nothing sent yet</b>Send the link on Viber — ${esc(chLink(t))} — and write the first message here so they find it waiting.</div>`);
   all.forEach((m,i)=>{
     const d=new Date(m.at); const dk=d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
@@ -6933,11 +6947,11 @@ function chAddFiles(list){ for(const f of list){ if(Chats.queue.length>=12){ toa
 async function chCopy(s){ try{ await navigator.clipboard.writeText(s); toast('Link copied — paste it in Viber'); }catch(e){ prompt('Copy the link:', s); } }
 function chOpenModal(t){
   const ov=$('#chatOverlay'), b=$('#chatModalBody'); $('#chatModalTitle').textContent=t?'Edit chat':'New chat';
-  const welcome='Καλώς ήρθατε! Από εδώ και πέρα, ό,τι αφορά την ιστοσελίδα σας — φωτογραφίες, κείμενα, αλλαγές, ερωτήσεις — μπορείτε να μου το στέλνετε σε αυτή τη σελίδα. Κρατήστε τον σύνδεσμο. Ό,τι στέλνετε το βλέπω αμέσως.';
+  const welcome=CH_WELCOME;
   b.innerHTML=`<label>Client name</label><input id="chmName" value="${esc(t?t.name:'')}" placeholder="π.χ. Σφυρή Αλεξάνδρα">
     <div class="row2"><div><label>Phone</label><input id="chmPhone" value="${esc(t?t.phone||'':'')}" placeholder="69…"></div><div><label>E-mail (for alerts)</label><input id="chmEmail" value="${esc(t?t.email||'':'')}" placeholder="name@example.gr"></div></div>
     <label>Website (draft or live — the client gets a button to it)</label><input id="chmSite" value="${esc(t?t.site||'':'')}" placeholder="https://…">
-    <label>Stage</label><select id="chmStage">${CH_STAGES.map(s=>`<option value="${s[0]}"${(t?t.stage:'yliko')===s[0]?' selected':''}>${s[1]}</option>`).join('')}</select>
+    <label>Stage</label><select id="chmStage">${CH_STAGES.map(s=>`<option value="${s[0]}"${(t?chStage(t):'yliko')===s[0]?' selected':''}>${s[1]}</option>`).join('')}</select>
     ${t?'':`<label>First message (sent from you, waiting when they open the link)</label><textarea id="chmWelcome">${esc(welcome)}</textarea>`}
     ${t?`<div class="ch-link"><code>${esc(chLink(t))}</code><button class="ch-ib" id="chmCopy">Copy</button></div>`:''}
     <div class="btns">${t?`<button class="btn btn-ghost btn-danger" id="chmArchive">${t.archived?'Restore':'Archive'}</button><button class="btn btn-ghost" id="chmNewLink" title="Old link stops working">New link</button>`:''}<button class="btn btn-ghost" id="chmCancel">Cancel</button><button class="btn" id="chmSave" style="background:var(--grad);color:#fff">${t?'Save':'Create link'}</button></div>`;

@@ -21,21 +21,23 @@
 //       POST /api/chat?new=1                      JSON {name,email,phone,site,stage,welcome} → create a thread + link
 //       POST /api/chat?t=<slug>&file=1            multipart {file} → loose blob
 //       GET  /api/chat?file=<path>                → any attachment
-//   • the chat AGENT (Claude, scheduled task) — ?k=<key>
+//   • the chat AGENT (Claude, scheduled task) — ?k=<key>   (from the Mac only api.github.com is reachable, so the
+//     agent normally uses ADVON-CLIENTS/.advon/chat.py, which writes the same files straight into the data repo)
 //       GET  /api/chat?k=<read key>[&t=<slug>][&format=json]   → plain-text digest of what waits for an answer, or one thread
 //       POST /api/chat?k=<agent key>&t=<slug>     JSON {text} → append a message as «claude» (shown to the client as Advon Media,
 //                                                  tagged «Claude» in the CRM so Angelo always sees which replies were automated)
 //
-// Every write is ONE commit through lib/ghdata.js (retried on ref races). Reads are cached in the function's
-// memory and keyed by the branch head, so a poll that finds nothing new costs a single GitHub call.
+// Every write is ONE commit through lib/ghdata.js (retried on ref races). Reads go through lib/chatcore.js: one
+// recursive listing of chats/ per branch head + blobs cached by sha, so a poll that finds nothing new is ONE GitHub
+// call and opening a thread is at most one blob fetch. Notifications (e-mail to clients, Telegram to Angelo,
+// reminders) are sent by netlify/functions/chat-notify.mjs every 5 minutes from the same files.
 
-import { ghReady, ghConf, ghFetch, commit as ghCommit, createBlob, head, entryAt, blobBuffer, readJson } from '@/lib/ghdata';
+import { ghReady, ghConf, commit as ghCommit, createBlob } from '@/lib/ghdata';
+import { DIR, INDEX_PATH, SITE_URL, STAGES, normStage, currentHead, forgetHead, getIndex as coreIndex, getMessages as coreMessages, readChatBuffer, headNow } from '@/lib/chatcore';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const DIR = 'chats';
-const INDEX_PATH = `${DIR}/index.json`;
 const MAX_FILE = 4.5 * 1024 * 1024;
 const MAX_FILES = 12;
 const MAX_TEXT = 4000;
@@ -43,8 +45,6 @@ const SLUG_RE = /^[a-z0-9-]{2,50}$/;
 const CODE_RE = /^[a-z0-9-]{8,70}$/;
 const SHA_RE = /^[0-9a-f]{40}$/;
 const NAME_OK = /\.(jpe?g|png|webp|gif|bmp|tiff?|heic|heif|svg|pdf|docx?|xlsx?|pptx?|txt|rtf|csv|zip|mp4|mov|m4a|mp3|ogg|webm)$/i;
-const STAGES = ['yliko', 'draft', 'changes', 'payment', 'live'];
-const SITE_URL = 'https://advonmedia.com';
 
 const NO_STORE = {
   'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
@@ -58,11 +58,6 @@ function cfg() {
   return {
     ...ghConf(),
     authHash: process.env.CRM_AUTH_HASH,
-    resendKey: process.env.RESEND_API_KEY,
-    notifyTo: process.env.LEAD_NOTIFY_TO || 'angelos@advonmedia.com',
-    from: process.env.CHAT_FROM || process.env.LEAD_FROM || 'Advon Media <forms@advonmedia.com>',
-    tgToken: process.env.TELEGRAM_BOT_TOKEN,
-    tgChat: process.env.TELEGRAM_CHAT_ID,
   };
 }
 
@@ -110,72 +105,12 @@ async function keyLevel(k) {
 }
 const MIME = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', gif: 'image/gif', bmp: 'image/bmp', tif: 'image/tiff', tiff: 'image/tiff', svg: 'image/svg+xml', heic: 'image/heic', heif: 'image/heif', pdf: 'application/pdf', txt: 'text/plain; charset=utf-8', rtf: 'application/rtf', csv: 'text/csv; charset=utf-8', doc: 'application/msword', docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', xls: 'application/vnd.ms-excel', xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', ppt: 'application/vnd.ms-powerpoint', pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', zip: 'application/zip', mp4: 'video/mp4', mov: 'video/quicktime', m4a: 'audio/mp4', mp3: 'audio/mpeg', ogg: 'audio/ogg', webm: 'video/webm' };
 
-// ---------- cached reads (keyed by the branch head) ----------
-const cache = { head: null, at: 0, index: null, threads: new Map() };
-const online = new Map();            // slug → last time the client page polled (memory only; used to skip pointless e-mails)
-
-async function headSha(c) {
-  const r = await ghFetch(c, `git/ref/heads/${encodeURIComponent(c.branch)}`);
-  if (r.status === 404) return null;
-  if (!r.ok) throw new Error(`GitHub ${r.status}`);
-  return (await r.json()).object.sha;
-}
-async function current(c) {
-  if (cache.head && Date.now() - cache.at < 1500) return cache.head;   // a burst of polls = one GitHub call
-  const sha = await headSha(c);
-  cache.at = Date.now();
-  if (sha !== cache.head) { cache.head = sha; cache.index = null; cache.threads.clear(); }
-  return sha;
-}
-async function treeOf(c) {
-  const h = await head(c);
-  return h ? h.tree : null;
-}
-async function getIndex(c) {
-  await current(c);
-  if (cache.index) return cache.index;
-  const tree = await treeOf(c);
-  const { data } = tree ? await readJson(c, tree, INDEX_PATH, []) : { data: [] };
-  cache.index = Array.isArray(data) ? data : [];
-  return cache.index;
-}
-async function getMessages(c, slug) {
-  await current(c);
-  if (cache.threads.has(slug)) return cache.threads.get(slug);
-  const tree = await treeOf(c);
-  const { data } = tree ? await readJson(c, tree, `${DIR}/${slug}/messages.json`, []) : { data: [] };
-  const msgs = Array.isArray(data) ? data : [];
-  cache.threads.set(slug, msgs);
-  return msgs;
-}
-const publicThread = (t) => ({ slug: t.slug, name: t.name, stage: t.stage, site: t.site || '', adminSeenAt: t.adminSeenAt || null, createdAt: t.createdAt });
-
-// ---------- notifications ----------
-async function tellAngelo(c, text) {
-  const jobs = [];
-  if (c.tgToken && c.tgChat) jobs.push(fetch(`https://api.telegram.org/bot${c.tgToken}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: c.tgChat, text }) }).catch(() => null));
-  if (c.resendKey) jobs.push(fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${c.resendKey}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ from: c.from, to: [c.notifyTo], subject: text.split('\n')[0].slice(0, 120), text }) }).catch(() => null));
-  await Promise.all(jobs);
-}
-async function tellClient(c, t, text) {
-  if (!c.resendKey || !t.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(t.email)) return false;
-  const seen = online.get(t.slug) || 0;
-  if (Date.now() - seen < 3 * 60 * 1000) return false;              // they are looking at the page right now
-  const link = `${SITE_URL}/c/${t.code}`;
-  const esc = (s) => String(s).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
-  const preview = text ? text.slice(0, 600) : '(συνημμένο αρχείο)';
-  const html = `<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;padding:28px 22px;color:#10141F">
-    <p style="font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#2F7FE0;font-weight:700;margin:0 0 14px">Advon Media</p>
-    <h2 style="font-size:20px;margin:0 0 14px">Νέο μήνυμα από τον Άγγελο</h2>
-    <div style="background:#F1F5FB;border-radius:14px;padding:16px 18px;font-size:15px;line-height:1.55;white-space:pre-wrap">${esc(preview)}</div>
-    <p style="margin:22px 0"><a href="${link}" style="display:inline-block;background:#2F7FE0;color:#fff;text-decoration:none;font-weight:700;padding:13px 22px;border-radius:12px">Ανοίξτε τη συνομιλία</a></p>
-    <p style="font-size:13px;color:#687182;line-height:1.5">Απαντάτε από τον ίδιο σύνδεσμο — δεν χρειάζεται κωδικός. Κρατήστε τον για να μιλάμε για την ιστοσελίδα σας.<br>Advon Media · advonmedia.com</p>
-  </div>`;
-  try {
-    const r = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${c.resendKey}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ from: c.from, to: [t.email], subject: 'Νέο μήνυμα από την Advon Media', text: `Νέο μήνυμα από τον Άγγελο (Advon Media):\n\n${preview}\n\nΑνοίξτε τη συνομιλία: ${link}`, html }) });
-    return r.ok;
-  } catch { return false; }
-}
+// ---------- reads (cached in lib/chatcore.js — one GitHub call when nothing changed) ----------
+const online = new Map();            // slug → last time the client page polled (memory only)
+const getIndex = (c) => coreIndex(c);
+const getMessages = (c, slug) => coreMessages(c, slug);
+const current = (c) => currentHead(c);
+const publicThread = (t) => ({ slug: t.slug, name: t.name, stage: normStage(t.stage), site: t.site || '', adminSeenAt: t.adminSeenAt || null, createdAt: t.createdAt, log: (t.log || []).slice(-3) });
 
 // ---------- the write: append a message ----------
 async function appendMessage(c, slug, msg, blobFiles = []) {
@@ -189,7 +124,7 @@ async function appendMessage(c, slug, msg, blobFiles = []) {
     const arr = Array.isArray(msgs) ? msgs : [];
     arr.push(msg);
     t.lastAt = msg.at; t.lastFrom = msg.from; t.lastText = (msg.text || (msg.files && msg.files.length ? '📎 ' + msg.files.map((f) => f.name).join(', ') : '')).slice(0, 140); t.n = arr.length;
-    if (msg.from === 'client') { t.unreadAdmin = (t.unreadAdmin || 0) + 1; t.clientSeenAt = msg.at; t.unreadClient = 0; }
+    if (msg.from === 'client') { t.unreadAdmin = (t.unreadAdmin || 0) + 1; t.clientSeenAt = msg.at; t.unreadClient = 0; t.remindersSent = 0; t.lastReminderAt = null; }
     else { t.unreadClient = (t.unreadClient || 0) + 1; t.adminSeenAt = msg.at; t.unreadAdmin = 0; if (msg.from === 'claude') t.lastClaudeAt = msg.at; }
     thread = t;
     return [
@@ -198,7 +133,7 @@ async function appendMessage(c, slug, msg, blobFiles = []) {
       { path: INDEX_PATH, content: JSON.stringify(list, null, 1) },
     ];
   });
-  cache.head = null;
+  forgetHead();
   return thread;
 }
 function normFiles(slug, id, files) {
@@ -210,10 +145,8 @@ function normFiles(slug, id, files) {
 const stripSha = (files) => files.map(({ sha, ...rest }) => rest);
 
 async function fileResponse(c, path) {
-  const h = await head(c);
-  const e = h ? await entryAt(c, h.tree, path) : null;
-  if (!e || e.type !== 'blob') return json({ error: 'not found' }, 404);
-  const buf = await blobBuffer(c, e.sha);
+  const buf = await readChatBuffer(c, path.replace(/^chats\//, ''));
+  if (!buf) return json({ error: 'not found' }, 404);
   const ext = (path.split('.').pop() || '').toLowerCase();
   const fname = encodeURIComponent(path.split('/').pop());
   return new Response(buf, { status: 200, headers: { 'Content-Type': MIME[ext] || 'application/octet-stream', 'Cache-Control': 'private, max-age=31536000, immutable', 'Content-Disposition': `inline; filename*=UTF-8''${fname}` } });
@@ -241,9 +174,9 @@ export async function GET(req) {
         if (!path.startsWith(`${DIR}/${t.slug}/files/`) || path.includes('..') || !/^[\w./\-\u0370-\u03FF\u1F00-\u1FFF]+$/.test(path)) return json({ error: 'bad path' }, 400);
         return fileResponse(c, path);
       }
-      if (q('h') && q('h') === cache.head) return json({ ok: true, same: true, head: cache.head });
+      if (q('h') && q('h') === headNow()) return json({ ok: true, same: true, head: headNow() });
       const messages = await getMessages(c, t.slug);
-      return json({ ok: true, thread: publicThread(t), messages: messages.map((m) => ({ id: m.id, from: m.from === 'client' ? 'client' : 'advon', text: m.text, files: m.files || [], at: m.at })), head: cache.head });
+      return json({ ok: true, thread: publicThread(t), messages: messages.map((m) => ({ id: m.id, from: m.from === 'client' ? 'client' : 'advon', text: m.text, files: m.files || [], at: m.at })), head: headNow() });
     }
 
     // ---- agents ----
@@ -282,16 +215,16 @@ export async function GET(req) {
     if (q('t')) {
       const slug = String(q('t'));
       if (!SLUG_RE.test(slug)) return json({ error: 'bad slug' }, 400);
-      if (q('h') && q('h') === (await current(c))) return json({ ok: true, same: true, head: cache.head });
+      if (q('h') && q('h') === (await current(c))) return json({ ok: true, same: true, head: headNow() });
       const idx = await getIndex(c);
       const t = idx.find((x) => x.slug === slug);
       if (!t) return json({ error: 'not found' }, 404);
       const messages = await getMessages(c, slug);
-      return json({ ok: true, thread: t, messages, head: cache.head, online: Date.now() - (online.get(slug) || 0) < 60 * 1000 });
+      return json({ ok: true, thread: t, messages, head: headNow(), online: Date.now() - (online.get(slug) || 0) < 60 * 1000 });
     }
-    if (q('h') && q('h') === (await current(c))) return json({ ok: true, same: true, head: cache.head });
+    if (q('h') && q('h') === (await current(c))) return json({ ok: true, same: true, head: headNow() });
     const idx = await getIndex(c);
-    return json({ ok: true, threads: idx, head: cache.head, notify: { email: !!c.resendKey, telegram: !!(c.tgToken && c.tgChat) }, onlineSlugs: [...online.entries()].filter(([, at]) => Date.now() - at < 60 * 1000).map(([s]) => s) });
+    return json({ ok: true, threads: idx, head: headNow(), notify: { email: !!process.env.RESEND_API_KEY, telegram: !!(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) }, onlineSlugs: [...online.entries()].filter(([, at]) => Date.now() - at < 60 * 1000).map(([s]) => s) });
   } catch (e) {
     return json({ error: e.message || 'read failed' }, 502);
   }
@@ -356,7 +289,7 @@ export async function POST(req) {
         changed = true;
         return [{ path: INDEX_PATH, content: JSON.stringify(list, null, 1) }];
       });
-      if (changed) cache.head = null;
+      if (changed) forgetHead();
       return json({ ok: true, changed });
     }
 
@@ -372,7 +305,7 @@ export async function POST(req) {
         const list = Array.isArray(idx) ? idx : [];
         let s = base, n = 2; while (list.some((x) => x.slug === s)) s = `${base}-${n++}`;
         const now = nowIso();
-        created = { slug: s, code: `${s}-${rnd(7)}`, name, email: clean(body.email, 120), phone: clean(body.phone, 40), site: clean(body.site, 200), stage: STAGES.includes(body.stage) ? body.stage : 'yliko', createdAt: now, lastAt: now, lastFrom: 'advon', lastText: '', n: 0, unreadAdmin: 0, unreadClient: 0, adminSeenAt: now, clientSeenAt: null, archived: false };
+        created = { slug: s, code: `${s}-${rnd(7)}`, name, email: clean(body.email, 120), phone: clean(body.phone, 40), site: clean(body.site, 200), stage: STAGES.includes(body.stage) ? body.stage : 'yliko', stageAt: now, createdAt: now, lastAt: now, lastFrom: 'advon', lastText: '', n: 0, unreadAdmin: 0, unreadClient: 0, adminSeenAt: now, clientSeenAt: null, archived: false };
         const files = [];
         const msgs = [];
         const welcome = clean(body.welcome, MAX_TEXT);
@@ -382,7 +315,7 @@ export async function POST(req) {
         files.push({ path: INDEX_PATH, content: JSON.stringify(list, null, 1) });
         return files;
       });
-      cache.head = null;
+      forgetHead();
       return json({ ok: true, thread: created, link: `${SITE_URL}/c/${created.code}` });
     }
 
@@ -399,13 +332,14 @@ export async function POST(req) {
         if ('email' in body) t.email = clean(body.email, 120);
         if ('phone' in body) t.phone = clean(body.phone, 40);
         if ('site' in body) t.site = clean(body.site, 200);
-        if ('stage' in body && STAGES.includes(body.stage)) t.stage = body.stage;
+        if ('stage' in body && STAGES.includes(body.stage)) { if (t.stage !== body.stage) { t.stage = body.stage; t.stageAt = nowIso(); t.remindersSent = 0; t.lastReminderAt = null; } }
+        if (typeof body.log === 'string' && body.log.trim()) { t.log = (t.log || []).concat([{ at: nowIso(), by: 'angelo', text: clean(body.log, 400) }]).slice(-30); }
         if ('archived' in body) t.archived = !!body.archived;
         if (body.newLink === true) t.code = `${t.slug}-${rnd(7)}`;
         out = t;
         return [{ path: INDEX_PATH, content: JSON.stringify(list, null, 1) }];
       });
-      cache.head = null;
+      forgetHead();
       return json({ ok: true, thread: out, link: `${SITE_URL}/c/${out.code}` });
     }
 
@@ -422,12 +356,7 @@ export async function POST(req) {
     let t;
     try { t = await appendMessage(c, slug, msg, files); }
     catch (e) { if (e.code === 'no_thread') return json({ error: 'unknown link' }, 404); throw e; }
-    // notifications — best effort, never block the answer
-    if (who === 'client') {
-      tellAngelo(c, `💬 ${t.name}: ${text ? text.slice(0, 500) : '(αρχείο)'}${files.length ? `\n📎 ${files.map((f) => f.name).join(', ')}` : ''}\n${SITE_URL}/crm/#chats`).catch(() => {});
-    } else {
-      tellClient(c, t, text).catch(() => {});
-    }
+    // e-mail / Telegram go out from netlify/functions/chat-notify.mjs (every 5 min) — nothing to wait for here
     return json({ ok: true, message: msg, thread: who === 'client' ? publicThread(t) : t });
   } catch (e) {
     return json({ error: e.message || 'write failed' }, 502);
