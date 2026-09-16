@@ -8,10 +8,11 @@
 // It then writes the bookkeeping fields (angeloNotifiedAt, clientNotifiedAt, remindersSent, lastReminderAt, log)
 // back in ONE commit. Nothing is sent twice: every send is keyed to the message time it covered.
 // Needs in Netlify: RESEND_API_KEY (+ optional CHAT_FROM, CHAT_REPLY_TO, LEAD_NOTIFY_TO), TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID.
-// Manual run: GET https://advonmedia.com/.netlify/functions/chat-notify?key=<first 12 chars of CRM_AUTH_HASH>[&dry=1]
+// Manual run: GET https://advonmedia.com/.netlify/functions/chat-notify?key=<CHAT_AGENT_KEY or first 12 chars of CRM_AUTH_HASH>[&dry=1]
+//   &test=telegram → one test ping + diagnosis (bot name, which chats wrote to it) · &test=email → one test e-mail to LEAD_NOTIFY_TO
 
 import { ghConf, ghReady, commit as ghCommit } from '../../lib/ghdata.js';
-import { INDEX_PATH, OUTBOX_PATH, SITE_URL, STAGE_EL, currentHead, forgetHead, getIndex, getMessages, readChatJson, mailConf, emailOk, sendEmail, sendTelegram, newMessageMail, reminderMail, chatLink } from '../../lib/chatcore.js';
+import { INDEX_PATH, OUTBOX_PATH, SITE_URL, STAGE_EL, currentHead, forgetHead, getIndex, getMessages, readChatJson, mailConf, emailOk, sendEmail, sendTelegram, telegramDiag, newMessageMail, reminderMail, chatLink } from '../../lib/chatcore.js';
 
 export const config = { schedule: '*/5 * * * *' };
 
@@ -26,9 +27,23 @@ export default async (req) => {
   const manual = url.searchParams.get('key');
   if (manual !== null) {
     const want = String(process.env.CRM_AUTH_HASH || '').slice(0, 12);
-    if (!want || manual !== want) return new Response('forbidden', { status: 403 });
+    const h = [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(manual)))].map((b) => b.toString(16).padStart(2, '0')).join('');
+    const agentOk = h === '9bdf28e5bfba580df30a7b218900fa53dc3fba6e8a1317df8e8c2326080ac38a';   // CHAT_AGENT_KEY (secrets.env)
+    if (!agentOk && (!want || manual !== want)) return new Response('forbidden', { status: 403 });
   }
   const dry = url.searchParams.get('dry') === '1';
+  // ?key=…&test=telegram → send one test ping now and show what Telegram says (bot name, chats that wrote to it)
+  if (manual !== null && url.searchParams.get('test') === 'telegram') {
+    const mc0 = mailConf();
+    const d = await telegramDiag(mc0);
+    const s = await sendTelegram(mc0, '✅ Advon Alerts: οι ειδοποιήσεις Telegram δουλεύουν.');
+    return Response.json({ diag: d, send: s });
+  }
+  if (manual !== null && url.searchParams.get('test') === 'email') {
+    const mc0 = mailConf();
+    const s = await sendEmail(mc0, mc0.notifyTo, '✅ Advon Media — δοκιμή e-mail', 'Οι ειδοποιήσεις e-mail από το advonmedia.com δουλεύουν.');
+    return Response.json({ from: mc0.from, to: mc0.notifyTo, send: s });
+  }
   const conf = ghConf();
   if (!ghReady(conf)) return Response.json({ error: 'storage not configured' }, { status: 503 });
   const mc = mailConf();
@@ -131,6 +146,5 @@ export default async (req) => {
       forgetHead();
     } catch (e) { report.error = e.message; }
   }
-  console.log(JSON.stringify({ sent: report.sent, skipped: report.skipped, telegram: canTg, email: canMail, error: report.error || null }));
   return Response.json(report);
 };
