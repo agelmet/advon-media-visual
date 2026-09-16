@@ -20,3 +20,7 @@
   from = "/c/*"
   to = "/c/index.html"
   status = 200
+
+# Skip the build (15 credits each) when a push only touches notes/docs.
+[build]
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)*.md' ':(exclude)Claude outputs'"
