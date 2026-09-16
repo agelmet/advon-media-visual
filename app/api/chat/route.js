@@ -33,7 +33,7 @@
 // reminders) are sent by netlify/functions/chat-notify.mjs every 5 minutes from the same files.
 
 import { ghReady, ghConf, commit as ghCommit, createBlob } from '@/lib/ghdata';
-import { DIR, INDEX_PATH, SITE_URL, STAGES, normStage, currentHead, forgetHead, getIndex as coreIndex, getMessages as coreMessages, readChatBuffer, headNow } from '@/lib/chatcore';
+import { DIR, INDEX_PATH, SITE_URL, STAGES, normStage, currentHead, forgetHead, getIndex as coreIndex, getMessages as coreMessages, readChatBuffer, headNow, mailConf, sendTelegram, telegramDiag, sendEmail } from '@/lib/chatcore';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -184,6 +184,9 @@ export async function GET(req) {
       if (limited(req, 'agent', 600, 60 * 60 * 1000)) return new Response('slow down', { status: 429 });
       const lvl = await keyLevel(q('k'));
       if (!lvl) return new Response('forbidden', { status: 403 });
+      // agent key only: ?test=telegram | ?test=email → send one test now and report what the provider said
+      if (lvl === 2 && q('test') === 'telegram') { const mc = mailConf(); const diag = await telegramDiag(mc); const send = await sendTelegram(mc, '✅ Advon Alerts: οι ειδοποιήσεις Telegram δουλεύουν.'); return json({ diag, send }); }
+      if (lvl === 2 && q('test') === 'email') { const mc = mailConf(); const to = q('to') || mc.notifyTo; const send = await sendEmail(mc, to, '✅ Advon Media — δοκιμή e-mail', 'Οι ειδοποιήσεις e-mail από το advonmedia.com δουλεύουν.'); return json({ from: mc.from, to, send }); }
       const idx = (await getIndex(c)).filter((t) => !t.archived);
       if (q('t')) {
         const slug = String(q('t'));
