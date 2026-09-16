@@ -44,6 +44,10 @@ const nextConfig = {
       { protocol: 'https', hostname: 'cdn.jsdelivr.net' },
     ],
   },
+  async rewrites() {
+    // advonmedia.com/c/<code> → the client chat page (netlify.toml has the same rule for the CDN; this is the fallback)
+    return [{ source: '/c/:code', destination: '/c/index.html' }];
+  },
   async headers() {
     return [
       { source: '/:path*', headers: SECURITY },
@@ -56,6 +60,7 @@ const nextConfig = {
       { source: '/api/pool', headers: NO_STORE },
       { source: '/api/intake', headers: NO_STORE },
       { source: '/api/watchdog', headers: NO_STORE },
+      { source: '/api/chat', headers: NO_STORE },
       { source: '/img/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] },
       { source: '/og/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=604800' }] },
     ];
