@@ -182,31 +182,6 @@ a{color:inherit}
 .skel{flex:1;display:grid;place-items:center;color:var(--muted);font-weight:700}
 .skel i{width:26px;height:26px;border:3px solid var(--line);border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite;display:block}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* delete own message */
-.bub{contain:layout style}
-.bub .del{position:absolute;top:3px;width:28px;height:28px;border-radius:10px;display:none;place-items:center;background:#fff;color:var(--red);box-shadow:0 2px 10px rgba(20,40,80,.22);z-index:2}
-.row.me .bub .del{left:-34px}
-.bub.showact .del{display:grid}
-@media (hover:hover){ .row.me .bub:hover .del{display:grid} }
-.bub .del svg{width:15px;height:15px}
-.bub.gone{background:#EEF2F8!important;color:#98A2B8!important;box-shadow:none!important;font-size:14px}
-.row.me .bub.gone{background:#E3EAF5!important}
-.bub.gone::after{display:none!important}
-.bub .ilink{display:inline-block;font-weight:800;text-decoration:none!important;background:rgba(47,127,224,.10);color:var(--brand);padding:2px 9px;border-radius:9px;margin:1px 0}
-.row.me .bub .ilink{background:rgba(255,255,255,.22);color:#fff}
-.sheet-body ol{margin:0;padding-left:0;list-style:none;display:grid;gap:7px}
-.sheet-body .nb{background:#F5F8FD;border-radius:12px;padding:10px 12px}
-.sheet-body .nb b.t{display:block;color:var(--ink);margin-bottom:2px}
-.sheet-body .tl{display:grid;gap:7px}
-.sheet-body .tl div{background:#F5F8FD;border-radius:12px;padding:9px 12px}
-.sheet-body .note{background:#FFF7E6;border-radius:12px;padding:10px 12px;color:#8A6D1F;font-weight:600}
-@media (max-width:440px){
-  .stages{padding:9px 12px 11px}
-  .st .lbl{font-size:11px}
-  .st .dot{width:19px;height:19px;font-size:10px}
-  .st .bar{min-width:8px;margin:0 5px}
-  .stagehint{padding:0 12px 9px;font-size:12px}
-}
 @media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important;scroll-behavior:auto!important} }
 </style>
 </head>
@@ -234,13 +209,13 @@ a{color:inherit}
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a1 1 0 0 0-1.38 1.13L3.7 11h7.3a1 1 0 1 1 0 2H3.7l-1.68 6.27A1 1 0 0 0 3.4 20.4z"/></svg>
       </button>
     </div>
-    <div class="hint">Αρχεία έως 4 MB · μεγαλύτερα μέσω <a href="https://wetransfer.com" target="_blank" rel="noopener">wetransfer.com</a> · <a href="https://advonmedia.com" target="_blank" rel="noopener">advonmedia.com</a></div>
+    <div class="hint">Φωτογραφίες, PDF και αρχεία έως 4 MB · <a href="https://advonmedia.com" target="_blank" rel="noopener">advonmedia.com</a></div>
   </footer>
 </div>
 <div class="sheet" id="guide"><div class="sheet-card">
-  <div class="sheet-head"><b>Οδηγός αλλαγών</b><button class="sx" aria-label="Κλείσιμο">✕</button></div>
+  <div class="sheet-head"><b>Τι μπορείτε να ζητήσετε — και πώς</b><button id="guidex" aria-label="Κλείσιμο">✕</button></div>
   <div class="sheet-body">
-    <p class="lead">Γράψτε μας ό,τι θέλετε, όπως θα το λέγατε σε έναν φίλο. Για να γίνει σωστά με την πρώτη, βοηθάει να λέτε <b>πού</b> (σε ποιο σημείο της σελίδας) και <b>τι ακριβώς</b>.</p>
+    <p class="lead">Γράψτε μας ό,τι θέλετε, όπως θα το λέγατε σε έναν φίλο. Για να γίνει σωστά με την πρώτη, βοηθάει να λέτε <b>πού</b> (ποιο σημείο της σελίδας) και <b>τι ακριβώς</b>.</p>
     <h4>Παραδείγματα αλλαγών που μπορείτε να ζητήσετε</h4>
     <ul>
       <li>«Αλλάξτε το τηλέφωνο σε <b>210 555 0199</b> παντού.»</li>
@@ -253,59 +228,22 @@ a{color:inherit}
     </ul>
     <h4>Για να γίνει γρήγορα και σωστά</h4>
     <ul>
-      <li>Στείλτε <b>όλες τις αλλαγές μαζί</b>, σε ένα μήνυμα, αριθμημένες (1, 2, 3…) — έτσι ολοκληρώνονται μέσα σε 24 ώρες.</li>
+      <li>Στείλτε <b>όλες τις αλλαγές μαζί</b> σε ένα μήνυμα, αριθμημένες (1, 2, 3…).</li>
       <li>Για κείμενα, στείλτε το <b>τελικό κείμενο</b> όπως θέλετε να μπει — όχι «κάντε το πιο ωραίο».</li>
-      <li>Για φωτογραφίες, στείλτε τις <b>πρωτότυπες</b> (όχι screenshot). Από κινητό επιλέξτε «Πλήρες μέγεθος».</li>
-      <li>Αρχείο πάνω από <b>4 MB</b>; Ανεβάστε το δωρεάν στο <a href="https://wetransfer.com" target="_blank" rel="noopener">wetransfer.com</a> και στείλτε μας εδώ τον σύνδεσμο.</li>
-      <li>Σας άρεσε κάποια <b>άλλη ιστοσελίδα</b>; Στείλτε τον σύνδεσμο και πείτε μας τι ακριβώς σας άρεσε — <a href="#" data-sheet="yliko">δείτε πώς</a>.</li>
+      <li>Για φωτογραφίες, στείλτε τις <b>πρωτότυπες</b> (όχι screenshot). Από το κινητό επιλέξτε «Πλήρες μέγεθος».</li>
+      <li>Λογότυπο σε PNG ή SVG, αν υπάρχει. Αν όχι, σχεδιάζουμε εμείς ένα.</li>
     </ul>
-    <h4>Πόσο γρήγορα προχωράμε</h4>
-    <div class="tl">
-      <div><b>1.</b> Μόλις έχουμε όλο το υλικό → <b>πρώτο draft σε 5–14 ημέρες</b>.</div>
-      <div><b>2.</b> Στέλνετε αλλαγές, καθαρά και όλες μαζί → <b>έτοιμες μέσα σε 24 ώρες</b>.</div>
-      <div><b>3.</b> Μας λέτε «όλα καλά» και το όνομα (domain) → <b>online σε 1–2 ημέρες</b>.</div>
-    </div>
-    <p class="lead">Δηλαδή ο χρόνος είναι ουσιαστικά στα χέρια σας: όσο πιο γρήγορα μας στέλνετε υλικό και απαντήσεις, τόσο πιο γρήγορα είναι online η σελίδα σας.</p>
-    <p class="lead">Απορία; Γράψτε μας εδώ ή στείλτε e-mail στο <a href="mailto:advonmd@gmail.com">advonmd@gmail.com</a>.<br>Τι χρειαζόμαστε στην αρχή: <a href="#" data-sheet="yliko">Υλικό</a> · Τι άλλο μπορούμε να κάνουμε: <a href="#" data-sheet="extras">Extras</a>.</p>
-  </div>
-</div></div>
-<div class="sheet" id="yliko"><div class="sheet-card">
-  <div class="sheet-head"><b>Τι χρειαζόμαστε στο «Υλικό»</b><button class="sx" aria-label="Κλείσιμο">✕</button></div>
-  <div class="sheet-body">
-    <p class="lead">Αυτά τα τέσσερα είναι όλα όσα χρειαζόμαστε για να ξεκινήσουμε. Ιδανικά στείλτε τα <b>όλα μαζί</b>, σε ένα μήνυμα.</p>
-    <ol>
-      <li class="nb"><b class="t">1 · Φωτογραφίες</b>5–10 φωτογραφίες: ο χώρος σας, εσείς, η ομάδα σας. Πρωτότυπες, όχι screenshot. Αν δεν έχετε, πείτε μας το και βρίσκουμε μαζί λύση.</li>
-      <li class="nb"><b class="t">2 · Δυο λόγια για εσάς</b>Σπουδές, εμπειρία, τι σας ξεχωρίζει. Ακόμη και σε bullet points είναι μια χαρά — το κείμενο το γράφουμε εμείς.</li>
-      <li class="nb"><b class="t">3 · Οι υπηρεσίες σας</b>Ποιες είναι, και μία σύντομη πρόταση για την καθεμία.</li>
-      <li class="nb"><b class="t">4 · Στοιχεία επικοινωνίας</b>Τηλέφωνο, e-mail, διεύθυνση, ωράριο, social και ο σύνδεσμος για τις κριτικές σας στο Google.</li>
-    </ol>
-    <h4>Έχετε ήδη προφίλ στο doctoranytime;</h4>
+    <h4>Τι χρειαζόμαστε στο στάδιο «Υλικό»</h4>
     <ul>
-      <li>Αν όλα τα παραπάνω υπάρχουν ήδη εκεί, <b>δεν χρειάζεται να γράψετε τίποτα</b> — στείλτε μας απλώς τον σύνδεσμο του προφίλ σας και τα παίρνουμε από εκεί.</li>
-      <li>Αν θέλετε, προσθέστε οδηγίες: τι να κρατήσουμε, τι να αλλάξουμε, τι να μην μπει. Αν προτιμάτε, το αφήνετε <b>εντελώς πάνω μας</b>.</li>
-      <li>Ό,τι λείπει από το προφίλ, θα σας το ζητήσουμε εμείς εδώ.</li>
+      <li>5–10 φωτογραφίες: ο χώρος, εσείς, η ομάδα σας.</li>
+      <li>Δυο λόγια για εσάς και τις υπηρεσίες σας (και σε bullet points είναι μια χαρά).</li>
+      <li>Στοιχεία επικοινωνίας, διεύθυνση, ωράριο, social και σύνδεσμος για τις κριτικές σας στο Google.</li>
     </ul>
-    <h4>Μεγάλα αρχεία</h4>
-    <div class="note">Εδώ ανεβαίνουν αρχεία έως <b>4 MB</b> το καθένα. Για μεγαλύτερα, ή για πολλές φωτογραφίες μαζί, ανεβάστε τα δωρεάν στο <a href="https://wetransfer.com" target="_blank" rel="noopener">wetransfer.com</a> και στείλτε μας εδώ τον σύνδεσμο.</div>
-    <h4>Σας αρέσει κάποια άλλη ιστοσελίδα;</h4>
-    <ul>
-      <li>Στείλτε μας τον σύνδεσμο και πείτε μας <b>τι ακριβώς</b> σας άρεσε:</li>
-      <li><b>Όλη η σελίδα;</b> Δηλαδή να φτιάξουμε κάτι αντίστοιχο σε χρώματα, σχεδίαση, γραμματοσειρές και δομή.</li>
-      <li><b>Μόνο κάτι συγκεκριμένο;</b> Τα χρώματα · ένα συγκεκριμένο κομμάτι · ο τρόπος που παρουσιάζονται οι υπηρεσίες · ένα κείμενο · κάποιο εφέ ή κίνηση.</li>
-      <li>Όσο πιο συγκεκριμένοι είστε, τόσο πιο κοντά θα είναι το αποτέλεσμα σε αυτό που έχετε στο μυαλό σας.</li>
-    </ul>
-    <h4>Πόσο γρήγορα προχωράμε</h4>
-    <div class="tl">
-      <div><b>1.</b> Μόλις έχουμε όλο το υλικό → <b>πρώτο draft σε 5–14 ημέρες</b>.</div>
-      <div><b>2.</b> Στέλνετε αλλαγές, καθαρά και όλες μαζί → <b>έτοιμες μέσα σε 24 ώρες</b>.</div>
-      <div><b>3.</b> Μας λέτε «όλα καλά» και το όνομα (domain) → <b>online σε 1–2 ημέρες</b>.</div>
-    </div>
-    <p class="lead">Δηλαδή ο χρόνος είναι ουσιαστικά στα χέρια σας: όσο πιο γρήγορα μας στέλνετε υλικό και απαντήσεις, τόσο πιο γρήγορα είναι online η σελίδα σας.</p>
-    <p class="lead">Απορία; Γράψτε μας εδώ ή στείλτε e-mail στο <a href="mailto:advonmd@gmail.com">advonmd@gmail.com</a>. Δείτε επίσης τον <a href="#" data-sheet="odigos">Οδηγό αλλαγών</a> και τα <a href="#" data-sheet="extras">Extras</a>.</p>
+    <p class="lead">Απορία; Γράψτε μας εδώ ή στείλτε e-mail στο <a href="mailto:advonmd@gmail.com">advonmd@gmail.com</a>. Για extras και τιμές δείτε το <a href="#" data-faq>Extras</a>.</p>
   </div>
 </div></div>
 <div class="sheet" id="faq"><div class="sheet-card">
-  <div class="sheet-head"><b>Extras &amp; συχνές ερωτήσεις</b><button class="sx" aria-label="Κλείσιμο">✕</button></div>
+  <div class="sheet-head"><b>Extras &amp; συχνές ερωτήσεις</b><button id="faqx" aria-label="Κλείσιμο">✕</button></div>
   <div class="sheet-body">
     <p class="lead">Ό,τι μπορεί να χρειαστείτε πέρα από τη βασική ιστοσελίδα, με απλά λόγια. Για οποιοδήποτε από αυτά, γράψτε μας εδώ.</p>
     <h4>Extras — προαιρετικά</h4>
@@ -319,12 +257,11 @@ a{color:inherit}
     </div>
     <h4>Συχνές ερωτήσεις</h4>
     <ul>
-      <li><b>Πόσο διαρκεί;</b> Από τη στιγμή που έχουμε όλο το υλικό, το πρώτο draft έρχεται σε 5–14 ημέρες. Μετά, όσες αλλαγές χρειαστούν — κάθε καθαρό αίτημα αλλαγών ολοκληρώνεται μέσα σε 24 ώρες.</li>
+      <li><b>Πόσο διαρκεί;</b> Από τη στιγμή που έχουμε όλο το υλικό, το πρώτο draft έρχεται σε 7–14 ημέρες. Μετά, όσες αλλαγές χρειαστούν.</li>
       <li><b>Το domain (π.χ. epitheto-epaggelma.gr);</b> Περιλαμβάνεται, χωρίς επιπλέον κόστος. Όταν η σελίδα είναι έτοιμη, σας ζητάμε 2–3 ονόματα με σειρά προτίμησης και ελέγχουμε τι είναι διαθέσιμο.</li>
       <li><b>Τι περιλαμβάνει η φιλοξενία (hosting);</b> Τον server όπου «ζει» η σελίδα, το domain, την ασφάλεια, τα backups και τη συνεχή λειτουργία της — όλα σε ένα.</li>
       <li><b>Θα με βρίσκουν στο Google;</b> Ναι — κάθε σελίδα φτιάχνεται με σωστή δομή, ταχύτητα και τα στοιχεία που χρειάζεται το Google. Το Google Business Profile τη βοηθά ακόμη περισσότερο.</li>
       <li><b>Μπορώ να αλλάξω κάτι μόνος μου;</b> Με τον Πίνακα Διαχείρισης, ναι — κείμενα και εικόνες, όποτε θέλετε.</li>
-      <li><b>Μπορώ να σβήσω ένα μήνυμα;</b> Ναι — πατήστε πάνω στο δικό σας μήνυμα και θα εμφανιστεί ο κάδος δίπλα του.</li>
       <li><b>Πώς σας βρίσκω;</b> Εδώ, στη συνομιλία — ή με e-mail στο <a href="mailto:advonmd@gmail.com">advonmd@gmail.com</a>.</li>
     </ul>
   </div>
@@ -341,8 +278,8 @@ const $=s=>document.querySelector(s);
 const feed=$('#feed'), dock=$('#dock'), txt=$('#txt'), sendBtn=$('#send'), tray=$('#tray'), fileIn=$('#file');
 const code=(location.pathname.match(/\/c\/([a-z0-9-]+)/i)||[])[1]||new URLSearchParams(location.search).get('c')||'';
 const STAGES=[['yliko','Υλικό'],['draft','Πρώτο draft'],['changes','Αλλαγές'],['live','Live']];
-const STAGE_HINT={yliko:'Στείλτε μας φωτογραφίες, δυο λόγια για εσάς και τα στοιχεία σας — ιδανικά όλα μαζί, σε ένα μήνυμα.',draft:'Δείτε το πρώτο draft και γράψτε μας εδώ ό,τι θέλετε να αλλάξει — όσες αλλαγές χρειαστούν.',changes:'Κάνουμε τις αλλαγές σας μία-μία. Όταν είναι όλα όπως τα θέλετε, πείτε μας «προχωράμε» και το όνομα (domain) που θα θέλατε.',live:'Η ιστοσελίδα σας είναι online! Για οποιαδήποτε αλλαγή ή ερώτηση, γράψτε μας εδώ.'};
-const CHIPS={yliko:[['📷','Στέλνω υλικό','Σας στέλνω το υλικό για την ιστοσελίδα: '],['❓','Έχω ερώτηση','Έχω μια ερώτηση: ']],draft:[['✏️','Έχω αλλαγές','Είδα το draft — θα ήθελα τις εξής αλλαγές:\n1. '],['✅','Όλα καλά','Όλα καλά, μου αρέσει! Προχωράμε να ανέβει live και θα ήθελα το domain name (πχ επώνυμο-επάγγελμα.gr).'],['❓','Έχω ερώτηση','Έχω μια ερώτηση: ']],changes:[['✅','Όλα καλά, προχωράμε','Όλα καλά, είναι όπως τα θέλω — προχωράμε στη δημοσίευση!'],['✏️','Κι άλλες αλλαγές','Θα ήθελα ακόμη:\n1. '],['🌐','Το domain μου','Για όνομα (domain) θα ήθελα, με σειρά προτίμησης:\n1. \n2. ']],live:[['✏️','Θέλω μια αλλαγή','Θα ήθελα μια αλλαγή στη σελίδα: '],['⭐','Κριτική στο Google','Πού μπορώ να γράψω κριτική;']]};
+const STAGE_HINT={yliko:'Στείλτε μας φωτογραφίες, λογότυπο και δυο λόγια για εσάς — δείτε τον Οδηγό για το τι χρειάζεται.',draft:'Δείτε το πρώτο draft και γράψτε μας εδώ ό,τι θέλετε να αλλάξει — όσες αλλαγές χρειαστούν.',changes:'Κάνουμε τις αλλαγές σας μία-μία. Όταν είναι όλα όπως τα θέλετε, πείτε μας «προχωράμε» και το όνομα (domain) που θα θέλατε.',live:'Η ιστοσελίδα σας είναι online! Για οποιαδήποτε αλλαγή ή ερώτηση, γράψτε μας εδώ.'};
+const CHIPS={yliko:[['📷','Στέλνω υλικό','Σας στέλνω το υλικό για την ιστοσελίδα: '],['❓','Έχω ερώτηση','Έχω μια ερώτηση: ']],draft:[['✏️','Έχω αλλαγές','Είδα το draft — θα ήθελα τις εξής αλλαγές:\n1. '],['✅','Όλα καλά','Όλα καλά, μου αρέσει! Προχωράμε.'],['❓','Έχω ερώτηση','Έχω μια ερώτηση: ']],changes:[['✅','Όλα καλά, προχωράμε','Όλα καλά, είναι όπως τα θέλω — προχωράμε στη δημοσίευση!'],['✏️','Κι άλλες αλλαγές','Θα ήθελα ακόμη:\n1. '],['🌐','Το domain μου','Για όνομα (domain) θα ήθελα, με σειρά προτίμησης:\n1. \n2. ']],live:[['✏️','Θέλω μια αλλαγή','Θα ήθελα μια αλλαγή στη σελίδα: '],['⭐','Κριτική στο Google','Πού μπορώ να γράψω κριτική;']]};
 const state={thread:null,msgs:[],head:null,pending:[],queue:[],lastActive:Date.now(),timer:null,unread:0,sound:false};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtT=iso=>{const d=new Date(iso);return d.toLocaleTimeString('el-GR',{hour:'2-digit',minute:'2-digit',hour12:false});};
@@ -351,13 +288,7 @@ function dayLabel(iso){const d=new Date(iso),n=new Date();const t0=new Date(n.ge
 const kb=n=>n>1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
 const isImg=n=>/\.(jpe?g|png|webp|gif|bmp)$/i.test(n||'');
 const fileKind=n=>{const e=(n.split('.').pop()||'').toLowerCase();return e==='pdf'?'pdf':/^docx?$|^rtf$|^txt$/.test(e)?'doc':/^xlsx?$|^csv$/.test(e)?'xls':/^zip$/.test(e)?'zip':'';};
-function linkify(t){
-  const keep=[]; let s=esc(t);
-  s=s.replace(/\[([^\]\n]{1,90})\]\(#(odigos|extras|yliko)\)/g,(m,x,id)=>{keep.push('<a href="#" class="ilink" data-sheet="'+id+'">'+x+'</a>');return '\u0001'+(keep.length-1)+'\u0001';});
-  s=s.replace(/\[([^\]\n]{1,90})\]\((https?:\/\/[^\s)]+)\)/g,(m,x,u)=>{keep.push('<a href="'+u+'" target="_blank" rel="noopener">'+x+'</a>');return '\u0001'+(keep.length-1)+'\u0001';});
-  s=s.replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)»"'])/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
-  return s.replace(/\u0001(\d+)\u0001/g,(m,i)=>keep[+i]);
-}
+const linkify=t=>esc(t).replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)»"'])/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
 const fileUrl=p=>API+'?c='+encodeURIComponent(code)+'&file='+encodeURIComponent(p);
 let toastT; function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2600);}
 
@@ -370,10 +301,8 @@ function tick(m){
   const two='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12.5l5 5L17.5 7"/><path d="M9.5 15.5l2 2L22 7"/></svg>';
   return seen?'<span class="seen" title="Το είδε ο Άγγελος">'+two+'</span>':one;
 }
-const DELIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>';
 function bubble(m,me){
   let inner='';
-  if(m.deleted) return '<span>Το μήνυμα διαγράφηκε</span><div class="meta">'+fmtT(m.at)+'</div>';
   const files=m.files||[], pics=files.filter(f=>isImg(f.name)), docs=files.filter(f=>!isImg(f.name));
   if(pics.length){inner+='<div class="pics'+(pics.length===1?' one':'')+'">'+pics.map(f=>'<img loading="lazy" src="'+(f.local||fileUrl(f.path))+'" alt="'+esc(f.name)+'" data-full="'+(f.local||fileUrl(f.path))+'" data-name="'+esc(f.name)+'">').join('')+'</div>';}
   docs.forEach(f=>{inner+='<a class="file" '+(f.local?'':'href="'+fileUrl(f.path)+'" target="_blank" rel="noopener"')+'><span class="ic '+fileKind(f.name)+'">'+esc((f.name.split('.').pop()||'').slice(0,4).toUpperCase())+'</span><span><span class="n">'+esc(f.name)+'</span><small>'+kb(f.bytes||0)+'</small></span></a>';});
@@ -381,54 +310,31 @@ function bubble(m,me){
   if(m.state==='pending'&&m.progress!=null)inner+='<div class="prog"><i style="width:'+Math.round(m.progress*100)+'%"></i></div>';
   inner+='<div class="meta">'+(m.state==='pending'?'αποστολή…':fmtT(m.at))+(me?' '+tick(m):'')+'</div>';
   if(m.state==='failed')inner+='<span class="fail" data-retry="'+esc(m.id)+'">Δεν στάλθηκε — πατήστε για επανάληψη</span>';
-  if(me)inner+='<button class="del" data-del="'+esc(m.id)+'" title="Διαγραφή μηνύματος" aria-label="Διαγραφή">'+DELIC+'</button>';
   return inner;
 }
-function seenKey(m){return (state.thread&&state.thread.adminSeenAt&&state.thread.adminSeenAt>=m.at)?'s':'';}
-function items(){
-  const all=state.msgs.concat(state.pending).sort((a,b)=>a.at<b.at?-1:1);
-  const out=[]; let lastDay='',prev=null;
-  all.forEach((m,i)=>{
-    const dk=dayKey(m.at);
-    if(dk!==lastDay){ out.push({key:'d'+dk,html:'<div class="day"><span>'+dayLabel(m.at)+'</span></div>'}); lastDay=dk; prev=null; }
-    const me=m.from==='client', next=all[i+1];
-    const sameNext=next&&next.from===m.from&&dayKey(next.at)===dk&&(new Date(next.at)-new Date(m.at))<6*60000;
-    const gap=prev&&prev.from!==m.from;
-    const cls='row '+(me?'me':'them')+(sameNext?'':' last')+(gap?' gap':'');
-    const key=m.id+'|'+cls+'|'+(m.state||'')+'|'+(m.progress==null?'':Math.round(m.progress*100))+'|'+(m.deleted?'x':'')+'|'+seenKey(m)+'|'+((m.files||[]).length);
-    out.push({key,html:'<div class="'+cls+'" data-id="'+esc(m.id)+'">'+(me?'':'<div class="av"><img src="/img/advon-icon-180.png" alt=""></div>')+'<div class="bub'+(m.state?' '+m.state:'')+(m.deleted?' gone':'')+'">'+bubble(m,me)+'</div></div>'});
-    prev=m;
-  });
-  return out;
-}
-function node(it){const d=document.createElement('div');d.innerHTML=it.html;const el=d.firstElementChild;el.dataset.k=it.key;requestAnimationFrame(()=>{el.style.animation='none';});return el;}
 function render(keepScroll){
   const nearBottom=feed.scrollHeight-feed.scrollTop-feed.clientHeight<140;
-  const list=items();
-  if(!list.length){ feed.innerHTML='<div class="hello"><img src="/img/advon-icon-180.png" alt=""><h2>Καλώς ήρθατε!</h2><p>Εδώ μιλάμε για την ιστοσελίδα σας: στείλτε φωτογραφίες, κείμενα, αλλαγές ή ό,τι σας απασχολεί. Απαντάμε το συντομότερο.</p></div>'; return; }
-  const kids=[...feed.children];
-  if(kids.length&&!kids[0].dataset.k){ feed.innerHTML=''; kids.length=0; }
-  const cur=kids.map(el=>el.dataset.k);
-  let added=false, prefix=cur.length<=list.length;
-  if(prefix) for(let i=0;i<cur.length;i++){ if(cur[i]!==list[i].key){prefix=false;break;} }
-  if(prefix){
-    for(let i=cur.length;i<list.length;i++){ feed.appendChild(node(list[i])); added=true; }
-  }else{
-    const old=new Map(); kids.forEach(el=>old.set(el.dataset.k,el));
-    const frag=document.createDocumentFragment();
-    for(const it of list){ let el=old.get(it.key); if(el){old.delete(it.key);} else {el=node(it);added=true;} frag.appendChild(el); }
-    old.forEach(el=>el.remove());
-    feed.appendChild(frag);
-  }
-  if(!keepScroll||nearBottom)feed.scrollTop=feed.scrollHeight; else if(added)$('#newpill').classList.add('on');
+  const all=state.msgs.concat(state.pending).sort((a,b)=>a.at<b.at?-1:1);
+  const out=[];
+  if(!all.length){out.push('<div class="hello"><img src="/img/advon-icon-180.png" alt=""><h2>Καλώς ήρθατε!</h2><p>Εδώ μιλάμε για την ιστοσελίδα σας: στείλτε φωτογραφίες, κείμενα, αλλαγές ή ό,τι σας απασχολεί. Απαντάμε το συντομότερο.</p></div>');}
+  let lastDay='',prev=null;
+  all.forEach((m,i)=>{
+    const dk=dayKey(m.at); if(dk!==lastDay){out.push('<div class="day"><span>'+dayLabel(m.at)+'</span></div>');lastDay='';lastDay=dk;prev=null;}
+    const me=m.from==='client'; const next=all[i+1]; const sameNext=next&&next.from===m.from&&dayKey(next.at)===dk&&(new Date(next.at)-new Date(m.at))<6*60000;
+    const gap=prev&&prev.from!==m.from;
+    out.push('<div class="row '+(me?'me':'them')+(sameNext?'':' last')+(gap?' gap':'')+'" data-id="'+esc(m.id)+'">'+(me?'':'<div class="av"><img src="/img/advon-icon-180.png" alt=""></div>')+'<div class="bub'+(m.state?' '+m.state:'')+'">'+bubble(m,me)+'</div></div>');
+    prev=m;
+  });
+  feed.innerHTML=out.join('');
+  if(!keepScroll||nearBottom)feed.scrollTop=feed.scrollHeight; else if(keepScroll)$('#newpill').classList.add('on');
 }
 function renderHead(){
   const t=state.thread; if(!t)return;
-  const act=$('#act'); act.innerHTML=(t.site?'<a href="'+esc(/^https?:/.test(t.site)?t.site:'https://'+t.site)+'" target="_blank" rel="noopener" title="Η ιστοσελίδα σας"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span>Η σελίδα σας</span></a>':'')+'<a href="mailto:advonmd@gmail.com?subject='+encodeURIComponent('Ιστοσελίδα — '+(t.name||''))+'" title="Στείλτε μας e-mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 8l9 6 9-6"/></svg><span>E-mail</span></a><button data-sheet="extras" title="Extras και συχνές ερωτήσεις"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h7"/></svg><span>Extras</span></button><button data-sheet="odigos" title="Οδηγός αλλαγών — τι μπορείτε να ζητήσετε και πώς"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5M12 17h.01"/></svg><span>Οδηγός αλλαγών</span></button>';
+  const act=$('#act'); act.innerHTML=(t.site?'<a href="'+esc(/^https?:/.test(t.site)?t.site:'https://'+t.site)+'" target="_blank" rel="noopener" title="Η ιστοσελίδα σας"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span>Η σελίδα σας</span></a>':'')+'<a href="mailto:advonmd@gmail.com?subject='+encodeURIComponent('Ιστοσελίδα — '+(t.name||''))+'" title="Στείλτε μας e-mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 8l9 6 9-6"/></svg><span>E-mail</span></a><button data-faq title="Extras και συχνές ερωτήσεις"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h7"/></svg><span>Extras</span></button><button data-guide title="Τι μπορείτε να ζητήσετε και πώς"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5M12 17h.01"/></svg><span>Οδηγός</span></button>';
   const st=$('#stages'); const stg=t.stage==='payment'?'changes':t.stage; const idx=STAGES.findIndex(s=>s[0]===stg);
   if(idx<0){st.hidden=true;return;}
   st.hidden=false; st.innerHTML=STAGES.map((s,i)=>'<div class="st'+(i<idx?' done':i===idx?' now':'')+'"><span class="dot">'+(i<idx?'✓':i+1)+'</span><span class="lbl">'+s[1]+'</span><span class="bar"></span></div>').join('');
-  const sh=$('#stagehint'); sh.hidden=false; sh.innerHTML=esc(STAGE_HINT[stg]||'')+(stg==='yliko'?' <a href="#" data-sheet="yliko">Τι χρειαζόμαστε →</a>':' <a href="#" data-sheet="odigos">Οδηγός αλλαγών →</a>');
+  const sh=$('#stagehint'); sh.hidden=false; sh.innerHTML=esc(STAGE_HINT[stg]||'')+(stg==='yliko'?' <a href="#" data-guide>Οδηγός →</a>':'');
   const chips=$('#chips'); chips.innerHTML=(CHIPS[stg]||[]).map((c,i)=>'<button class="chip" data-chip="'+i+'"><span>'+c[0]+'</span>'+esc(c[1])+'</button>').join('');
 }
 
@@ -447,7 +353,7 @@ async function load(first){
     state.pending=state.pending.filter(pm=>!state.msgs.some(m=>m.id===pm.id));
     const fresh=state.msgs.filter(m=>!before.has(m.id)&&m.from!=='client');
     renderHead(); render(!first);
-    if(first){dock.hidden=false; requestAnimationFrame(()=>{feed.scrollTop=feed.scrollHeight;}); setTimeout(()=>{feed.scrollTop=feed.scrollHeight;},300);}
+    if(first){dock.hidden=false;}
     if(fresh.length&&!first){if(document.visibilityState==='visible'&&state.sound)blip();}
     if(state.msgs.some(m=>m.from!=='client')){ if(document.visibilityState==='visible')markSeen(); else {state.unread=(before.size?fresh.length:0);title();} }
   }catch(e){ if(first){feed.innerHTML='<div class="err"><img src="/img/advon-icon-180.png" alt=""><h1>Μικρό πρόβλημα σύνδεσης</h1><p>'+esc(e.message||'')+'</p><a href="javascript:location.reload()">Δοκιμάστε ξανά</a></div>';} }
@@ -523,61 +429,39 @@ async function send(){
 async function push(pm){
   pm.state='pending'; pm.progress=pm._q&&pm._q.length?0:null; render(true);
   try{
-    const q=pm._q||[]; const files=new Array(q.length); let next=0, done=0;
-    async function one(i){
-      const f=await shrink(q[i].file);
-      if(f.size>4.5*1024*1024)throw new Error('Το αρχείο «'+f.name+'» ξεπερνά τα 4 MB. Ανεβάστε το δωρεάν στο wetransfer.com και στείλτε μας εδώ τον σύνδεσμο.');
+    const files=[];
+    for(let i=0;i<(pm._q||[]).length;i++){
+      const f=await shrink(pm._q[i].file);
+      if(f.size>4.5*1024*1024)throw new Error('Το αρχείο «'+f.name+'» είναι πολύ μεγάλο (έως 4 MB)');
       const fd=new FormData(); fd.append('file',f,f.name);
       const r=await fetch(API+'?c='+encodeURIComponent(code)+'&file=1',{method:'POST',body:fd});
       const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok)throw new Error(p.error==='file type not allowed'?'Αυτός ο τύπος αρχείου δεν υποστηρίζεται':'Η μεταφόρτωση απέτυχε');
-      files[i]={sha:p.sha,name:p.name,bytes:p.bytes,type:p.type};
-      done++; pm.progress=done/q.length; render(true);
+      files.push({sha:p.sha,name:p.name,bytes:p.bytes,type:p.type});
+      pm.progress=(i+1)/pm._q.length; render(true);
     }
-    await Promise.all(Array.from({length:Math.min(3,q.length)},async()=>{ while(next<q.length){ await one(next++); } }));
-    const r=await fetch(API+'?c='+encodeURIComponent(code),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:pm.text,files:files.filter(Boolean),ua:navigator.userAgent.slice(0,120)})});
+    const r=await fetch(API+'?c='+encodeURIComponent(code),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:pm.text,files,ua:navigator.userAgent.slice(0,120)})});
     const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok)throw new Error(p.error||'Η αποστολή απέτυχε');
+    // swap the pending copy with the real one
     state.pending=state.pending.filter(x=>x.id!==pm.id);
     (pm._q||[]).forEach(x=>x.url&&setTimeout(()=>URL.revokeObjectURL(x.url),60000));
     state.msgs.push(p.message); if(p.thread)state.thread=Object.assign(state.thread||{},p.thread); state.head=null;
     render(false);
   }catch(e){ pm.state='failed'; pm.err=e.message; render(true); toast(e.message||'Δεν στάλθηκε'); }
 }
-/* the client can take back anything they sent */
-async function delMsg(id){
-  const pend=state.pending.find(x=>x.id===id);
-  if(pend){ state.pending=state.pending.filter(x=>x.id!==id); render(true); return; }
-  const m=state.msgs.find(x=>x.id===id); if(!m||m.deleted)return;
-  if(!confirm('Να διαγραφεί αυτό το μήνυμα;'))return;
-  const keep={text:m.text,files:m.files};
-  m.deleted=true; m.text=''; m.files=[]; render(true);
-  try{
-    const r=await fetch(API+'?c='+encodeURIComponent(code)+'&del='+encodeURIComponent(id),{method:'POST'});
-    const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok)throw new Error(p.error||'x');
-    state.head=null; toast('Το μήνυμα διαγράφηκε');
-  }catch(e){ m.deleted=false; m.text=keep.text; m.files=keep.files; render(true); toast('Δεν έγινε η διαγραφή — δοκιμάστε ξανά'); }
-}
 feed.addEventListener('click',e=>{
-  const dl=e.target.closest('[data-del]'); if(dl){ e.stopPropagation(); delMsg(dl.dataset.del); return; }
   const rt=e.target.closest('[data-retry]'); if(rt){const pm=state.pending.find(x=>x.id===rt.dataset.retry);if(pm)push(pm);return;}
-  const im=e.target.closest('.pics img'); if(im){$('#lbimg').src=im.dataset.full;$('#lbdl').href=im.dataset.full;$('#lbdl').download=im.dataset.name||'';$('#lb').classList.add('on');return;}
-  const mine=e.target.closest('.row.me .bub');
-  const on=mine&&mine.classList.contains('showact');
-  feed.querySelectorAll('.bub.showact').forEach(x=>x.classList.remove('showact'));
-  if(mine&&!on&&!mine.classList.contains('gone'))mine.classList.add('showact');
+  const im=e.target.closest('.pics img'); if(im){$('#lbimg').src=im.dataset.full;$('#lbdl').href=im.dataset.full;$('#lbdl').download=im.dataset.name||'';$('#lb').classList.add('on');}
 });
-const SHEET={odigos:'guide',extras:'faq',yliko:'yliko'};
-function closeSheets(){document.querySelectorAll('.sheet.on').forEach(el=>el.classList.remove('on'));}
-function openSheet(id){const el=document.getElementById(SHEET[id]||id); if(el){closeSheets();el.classList.add('on');el.querySelector('.sheet-body').scrollTop=0;}}
-document.addEventListener('click',e=>{
-  const b=e.target.closest('[data-sheet]'); if(b){ e.preventDefault(); openSheet(b.dataset.sheet); return; }
-  if(e.target.closest('[data-guide]')){ e.preventDefault(); openSheet('odigos'); return; }
-  if(e.target.closest('[data-faq]')){ e.preventDefault(); openSheet('extras'); return; }
-  if(e.target.closest('.sx')||e.target.classList.contains('sheet')) closeSheets();
-});
+document.addEventListener('click',e=>{ const g=e.target.closest('[data-guide]'); if(g){ e.preventDefault(); $('#guide').classList.add('on'); } });
+$('#guidex').addEventListener('click',()=>$('#guide').classList.remove('on'));
+document.addEventListener('click',e=>{ const g=e.target.closest('[data-faq]'); if(g){ e.preventDefault(); $('#faq').classList.add('on'); } });
+$('#faqx').addEventListener('click',()=>$('#faq').classList.remove('on'));
+$('#faq').addEventListener('click',e=>{ if(e.target.id==='faq') e.currentTarget.classList.remove('on'); });
+$('#guide').addEventListener('click',e=>{ if(e.target.id==='guide') e.currentTarget.classList.remove('on'); });
 $('#chips').addEventListener('click',e=>{ const b=e.target.closest('[data-chip]'); if(!b) return; const stg=(state.thread&&state.thread.stage==='payment')?'changes':(state.thread&&state.thread.stage); const c=(CHIPS[stg]||[])[+b.dataset.chip]; if(!c) return; txt.value=c[2]; txt.dispatchEvent(new Event('input')); txt.focus(); txt.setSelectionRange(txt.value.length,txt.value.length); });
 $('#lbx').addEventListener('click',()=>$('#lb').classList.remove('on'));
 $('#lb').addEventListener('click',e=>{if(e.target.id==='lb')$('#lb').classList.remove('on');});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('#lb').classList.remove('on');closeSheets();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('#lb').classList.remove('on');$('#guide').classList.remove('on');$('#faq').classList.remove('on');}});
 $('#newpill').addEventListener('click',()=>{feed.scrollTop=feed.scrollHeight;$('#newpill').classList.remove('on');});
 feed.addEventListener('scroll',()=>{if(feed.scrollHeight-feed.scrollTop-feed.clientHeight<60)$('#newpill').classList.remove('on');},{passive:true});
 function blip(){try{const a=new (window.AudioContext||window.webkitAudioContext)();const o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.setValueAtTime(880,a.currentTime);o.frequency.exponentialRampToValueAtTime(1320,a.currentTime+.08);g.gain.setValueAtTime(.0001,a.currentTime);g.gain.exponentialRampToValueAtTime(.12,a.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+.22);o.connect(g).connect(a.destination);o.start();o.stop(a.currentTime+.24);}catch(e){}}

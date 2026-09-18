@@ -157,27 +157,6 @@ body[data-view="calendar"] .strip .month-nav, body[data-view="calendar"] .strip 
 .view{max-width:1600px; margin:18px auto 60px; padding:0 24px; display:none;}
 .view.active{display:block;}
 
-/* --- money strip 2.0 (18 Sept 2026): three big numbers + a row of small boxes --- */
-.stat-pills .stat-pill.collect-pill{flex-basis:150px;}
-.stat-pill.collect-pill .v{color:var(--coral);}
-.stat-pill.gen-pill{flex-basis:210px; max-width:300px;}
-.stat-pill.gen-pill .v{display:flex; align-items:baseline; gap:6px; justify-content:flex-end;}
-.stat-pill.gen-pill .gpot{font-family:'Sora'; font-size:13.5px; font-weight:800; color:#9AA6BC; opacity:.85;}
-.stat-pill.gen-pill .gpot:empty{display:none;}
-.stat-pill.gen-pill .tgt-bar{position:relative;}
-.stat-pill.gen-pill .tgt-bar > u{position:absolute; left:0; top:0; height:100%; border-radius:99px; background:repeating-linear-gradient(135deg,#C9D4E6 0 5px,#DFE7F2 5px 10px); width:0; transition:width .35s ease;}
-.stat-pill.gen-pill .tgt-bar > i{position:relative; z-index:1;}
-.stat-pill.gen-pill #statTargetSub{margin-top:4px;}
-.mini-pills{display:flex; flex-wrap:wrap; gap:6px; align-items:center; align-self:center; flex:0 1 auto;}
-.mini{display:flex; flex-direction:column; align-items:flex-end; justify-content:center; gap:1px; background:#fff; border:1px solid var(--line); border-radius:11px; padding:6px 10px; box-shadow:var(--shadow); cursor:pointer; min-width:78px; transition:border-color .12s, transform .12s;}
-.mini:hover{border-color:#BFD4F2; transform:translateY(-1px);}
-.mini .mk{font-size:8.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); white-space:nowrap;}
-.mini .mk i{font-style:normal; font-weight:700; color:#9AA6BC; text-transform:none; letter-spacing:0;}
-.mini .mv{font-family:'Sora'; font-weight:800; font-size:14.5px; letter-spacing:-.02em; font-variant-numeric:tabular-nums;}
-.mini.risk .mv{color:#9AA6BC;}
-.mini.risk.off{opacity:.55;}
-body.dark .mini{background:#151C28;}
-@media(max-width:900px){ .mini-pills{width:100%;} .mini{flex:1 1 72px; min-width:0;} }
 /* ---------- Quick add ---------- */
 .quickadd{background:#fff; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:13px 15px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:16px; border-left:5px solid var(--green);}
 .quickadd .qa-title{font-family:'Sora'; font-weight:700; font-size:12.5px; margin-right:4px; white-space:nowrap;}
@@ -1654,10 +1633,6 @@ body.dark .ch-pill.on{background:var(--brand);}
 .ch-msg.me .ch-meta{opacity:.9;}
 .ch-meta svg{width:14px; height:14px;}
 .ch-meta .tag{background:rgba(255,255,255,.22); padding:1px 6px; border-radius:6px; font-size:10px; letter-spacing:.03em;}
-.ch-bub .ch-del{position:absolute; top:2px; right:-30px; width:24px; height:24px; border-radius:8px; display:none; place-items:center; background:var(--surface); color:var(--red); border:1px solid var(--line); font-size:12px; font-weight:800; cursor:pointer;}
-.ch-msg.me .ch-bub .ch-del{right:auto; left:-30px;}
-.ch-bub:hover .ch-del{display:grid;}
-.ch-bub.gone{background:var(--bg)!important; color:var(--muted)!important; box-shadow:none!important;}
 .ch-bub.pending{opacity:.7;}
 .ch-bub.failed{outline:2px solid var(--red);}
 .ch-bub .fail{display:block; font-size:12px; font-weight:800; margin-top:6px; background:#fff; color:var(--red); padding:4px 8px; border-radius:8px; cursor:pointer;}
@@ -1829,20 +1804,18 @@ body.dark .ch-file{background:rgba(255,255,255,.06);}
   </div>
   <button class="today-btn" id="todayBtn">Today</button>
   <div class="stat-pills">
-    <div class="stat-pill earned-pill" id="statEarnedPill"><div class="k">In the bank</div><div class="v" id="statEarned">€0</div><div class="earned-split" id="statEarnedSplit"></div></div>
-    <div class="stat-pill collect-pill" id="statRemPill"><div class="k">Still to collect</div><div class="v" id="statRem">€0</div><div class="tgt-meta" id="statRemMeta"></div></div>
-    <div class="stat-pill target-pill gen-pill" id="statTargetPill">
-      <div class="k">Generated <span class="tgt-meta" id="statTargetMeta"></span></div>
-      <div class="v"><span id="statGen">€0</span><span class="gpot" id="statPot"></span></div>
-      <div class="tgt-bar"><u id="statTargetGhost"></u><i id="statTargetBar"></i></div>
-      <div class="tgt-meta" id="statTargetSub">tap to set a target</div>
-    </div>
-    <div class="mini-pills">
-      <button class="mini" id="statCountPill" title="Clients whose meeting landed in this month"><span class="mk">Clients</span><span class="mv" id="statCount">0</span></button>
-      <button class="mini" id="statRenewPill" title="Renewals paid this month — click to open Renewals"><span class="mk">Renewals <i id="statRenewMeta"></i></span><span class="mv" id="statRenew">€0</span></button>
-      <button class="mini" id="statSubsPill" title="Monthly subscriptions ticked as paid — click to open Monthly"><span class="mk">Monthly <i id="statSubsMeta"></i></span><span class="mv" id="statSubs">€0</span></button>
-      <button class="mini" id="statExpPill" title="Costs this month — click to open Expenses"><span class="mk">Costs <i class="exp-net" id="statExpMeta"></i></span><span class="mv" id="statExp">€0</span></button>
-      <button class="mini risk" id="statRiskPill" title="Money that may never come — trashed clients"><span class="mk">At risk <i id="statRiskMeta"></i></span><span class="mv" id="statRisk">€0</span></button>
+    <div class="stat-pill"><div class="k">Booked this month</div><div class="v" id="statCount">0</div></div>
+    <div class="stat-pill pipe"><div class="k">Month pipeline</div><div class="v" id="statTotal">€0</div></div>
+    <div class="stat-pill paid-pill" title="New websites &amp; extras paid this month"><div class="k">New · paid</div><div class="v" id="statPaid">€0</div></div>
+    <div class="stat-pill renew-pill" id="statRenewPill" title="Renewals paid this month — click to open Renewals"><div class="k">Renewals <span class="tgt-meta" id="statRenewMeta"></span></div><div class="v" id="statRenew">€0</div></div>
+    <div class="stat-pill subs-pill" id="statSubsPill" title="Monthly subscriptions ticked as paid for this month — click to open Monthly"><div class="k">Monthly <span class="tgt-meta" id="statSubsMeta"></span></div><div class="v" id="statSubs">€0</div></div>
+    <div class="stat-pill earned-pill" id="statEarnedPill" title="Everything earned this month: new + renewals + monthly"><div class="k">Earned total</div><div class="v" id="statEarned">€0</div><div class="earned-split" id="statEarnedSplit"></div></div>
+    <div class="stat-pill"><div class="k">To collect</div><div class="v" id="statRem" style="color:var(--coral);">€0</div></div>
+    <div class="stat-pill exp-pill" id="statExpPill" title="This month's costs (domains + fixed costs) and what is left after them — click to open Expenses"><div class="k">Expenses</div><div class="tgt-meta exp-net" id="statExpMeta"></div><div class="v" id="statExp">€0</div></div>
+    <div class="stat-pill target-pill" id="statTargetPill" title="Click to set this month's target">
+      <div class="k">Target · generated <span class="tgt-meta" id="statTargetMeta"></span></div>
+      <div class="v" id="statTarget">Set →</div>
+      <div class="tgt-bar"><i id="statTargetBar"></i></div>
     </div>
   </div>
 </div>
@@ -1859,6 +1832,10 @@ body.dark .ch-file{background:rgba(255,255,255,.06);}
       <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--blue)" data-ic="calendar"></span><h3>Booked meetings</h3><span class="hc-hint" id="homeWeekHint"></span><button class="hc-link" id="bkRefresh" title="Read the booking calendar again now">Check calendar</button><button class="hc-link" data-goto="calendar">Open calendar</button></div>
       <div class="home-card-body" id="homeWeek"></div>
       <div id="bkBody" class="bk-strip"></div>
+    </section>
+    <section class="home-card wide intake-card" id="intakeCard">
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--violet-soft);color:var(--violet)" data-ic="folder"></span><h3>Client material</h3><span class="hc-hint" id="intakeHint"></span><button class="hc-link" id="intakeRefresh" title="Look for new submissions now">Check now</button><a class="hc-link" href="/ylika" target="_blank" rel="noopener">Open /ylika ↗</a></div>
+      <div class="home-card-body" id="intakeBody"></div>
     </section>
     <section class="home-card wide chats-card" id="homeChatsCard">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--brand)" data-ic="message"></span><h3>Client chats</h3><span class="hc-hint" id="homeChatsHint"></span><button class="hc-link" data-goto="chats">Open Chats</button></div>
@@ -1881,7 +1858,7 @@ body.dark .ch-file{background:rgba(255,255,255,.06);}
       <div class="home-card-body" id="homeCash"></div>
     </section>
     <section class="home-card wide subs-card">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--green-soft);color:var(--deep)" data-ic="calendar"></span><h3>Subscriptions to collect</h3><span class="hc-hint" id="homeSubsHint"></span><button class="hc-link" data-goto="monthly">Monthly</button></div>
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--green-soft);color:var(--deep)" data-ic="calendar"></span><h3>Subscriptions due this week</h3><button class="hc-link" data-goto="monthly">Monthly</button></div>
       <div class="home-card-body" id="homeSubs"></div>
     </section>
   </div>
@@ -3164,83 +3141,56 @@ function openRenewalsMonth(key){
 document.addEventListener('click',e=>{ if(e.target.closest && e.target.closest('#statRenewPill')) openRenewalsMonth(curMonth); });
 document.addEventListener('click',e=>{ if(e.target.closest && e.target.closest('#statSubsPill')){ subYear=+curMonth.slice(0,4); switchView('monthly'); } });
 document.addEventListener('click',e=>{ if(e.target.closest && e.target.closest('#statExpPill')){ switchView('monthly'); setTimeout(()=>{ const p=document.getElementById('expensePanel'); if(p) p.scrollIntoView({behavior:'smooth',block:'start'}); },60); } });
-/* ---------- the month's money, in four honest buckets ----------
-   IN THE BANK  money actually received this month: new websites paid + renewals + monthly subs
-   TO COLLECT   agreed work already under way that is still unpaid (Need info → Waiting payment)
-   GENERATED    in the bank + to collect — what the month really produced
-   POTENTIAL    not agreed yet or in danger: Booked (not started), Thinking, and Trash.
-                It is shown faded, with a +, beside Generated and as a ghost on the target bar. */
-function monthMoney(key){
-  const all=state.clients.filter(c=>c.month===key && c.stage!=='lost');
-  const live=all.filter(c=>!c.trashed);
-  const isPot=c=>c.stage==='booked'||c.stage==='thinking';
-  const sum=arr=>arr.reduce((a,c)=>a+cval(c),0);
-  const earned=earnedForMonth(key);
-  const working=live.filter(c=>!isPot(c));
-  const collect=sum(working.filter(c=>c.stage!=='paid'));
-  const pot={ booked:sum(live.filter(c=>c.stage==='booked')), think:sum(live.filter(c=>c.stage==='thinking')), risk:sum(all.filter(c=>c.trashed)) };
-  pot.total=pot.booked+pot.think+pot.risk;
-  pot.n=live.filter(isPot).length+all.filter(c=>c.trashed).length;
-  return { earned, collect, collectN:working.filter(c=>c.stage!=='paid').length, pot,
-           generated:earned.total+collect, withPotential:earned.total+collect+pot.total,
-           riskN:all.filter(c=>c.trashed).length, n:live.length };
-}
 function renderStats(){
   $('#monthLabel').textContent=fmtMonth(curMonth);
-  const m=monthMoney(curMonth), earned=m.earned;
-  $('#statCount').textContent=m.n;
-  /* in the bank */
-  $('#statEarned').textContent=fmtMoney(earned.total);
-  $('#statEarnedSplit').innerHTML=`<span class="es new" title="New websites paid">${fmtMoney(earned.new)}</span><span class="es ren" title="Renewals paid">${fmtMoney(earned.renew)}</span><span class="es sub" title="Monthly subscriptions paid">${fmtMoney(earned.subs)}</span>`;
-  $('#statEarnedPill').title=fmtMoney(earned.total)+' already received in '+fmtMonth(curMonth)+' — '+fmtMoney(earned.new)+' new websites + '+fmtMoney(earned.renew)+' renewals + '+fmtMoney(earned.subs)+' monthly';
-  /* still to collect */
-  $('#statRem').textContent=fmtMoney(m.collect);
-  $('#statRemMeta').textContent= m.collectN? m.collectN+(m.collectN===1?' client owes it':' clients owe it') : 'nothing outstanding';
-  $('#statRemPill').title=fmtMoney(m.collect)+' agreed and under way, not paid yet — click for Remaining';
-  /* generated + potential */
-  $('#statGen').textContent=fmtMoney(m.generated);
-  const pot=$('#statPot');
-  pot.textContent= m.pot.total? '+'+fmtMoney(m.pot.total) : '';
-  pot.title= m.pot.total? 'Potential, not counted yet: '+fmtMoney(m.pot.booked)+' booked · '+fmtMoney(m.pot.think)+' thinking · '+fmtMoney(m.pot.risk)+' in the trash' : '';
-  /* the two small money boxes + costs + risk */
+  const mc=state.clients.filter(c=>c.month===curMonth && notLost(c));
+  $('#statCount').textContent=mc.length;
+  const tot=mc.reduce((a,c)=>a+cval(c),0);
+  const paid=mc.filter(c=>c.stage==='paid').reduce((a,c)=>a+cval(c),0);
+  $('#statTotal').textContent=fmtMoney(tot);
+  $('#statPaid').textContent=fmtMoney(paid);
+  $('#statRem').textContent=fmtMoney(tot-paid);
+  /* earned = new (paid) + renewals (paid) + monthly (ticked) — the one number that says what the month really made */
+  const earned=earnedForMonth(curMonth);
   const subsN=state.subs.filter(s=>s.paid && s.paid[curMonth]).length;
   $('#statSubs').textContent=fmtMoney(earned.subs);
   $('#statSubsMeta').textContent= subsN? subsN+' paid' : '';
-  const rnPaidN=renewalHistory().filter(x=>(x.h.at||'').slice(0,7)===curMonth).length;
-  const rnDueM=liveRenewals().filter(r=>r.date && r.date.slice(0,7)===curMonth);
-  $('#statRenew').textContent=fmtMoney(earned.renew);
-  $('#statRenewMeta').textContent= rnPaidN? rnPaidN+' paid' : (rnDueM.length? rnDueM.length+' due' : '');
+  $('#statEarned').textContent=fmtMoney(earned.total);
+  $('#statEarnedSplit').innerHTML=`<span class="es new" title="New websites paid">${fmtMoney(earned.new)}</span><span class="es ren" title="Renewals paid">${fmtMoney(earned.renew)}</span><span class="es sub" title="Monthly subscriptions paid">${fmtMoney(earned.subs)}</span>`;
+  $('#statEarnedPill').title=fmtMoney(earned.total)+' earned in '+fmtMonth(curMonth)+' — '+fmtMoney(earned.new)+' new + '+fmtMoney(earned.renew)+' renewals + '+fmtMoney(earned.subs)+' monthly';
   const mExpS=expensesForMonth(curMonth), mNetS=earned.total-mExpS;
   $('#statExp').textContent=fmtMoney(Math.round(mExpS));
   $('#statExpMeta').textContent=(mNetS>=0?'+':'−')+fmtMoney(Math.abs(Math.round(mNetS)))+' net';
   $('#statExpMeta').style.color= mNetS>=0 ? 'var(--deep)' : 'var(--coral)';
-  $('#statExpPill').title=fmtMoney(Math.round(mExpS))+' costs in '+fmtMonth(curMonth)+' · '+fmtMoney(Math.round(mNetS))+' left after costs';
-  $('#statRisk').textContent=fmtMoney(m.pot.risk);
-  $('#statRiskMeta').textContent= m.riskN? m.riskN+' in trash' : '';
-  $('#statRiskPill').classList.toggle('off', !m.pot.risk);
-  /* target — solid bar = generated, ghost = with the potential added */
+  $('#statExpPill').title=fmtMoney(Math.round(mExpS))+' costs in '+fmtMonth(curMonth)+' · net after costs '+fmtMoney(Math.round(mNetS))+' (earned − costs) — click to open Expenses';
+  /* renewals pill — renewal money paid in this month (same figure as the Renewals tab), kept apart from Collected */
+  const rnPaidM=renewalsPaidForMonth(curMonth);
+  const rnPaidN=renewalHistory().filter(x=>(x.h.at||'').slice(0,7)===curMonth).length;
+  const rnDueM=liveRenewals().filter(r=>r.date && r.date.slice(0,7)===curMonth);
+  const rnDueV=rnDueM.reduce((a,r)=>a+(+r.value||0),0);
+  $('#statRenew').textContent=fmtMoney(rnPaidM);
+  $('#statRenewMeta').textContent= rnPaidN? rnPaidN+' paid' : (rnDueM.length? rnDueM.length+' due' : '');
+  $('#statRenewPill').title=fmtMoney(rnPaidM)+' renewed in '+fmtMonth(curMonth)+(rnPaidN?' ('+rnPaidN+' paid)':'')+(rnDueM.length?' · '+fmtMoney(rnDueV)+' still due ('+rnDueM.length+')':'')+' — click to open Renewals';
+  // target pill — measured against GENERATED income (booked value + subs), not collected
+  const generated=generatedForMonth(curMonth);
   const mt=monthTarget(curMonth);
-  const pill=$('#statTargetPill'), bar=$('#statTargetBar'), ghost=$('#statTargetGhost');
+  const pill=$('#statTargetPill'), bar=$('#statTargetBar');
   if(mt.value>0){
-    const pct=progPct(m.generated,mt.value), pctAll=progPct(m.withPotential,mt.value);
+    const pct=progPct(generated,mt.value), cls=progClass(pct);
     pill.classList.remove('unset');
+    $('#statTarget').textContent=fmtMoney(Math.round(mt.value));
     $('#statTargetMeta').textContent=pct+'%';
-    bar.className=progClass(pct); bar.style.width=Math.min(100,pct)+'%';
-    ghost.style.width=Math.min(100,pctAll)+'%';
-    $('#statTargetSub').innerHTML='of '+fmtMoney(Math.round(mt.value))+(m.pot.total?' · <b>'+pctAll+'%</b> with the potential':'');
-    pill.title=fmtMoney(m.generated)+' generated of '+fmtMoney(Math.round(mt.value))+' target'+(m.pot.total?' · '+fmtMoney(m.pot.total)+' more is possible':'')+' — click to change the target';
+    bar.className=cls; bar.style.width=Math.min(100,pct)+'%';
+    pill.title=fmtMoney(generated)+' generated of '+fmtMoney(Math.round(mt.value))+' target — click to change';
   } else {
     pill.classList.add('unset');
-    $('#statTargetMeta').textContent='';
-    bar.className=''; bar.style.width='0%'; ghost.style.width='0%';
-    $('#statTargetSub').textContent='tap to set a target';
-    pill.title='Click to set this month\u2019s target';
+    $('#statTarget').textContent='Set →';
+    $('#statTargetMeta').textContent='tap';
+    bar.className=''; bar.style.width='0%';
+    pill.title='Click to set this month’s target';
   }
 }
 $('#statTargetPill').addEventListener('click',()=>editMonthTarget(curMonth));
-$('#statRemPill').addEventListener('click',()=>switchView('remaining'));
-$('#statCountPill').addEventListener('click',()=>switchView('board'));
-$('#statRiskPill').addEventListener('click',()=>switchView('remaining'));
 
 /* ---------- board ---------- */
 function dropHandlers(el, stageId){
@@ -3920,17 +3870,6 @@ $('#qlSourceSeg').addEventListener('click',e=>{
   const b=e.target.closest('button[data-src]'); if(!b) return;
   qlSource=b.dataset.src; renderQLCards();
 });
-/* The CRM often stays open for days. Every minute we check whether the real date
-   moved on; when it does, Quick Log (and the month) follow it, so anything logged
-   in call mode lands on the day it actually happened. */
-let dayWatch=todayIso();
-setInterval(()=>{
-  const t=todayIso(); if(t===dayWatch) return;
-  const was=dayWatch; dayWatch=t;
-  const qd=$('#qlDate'); if(qd && (!qd.value || qd.value===was)) qd.value=t;
-  if(curMonth===was.slice(0,7) && t.slice(0,7)!==curMonth) curMonth=t.slice(0,7);
-  renderAll(); toast('New day — Quick Log is now on '+fmtDay(t));
-}, 60000);
 $('#qlDate').addEventListener('change',()=>{
   const d=$('#qlDate').value;
   if(d && d.slice(0,7)!==curMonth){ curMonth=d.slice(0,7); renderAll(); }
@@ -5145,18 +5084,9 @@ function renderHome(){
   // overdue renewals
   const hrn=$('#homeRenew');
   hrn.innerHTML= overdue.length? overdue.slice(0,12).map(r=>`<div class="home-row warn" data-goto="renewals"><span class="hr-name">${esc(r.name)}</span><span class="hr-sub">${fmtDate(r.date)}</span><span class="hr-val">${fmtMoney2(r.value)}</span></div>`).join('') : '<div class="home-empty">No overdue renewals.</div>';
-  // every monthly client who has not paid for the month we are in — overdue first
-  const hs=$('#homeSubs'), subKey=todayI.slice(0,7), dim=new Date(today.getFullYear(),today.getMonth()+1,0).getDate();
-  const subsOpen=(state.subs||[]).filter(s=>!(s.paid && s.paid[subKey])).map(s=>{
-    const day=Math.min(+s.renewDay||0, dim);
-    const di=day? isoDate(new Date(today.getFullYear(),today.getMonth(),day)) : '';
-    return {s, day, di, over: di? di<todayI : false, today: di===todayI};
-  }).sort((a,b)=> (a.over===b.over) ? ((a.day||99)-(b.day||99)) : (a.over?-1:1));
-  const subsSum=subsOpen.reduce((a,x)=>a+(+x.s.value||0),0), subsOver=subsOpen.filter(x=>x.over).length;
-  const hsh=$('#homeSubsHint'); if(hsh) hsh.textContent= subsOpen.length? `${subsOpen.length} unpaid in ${fmtMonth(subKey)} · ${fmtMoney2(subsSum)}${subsOver?` · ${subsOver} overdue`:''}` : `all paid for ${fmtMonth(subKey)}`;
-  hs.innerHTML= subsOpen.length
-    ? subsOpen.map(x=>`<div class="home-row${x.over?' warn':''}" data-goto="monthly"><span class="hr-name">${esc(x.s.name)}</span><span class="hr-sub">${x.day? (x.over? `day ${x.day} · overdue` : x.today? `due today` : `due day ${x.day}`) : 'no day set'}</span><span class="hr-val">${fmtMoney2(+x.s.value||0)}</span></div>`).join('')
-    : '<div class="home-empty">Every monthly client has paid this month.</div>';
+  // subs due this week
+  const hs=$('#homeSubs');
+  hs.innerHTML= subsDue.length? subsDue.map(s=>`<div class="home-row" data-goto="monthly"><span class="hr-name">${esc(s.name)}</span><span class="hr-sub">day ${s.renewDay}</span><span class="hr-val">${fmtMoney2(s.value)}</span></div>`).join('') : '<div class="home-empty">No subscriptions due in the next 7 days.</div>';
   renderAsap();
   renderBookings();
   renderIntake();
@@ -5433,7 +5363,7 @@ async function openIntake(id){
 }
 $('#intakeClose').addEventListener('click',()=>$('#intakeOverlay').classList.remove('open'));
 $('#intakeOverlay').addEventListener('click',e=>{ if(e.target.id==='intakeOverlay') e.currentTarget.classList.remove('open'); });
-const _ir=$('#intakeRefresh'); if(_ir) _ir.addEventListener('click',()=>Intake.pull(true));
+$('#intakeRefresh').addEventListener('click',()=>Intake.pull(true));
 
 /* ---------- Do ASAP — numbered quick list on Home (free text, 🔥 = super-high priority) ---------- */
 let dragAsapId=null;
@@ -6046,7 +5976,7 @@ function renderLdFocus(){
       <div class="f-spec">${esc(l.spec||'')}${l.city?' · '+esc(l.city):''}${l.addr?' · '+esc(l.addr):''}</div>
       ${l.phone?`<a class="f-phone" href="tel:+30${esc(l.phone)}">${IC.phone}${esc(ldFmtPhone(l.phone))}</a>`:`<div class="f-nophone" id="ldFocusPhone">${IC.phone} No phone yet — look it up, then type it: <input type="tel" placeholder="69… / 21…" autocomplete="off"><button type="button">Save</button></div>`}
       <div class="f-meta">${l.reviews?`<span class="chip">★ ${l.reviews} reviews${l.score?' · '+l.score+'/10':''}</span>`:''}${l.url?`<a class="chip" href="${esc(l.url)}" target="_blank" rel="noopener">doctoranytime profile ↗</a>`:''}${(ldIsCheck(l)||!l.url)?`<a class="chip" href="${esc(ldLookup(l))}" target="_blank" rel="noopener">${IC.search} Google ↗</a><a class="chip" href="${esc(ldMaps(l))}" target="_blank" rel="noopener">Maps ↗</a>`:''}<span class="chip">${esc(ldListInfo(ldListOf(l)).t||'')}</span>${l.note?`<span class="chip">${esc(l.note)}</span>`:''}${l.status==='na'?`<span class="chip" style="background:var(--yellow-soft);color:#8A6400;">no answer on ${l.tries.map(fmtDay).join(', ')}</span>`:''}</div>
-    </div><div class="f-right">next in line<b>${q.length-idx-1}</b>logging on ${fmtDay(todayIso())}</div></div>
+    </div><div class="f-right">next in line<b>${q.length-idx-1}</b>left after this one</div></div>
     <div class="f-script">${script}</div>
     <div class="f-acts"><button class="g">${IC.check} Booked<small>1 · meeting set</small></button><button class="y">${IC.message} SMS sent<small>2 · wants info</small></button><button class="r">${IC.x} No<small>3 · not interested</small></button><button class="n">${IC.hourglass} No answer<small>4 · try another day</small></button></div>
     <div class="ld-book" id="ldFocusBook"></div>
@@ -6124,9 +6054,7 @@ function renderLeads(){
   const trashed=(state.meta.ld.trashed||[]).filter(t=>!ldFilter.list || ldListOf(t)===ldFilter.list);
   if(trashed.length){ if(!done.length) d_el.innerHTML=''; d_el.appendChild(ldTrashGroup(trashed)); }
 }
-$('#ldCallMode').addEventListener('click',()=>{ ldCallMode=!ldCallMode; ldBookingFor=null; if(ldCallMode) syncToday(); renderLeads(); });
-/* every call logged in call mode is written on the real day it happened */
-function syncToday(){ const t=todayIso(); dayWatch=t; const qd=$('#qlDate'); if(qd) qd.value=t; }
+$('#ldCallMode').addEventListener('click',()=>{ ldCallMode=!ldCallMode; ldBookingFor=null; renderLeads(); });
 $('#ldSearch').addEventListener('input',()=>{ ldFilter.q=$('#ldSearch').value; ldShown=LD_PAGE; renderLeads(); });
 $('#ldSpec').addEventListener('change',()=>{ ldFilter.spec=$('#ldSpec').value; ldShown=LD_PAGE; ensureLeads(); delete state.meta.ld.focus; renderLeads(); });
 $('#ldCity').addEventListener('change',()=>{ ldFilter.city=$('#ldCity').value; ldShown=LD_PAGE; ensureLeads(); delete state.meta.ld.focus; renderLeads(); });
@@ -6625,7 +6553,7 @@ $('#restoreFile').addEventListener('change',e=>{
 /* ---------- init ---------- */
 function unlockUI(){ $('#loginScreen').style.display='none'; document.body.classList.remove('locked'); }
 function lockUI(){ $('#loginScreen').style.display='grid'; document.body.classList.add('locked'); $('#loginErr').style.display='none'; $('#loginPass').value=''; setTimeout(()=>$('#loginUser').focus(),50); }
-function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); if(migrateCallStats()){ save(); setTimeout(()=>toast('Cold-call statistics cleared — every month and the year start from your next logged call'),900); } renderAll(); Bookings.start(); setTimeout(()=>Chats.start(),3200); setTimeout(()=>Leads.pull(false),1500); setTimeout(()=>Brief.send(false),4000); }
+function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); if(migrateCallStats()){ save(); setTimeout(()=>toast('Cold-call statistics cleared — every month and the year start from your next logged call'),900); } renderAll(); Bookings.start(); setTimeout(()=>Intake.start(),2500); setTimeout(()=>Chats.start(),3200); setTimeout(()=>Leads.pull(false),1500); setTimeout(()=>Brief.send(false),4000); }
 let loggingIn=false;
 async function tryLogin(){
   if(loggingIn) return;
@@ -6799,8 +6727,7 @@ const CHAT_URL='/api/chat';
 const CH_STAGES=[['yliko','Material'],['draft','First draft'],['changes','Changes'],['live','Live']];
 const chStage=t=>t&&t.stage==='payment'?'changes':(t&&t.stage)||'yliko';
 const CH_STAGE_MSG={draft:1, changes:2, live:5};   /* stage → CH_QUICK index offered after a stage change */
-const CH_WELCOME='Καλώς ήρθατε! 👋\n\nΦτιάξαμε αυτή τη σελίδα συνομιλίας ειδικά για εσάς, ώστε ό,τι αφορά την ιστοσελίδα σας να βρίσκεται σε ένα μέρος — φωτογραφίες, κείμενα, αλλαγές, ερωτήσεις. Όλα εδώ, οργανωμένα.\n\n👀 Τη βλέπουμε εγώ και η ομάδα μας, οπότε σας απαντάμε το συντομότερο δυνατό.\n\n🔗 Κρατήστε τον σύνδεσμο — είναι δικός σας και δεν αλλάζει.\n\n📊 Πάνω-πάνω βλέπετε πάντα σε ποιο στάδιο βρίσκεται η σελίδα σας.\n\n💡 Το πιο χρήσιμο tip: στείλτε τα πράγματα μαζεμένα — όλο το υλικό σε ένα μήνυμα, ή όλες τις αλλαγές μαζί. Έτσι προχωράμε πολύ πιο γρήγορα.\n\nΣτον [Οδηγό αλλαγών](#odigos) θα βρείτε παραδείγματα για το τι μπορείτε να ζητάτε και πώς, και στα [Extras](#extras) ό,τι άλλο μπορούμε να κάνουμε για εσάς.';
-const CH_YLIKO='Ξεκινάμε από το στάδιο «Υλικό».\n\n📋 [Δείτε εδώ τι χρειαζόμαστε](#yliko) — με παραδείγματα.\n\nΣε δυο λόγια:\n• 5–10 φωτογραφίες: ο χώρος, εσείς, η ομάδα σας\n• Δυο λόγια για εσάς και τις υπηρεσίες σας (και σε bullet points είναι μια χαρά)\n• Στοιχεία επικοινωνίας: τηλέφωνο, διεύθυνση, ωράριο, social και ο σύνδεσμος για τις κριτικές σας στο Google\n\n✅ Αν όλα αυτά υπάρχουν ήδη στο προφίλ σας (π.χ. doctoranytime), στείλτε μας απλώς τον σύνδεσμο — τα παίρνουμε από εκεί. Προσθέστε οδηγίες αν θέλετε κάτι συγκεκριμένο, ή αφήστε το εντελώς πάνω μας.\n\n📎 Εδώ ανεβαίνουν αρχεία έως 4 MB. Για μεγαλύτερα (ή πολλές φωτογραφίες μαζί) ανεβάστε τα δωρεάν στο wetransfer.com και στείλτε μας τον σύνδεσμο.\n\n⏱️ Μόλις τα έχουμε όλα, το πρώτο draft έρχεται σε 5–14 ημέρες. Ιδανικά στείλτε τα όλα μαζί, σε ένα μήνυμα.';
+const CH_WELCOME='Καλώς ήρθατε! 👋 Φτιάξαμε αυτή τη σελίδα συνομιλίας ειδικά για εσάς, ώστε ό,τι αφορά την ιστοσελίδα σας να είναι σε ένα μέρος, οργανωμένο και προσωπικό: φωτογραφίες, κείμενα, αλλαγές, ερωτήσεις — όλα εδώ. Την βλέπω εγώ και η ομάδα μας, ώστε να σας βοηθάμε όσο πιο άμεσα γίνεται. Κρατήστε τον σύνδεσμο — είναι δικός σας. Στην επάνω γραμμή βλέπετε σε ποιο στάδιο είναι η σελίδα σας, και στον «Οδηγό» παραδείγματα για το τι μπορείτε να ζητήσετε.';
 const CH_QUICK=[
   ['Received','Έλαβα, ευχαριστώ πολύ! Θα το δω και θα σας ενημερώσω μέσα στην ημέρα.'],
   ['First draft ready','Το πρώτο draft της ιστοσελίδας σας είναι έτοιμο: {site}\nΔείτε το με την ησυχία σας και γράψτε μου εδώ ό,τι αλλαγές θέλετε — όσες χρειαστούν μέχρι να είναι ακριβώς όπως τη φαντάζεστε.'],
@@ -6813,7 +6740,7 @@ const CH_QUICK=[
   ['FAQ · articles section','Η Ενότητα Άρθρων / Σεμιναρίων (70€ εφάπαξ) είναι ένα δικό σας τμήμα στη σελίδα όπου ανεβάζετε και επεξεργάζεστε άρθρα, σεμινάρια ή εργαστήρια μόνοι σας, όποτε θέλετε.'],
   ['FAQ · contact form','Η Φόρμα Επικοινωνίας (50€ εφάπαξ) μπαίνει μέσα στη σελίδα σας — κάθε φορά που κάποιος τη συμπληρώνει, λαμβάνετε αμέσως e-mail στη διεύθυνση που επιλέγετε.'],
   ['FAQ · Google profile','Με το Google Business Profile (90€ εφάπαξ) στήνουμε ή διορθώνουμε το προφίλ σας στο Google Maps και την αναζήτηση, το συνδέουμε με τη σελίδα σας και σας δίνουμε κάρτα NFC ώστε οι πελάτες σας να αφήνουν κριτική με ένα άγγιγμα.'],
-  ['FAQ · how long','Από τη στιγμή που έχουμε όλο το υλικό, το πρώτο draft έρχεται σε 5–14 ημέρες. Από εκεί και πέρα κάνουμε όσες αλλαγές χρειαστούν — κάθε αίτημα αλλαγών, όταν είναι καθαρό και μαζεμένο, ολοκληρώνεται μέσα σε 24 ώρες.'],
+  ['FAQ · how long','Από τη στιγμή που έχουμε όλο το υλικό, το πρώτο draft έρχεται σε 7–14 ημέρες. Από εκεί και πέρα κάνουμε όσες αλλαγές χρειαστούν μέχρι να είναι ακριβώς όπως τη θέλετε.'],
   ['FAQ · domain','Το domain περιλαμβάνεται, χωρίς επιπλέον κόστος. Προτείνουμε κάτι απλό όπως epitheto-epaggelma.gr ή onoma-epitheto.gr — στείλτε μου 2–3 επιλογές με σειρά προτίμησης και ελέγχω τι είναι διαθέσιμο.'],
 ];
 const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, cache:{}, state:'idle', err:'', busy:false, tbusy:false, timer:null, ttimer:null, urls:{}, notify:null, online:[], filter:'all', q:'', queue:[], pending:[], lastAt:0, seenSent:null,
@@ -6921,16 +6848,6 @@ const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, ca
     const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok) throw new Error(p.error||'could not create');
     this.head=null; await this.pull(false); return p;
   },
-  async del(slug, id){
-    if(window.DEMO_CHATS){ const m=(window.DEMO_CHATS.messages[slug]||[]).find(x=>x.id===id); if(m){m.deleted=true;m.text='';m.files=[];} this.msgs=this.msgs.map(x=>x.id===id?{...x,deleted:true,text:'',files:[]}:x); renderChats(); return; }
-    const m=this.msgs.find(x=>x.id===id); const keep=m?{text:m.text,files:m.files}:null;
-    if(m){ m.deleted=true; m.deletedBy='angelo'; m.text=''; m.files=[]; renderChats(); }
-    try{
-      const r=await fetch(CHAT_URL+'?t='+encodeURIComponent(slug)+'&del='+encodeURIComponent(id),{method:'POST', headers:this.hdr()});
-      const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok) throw new Error(p.error||'could not delete');
-      this.head=null; this.thead=null; toast('Message deleted — gone for the client too');
-    }catch(e){ if(m&&keep){ m.deleted=false; m.text=keep.text; m.files=keep.files; renderChats(); } toast('Could not delete'); }
-  },
   async meta(slug, data){
     if(window.DEMO_CHATS){ const t=this.list.find(x=>x.slug===slug); if(t) Object.assign(t,data); renderChats(); return {ok:true, thread:t, link:'https://advonmedia.com/c/'+(t&&t.code)}; }
     const r=await fetch(CHAT_URL+'?t='+encodeURIComponent(slug)+'&meta=1',{method:'POST', headers:{...this.hdr(),'Content-Type':'application/json'}, body:JSON.stringify(data)});
@@ -6949,13 +6866,7 @@ function chInitials(name){ const p=String(name||'?').trim().split(/\s+/); return
 const chIsImg=n=>/\.(jpe?g|png|webp|gif|bmp)$/i.test(String(n||''));
 const chKind=n=>{ const e=(String(n).split('.').pop()||'').toLowerCase(); return e==='pdf'?'pdf':/^docx?$|^rtf$|^txt$/.test(e)?'doc':/^xlsx?$|^csv$/.test(e)?'xls':/^zip$/.test(e)?'zip':''; };
 const chKb=n=>n>1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
-const chLinkify=t=>{
-  const keep=[]; let x=esc(t);
-  x=x.replace(/\[([^\]\n]{1,90})\]\(#(odigos|extras|yliko)\)/g,(m,a)=>{keep.push('<b style="background:rgba(255,255,255,.22);padding:1px 7px;border-radius:8px">'+a+'</b>');return '\u0001'+(keep.length-1)+'\u0001';});
-  x=x.replace(/\[([^\]\n]{1,90})\]\((https?:\/\/[^\s)]+)\)/g,(m,a,u)=>{keep.push('<a href="'+u+'" target="_blank" rel="noopener">'+a+'</a>');return '\u0001'+(keep.length-1)+'\u0001';});
-  x=x.replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)»"'])/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
-  return x.replace(/\u0001(\d+)\u0001/g,(m,i)=>keep[+i]);
-};
+const chLinkify=t=>esc(t).replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)»"'])/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
 const chWhen=iso=>{ if(!iso) return ''; const d=new Date(iso); if(Date.now()-d<86400e3) return relTime(iso); return d.toLocaleDateString(undefined,{day:'numeric',month:'short'})+(Date.now()-d>300*86400e3?' '+d.getFullYear():''); };
 const chTime=iso=>new Date(iso).toLocaleTimeString('el-GR', {hour:'2-digit',minute:'2-digit',hour12:false});
 function chDayLabel(iso){ const d=new Date(iso), n=new Date(); const dd=Math.round((new Date(n.getFullYear(),n.getMonth(),n.getDate())-new Date(d.getFullYear(),d.getMonth(),d.getDate()))/864e5); if(dd===0) return 'Today'; if(dd===1) return 'Yesterday'; return d.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'}); }
@@ -7032,9 +6943,7 @@ function renderChatThread(keep){
     if(m.text) inner+=chLinkify(m.text);
     inner+=`<div class="ch-meta">${m.from==='claude'?'<span class="tag">Claude</span>':''}${m.state==='pending'?'sending…':chTime(m.at)}${me?' '+chTick(m,t):''}</div>`;
     if(m.state==='failed') inner+=`<span class="fail" data-retry="${esc(m.id)}">Not sent — click to retry</span>`;
-    if(m.deleted) inner=`<span style="opacity:.7;font-style:italic">Deleted${m.deletedBy==='client'?' by the client':''}</span><div class="ch-meta">${chTime(m.at)}</div>`;
-    else if(!m.state) inner+=`<button class="ch-del" data-del="${esc(m.id)}" title="Delete this message for both sides">\u2715</button>`;
-    out.push(`<div class="ch-msg ${me?'me':'them'}${m.from==='claude'?' claude':''}${prev&&prev.from!==m.from?' gap':''}"><div class="ch-bub${m.state?' '+m.state:''}${m.deleted?' gone':''}">${inner}</div></div>`);
+    out.push(`<div class="ch-msg ${me?'me':'them'}${m.from==='claude'?' claude':''}${prev&&prev.from!==m.from?' gap':''}"><div class="ch-bub${m.state?' '+m.state:''}">${inner}</div></div>`);
     prev=m;
   });
   feed.innerHTML=out.join('');
@@ -7053,8 +6962,7 @@ function chOpenModal(t){
     <div class="row2"><div><label>Phone</label><input id="chmPhone" value="${esc(t?t.phone||'':'')}" placeholder="69…"></div><div><label>E-mail (for alerts)</label><input id="chmEmail" value="${esc(t?t.email||'':'')}" placeholder="name@example.gr"></div></div>
     <label>Website (draft or live — the client gets a button to it)</label><input id="chmSite" value="${esc(t?t.site||'':'')}" placeholder="https://…">
     <label>Stage</label><select id="chmStage">${CH_STAGES.map(s=>`<option value="${s[0]}"${(t?chStage(t):'yliko')===s[0]?' selected':''}>${s[1]}</option>`).join('')}</select>
-    ${t?'':`<label>First message (sent from you, waiting when they open the link)</label><textarea id="chmWelcome" style="min-height:150px">${esc(welcome)}</textarea>
-    <label>Second message — what we need at this stage (leave empty to skip)</label><textarea id="chmWelcome2" style="min-height:150px">${esc(CH_YLIKO)}</textarea>`}
+    ${t?'':`<label>First message (sent from you, waiting when they open the link)</label><textarea id="chmWelcome">${esc(welcome)}</textarea>`}
     ${t?`<div class="ch-link"><code>${esc(chLink(t))}</code><button class="ch-ib" id="chmCopy">Copy</button></div>`:''}
     <div class="btns">${t?`<button class="btn btn-ghost btn-danger" id="chmArchive">${t.archived?'Restore':'Archive'}</button><button class="btn btn-ghost" id="chmNewLink" title="Old link stops working">New link</button>`:''}<button class="btn btn-ghost" id="chmCancel">Cancel</button><button class="btn" id="chmSave" style="background:var(--grad);color:#fff">${t?'Save':'Create link'}</button></div>`;
   ov.classList.add('open'); setTimeout(()=>$('#chmName').focus(),50);
@@ -7066,7 +6974,7 @@ function chOpenModal(t){
     $('#chmSave').disabled=true;
     try{
       if(t){ await Chats.meta(t.slug,d); ov.classList.remove('open'); toast('Saved'); }
-      else { d.welcome=[$('#chmWelcome').value.trim(), $('#chmWelcome2').value.trim()].filter(Boolean); const p=await Chats.create(d); ov.classList.remove('open'); await Chats.open(p.thread.slug); chShowLink(p.thread); }
+      else { d.welcome=$('#chmWelcome').value.trim(); const p=await Chats.create(d); ov.classList.remove('open'); await Chats.open(p.thread.slug); chShowLink(p.thread); }
     }catch(e){ toast(e.message||'Could not save'); $('#chmSave').disabled=false; }
   });
   const ar=$('#chmArchive'); if(ar) ar.addEventListener('click',async()=>{ try{ await Chats.meta(t.slug,{archived:!t.archived}); ov.classList.remove('open'); toast(t.archived?'Restored':'Archived — the client link is paused'); }catch(e){ toast('Could not save'); } });
@@ -7111,7 +7019,6 @@ function renderHomeChats(){
   document.addEventListener('click',()=>qm.classList.remove('open'));
   const feed=$('#chFeed');
   feed.addEventListener('click',async e=>{
-    const dx=e.target.closest('[data-del]'); if(dx){ e.preventDefault(); e.stopPropagation(); if(confirm('Delete this message? It disappears for the client too.')) Chats.del(Chats.cur, dx.dataset.del); return; }
     const rt=e.target.closest('[data-retry]'); if(rt){ const pm=Chats.pending.find(x=>x.id===rt.dataset.retry); if(pm) Chats.push(pm); return; }
     const im=e.target.closest('.ch-pics img'); if(im && im.src){ $('#chLbImg').src=im.src; $('#chLb').classList.add('open'); return; }
     const dl=e.target.closest('[data-dl]'); if(dl){ e.preventDefault(); if(!dl.dataset.dl) return; try{ const u=await Chats.fileUrl(dl.dataset.dl); const a=document.createElement('a'); a.href=u; a.download=dl.dataset.name||'file'; document.body.appendChild(a); a.click(); a.remove(); }catch(err){ toast('Could not fetch that file'); } }

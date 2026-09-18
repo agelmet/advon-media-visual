@@ -176,7 +176,7 @@ export async function GET(req) {
       }
       if (q('h') && q('h') === headNow()) return json({ ok: true, same: true, head: headNow() });
       const messages = await getMessages(c, t.slug);
-      return json({ ok: true, thread: publicThread(t), messages: messages.map((m) => ({ id: m.id, from: m.from === 'client' ? 'client' : 'advon', text: m.text, files: m.files || [], at: m.at })), head: headNow() });
+      return json({ ok: true, thread: publicThread(t), messages: messages.map((m) => ({ id: m.id, from: m.from === 'client' ? 'client' : 'advon', text: m.text, files: m.files || [], at: m.at, ...(m.deleted ? { deleted: true } : {}) })), head: headNow() });
     }
 
     // ---- agents ----
@@ -296,6 +296,40 @@ export async function POST(req) {
       return json({ ok: true, changed });
     }
 
+    // ---- delete one message (the client takes back their own; the CRM can remove any) ----
+    if (q('del')) {
+      if (!slug) return json({ error: 'no thread' }, 400);
+      const id = clean(q('del'), 40);
+      let done = false;
+      await ghCommit(c, `chat: ${slug} message deleted by ${who}`, async (ctx) => {
+        const { data: idx } = await ctx.readJson(INDEX_PATH, []);
+        const list = Array.isArray(idx) ? idx : [];
+        const t = list.find((x) => x.slug === slug); if (!t) return null;
+        const { data: msgs } = await ctx.readJson(`${DIR}/${slug}/messages.json`, []);
+        const arr = Array.isArray(msgs) ? msgs : [];
+        const m = arr.find((x) => x.id === id);
+        if (!m || m.deleted) return null;
+        if (who === 'client' && m.from !== 'client') return null;
+        m.deleted = true; m.deletedAt = nowIso(); m.deletedBy = who; m.text = ''; m.files = [];
+        const live = arr.filter((x) => !x.deleted);
+        const last = live[live.length - 1];
+        t.n = arr.length;
+        if (last) {
+          t.lastAt = last.at; t.lastFrom = last.from;
+          t.lastText = (last.text || (last.files && last.files.length ? '\u{1F4CE} ' + last.files.map((f) => f.name).join(', ') : '')).slice(0, 140);
+        }
+        t.unreadAdmin = arr.filter((x) => x.from === 'client' && !x.deleted && x.at > (t.adminSeenAt || '')).length;
+        t.unreadClient = arr.filter((x) => x.from !== 'client' && !x.deleted && x.at > (t.clientSeenAt || '')).length;
+        done = true;
+        return [
+          { path: `${DIR}/${slug}/messages.json`, content: JSON.stringify(arr, null, 1) },
+          { path: INDEX_PATH, content: JSON.stringify(list, null, 1) },
+        ];
+      });
+      if (done) forgetHead();
+      return json({ ok: true, deleted: done });
+    }
+
     // ---- CRM: create a thread ----
     if (who === 'advon' && q('new') === '1') {
       let body; try { body = await req.json(); } catch { return json({ error: 'bad json' }, 400); }
@@ -311,8 +345,11 @@ export async function POST(req) {
         created = { slug: s, code: `${s}-${rnd(7)}`, name, email: clean(body.email, 120), phone: clean(body.phone, 40), site: clean(body.site, 200), stage: STAGES.includes(body.stage) ? body.stage : 'yliko', stageAt: now, createdAt: now, lastAt: now, lastFrom: 'advon', lastText: '', n: 0, unreadAdmin: 0, unreadClient: 0, adminSeenAt: now, clientSeenAt: null, archived: false };
         const files = [];
         const msgs = [];
-        const welcome = clean(body.welcome, MAX_TEXT);
-        if (welcome) { const m = { id: msgId(), from: 'advon', text: welcome, files: [], at: now }; msgs.push(m); created.lastText = welcome.slice(0, 140); created.n = 1; created.unreadClient = 1; }
+        const wel = (Array.isArray(body.welcome) ? body.welcome : [body.welcome]).map((w) => clean(w, MAX_TEXT)).filter(Boolean).slice(0, 4);
+        if (wel.length) {
+          wel.forEach((w, i) => msgs.push({ id: msgId() + String(i), from: 'advon', text: w, files: [], at: new Date(Date.parse(now) + i * 1000).toISOString() }));
+          created.lastText = wel[wel.length - 1].slice(0, 140); created.n = wel.length; created.unreadClient = wel.length; created.lastAt = msgs[msgs.length - 1].at;
+        }
         list.push(created);
         files.push({ path: `${DIR}/${s}/messages.json`, content: JSON.stringify(msgs, null, 1) });
         files.push({ path: INDEX_PATH, content: JSON.stringify(list, null, 1) });
