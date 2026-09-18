@@ -402,6 +402,22 @@ function items(){
   return out;
 }
 function node(it){const d=document.createElement('div');d.innerHTML=it.html;const el=d.firstElementChild;el.dataset.k=it.key;requestAnimationFrame(()=>{el.style.animation='none';});return el;}
+/* On the first paint the web font is often still loading, so the thread grows
+   right after we scroll to the end. Stay pinned to the bottom for a moment —
+   and stop the instant the reader scrolls themselves. */
+let userScrolled=false;
+['wheel','touchstart','keydown'].forEach(ev=>feed.addEventListener(ev,()=>{userScrolled=true;},{passive:true}));
+function stickBottom(ms){
+  userScrolled=false;
+  const end=Date.now()+ms, sb=feed.style.scrollBehavior;
+  feed.style.scrollBehavior='auto';
+  const go=()=>{
+    if(userScrolled){ feed.style.scrollBehavior=sb; return; }
+    feed.scrollTop=feed.scrollHeight;
+    if(Date.now()<end) requestAnimationFrame(go); else feed.style.scrollBehavior=sb;
+  };
+  go();
+}
 function render(keepScroll){
   const nearBottom=feed.scrollHeight-feed.scrollTop-feed.clientHeight<140;
   const list=items();
@@ -447,7 +463,7 @@ async function load(first){
     state.pending=state.pending.filter(pm=>!state.msgs.some(m=>m.id===pm.id));
     const fresh=state.msgs.filter(m=>!before.has(m.id)&&m.from!=='client');
     renderHead(); render(!first);
-    if(first){dock.hidden=false; requestAnimationFrame(()=>{feed.scrollTop=feed.scrollHeight;}); setTimeout(()=>{feed.scrollTop=feed.scrollHeight;},300);}
+    if(first){dock.hidden=false; stickBottom(1500); if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>stickBottom(500));}
     if(fresh.length&&!first){if(document.visibilityState==='visible'&&state.sound)blip();}
     if(state.msgs.some(m=>m.from!=='client')){ if(document.visibilityState==='visible')markSeen(); else {state.unread=(before.size?fresh.length:0);title();} }
   }catch(e){ if(first){feed.innerHTML='<div class="err"><img src="/img/advon-icon-180.png" alt=""><h1>Μικρό πρόβλημα σύνδεσης</h1><p>'+esc(e.message||'')+'</p><a href="javascript:location.reload()">Δοκιμάστε ξανά</a></div>';} }
