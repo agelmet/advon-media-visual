@@ -172,7 +172,9 @@ body.dark .stat-pill.new-pill .k{color:#6FE3A8;} body.dark .stat-pill.new-pill .
 .stat-pills .stat-pill.collect-pill{flex-basis:150px;}
 .stat-pill.collect-pill .v{color:var(--coral);}
 .stat-pill.gen-pill{flex-basis:210px; max-width:300px;}
-.stat-pill.gen-pill .v{display:flex; align-items:baseline; gap:6px; justify-content:flex-end;}
+.stat-pill.gen-pill .v,.stat-pill.new-pill .v{display:flex; align-items:baseline; gap:6px; justify-content:flex-end;}
+.stat-pill.new-pill .gpot{font-family:'Sora'; font-size:13.5px; font-weight:800; color:#79A892;}
+.stat-pill.new-pill .gpot:empty{display:none;}
 .stat-pill.gen-pill .gpot{font-family:'Sora'; font-size:13.5px; font-weight:800; color:#9AA6BC; opacity:.85;}
 .stat-pill.gen-pill .gpot:empty{display:none;}
 .stat-pill.gen-pill .tgt-bar{position:relative;}
@@ -221,6 +223,35 @@ body.dark .mini{background:#151C28;}
 .cb-prio.dragover{background:var(--red-soft); outline:2px dashed var(--red);}
 .cb-item[draggable="true"]{cursor:grab;}
 .cb-item.dragging{opacity:.45;}
+/* 18 Sept 2026 · colours that match the «in the bank» chips, one-row callbacks, meeting outcomes */
+#statRenewPill .mv{color:#3D8BF0;} #statSubsPill .mv{color:#8B5CF6;} #statExpPill .mv{color:var(--coral);}
+.home-card-head .hs-amt{font-family:'Sora'; font-weight:800; font-size:15px; color:var(--deep); font-variant-numeric:tabular-nums;}
+/* meetings pill — only on the Calendar */
+.stat-pill.meet-pill{display:none;}
+body[data-view="calendar"] .stat-pill.meet-pill{display:flex; flex-basis:150px; max-width:210px;}
+.stat-pill.meet-pill .v{background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;}
+/* how a meeting ended — the card colours of the board */
+.meet{position:relative;}
+.meet.o-won{box-shadow:inset 3px 0 0 var(--green);} .meet.o-lost{box-shadow:inset 3px 0 0 var(--muted); opacity:.72;}
+.meet.o-think{box-shadow:inset 3px 0 0 var(--yellow);} .meet.o-noshow{box-shadow:inset 3px 0 0 var(--red);}
+.meet .mo{position:absolute; top:3px; right:4px; font-size:9px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; opacity:.8;}
+.calpop{position:fixed; z-index:120; background:var(--surface); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow-lg); padding:10px; width:250px;}
+.calpop h5{font-family:'Sora'; font-size:13px; margin:2px 4px 8px;}
+.calpop .ops{display:grid; grid-template-columns:1fr 1fr; gap:6px;}
+.calpop button{display:flex; align-items:center; justify-content:center; gap:6px; padding:9px 8px; border-radius:11px; font-weight:800; font-size:12.5px; border:1px solid var(--line); background:var(--bg);}
+.calpop button:hover{transform:translateY(-1px);}
+.calpop .b-won{background:var(--green-soft); color:var(--deep); border-color:transparent;}
+.calpop .b-lost{background:var(--bg); color:var(--muted);}
+.calpop .b-think{background:var(--yellow-soft); color:#8A6400; border-color:transparent;}
+.calpop .b-noshow{background:var(--red-soft); color:var(--red); border-color:transparent;}
+.calpop .b-open{grid-column:1 / -1; background:var(--blue-soft); color:var(--brand); border-color:transparent;}
+.calpop .b-clear{grid-column:1 / -1; background:transparent; color:var(--muted); font-weight:700; font-size:11.5px; border:0;}
+.mo-board{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin-top:16px;}
+@media(max-width:800px){.mo-board{grid-template-columns:repeat(2,minmax(0,1fr));}}
+.mo-cell{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:12px 14px; box-shadow:var(--shadow); border-top:4px solid var(--c,var(--line));}
+.mo-cell .k{font-size:10px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--muted);}
+.mo-cell .v{font-family:'Sora'; font-weight:800; font-size:26px; letter-spacing:-.02em; margin-top:2px;}
+.mo-cell .s{font-size:11px; color:var(--muted); font-weight:600;}
 /* ---------- Quick add ---------- */
 .quickadd{background:#fff; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:13px 15px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:16px; border-left:5px solid var(--green);}
 .quickadd .qa-title{font-family:'Sora'; font-weight:700; font-size:12.5px; margin-right:4px; white-space:nowrap;}
@@ -1773,6 +1804,13 @@ body.dark .ch-file{background:rgba(255,255,255,.06);}
 .ch-quick-menu button.faq b{color:var(--violet);}
 .tab .tab-n{animation:chpulse 2.6s ease-in-out infinite;}
 @keyframes chpulse{0%,100%{box-shadow:0 2px 8px rgba(255,77,94,.4);}50%{box-shadow:0 2px 14px rgba(255,77,94,.75);}}
+
+/* the callbacks banner reads as one row */
+.cb-banner{grid-template-columns:repeat(7,minmax(0,1fr)); gap:14px;}
+.cb-banner .big{font-size:26px;} .cb-banner .cell.now .big{font-size:32px;}
+.cb-banner .sub{font-size:10.5px;}
+@media(max-width:1250px){.cb-banner{grid-template-columns:repeat(4,minmax(0,1fr));}}
+@media(max-width:860px){.cb-banner{grid-template-columns:repeat(2,minmax(0,1fr));}}
 </style>
 </head>
 <body class="locked">
@@ -1872,9 +1910,10 @@ body.dark .ch-file{background:rgba(255,255,255,.06);}
   </div>
   <button class="today-btn" id="todayBtn">Today</button>
   <div class="stat-pills">
+    <div class="stat-pill meet-pill" id="statMeetPill"><div class="k">Meetings this month</div><div class="v" id="statMeet">0</div><div class="tgt-meta" id="statMeetMeta"></div></div>
     <div class="stat-pill new-pill" id="statNewPill">
       <div class="k">New money this month</div>
-      <div class="v" id="statNewTotal">€0</div>
+      <div class="v"><span id="statNewTotal">€0</span><span class="gpot" id="statNewPot"></span></div>
       <div class="newsplit"><span class="ns paid" id="statNewPaid">€0</span><span class="ns owed" id="statNewOwed">€0</span></div>
       <div class="tgt-meta" id="statRemMeta"></div>
     </div>
@@ -1988,6 +2027,7 @@ body.dark .ch-file{background:rgba(255,255,255,.06);}
   <div class="board" id="board"></div>
   <div class="lost-tray think-tray" id="thinkTray"></div>
   <div class="lost-tray" id="lostTray"></div>
+  <section class="ql-stats" id="boardStats"></section>
 </main>
 
 <!-- CALENDAR -->
@@ -2005,6 +2045,8 @@ body.dark .ch-file{background:rgba(255,255,255,.06);}
     <button class="today-btn" id="calToday">This week</button>
   </div>
   <div id="calBody"></div>
+  <section class="mo-board" id="calOutcomes"></section>
+  <section class="ql-stats" id="calStats"></section>
 </main>
 
 <!-- YEAR -->
@@ -2047,7 +2089,7 @@ body.dark .ch-file{background:rgba(255,255,255,.06);}
     <div class="ql-card y">
       <div class="qc-top">
         <span class="qc-ico" data-ic="message"></span>
-        <div class="qc-txt"><div class="qc-title">SMS sent</div><div class="qc-sub">Follow-up sent — waiting on them</div></div>
+        <div class="qc-txt"><div class="qc-title">SMS-e-mail sent</div><div class="qc-sub">Follow-up sent — waiting on them</div></div>
         <div class="qc-count" id="qcCountY" title="SMS sent on the selected day"><b>0</b><small>day</small></div>
       </div>
       <div class="qc-form">
@@ -3255,6 +3297,9 @@ function renderStats(){
   /* new money this month — what they already paid (green) + what they still owe (red), summed on top */
   const newPaid=earned.new, newOwed=m.collect, newSum=newPaid+newOwed;
   $('#statNewTotal').textContent=fmtMoney(newSum);
+  const soonNew=m.pot.booked+m.pot.think;
+  const np=$('#statNewPot'); np.textContent= soonNew? '+'+fmtMoney(soonNew) : '';
+  np.title= soonNew? 'Not agreed yet: '+fmtMoney(m.pot.booked)+' booked · '+fmtMoney(m.pot.think)+' thinking' : '';
   $('#statNewPaid').textContent=fmtMoney(newPaid);
   $('#statNewOwed').textContent=fmtMoney(newOwed);
   $('#statRemMeta').textContent= m.collectN? m.collectN+(m.collectN===1?' client still owes':' clients still owe') : 'everything collected';
@@ -3480,12 +3525,92 @@ function qaSubmit(){
 $('#qaAdd').addEventListener('click',qaSubmit);
 ['#qaName','#qaValue'].forEach(s=>$(s).addEventListener('keydown',e=>{ if(e.key==='Enter') qaSubmit(); }));
 
+
+/* ---------- how each meeting ended (Calendar) ----------
+   One tap on a meeting says whether it became a client, was lost, is still being
+   thought about, or never happened. The colours are the board's own. */
+const MEET_OUT={
+  won:   {name:'Won',      c:'var(--green)'},
+  think: {name:'Thinking', c:'var(--yellow)'},
+  lost:  {name:'Lost',     c:'var(--muted)'},
+  noshow:{name:'No show',  c:'var(--red)'},
+};
+function meetOut(c){
+  if(c && c.meetOutcome && MEET_OUT[c.meetOutcome]) return c.meetOutcome;
+  if(!c) return '';
+  if(c.stage==='lost') return 'lost';
+  if(c.stage==='thinking') return 'think';
+  if(PAYING_STAGES.includes(c.stage)) return 'won';
+  return '';
+}
+function setMeetOutcome(c,o){
+  c.meetOutcome=o||''; c.updated=Date.now();
+  if(o==='won'){ if(c.stage==='booked'||c.stage==='thinking'||c.stage==='lost'){ c.stage='needinfo'; delete c.lostReason; c.lostAt=null; } }
+  else if(o==='lost'){ c.stage='lost'; c.lostAt=Date.now(); }
+  else if(o==='think'){ c.stage='thinking'; if(!c.thinkAt) c.thinkAt=Date.now(); }
+  save(); renderAll();
+  toast(c.name+(o?' \u2192 '+MEET_OUT[o].name.toLowerCase():' \u2014 outcome cleared'));
+}
+let calPop=null;
+function closeCalPop(){ if(calPop){ calPop.remove(); calPop=null; } }
+document.addEventListener('click',e=>{ if(calPop && !e.target.closest('.calpop') && !e.target.closest('.meet')) closeCalPop(); });
+window.addEventListener('resize',closeCalPop);
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeCalPop(); });
+function openCalPop(c, anchor){
+  closeCalPop();
+  const cur=meetOut(c);
+  const d=document.createElement('div'); d.className='calpop';
+  d.innerHTML=`<h5>${esc(c.name)}${c.day?' \u00b7 '+fmtDay(c.day):''}${cval(c)?' \u00b7 '+fmtMoney(cval(c)):''}</h5>
+    <div class="ops">
+      <button class="b-won">${IC.check} Won</button>
+      <button class="b-think">${IC.clock} Thinking</button>
+      <button class="b-lost">${IC.x} Lost</button>
+      <button class="b-noshow">${IC.ban} No show</button>
+      <button class="b-open">Open the card</button>
+      ${cur?'<button class="b-clear">clear the outcome</button>':''}
+    </div>`;
+  document.body.appendChild(d); calPop=d;
+  const r=anchor.getBoundingClientRect(), w=d.offsetWidth||250, h=d.offsetHeight||210;
+  d.style.left=Math.max(10,Math.min(window.innerWidth-w-10, r.left))+'px';
+  d.style.top=(r.bottom+8+h>window.innerHeight ? Math.max(10,r.top-h-8) : r.bottom+8)+'px';
+  const go=o=>{ setMeetOutcome(c,o); closeCalPop(); };
+  d.querySelector('.b-won').addEventListener('click',()=>go('won'));
+  d.querySelector('.b-think').addEventListener('click',()=>go('think'));
+  d.querySelector('.b-lost').addEventListener('click',()=>go('lost'));
+  d.querySelector('.b-noshow').addEventListener('click',()=>go('noshow'));
+  d.querySelector('.b-open').addEventListener('click',()=>{ closeCalPop(); openModal(c.id); });
+  const cl=d.querySelector('.b-clear'); if(cl) cl.addEventListener('click',()=>go(''));
+}
+/* the month's meetings, their outcomes and what they turned into */
+function meetingsOfMonth(key){ return state.clients.filter(c=>c.day && c.day.slice(0,7)===key && !isTrashed(c)); }
+function renderCalExtras(){
+  const list=meetingsOfMonth(curMonth);
+  const n=o=>list.filter(c=>meetOut(c)===o).length;
+  const open=list.filter(c=>!meetOut(c)).length;
+  const paid=list.filter(c=>PAYING_STAGES.includes(c.stage)).length;
+  const conv=list.length? Math.round(paid/list.length*100) : 0;
+  const mp=$('#statMeet'); if(mp){ mp.textContent=list.length; $('#statMeetMeta').textContent= list.length? `${n('won')} won \u00b7 ${open} open` : 'none booked yet'; }
+  const el=$('#calOutcomes');
+  if(el){
+    el.innerHTML = list.length ? `
+      <div class="mo-cell" style="--c:var(--brand)"><div class="k">Meetings in ${fmtMonth(curMonth)}</div><div class="v">${list.length}</div><div class="s">${open} with no outcome yet</div></div>
+      <div class="mo-cell" style="--c:var(--green)"><div class="k">Won</div><div class="v" style="color:var(--deep)">${n('won')}</div><div class="s">said yes / paying</div></div>
+      <div class="mo-cell" style="--c:var(--yellow)"><div class="k">Thinking</div><div class="v" style="color:#B8860B">${n('think')}</div><div class="s">still deciding</div></div>
+      <div class="mo-cell" style="--c:var(--muted)"><div class="k">Lost</div><div class="v" style="color:var(--muted)">${n('lost')}</div><div class="s">said no</div></div>
+      <div class="mo-cell" style="--c:var(--red)"><div class="k">No show</div><div class="v" style="color:var(--red)">${n('noshow')}</div><div class="s">never happened</div></div>`
+      : '<div class="mo-cell" style="grid-column:1 / -1; --c:var(--line)"><div class="k">Meetings in '+fmtMonth(curMonth)+'</div><div class="v">0</div><div class="s">Book one from Quick Log or by clicking a day above. Click any meeting to say how it went.</div></div>';
+  }
+  const st=$('#calStats'); if(st) st.innerHTML=monthStatsHtml(monthLogStats(curMonth),curMonth);
+}
+function renderBoardStats(){ const el=$('#boardStats'); if(el) el.innerHTML=monthStatsHtml(monthLogStats(curMonth),curMonth); }
 /* ---------- calendar ---------- */
 function meetingsOn(iso){
   return state.clients.filter(c=>c.day===iso && !isTrashed(c)).sort((a,b)=>(a.time||'99')<(b.time||'99')?-1:1);
 }
 function meetHtml(c){
-  return `<div class="meet" data-id="${c.id}">
+  const o=meetOut(c);
+  return `<div class="meet${o?' o-'+o:''}" data-id="${c.id}" title="${o?MEET_OUT[o].name+' — click to change':'Click to say how it went'}">
+    ${o?`<span class="mo">${MEET_OUT[o].name}</span>`:''}
     ${c.time?`<div class="mt">${esc(c.time)}</div>`:''}
     <div class="mn">${esc(c.name)}</div>
     ${cval(c)?`<div class="mv">${fmtMoney(cval(c))}</div>`:''}
@@ -3533,7 +3658,7 @@ function renderCalendar(){
     }
     body.innerHTML=html+'</div>';
   }
-  body.querySelectorAll('.meet').forEach(el=>el.addEventListener('click',e=>{ e.stopPropagation(); openModal(el.dataset.id); }));
+  body.querySelectorAll('.meet').forEach(el=>el.addEventListener('click',e=>{ e.stopPropagation(); const c=state.clients.find(x=>x.id===el.dataset.id); if(c) openCalPop(c, el); }));
   body.querySelectorAll('.day-add').forEach(el=>el.addEventListener('click',()=>openModal(null, el.dataset.day)));
   body.querySelectorAll('.mcell').forEach(el=>el.addEventListener('click',e=>{ if(e.target.closest('.meet')) return; openModal(null, el.dataset.day); }));
 }
@@ -3751,7 +3876,7 @@ function monthStatsHtml(m,key){
   <div class="ql-stat-grid">
     <div class="qs-pill"><div class="k">${IC.phone} Cold calls</div><div class="v">${m.calls}</div><div class="sub">call volume · cold only</div></div>
     <div class="qs-pill"><div class="k">${IC.check} Booked</div><div class="v">${m.booked}</div><div class="sub">all sources</div></div>
-    <div class="qs-pill"><div class="k">${IC.message} SMS sent</div><div class="v">${m.sms}</div><div class="sub">all sources</div></div>
+    <div class="qs-pill"><div class="k">${IC.message} SMS-e-mail sent</div><div class="v">${m.sms}</div><div class="sub">all sources</div></div>
     <div class="qs-pill"><div class="k">${IC.x} No's</div><div class="v">${m.nos}</div><div class="sub">all sources</div></div>
     <div class="qs-pill accent"><div class="k">${IC.target} Call → booking</div><div class="v">${callConv}%</div><div class="sub">cold booked ÷ cold calls</div><div class="tgt-bar on-dark"><i class="${progClass(callConv)}" style="width:${Math.min(100,callConv)}%"></i></div></div>
     <div class="qs-pill"><div class="k">${IC.check2} Meeting → client</div><div class="v">${meetConv}%</div><div class="sub">${m.converted}/${m.meetClients} paid · lost = fail</div><div class="tgt-bar"><i class="${progClass(meetConv)}" style="width:${Math.min(100,meetConv)}%"></i></div></div>
@@ -3781,7 +3906,7 @@ function yearStatsHtml(y,year){
   <div class="ql-stat-grid">
     <div class="qs-pill"><div class="k">${IC.phone} Cold calls</div><div class="v">${y.calls}</div><div class="sub">call volume · cold only</div></div>
     <div class="qs-pill"><div class="k">${IC.check} Booked</div><div class="v">${y.booked}</div><div class="sub">all sources</div></div>
-    <div class="qs-pill"><div class="k">${IC.message} SMS sent</div><div class="v">${y.sms}</div><div class="sub">all sources</div></div>
+    <div class="qs-pill"><div class="k">${IC.message} SMS-e-mail sent</div><div class="v">${y.sms}</div><div class="sub">all sources</div></div>
     <div class="qs-pill"><div class="k">${IC.x} No's</div><div class="v">${y.nos}</div><div class="sub">all sources</div></div>
     <div class="qs-pill accent"><div class="k">${IC.target} Call → booking</div><div class="v">${callConv}%</div><div class="sub">cold booked ÷ cold calls</div><div class="tgt-bar on-dark"><i class="${progClass(callConv)}" style="width:${Math.min(100,callConv)}%"></i></div></div>
     <div class="qs-pill"><div class="k">${IC.check2} Meeting → client</div><div class="v">${meetConv}%</div><div class="sub">${y.converted}/${y.meetClients} paid · lost = fail</div><div class="tgt-bar"><i class="${progClass(meetConv)}" style="width:${Math.min(100,meetConv)}%"></i></div></div>
@@ -5283,7 +5408,7 @@ function renderHome(){
     return {s, day, di, over: di? di<todayI : false, today: di===todayI};
   }).sort((a,b)=> (a.over===b.over) ? ((a.day||99)-(b.day||99)) : (a.over?-1:1));
   const subsSum=subsOpen.reduce((a,x)=>a+(+x.s.value||0),0), subsOver=subsOpen.filter(x=>x.over).length;
-  const hsh=$('#homeSubsHint'); if(hsh) hsh.textContent= subsOpen.length? `${subsOpen.length} unpaid in ${fmtMonth(subKey)} · ${fmtMoney2(subsSum)}${subsOver?` · ${subsOver} overdue`:''}` : `all paid for ${fmtMonth(subKey)}`;
+  const hsh=$('#homeSubsHint'); if(hsh) hsh.innerHTML= subsOpen.length? `${subsOpen.length} unpaid in ${fmtMonth(subKey)} · <b class="hs-amt">${fmtMoney2(subsSum)}</b>${subsOver?` · ${subsOver} overdue`:''}` : `all paid for ${fmtMonth(subKey)}`;
   hs.innerHTML= subsOpen.length
     ? subsOpen.map(x=>`<div class="home-row${x.over?' warn':''}" data-goto="monthly"><span class="hr-name">${esc(x.s.name)}</span><span class="hr-sub">${x.day? (x.over? `day ${x.day} · overdue` : x.today? `due today` : `due day ${x.day}`) : 'no day set'}</span><span class="hr-val">${fmtMoney2(+x.s.value||0)}</span></div>`).join('')
     : '<div class="home-empty">Every monthly client has paid this month.</div>';
@@ -6168,7 +6293,7 @@ function renderLdBanner(){
   el.innerHTML=`
     <div class="cell now"><div class="k">${IC.phone} Left to call</div><div class="big">${n.new+n.na}</div><div class="sub">${n.new} fresh · ${n.na} to retry${ldFilter.list?' · '+esc(ldListInfo(ldFilter.list).t||'')+': '+f:(filt?' · '+f+' in this filter':'')}</div></div>
     <div class="cell ok"><div class="k">${IC.check} Booked</div><div class="big">${n.g}</div><div class="sub">meetings from this list</div></div>
-    <div class="cell sms"><div class="k">${IC.message} SMS sent</div><div class="big">${n.y}</div><div class="sub">info sent, follow up</div></div>
+    <div class="cell sms"><div class="k">${IC.message} SMS-e-mail sent</div><div class="big">${n.y}</div><div class="sub">info sent, follow up</div></div>
     <div class="cell no"><div class="k">${IC.x} No</div><div class="big">${n.r}</div><div class="sub">${n.x?n.x+' dropped':'not interested'}</div></div>
     <div class="cell na"><div class="k">${IC.hourglass} No answer</div><div class="big">${n.na}</div><div class="sub">call another day</div></div>
     <div class="cell"><div class="k">${IC.fire} Today</div><div class="big">${n.today}</div><div class="sub">${n.total} leads · harvest ${pulled}</div></div>`;
@@ -6395,7 +6520,7 @@ $('#bkRefresh').addEventListener('click',()=>Bookings.pull(true));
 
 function renderAll(){
   if(!state) return;
-  renderHome(); renderStats(); renderBoard(); renderCalendar(); renderYear(); renderQuickLog(); renderPrio(); renderWarm(); renderSched(); renderRenewals(); renderRemaining(); renderTodo(); renderIdeas(); renderMonthly(); renderExpenses(); renderLeads(); renderCashForecast();
+  renderHome(); renderStats(); renderBoard(); renderBoardStats(); renderCalendar(); renderCalExtras(); renderYear(); renderQuickLog(); renderPrio(); renderWarm(); renderSched(); renderRenewals(); renderRemaining(); renderTodo(); renderIdeas(); renderMonthly(); renderExpenses(); renderLeads(); renderCashForecast();
 }
 
 /* ---------- export ---------- */
