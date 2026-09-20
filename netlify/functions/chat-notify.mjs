@@ -5,6 +5,10 @@
 //   2. Angelo/Claude wrote and the client has not seen it    → e-mail to the client with the text + their link
 //   3. we wrote last and the client has been silent 3+ days  → a gentle stage-aware reminder e-mail (max 2, 3 days apart)
 //   4. chats/outbox.json                                     → pings queued by the chat agent (it can only reach GitHub)
+//   5. Claude left a reply waiting for approval (t.suggest)  → «APPROVAL NEEDED — <client>» to Angelo: what the client asked,
+//      what was done / is intended, the exact reply — Telegram + e-mail, once per suggestion (suggestNotifiedAt)
+// Every message to Angelo starts with the CLIENT'S NAME and is built in lib/chatcore.js (clientWroteNote, approvalNote,
+// quietNote, reminderSentNote, agentNote); every client e-mail shares one layout (newMessageMail, reminderMail, plainClientMail).
 // It then writes the bookkeeping fields (angeloNotifiedAt, clientNotifiedAt, remindersSent, lastReminderAt, log)
 // back in ONE commit. Nothing is sent twice: every send is keyed to the message time it covered.
 // Needs in Netlify: RESEND_API_KEY (+ optional CHAT_FROM, CHAT_REPLY_TO, LEAD_NOTIFY_TO), TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID.
@@ -12,7 +16,7 @@
 //   &test=telegram → one test ping + diagnosis (bot name, which chats wrote to it) · &test=email → one test e-mail to LEAD_NOTIFY_TO
 
 import { ghConf, ghReady, commit as ghCommit } from '../../lib/ghdata.js';
-import { INDEX_PATH, OUTBOX_PATH, SITE_URL, STAGE_EL, currentHead, forgetHead, getIndex, getMessages, readChatJson, mailConf, emailOk, sendEmail, sendTelegram, telegramDiag, newMessageMail, reminderMail, chatLink, politeHour } from '../../lib/chatcore.js';
+import { INDEX_PATH, OUTBOX_PATH, STAGE_EL, currentHead, forgetHead, getIndex, getMessages, readChatJson, mailConf, emailOk, sendEmail, sendTelegram, telegramDiag, newMessageMail, reminderMail, plainClientMail, clientWroteNote, approvalNote, quietNote, reminderSentNote, agentNote, politeHour } from '../../lib/chatcore.js';
 
 export const config = { schedule: '*/5 * * * *' };
 
@@ -59,6 +63,12 @@ export default async (req) => {
   const now = Date.now();
   const polite = politeHour();
 
+  const toAngelo = async (note, mail = true) => {
+    const a = canTg ? await sendTelegram(mc, note.tg, { html: true, buttons: note.buttons }) : { ok: false, why: 'no telegram' };
+    const b = mail && canMail && note.html ? await sendEmail(mc, mc.notifyTo, note.subject, note.text, note.html) : { ok: false, why: mail ? 'no email' : '' };
+    return { ok: a.ok || b.ok, how: `${a.ok ? 'telegram' : ''}${a.ok && b.ok ? '+' : ''}${b.ok ? 'email' : ''}`, why: [a.why, b.why].filter(Boolean).join('; ') };
+  };
+
   for (const t of idx) {
     if (t.archived) continue;
     const lastAt = Date.parse(t.lastAt || 0) || 0;
@@ -68,12 +78,14 @@ export default async (req) => {
       if (!canTg && !canMail) { report.skipped.push(`${t.slug}: angelo (nothing configured)`); }
       else if (now - lastAt > 2 * DAY) { upd(t, { angeloNotifiedAt: t.lastAt }); }         // too old to ping now (keys were added later)
       else {
-        const text = `💬 ${t.name} (${STAGE_EL[t.stage] || t.stage}) — ${(t.unreadAdmin || 0) === 1 ? '1 νέο μήνυμα' : (t.unreadAdmin || 0) + ' νέα μηνύματα'}\n«${(t.lastText || '').slice(0, 300)}»\n${SITE_URL}/crm/#chats`;
         if (dry) { report.sent.push(`[dry] angelo ← ${t.slug}`); continue; }
-        const a = await sendTelegram(mc, text);
-        const b = canMail ? await sendEmail(mc, mc.notifyTo, `💬 ${t.name}: ${(t.lastText || '').slice(0, 60)}`, text) : { ok: false };
-        if (a.ok || b.ok) { upd(t, { angeloNotifiedAt: t.lastAt }); report.sent.push(`angelo ← ${t.slug} (${a.ok ? 'telegram' : ''}${a.ok && b.ok ? '+' : ''}${b.ok ? 'email' : ''})`); }
-        else report.skipped.push(`${t.slug}: angelo (${a.why}; ${b.why || 'no email'})`);
+        // everything the client wrote since Angelo was last told (or last looked), not only the last line
+        const since = [t.angeloNotifiedAt || '', t.adminSeenAt || ''].sort().pop();
+        let fresh = [];
+        try { fresh = (await getMessages(conf, t.slug)).filter((m) => m.from === 'client' && !m.deleted && m.at > since); } catch {}
+        const r = await toAngelo(clientWroteNote(t, fresh));
+        if (r.ok) { upd(t, { angeloNotifiedAt: t.lastAt }); report.sent.push(`angelo ← ${t.slug} (${r.how})`); }
+        else report.skipped.push(`${t.slug}: angelo (${r.why})`);
       }
     }
 
@@ -100,8 +112,7 @@ export default async (req) => {
     if (polite && canTg && t.lastFrom !== 'client' && t.stage !== 'live' && !emailOk(t.email) && now - lastAt >= REMIND_AFTER && (t.quietPingAt || '') < (t.lastAt || '')) {
       if (dry) { report.sent.push(`[dry] quiet-no-email ${t.slug}`); }
       else {
-        const opened = !!t.clientSeenAt;
-        const a = await sendTelegram(mc, `🔕 ${t.name} (${STAGE_EL[t.stage] || t.stage}) — σιωπή ${Math.floor((now - lastAt) / DAY)} μέρες και δεν έχουμε e-mail του, άρα δεν παίρνει υπενθυμίσεις.${opened ? '' : ' Δεν έχει ανοίξει ΚΑΝ τον σύνδεσμο.'} Στείλε του ένα Viber: ${chatLink(t)}`);
+        const a = await toAngelo(quietNote(t, Math.floor((now - lastAt) / DAY)), false);
         if (a.ok) { upd(t, { quietPingAt: t.lastAt }); log(t, 'Telegram στον Άγγελο: σιωπή χωρίς e-mail'); report.sent.push(`quiet-no-email ${t.slug}`); }
       }
     }
@@ -118,10 +129,31 @@ export default async (req) => {
           upd(t, { remindersSent: n, lastReminderAt: nowIso() });
           log(t, `Υπενθύμιση e-mail #${n} (${STAGE_EL[t.stage] || t.stage})`);
           report.sent.push(`reminder ${t.slug} #${n}`);
-          await sendTelegram(mc, `🔔 Υπενθύμιση #${n} στάλθηκε: ${t.name} (${STAGE_EL[t.stage] || t.stage}) — σιωπή από ${String(t.lastAt).slice(0, 10)}`);
+          await toAngelo(reminderSentNote(t, n), false);
         } else report.skipped.push(`${t.slug}: reminder (${r.why})`);
       }
     }
+  }
+
+  // 5. a reply prepared by Claude waits for Angelo's OK → one clear «approval needed» message per suggestion
+  for (const t of idx) {
+    if (t.archived || !t.suggest || !t.suggest.text || !t.suggest.at) continue;
+    if ((t.suggestNotifiedAt || '') >= t.suggest.at) continue;
+    if (now - (Date.parse(t.suggest.at) || 0) > 3 * DAY) { upd(t, { suggestNotifiedAt: t.suggest.at }); continue; }
+    if (!canTg && !canMail) { report.skipped.push(`${t.slug}: approval (nothing configured)`); continue; }
+    if (dry) { report.sent.push(`[dry] approval ${t.slug}`); continue; }
+    let asked = '';
+    if (!t.suggest.asked) {
+      try {
+        const msgs = (await getMessages(conf, t.slug)).filter((m) => !m.deleted);
+        let i = msgs.length - 1; while (i >= 0 && msgs[i].from !== 'client') i--;
+        const tail = []; while (i >= 0 && msgs[i].from === 'client') { tail.unshift(msgs[i]); i--; }
+        asked = tail.map((m) => m.text || (m.files && m.files.length ? '📎 ' + m.files.map((f) => f.name).join(', ') : '')).filter(Boolean).join('\n\n');
+      } catch {}
+    }
+    const r = await toAngelo(approvalNote(t, asked));
+    if (r.ok) { upd(t, { suggestNotifiedAt: t.suggest.at }); log(t, 'Ζητήθηκε έγκριση από τον Άγγελο (Telegram/e-mail)'); report.sent.push(`approval ${t.slug} (${r.how})`); }
+    else report.skipped.push(`${t.slug}: approval (${r.why})`);
   }
 
   // 4. outbox — pings queued by the chat agent
@@ -131,8 +163,8 @@ export default async (req) => {
     if (o.sentAt) continue;
     if (dry) { report.sent.push(`[dry] outbox ${o.kind}`); continue; }
     let ok = false;
-    if (o.kind === 'angelo') { const a = await sendTelegram(mc, o.text); const b = canMail ? await sendEmail(mc, mc.notifyTo, o.subject || 'Advon — Chat agent', o.text) : { ok: false }; ok = a.ok || b.ok; }
-    else if (o.kind === 'client' && o.slug) { const t = idx.find((x) => x.slug === o.slug); if (t && emailOk(t.email) && canMail) { const r = await sendEmail(mc, t.email, o.subject || 'Μήνυμα από την Advon Media', `${o.text}\n\n${chatLink(t)}`, undefined); ok = r.ok; } }
+    if (o.kind === 'angelo') { ok = (await toAngelo(agentNote(o, idx))).ok; }
+    else if (o.kind === 'client' && o.slug) { const t = idx.find((x) => x.slug === o.slug); if (t && emailOk(t.email) && canMail) { const m = plainClientMail(t, o.subject, o.text || ''); const r = await sendEmail(mc, t.email, m.subject, m.text, m.html); ok = r.ok; } }
     if (ok) { o.sentAt = nowIso(); outChanged = true; report.sent.push(`outbox ${o.kind}${o.slug ? ' ' + o.slug : ''}`); }
     else if (!canTg && !canMail) { report.skipped.push(`outbox ${o.kind}: nothing configured`); break; }
   }

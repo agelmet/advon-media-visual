@@ -49,10 +49,10 @@ never make the situation worse.
 
 1. Open the CRM on the device that still shows your data.
 2. Top right → the **Export** button (the download icon).
-3. Click **Export backup (encrypted)**.
-4. Click **Plain CSV — every client**.
+3. Click **Backup everything**.
 
-You now have two files in your Downloads folder. Put them somewhere safe.
+You now have ONE file in your Downloads folder — `ADVON-FULL-BACKUP-<date>.zip`. It holds the whole CRM, every chat with its
+files, the leads and two spreadsheets you can open in Excel. Put it somewhere safe (it is not locked with a password).
 Now you can experiment freely.
 
 ---
@@ -62,10 +62,10 @@ Now you can experiment freely.
 Use this when data has gone missing and you have a backup file.
 
 1. Find your backup file. It will be in Downloads and named something like
-   `advon-crm-encrypted-2026-08-09.json`. The date in the name is the day it
+   `ADVON-FULL-BACKUP-2026-09-20_1830.zip` (older ones: `advon-crm-encrypted-….json` or `advon-crm-backup-….json` — all three work). The date in the name is the day it
    was made — pick the newest one from **before** things went wrong.
 2. Open the CRM and sign in.
-3. Top right → **Export** button → **Import backup (encrypted)**.
+3. Top right → **Export** button → **Restore from a backup…**.
 4. Choose the file.
 5. The CRM tells you how many clients are in it and what date it was made.
    Read that line. If it looks right, confirm.
@@ -75,8 +75,12 @@ Use this when data has gone missing and you have a backup file.
 with a different passphrase than the one you just signed in with. Try another
 backup file.
 
-**If your backup is the plain-JSON kind** (`advon-crm-backup-….json`), use
-**Restore from backup** instead of **Import backup (encrypted)**. Same steps.
+**Chats, leads and client files:** the restore window has a second tick — «Also put back the chats, leads and client
+files on the server». Leave it off unless those were lost too. Before anything is replaced the CRM downloads a copy of
+what it holds right now (`advon-crm-BEFORE-restore-….json`), so a restore can always be undone.
+
+**The net under the net:** every Monday the server e-mails you `ADVON-SAFETY-COPY-<date>.zip` by itself (Export →
+«E-mail me a safety copy now» sends one on the spot). If everything else is gone, give that file — or the full backup — to Claude.
 
 ---
 
@@ -132,7 +136,7 @@ Use your own code instead of `9e8d7c6`.
 You now have `recovered.json` on your Desktop. Open it in TextEdit — it will
 look like scrambled letters, which is correct; that is the encryption. Rename it
 to end in `.json` if it doesn't already, then in the CRM use **Export** →
-**Import backup (encrypted)** and choose it.
+**Restore from a backup…** and choose it.
 
 > The dated snapshots are also sitting in the `snapshots/` folder of that same
 > repo, one file per save, named by date and time. If the steps above feel like
@@ -157,7 +161,7 @@ Numbers. That is your full client list — names, values, stages, phone numbers,
 emails, notes — in plain readable form. **This works with no app, no internet
 and no passphrase.**
 
-This is why it is worth clicking **Plain CSV — every client** once a week and
+This is why it is worth clicking **Backup everything** once a week (the zip has `crm/clients.csv` inside) and
 keeping the file. It is the copy that survives everything.
 
 ### Option B — you have no CSV
@@ -220,7 +224,7 @@ What to do:
 
 1. Check your internet connection.
 2. Click **Retry now** in the red bar.
-3. If it keeps failing, click **Export backup (encrypted)** so the change exists
+3. If it keeps failing, click **Backup everything** so the change exists
    in a file too. Then carry on working — nothing is being lost.
 4. **Do not open the CRM on your other device and edit there** while the bar is
    red. That is how two versions drift apart. If you do, the CRM will notice and
@@ -261,8 +265,8 @@ computer or email it around.
 
 Once a week:
 
-1. **Export** → **Export backup (encrypted)** → keep the file.
-2. **Export** → **Plain CSV — every client** → keep the file.
+1. **Export** → **Backup everything** → keep the file.
+2. Check your inbox has a recent «Advon safety copy» e-mail (it arrives every Monday).
 3. Glance at the sync pill in the top right. It should say **Synced** with a
    recent time.
 

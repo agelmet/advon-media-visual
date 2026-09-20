@@ -17,7 +17,12 @@
 //       GET  /api/chat?t=<slug>[&h=<head>]        → {thread, messages, head}
 //       POST /api/chat?t=<slug>                   JSON {text, files} → append an Advon message (+ e-mail to the client)
 //       POST /api/chat?t=<slug>&seen=1            → Angelo has read the thread
-//       POST /api/chat?t=<slug>&meta=1            JSON {name,email,phone,site,stage,archived} → edit the card
+//       POST /api/chat?t=<slug>&meta=1            JSON {name,email,phone,site,stage,archived,pin,unread} → edit the card
+//                                                  (pin:true = «Priority», kept on top of the list; unread:true = mark as unread again)
+//       POST /api/chat?order=1                    JSON {slugs:[…]} → the Priority chats in the order Angelo dragged them (ord = position)
+//       POST /api/chat?t=<slug>&remove=1          → DELETE the chat for good: card, messages and files leave the repo in one commit and
+//                                                  the client's link stops working. A line stays in chats/deleted.json (name, when, the
+//                                                  commit just before) so it can still be brought back from the repo's history.
 //       POST /api/chat?new=1                      JSON {name,email,phone,site,stage,welcome} → create a thread + link
 //       POST /api/chat?t=<slug>&file=1            multipart {file} → loose blob
 //       GET  /api/chat?file=<path>                → any attachment
@@ -33,7 +38,7 @@
 // reminders) are sent by netlify/functions/chat-notify.mjs every 5 minutes from the same files.
 
 import { ghReady, ghConf, commit as ghCommit, createBlob } from '@/lib/ghdata';
-import { DIR, INDEX_PATH, SITE_URL, STAGES, normStage, currentHead, forgetHead, getIndex as coreIndex, getMessages as coreMessages, readChatBuffer, headNow, mailConf, sendTelegram, telegramDiag, sendEmail } from '@/lib/chatcore';
+import { DIR, INDEX_PATH, SITE_URL, STAGES, normStage, currentHead, forgetHead, getIndex as coreIndex, getMessages as coreMessages, readChatBuffer, headNow, mailConf, sendTelegram, telegramDiag, sendEmail, clientWroteNote, approvalNote, agentNote, newMessageMail, reminderMail } from '@/lib/chatcore';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -191,6 +196,25 @@ export async function GET(req) {
       // agent key only: ?test=telegram | ?test=email → send one test now and report what the provider said
       if (lvl === 2 && q('test') === 'telegram') { const mc = mailConf(); const diag = await telegramDiag(mc); const send = await sendTelegram(mc, '✅ Advon Alerts: οι ειδοποιήσεις Telegram δουλεύουν.'); return json({ diag, send }); }
       if (lvl === 2 && q('test') === 'email') { const mc = mailConf(); const to = q('to') || mc.notifyTo; const send = await sendEmail(mc, to, '✅ Advon Media — δοκιμή e-mail', 'Οι ειδοποιήσεις e-mail από το advonmedia.com δουλεύουν.'); return json({ from: mc.from, to, send }); }
+      // agent key only: ?test=samples → ONE sample of every message Angelo gets (Telegram + e-mail) and of the client e-mail
+      // (sent to Angelo's own address), all built from a made-up client called «ΔΟΚΙΜΗ», so the wording and layout can be checked for real.
+      if (lvl === 2 && q('test') === 'samples') {
+        const mc = mailConf();
+        const t = { slug: 'dokimi', code: 'dokimi-sample00', name: 'Δοκιμή Πελάτης (sample)', stage: 'changes', email: mc.notifyTo, site: 'https://advonmedia.com', lastAt: new Date().toISOString(), unreadAdmin: 2, clientSeenAt: '',
+          suggest: { at: new Date().toISOString(), stage: 'changes', draft: 'https://agelmet.github.io/DOKIMI', asked: 'Καλησπέρα! Θα ήθελα να αλλάξουμε τη φωτογραφία στην αρχή με αυτή που σας στέλνω, και το τηλέφωνο είναι λάθος — το σωστό είναι 697 000 0000.', steps: ['Hero photo replaced with the new one (whole photo, not cropped)', 'Phone corrected in the header, the contact section and the footer', 'Saved to the draft only'], text: 'Καλησπέρα σας!\n\nΟι αλλαγές έγιναν — ρίξτε μια ματιά: https://agelmet.github.io/DOKIMI\n\n1. Η φωτογραφία στην αρχή άλλαξε με τη νέα\n2. Το τηλέφωνο διορθώθηκε παντού\n\nΠείτε μου αν είναι όλα εντάξει τώρα.' } };
+        const fresh = [{ from: 'client', text: t.suggest.asked, files: [{ name: 'nea-fotografia.jpg' }] }];
+        const out = {};
+        for (const [k, n] of [['wrote', clientWroteNote(t, fresh)], ['approval', approvalNote(t)], ['agent', agentNote({ title: 'Morning check (sample)', items: [{ client: t.name, slug: 'dokimi', lines: ['2 changes done on the draft', 'The reply waits for your OK in the CRM'] }], text: 'Nobody else wrote.' }, [t])]]) {
+          const a = await sendTelegram(mc, n.tg, { html: true, buttons: n.buttons });
+          const b = await sendEmail(mc, mc.notifyTo, '[SAMPLE] ' + n.subject, n.text, n.html);
+          out[k] = { telegram: a.ok || a.why, email: b.ok || b.why };
+        }
+        const cm = newMessageMail(t, t.suggest.text, []);
+        out.clientMail = (await sendEmail(mc, q('to') || mc.notifyTo, '[SAMPLE · what a client receives] ' + cm.subject, cm.text, cm.html));
+        const rm = reminderMail({ ...t, stage: 'draft' });
+        out.clientReminder = (await sendEmail(mc, q('to') || mc.notifyTo, '[SAMPLE · what a client receives] ' + rm.subject, rm.text, rm.html));
+        return json(out);
+      }
       const idx = (await getIndex(c)).filter((t) => !t.archived);
       if (q('t')) {
         const slug = String(q('t'));
@@ -205,8 +229,8 @@ export async function GET(req) {
       if (q('format') === 'json') return json({ threads: idx });
       const waiting = idx.filter((t) => t.lastFrom === 'client');
       const L = [`CHATS — ${waiting.length} conversation(s) waiting for an answer (${idx.length} active)`];
-      waiting.sort((a, b) => String(a.lastAt).localeCompare(String(b.lastAt)));
-      waiting.forEach((t) => L.push(`  • ${t.name} (${t.slug}) — stage ${t.stage} — ${t.unreadAdmin || 0} unread — last ${String(t.lastAt).slice(0, 16).replace('T', ' ')}: «${(t.lastText || '').slice(0, 160)}»`));
+      waiting.sort((a, b) => (b.pin ? 1 : 0) - (a.pin ? 1 : 0) || (a.ord ?? 1e9) - (b.ord ?? 1e9) || String(a.lastAt).localeCompare(String(b.lastAt)));
+      waiting.forEach((t) => L.push(`  • ${t.pin ? '★ PRIORITY ' : ''}${t.name} (${t.slug}) — stage ${t.stage} — ${t.unreadAdmin || 0} unread — last ${String(t.lastAt).slice(0, 16).replace('T', ' ')}: «${(t.lastText || '').slice(0, 160)}»`));
       const quiet = idx.filter((t) => t.lastFrom !== 'client' && t.lastAt && Date.now() - Date.parse(t.lastAt) > 3 * 86400000);
       if (quiet.length) { L.push(`QUIET — we wrote last and heard nothing for 3+ days:`); quiet.forEach((t) => L.push(`  • ${t.name} (${t.slug}) — stage ${t.stage} — since ${String(t.lastAt).slice(0, 10)}`)); }
       return new Response(L.join('\n'), { headers: { ...NO_STORE, 'Content-Type': 'text/plain; charset=utf-8' } });
@@ -363,6 +387,49 @@ export async function POST(req) {
       return json({ ok: true, thread: created, link: `${SITE_URL}/c/${created.code}` });
     }
 
+    // ---- CRM: the order of the Priority chats ----
+    if (who === 'advon' && q('order') === '1') {
+      let body; try { body = await req.json(); } catch { return json({ error: 'bad json' }, 400); }
+      const slugs = (Array.isArray(body.slugs) ? body.slugs : []).map(String).filter((x) => SLUG_RE.test(x)).slice(0, 200);
+      let out = [];
+      await ghCommit(c, 'chat: priority order', async (ctx) => {
+        const { data: idx } = await ctx.readJson(INDEX_PATH, []);
+        const list = Array.isArray(idx) ? idx : [];
+        slugs.forEach((sl, i) => { const t = list.find((x) => x.slug === sl); if (t) { t.pin = true; t.ord = i; if (!t.pinAt) t.pinAt = nowIso(); } });
+        out = list;
+        return [{ path: INDEX_PATH, content: JSON.stringify(list, null, 1) }];
+      });
+      forgetHead();
+      return json({ ok: true, threads: out });
+    }
+
+    // ---- CRM: delete a chat for good ----
+    if (who === 'advon' && q('remove') === '1') {
+      if (!slug) return json({ error: 'no thread' }, 400);
+      let gone = null;
+      await ghCommit(c, `chat: ${slug} deleted`, async (ctx) => {
+        const { data: idx } = await ctx.readJson(INDEX_PATH, []);
+        const list = Array.isArray(idx) ? idx : [];
+        const t = list.find((x) => x.slug === slug);
+        if (!t) return null;
+        const files = [];                       // only paths that really exist — GitHub refuses to delete a missing one
+        for (const f of await ctx.listDir(`${DIR}/${slug}`)) {
+          if (f.type === 'blob') files.push({ path: `${DIR}/${slug}/${f.path}`, content: null });
+          else if (f.type === 'tree') for (const g of await ctx.listDir(`${DIR}/${slug}/${f.path}`)) if (g.type === 'blob') files.push({ path: `${DIR}/${slug}/${f.path}/${g.path}`, content: null });
+        }
+        const nFiles = files.filter((f) => f.path.includes('/files/')).length;
+        const { data: del } = await ctx.readJson(`${DIR}/deleted.json`, []);
+        const bin = (Array.isArray(del) ? del : []).concat([{ slug, name: t.name, phone: t.phone || '', email: t.email || '', stage: t.stage, n: t.n || 0, files: nFiles, deletedAt: nowIso(), commitBefore: ctx.head ? ctx.head.commit : null }]).slice(-300);
+        gone = t;
+        files.push({ path: `${DIR}/deleted.json`, content: JSON.stringify(bin, null, 1) });
+        files.push({ path: INDEX_PATH, content: JSON.stringify(list.filter((x) => x.slug !== slug), null, 1) });
+        return files;
+      });
+      forgetHead();
+      online.delete(slug);
+      return json({ ok: true, deleted: !!gone, slug });
+    }
+
     // ---- CRM: edit the card ----
     if (who === 'advon' && q('meta') === '1') {
       if (!slug) return json({ error: 'no thread' }, 400);
@@ -379,6 +446,8 @@ export async function POST(req) {
         if ('stage' in body && STAGES.includes(body.stage)) { if (t.stage !== body.stage) { t.stage = body.stage; t.stageAt = nowIso(); t.remindersSent = 0; t.lastReminderAt = null; } }
         if (typeof body.log === 'string' && body.log.trim()) { t.log = (t.log || []).concat([{ at: nowIso(), by: 'angelo', text: clean(body.log, 400) }]).slice(-30); }
         if ('archived' in body) t.archived = !!body.archived;
+        if ('pin' in body) { t.pin = !!body.pin; if (t.pin) { if (typeof t.ord !== 'number') t.ord = list.reduce((m, x) => (x.pin && typeof x.ord === 'number' ? Math.max(m, x.ord + 1) : m), 0); t.pinAt = nowIso(); } else { delete t.ord; delete t.pinAt; } }
+        if (body.unread === true) t.unreadAdmin = Math.max(1, t.unreadAdmin || 0);
         if (body.suggest === null) delete t.suggest;
         if (body.newLink === true) t.code = `${t.slug}-${rnd(7)}`;
         out = t;

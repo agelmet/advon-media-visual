@@ -98,6 +98,34 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 .export-menu button{display:flex; width:100%; text-align:left; padding:10px 12px; border-radius:9px; font-weight:500; gap:10px; align-items:center; font-size:13.5px;}
 .export-menu button:hover{background:var(--bg);}
 .export-menu .sep{height:1px; background:var(--line); margin:5px 8px;}
+.export-menu{min-width:318px; max-width:340px; max-height:calc(100dvh - 90px); overflow-y:auto;}
+.export-menu .xm-main{font-weight:800; background:var(--blue-soft); color:var(--brand);}
+.export-menu .xm-main:hover{background:var(--blue-soft); filter:brightness(.97);}
+.export-menu .xm-hint{font-size:11.5px; line-height:1.45; color:var(--muted); padding:4px 12px 8px; font-weight:500;}
+.export-menu .xm-last{font-weight:700; padding-top:0;}
+.export-menu .xm-last.stale{color:#C4243A;}
+.export-menu details summary{cursor:pointer; list-style:none; font-size:10.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:8px 12px;}
+.export-menu details summary::-webkit-details-marker{display:none;}
+.export-menu details summary::after{content:" ▸";}
+.export-menu details[open] summary::after{content:" ▾";}
+.export-wrap{position:relative;}
+.export-wrap.stale #exportBtn::after{content:""; position:absolute; top:6px; right:6px; width:8px; height:8px; border-radius:50%; background:var(--red); box-shadow:0 0 0 2px var(--surface,#fff);}
+/* backup / restore window */
+.bk-prog .bk-bar{height:10px; border-radius:999px; background:var(--bg); overflow:hidden;}
+.bk-prog .bk-bar i{display:block; height:100%; border-radius:999px; background:var(--grad); transition:width .25s ease;}
+.bk-prog p{margin:12px 0 0; font-size:14px; font-weight:600;}
+.bk-sub{font-size:12.5px !important; font-weight:500 !important; color:var(--muted); line-height:1.5;}
+.bk-done p{font-size:14px; line-height:1.5; margin:0;}
+.bk-done ul{margin:4px 0; padding-left:18px; font-size:13.5px; line-height:1.55; display:grid; gap:4px;}
+.bk-done .warn{color:#C4243A; font-weight:600;}
+.bk-btns{display:flex; gap:8px; justify-content:flex-end; margin-top:6px;}
+.bk-cmp{width:100%; border-collapse:collapse; font-size:13px;}
+.bk-cmp th{font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); text-align:left; padding:6px 8px; border-bottom:1px solid var(--line);}
+.bk-cmp td{padding:6px 8px; border-bottom:1px solid var(--line);}
+.bk-cmp .num{text-align:right; font-variant-numeric:tabular-nums;}
+.bk-chk{display:flex; gap:10px; align-items:flex-start; font-size:13px; line-height:1.45; padding:10px 12px; border:1px solid var(--line); border-radius:12px; cursor:pointer;}
+.bk-chk input{margin-top:3px; width:16px; height:16px; flex:none;}
+.bk-chk.off{opacity:.55; cursor:default;}
 .export-menu .lbl{font-size:10.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:8px 12px 4px;}
 
 /* ---------- Control strip ---------- */
@@ -1401,6 +1429,17 @@ body.dark .bk-act button,body.dark .bk-tag{background:var(--surface);}
   .rp-li .s{color:#687182; font-size:8.5px;}
   .prio-high .d{background:#FF4D5E;} .prio-mid .d{background:#FFC400;} .prio-low .d{background:#0EC673;}
   .rp-overdue{color:#FF4D5E; font-weight:700;}
+  /* complete report (20 Sept 2026) */
+  .rp-toc{display:grid; grid-template-columns:repeat(4,1fr); gap:1.6mm 5mm; font-size:9.5px; color:#414B5E; border-top:1px solid #E4E9F3; padding-top:4mm;}
+  .rp-toc b{grid-column:1/-1; font-size:8.5px; letter-spacing:.12em; text-transform:uppercase; color:#687182;}
+  .rp-dot{display:inline-block; width:2.2mm; height:2.2mm; border-radius:50%; margin:0 1mm 0 2mm; vertical-align:-.1mm;}
+  .rp-dot:first-child{margin-left:0;}
+  .rp-mline{font-size:9.5px; color:#414B5E; margin:-1mm 0 2.5mm 3.5mm; font-variant-numeric:tabular-nums;}
+  .rp-note{font-size:9.5px; color:#414B5E; padding:.5mm 0 1.5mm 3.5mm;}
+  .rp-t tr.rp-grp td{background:#F1F5FB !important; font-weight:800; font-size:9.5px; border-bottom:1px solid #DCE4F2;}
+  .rp-kpis{margin:7mm 0;}
+  .rp-cover .rp-kpi .v{font-size:21px;}
+  .rp-year{background:none !important; -webkit-background-clip:border-box !important; background-clip:border-box !important; color:#2F7FE0 !important;}
   .rp-soon{color:#FF8A00; font-weight:700;}
 }
 @media(max-width:900px){
@@ -1691,6 +1730,27 @@ body.dark .ch-pill.on{background:var(--brand);}
 .ch-row .r{display:flex; flex-direction:column; align-items:flex-end; gap:5px;}
 .ch-row .t{font-size:11px; color:var(--muted); font-weight:600; white-space:nowrap;}
 .ch-row.unread .t{color:var(--brand);}
+.ch-grp{font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:10px 14px 6px; background:var(--surface); position:sticky; top:0; z-index:1; border-bottom:1px solid var(--line);}
+.ch-grp.prio{color:#B7791F;}
+.ch-row{position:relative;}
+.ch-row.pin{background:linear-gradient(90deg,rgba(245,166,35,.10),transparent 55%);}
+.ch-row.pin.on{background:var(--blue-soft);}
+.ch-row .ch-star{color:#F5A623; margin-right:4px;}
+.ch-row.drag-over{box-shadow:inset 0 2px 0 var(--brand);}
+.ch-row.dragging{opacity:.45;}
+.ch-row .r2{display:flex; align-items:center; gap:6px;}
+.ch-more{width:28px; height:24px; border-radius:8px; display:grid; place-items:center; color:var(--muted); font-size:17px; line-height:1; font-weight:800; letter-spacing:1px;}
+.ch-more:hover{background:var(--line); color:var(--ink);}
+.ch-menu{position:fixed; z-index:140; background:var(--surface,#fff); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow-lg); padding:6px; min-width:216px; display:none;}
+.ch-menu.open{display:block;}
+.ch-menu button{display:flex; width:100%; gap:10px; align-items:center; text-align:left; padding:9px 12px; border-radius:9px; font-size:13.5px; font-weight:600;}
+.ch-menu button:hover{background:var(--bg);}
+.ch-menu button.danger{color:#C4243A;}
+.ch-menu .sep{height:1px; background:var(--line); margin:5px 8px;}
+.ch-menu i{width:18px; text-align:center; font-style:normal;}
+#chPin.on{background:#FFF3D6; color:#B7791F;}
+.ch-sug .sg-ask{font-size:12px; color:var(--muted); font-weight:600; margin:6px 0 0; line-height:1.45; white-space:pre-wrap; border-left:3px solid var(--line); padding-left:9px;}
+.ch-sug .sg-steps{margin:6px 0 0; padding-left:18px; font-size:12px; font-weight:600; color:var(--ink); line-height:1.5;}
 .ch-badge{background:var(--red); color:#fff; border-radius:999px; min-width:20px; height:20px; font-size:11px; font-weight:800; display:grid; place-items:center; padding:0 6px;}
 .ch-wait{font-size:10px; font-weight:800; padding:2px 7px; border-radius:999px; background:var(--orange-soft); color:var(--orange); white-space:nowrap;}
 .ch-wait.late{background:var(--red-soft); color:var(--red);}
@@ -1972,25 +2032,24 @@ body.dark .ch-sug{background:linear-gradient(135deg,#1E1A33,#15202F); border-col
       <div class="export-wrap">
         <button class="btn btn-ghost" id="exportBtn"></button>
         <div class="export-menu" id="exportMenu">
-          <div class="lbl">Report — to read &amp; share</div>
-          <button data-x="pdf-year" data-ic="file">Full year report (PDF)</button>
+          <div class="lbl">Keep it safe</div>
+          <button data-x="backup-all" data-ic="save" class="xm-main">Backup everything</button>
+          <div class="xm-hint">One file with the whole CRM, the chats with their files and the leads. Restore it here — or hand it to Claude — and everything is back exactly as it was.</div>
+          <div class="xm-hint xm-last" id="bkHint">Last full backup: never</div>
+          <button data-x="restore-any" data-ic="folder">Restore from a backup…</button>
+          <button data-x="mail-copy" data-ic="message">E-mail me a safety copy now</button>
+          <div class="xm-hint">Extra net: the server also e-mails you a copy every Monday by itself, and keeps hourly snapshots for 30 days.</div>
           <div class="sep"></div>
-          <div class="lbl">Safety copies — keep these</div>
-          <button data-x="csv-clients" data-ic="sheet">Plain CSV — every client</button>
+          <div class="lbl">To read &amp; share</div>
+          <button data-x="pdf-year" data-ic="file">Complete report (PDF)</button>
+          <div class="xm-hint">The year in numbers, every month with every client, what is owed, renewals with exact dates, subscriptions, costs, calls.</div>
           <div class="sep"></div>
-          <button data-x="backup-enc" data-ic="save">Export backup (encrypted)</button>
-          <button data-x="restore-enc" data-ic="folder">Import backup (encrypted)</button>
-          <div class="sep"></div>
-          <button data-x="backup" data-ic="save">Backup everything (plain JSON)</button>
-          <button data-x="restore" data-ic="folder">Restore from backup</button>
-          <div class="sep"></div>
-          <button data-x="sync-setup" data-ic="save">Sync setup…</button>
-          <div class="sep"></div>
-          <div class="lbl">Call statistics</div>
-          <button data-x="reset-stats" data-ic="repeat">Restart call statistics…</button>
-          <button data-x="restore-stats" data-ic="folder">Restore archived calls</button>
-          <input type="file" id="restoreFile" accept=".json" style="display:none">
-          <input type="file" id="restoreEncFile" accept=".json,.advoncrm" style="display:none">
+          <details class="xm-more"><summary>More</summary>
+            <button data-x="sync-setup" data-ic="save">Sync setup…</button>
+            <button data-x="reset-stats" data-ic="repeat">Restart call statistics…</button>
+            <button data-x="restore-stats" data-ic="folder">Restore archived calls</button>
+          </details>
+          <input type="file" id="restoreAnyFile" accept=".zip,.json,.advoncrm,application/zip,application/json" style="display:none">
         </div>
       </div>
     </div>
@@ -2496,6 +2555,13 @@ body.dark .ch-sug{background:linear-gradient(135deg,#1E1A33,#15202F); border-col
 </div>
 
 <!-- CONFLICT: the stored copy changed since this device loaded -->
+<div class="overlay" id="bkupOverlay">
+  <div class="modal">
+    <div class="modal-head"><h3 id="bkupTitle">Backup</h3><button class="modal-close" id="bkupClose" title="Close">✕</button></div>
+    <div class="modal-body" id="bkupBody"></div>
+  </div>
+</div>
+<div class="ch-menu" id="chMenu"></div>
 <div class="overlay" id="chatOverlay">
   <div class="modal">
     <div class="modal-head"><h3 id="chatModalTitle">New chat</h3><button class="modal-close" id="chatModalClose" title="Close">✕</button></div>
@@ -6741,36 +6807,55 @@ function renderAll(){
 }
 
 /* ---------- export ---------- */
-$('#exportBtn').addEventListener('click',e=>{ e.stopPropagation(); $('#exportMenu').classList.toggle('open'); });
-document.addEventListener('click',()=>$('#exportMenu').classList.remove('open'));
+/* The Export menu (20 Sept 2026) — three things only, so there is never a doubt which one to press:
+     1. Backup everything      ONE .zip with the whole CRM (plain state.json + CSVs to read by eye) AND every file the
+                               server keeps in the private data repo — chats with their attachments, leads, client material.
+                               Handed to Claude (or restored here) it rebuilds everything exactly as it was.
+     2. Restore from a backup  takes that .zip — and every older backup file (plain .json, encrypted .json).
+     3. Complete report (PDF)  everything, to read: the year, every month with its clients, renewals with exact dates…
+   Extra safety net: a copy e-mailed by the server every Monday by itself (netlify/functions/weekly-backup.mjs → /api/backup),
+   plus «E-mail me a safety copy now». Sync setup and the call-statistics tools sit under «More». */
+$('#exportBtn').addEventListener('click',e=>{ e.stopPropagation(); renderBackupHint(); $('#exportMenu').classList.toggle('open'); });
+document.addEventListener('click',e=>{ if(e.target.closest && e.target.closest('#exportMenu details')) return; $('#exportMenu').classList.remove('open'); });
 $('#exportMenu').addEventListener('click',e=>{
+  if(e.target.closest('summary')){ e.stopPropagation(); return; }
   const b=e.target.closest('button[data-x]'); if(!b) return;
   const x=b.dataset.x;
-  if(x==='pdf-year')  exportYearReport();
-  if(x==='csv-clients') exportAllClientsCSV();
-  if(x==='backup-enc')  backupEncrypted();
-  if(x==='restore-enc') $('#restoreEncFile').click();
+  if(x==='backup-all')  backupEverything();
+  if(x==='restore-any') $('#restoreAnyFile').click();
+  if(x==='mail-copy')   mailSafetyCopy();
+  if(x==='pdf-year')    exportYearReport();
   if(x==='sync-setup')  openSyncSetup();
   if(x==='reset-stats')   resetCallStatsUI();
   if(x==='restore-stats') restoreCallLogsUI();
-  if(x==='backup')    backup();
-  if(x==='restore')   $('#restoreFile').click();
   $('#exportMenu').classList.remove('open');
 });
 function download(filename, blob){
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob); a.download=filename;
   document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
 }
-function csvBlob(rows){
-  return new Blob(['\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n')],{type:'text/csv;charset=utf-8'});
+const csvText=rows=>'﻿'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
+function csvBlob(rows){ return new Blob([csvText(rows)],{type:'text/csv;charset=utf-8'}); }
+function agoLabel(iso){ if(!iso) return 'never'; const d=Math.floor((Date.now()-Date.parse(iso))/864e5); return d<=0?'today':d===1?'yesterday':d+' days ago'; }
+function renderBackupHint(){
+  try{
+    ensureMeta();
+    const last=state.meta.lastFullBackup||'';
+    const stale=!last || (Date.now()-Date.parse(last))/864e5>=14;
+    const h=$('#bkHint'); if(h){ h.textContent='Last full backup: '+agoLabel(last)+(stale?' — make one now':''); h.classList.toggle('stale',stale); }
+    const w=document.querySelector('.export-wrap'); if(w) w.classList.toggle('stale',stale);
+  }catch(e){}
 }
+
 /* ==================================================================
-   FULL-YEAR REPORT  →  PDF
-   One complete, designed report for the whole year: the board month
-   by month, the money, the work outstanding, callbacks and renewals.
-   Printed through the browser so Greek names render exactly as typed.
+   COMPLETE REPORT  →  PDF
+   Everything in the CRM, laid out to be read: the year in numbers,
+   every month with every client, what is still owed, renewals with
+   their exact dates, subscriptions, costs, calls, callbacks, chats,
+   leads and the to-do lists. Printed through the browser so Greek
+   names render exactly as typed («Save as PDF» in the print dialog).
    ================================================================== */
 function reportYear(){ return curYear; }
 
@@ -6791,320 +6876,571 @@ function rpDueLabel(iso){
   if(d<=30)return `<span class="rp-soon">in ${d}d</span>`;
   return `in ${d}d`;
 }
+const rpM=v=>v?fmtMoney2(v):'—';
+const rpPct=v=>(Math.round((v||0)*1000)/10)+'%';
+function rpFlagChip(c){ const f=remFlag(c); if(!f) return ''; const F=REM_FLAGS[f]; return ` <span class="rp-chip" style="background:${F.hex}1A;color:${F.hex}">${esc(F.name)}</span>`; }
+function rpContact(c){ return [c.phone,c.viber&&c.viber!==c.phone&&('Viber '+c.viber),c.email].filter(Boolean).map(esc).join('<br>')||'—'; }
+function rpSplit(e){ return `<span class="rp-dot" style="background:#0EC673"></span>New ${fmtMoney2(e.new)} <span class="rp-dot" style="background:#2F7FE0"></span>Renewals ${fmtMoney2(e.renew)} <span class="rp-dot" style="background:#7C5CFC"></span>Monthly ${fmtMoney2(e.subs)}`; }
+/* every renewal line that belongs to a month: the ones still due then, the ones already renewed for that date, the lost ones */
+function rpRenewalsOfMonth(m){
+  ensureRenewals();
+  const out=[];
+  state.renewals.forEach(r=>{
+    (r.history||[]).forEach(h=>{ if((h.due||'').slice(0,7)===m) out.push({r, date:h.due, value:+h.value||0, status:'renewed', at:h.at}); });
+    if((r.date||'').slice(0,7)===m) out.push({r, date:r.date, value:+r.value||0, status:r.lost?'lost':'due'});
+  });
+  return out.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+}
+function rpRenewStatus(x){
+  if(x.status==='renewed') return `<span style="color:#0B9E5C;font-weight:700">✓ renewed ${fmtDate(x.at)}</span>`;
+  if(x.status==='lost') return `<span style="color:#8A94A8;font-weight:700">⊘ won't renew</span>`;
+  return rpDueLabel(x.date);
+}
 
 function exportYearReport(){
   const y=reportYear();
   const months=Array.from({length:12},(_,i)=>y+'-'+pad(i+1));
-  const yearClients=state.clients.filter(c=>c.month && c.month.startsWith(String(y)) && notLost(c));
-  const lostCount=state.clients.filter(c=>c.month && c.month.startsWith(String(y)) && c.stage==='lost').length;
+  const inYear=c=>c.month && c.month.startsWith(String(y));
+  const yearClients=state.clients.filter(c=>inYear(c) && notLost(c));
+  const lostClients=state.clients.filter(c=>inYear(c) && c.stage==='lost');
+  const trashClients=state.clients.filter(c=>inYear(c) && c.trashed);
 
-  const gen=generatedForYear(y), exp=expensesForYear(y), net=gen-exp;
+  const gen=generatedForYear(y), exp=expensesForYear(y);
+  const earnedY={new:0,renew:0,subs:0,total:0}; months.forEach(m=>{ const e=earnedForMonth(m); earnedY.new+=e.new; earnedY.renew+=e.renew; earnedY.subs+=e.subs; earnedY.total+=e.total; });
+  const net=earnedY.total-exp;
   const pipeline=yearClients.reduce((a,c)=>a+cval(c),0);
-  const collected=yearClients.reduce((a,c)=>a+cpaid(c),0);     /* Paid cards + deposits */
-  /* orange/red = money given up on; it is never reported as "still to collect" */
-  const givenUpMoney=yearClients.filter(c=>isUnpaid(c)&&isGivenUp(c)).reduce((a,c)=>a+cowed(c),0);
-  const givenUpCount=yearClients.filter(c=>isUnpaid(c)&&isGivenUp(c)).length;
-  const toCollect=Math.max(0,pipeline-collected-givenUpMoney);
+  const givenUp=yearClients.filter(c=>isUnpaid(c)&&isGivenUp(c));
+  const givenUpMoney=givenUp.reduce((a,c)=>a+cowed(c),0);
+  const chasing=yearClients.filter(isChasing);
+  const toCollect=chasing.reduce((a,c)=>a+cowed(c),0);
   const LS=lossStats();
   let sold=0; months.forEach(m=>sold+=websitesSold(m));
 
-  const openRenewals=(state.renewals||[]).filter(r=>r.date && !r.lost).sort((a,b)=>a.date<b.date?-1:1);
+  const openRenewals=liveRenewals().filter(r=>r.date).sort((a,b)=>a.date<b.date?-1:1);
+  const lostRenewals=(state.renewals||[]).filter(r=>r.lost);
   const dueSoon=openRenewals.filter(r=>{const d=rpDaysLeft(r.date); return d!==null && d<=90;});
+  const overdueRen=openRenewals.filter(r=>rpDaysLeft(r.date)<0);
   const subsTotal=(state.subs||[]).reduce((a,s)=>a+(+s.value||0),0);
+  const YS=yearLogStats(y);
+  let chats=[]; try{ chats=(Chats.list||[]).slice(); }catch(e){}
+  const genAt=new Date().toLocaleDateString('en-GB')+' at '+new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
 
   /* ---------------- cover ---------------- */
   let h=`<section class="rp-cover pbreak">
     <div>
       <div class="rp-rule"></div>
-      <div class="rp-brandline"><span class="bn">Advon Media</span><span class="bt">CRM Report</span></div>
+      <div class="rp-brandline"><span class="bn">Advon Media</span><span class="bt">Complete CRM report</span></div>
       <div class="rp-year">${y}</div>
-      <div class="rp-sub">Complete year — production board, money, work outstanding, callbacks and renewals</div>
+      <div class="rp-sub">Everything in the CRM — the year in numbers, every month with every client, money still owed, renewals with their exact dates, subscriptions, costs, calls, callbacks, chats and to-dos</div>
       <div class="rp-kpis">
-        <div class="rp-kpi hero"><div class="k">Generated</div><div class="v">${fmtMoney(gen)}</div><div class="n">${sold} website${sold===1?'':'s'} paid</div></div>
-        <div class="rp-kpi"><div class="k">Pipeline value</div><div class="v">${fmtMoney(pipeline)}</div><div class="n">${yearClients.length} active client${yearClients.length===1?'':'s'}</div></div>
-        <div class="rp-kpi good"><div class="k">Collected</div><div class="v">${fmtMoney(collected+renewalsPaidForYear(y))}</div><div class="n">${fmtMoney(collected)} new clients + ${fmtMoney(renewalsPaidForYear(y))} renewals</div></div>
-        <div class="rp-kpi ${toCollect>0?'warn':''}"><div class="k">Still to collect</div><div class="v">${fmtMoney(toCollect)}</div><div class="n">realistic — ${fmtMoney(givenUpMoney)} given up is not counted</div></div>
-        <div class="rp-kpi ${LS.lostPct>=15?'bad':''}"><div class="k">Clients lost after saying yes</div><div class="v">${LS.lostPct}%</div><div class="n">${LS.lost.length} of ${LS.t} never paid${LS.risk.length?` · ${LS.risk.length} more at risk`:''}</div></div>
-        <div class="rp-kpi"><div class="k">Expenses</div><div class="v">${fmtMoney2(exp)}</div><div class="n">domains + fixed monthly</div></div>
-        <div class="rp-kpi ${net>=0?'good':'bad'}"><div class="k">Net profit</div><div class="v">${fmtMoney2(net)}</div><div class="n">generated − expenses</div></div>
+        <div class="rp-kpi hero"><div class="k">Earned in ${y} · in the bank</div><div class="v">${fmtMoney2(earnedY.total)}</div><div class="n">${sold} website${sold===1?'':'s'} paid in full</div></div>
+        <div class="rp-kpi good"><div class="k">New websites</div><div class="v">${fmtMoney2(earnedY.new)}</div><div class="n">paid cards + deposits</div></div>
+        <div class="rp-kpi"><div class="k" style="color:#2F7FE0">Renewals</div><div class="v" style="color:#2F7FE0">${fmtMoney2(earnedY.renew)}</div><div class="n">${renewalsPaidCountForYear(y)} renewed in ${y}</div></div>
+        <div class="rp-kpi"><div class="k" style="color:#7C5CFC">Monthly subscriptions</div><div class="v" style="color:#7C5CFC">${fmtMoney2(earnedY.subs)}</div><div class="n">${(state.subs||[]).length} client${(state.subs||[]).length===1?'':'s'} · ${fmtMoney2(subsTotal)} / month</div></div>
+        <div class="rp-kpi ${toCollect>0?'warn':''}"><div class="k">Still to collect</div><div class="v">${fmtMoney2(toCollect)}</div><div class="n">${chasing.length} client${chasing.length===1?'':'s'} · ${fmtMoney2(givenUpMoney)} given up is not counted</div></div>
+        <div class="rp-kpi ${net>=0?'good':'bad'}"><div class="k">Net profit</div><div class="v">${fmtMoney2(net)}</div><div class="n">earned − ${fmtMoney2(exp)} expenses</div></div>
       </div>
       <div class="rp-kpis">
-        <div class="rp-kpi"><div class="k">Renewals due ≤90d</div><div class="v">${dueSoon.length}</div><div class="n">${fmtMoney(dueSoon.reduce((a,r)=>a+(+r.value||0),0))} at stake · ${fmtMoney(renewalsPaidForYear(y))} renewed in ${y}</div></div>
-        <div class="rp-kpi"><div class="k">Subscriptions</div><div class="v">${(state.subs||[]).length}</div><div class="n">${fmtMoney2(subsTotal)} / month</div></div>
-        <div class="rp-kpi"><div class="k">Open to-dos</div><div class="v">${(state.todos||[]).filter(t=>!t.done).length}</div><div class="n">${lostCount} lost this year</div></div>
+        <div class="rp-kpi"><div class="k">Generated (agreed work)</div><div class="v">${fmtMoney2(gen)}</div><div class="n">${yearClients.length} active client${yearClients.length===1?'':'s'} · ${fmtMoney2(pipeline)} booked</div></div>
+        <div class="rp-kpi ${overdueRen.length?'bad':''}"><div class="k">Renewals due ≤ 90 days</div><div class="v">${dueSoon.length}</div><div class="n">${fmtMoney2(dueSoon.reduce((a,r)=>a+(+r.value||0),0))} at stake · ${overdueRen.length} overdue</div></div>
+        <div class="rp-kpi ${LS.lostPct>=15?'bad':''}"><div class="k">Lost after saying yes</div><div class="v">${LS.lostPct}%</div><div class="n">${LS.lost.length} of ${LS.t} never paid${LS.risk.length?` · ${LS.risk.length} more at risk`:''}</div></div>
+      </div>
+      <div class="rp-toc"><b>Inside</b>
+        <span>1 · The year in numbers</span><span>2 · Pipeline by stage</span><span>3 · Month by month — every client</span><span>4 · Money still to collect</span>
+        <span>5 · Renewals — exact dates</span><span>6 · Monthly subscriptions</span><span>7 · Expenses</span><span>8 · Calls &amp; meetings</span>
+        <span>9 · Callbacks</span><span>10 · Client chats</span><span>11 · Leads</span><span>12 · To do &amp; ideas</span>
       </div>
     </div>
-    <div class="rp-foot">Generated ${new Date().toLocaleDateString('en-GB')} at ${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})} · advonmedia.com · Confidential — contains client contact details</div>
+    <div class="rp-foot">Generated ${genAt} · advonmedia.com · Confidential — contains client contact details</div>
   </section>`;
 
-  /* ---------------- year at a glance ---------------- */
+  /* ---------------- 1 · the year in numbers ---------------- */
   const rows=months.map(m=>{
     const items=state.clients.filter(c=>c.month===m && notLost(c));
-    return {
-      m, n:items.length,
-      total:items.reduce((a,c)=>a+cval(c),0),
-      paid:items.reduce((a,c)=>a+cpaid(c),0),
-      g:generatedForMonth(m), e:expensesForMonth(m)
-    };
+    const e=earnedForMonth(m);
+    return { m, n:items.length, booked:items.reduce((a,c)=>a+cval(c),0), owed:items.filter(isChasing).reduce((a,c)=>a+cowed(c),0), e, g:generatedForMonth(m), x:expensesForMonth(m) };
   });
-  const maxBar=Math.max(1, ...rows.map(r=>Math.max(r.total, r.g)));
+  const maxBar=Math.max(1, ...rows.map(r=>Math.max(r.g, r.e.total)));
   const BW=13, GAP=6.2, H=42;
   let bars='';
   rows.forEach((r,i)=>{
     const x=i*(BW+GAP)+4;
-    const ht=(r.total/maxBar)*H, hg=(r.g/maxBar)*H;
-    bars+=`<rect x="${x}" y="${52-ht}" width="${BW}" height="${Math.max(ht,0.4)}" rx="1.6" fill="#DCE8FA"/>`;
-    bars+=`<rect x="${x+2.6}" y="${52-hg}" width="${BW-5.2}" height="${Math.max(hg,0.4)}" rx="1.4" fill="#2F7FE0"/>`;
+    const hg=(r.g/maxBar)*H;
+    bars+=`<rect x="${x}" y="${52-hg}" width="${BW}" height="${Math.max(hg,0.4)}" rx="1.6" fill="#E6EDF8"/>`;
+    let yy=52; [['new','#0EC673'],['renew','#2F7FE0'],['subs','#7C5CFC']].forEach(([k,col])=>{ const hh=(r.e[k]/maxBar)*H; if(hh>0){ yy-=hh; bars+=`<rect x="${x+2.6}" y="${yy}" width="${BW-5.2}" height="${hh}" fill="${col}"/>`; } });
     bars+=`<text x="${x+BW/2}" y="58.6" font-size="3.6" fill="#687182" text-anchor="middle">${MONTHS[i].slice(0,3)}</text>`;
-    if(r.g>0) bars+=`<text x="${x+BW/2}" y="${52-hg-1.6}" font-size="3.4" fill="#2F7FE0" text-anchor="middle" font-weight="700">${Math.round(r.g)}</text>`;
+    if(r.e.total>0) bars+=`<text x="${x+BW/2}" y="${yy-1.6}" font-size="3.4" fill="#10141F" text-anchor="middle" font-weight="700">${Math.round(r.e.total)}</text>`;
   });
   h+=`<section class="rp-sec">
-    <div class="rp-h">Year at a glance <span class="hc">· ${y}</span></div>
-    <div class="rp-hs">What each month brought in, what it cost, and what it left behind</div>
+    <div class="rp-h">1 · The year in numbers <span class="hc">· ${y}</span></div>
+    <div class="rp-hs">What each month brought in (money actually received), what is still owed from it, what it cost and what it left</div>
     <div class="rp-chart avoid">
       <svg viewBox="0 0 236 62" width="100%" height="150" preserveAspectRatio="xMidYMid meet">${bars}</svg>
-      <div class="rp-legend"><span><i style="background:#DCE8FA"></i>Pipeline booked</span><span><i style="background:#2F7FE0"></i>Generated (collected)</span></div>
+      <div class="rp-legend"><span><i style="background:#0EC673"></i>New websites</span><span><i style="background:#2F7FE0"></i>Renewals</span><span><i style="background:#7C5CFC"></i>Monthly</span><span><i style="background:#E6EDF8"></i>Generated (agreed work)</span></div>
     </div>
     <table class="rp-t avoid">
-      <thead><tr><th>Month</th><th class="num">Clients</th><th class="num">Booked</th><th class="num">Collected</th><th class="num">Generated</th><th class="num">Expenses</th><th class="num">Net</th></tr></thead>
+      <thead><tr><th>Month</th><th class="num">Clients</th><th class="num">Booked</th><th class="num">New paid</th><th class="num">Renewals</th><th class="num">Monthly</th><th class="num">Earned</th><th class="num">Still owed</th><th class="num">Expenses</th><th class="num">Net</th></tr></thead>
       <tbody>`;
+  let owedY=0;
   rows.forEach(r=>{
-    const n=r.g-r.e;
+    const n=r.e.total-r.x; owedY+=r.owed;
     h+=`<tr><td class="nm">${MONTHS[+r.m.split('-')[1]-1]}</td><td class="num">${r.n||'—'}</td>
-      <td class="num">${r.total?fmtMoney(r.total):'—'}</td><td class="num">${r.paid?fmtMoney(r.paid):'—'}</td>
-      <td class="num">${r.g?fmtMoney(r.g):'—'}</td><td class="num">${fmtMoney2(r.e)}</td>
+      <td class="num">${rpM(r.booked)}</td><td class="num" style="color:#0B9E5C">${rpM(r.e.new)}</td><td class="num" style="color:#2F7FE0">${rpM(r.e.renew)}</td><td class="num" style="color:#7C5CFC">${rpM(r.e.subs)}</td>
+      <td class="num" style="font-weight:800">${rpM(r.e.total)}</td><td class="num" style="color:${r.owed?'#FF6B57':'inherit'}">${rpM(r.owed)}</td><td class="num">${fmtMoney2(r.x)}</td>
       <td class="num" style="color:${n>=0?'#0B9E5C':'#FF4D5E'};font-weight:700">${fmtMoney2(n)}</td></tr>`;
   });
-  h+=`</tbody><tfoot><tr><td>Total ${y}</td><td class="num">${yearClients.length}</td><td class="num">${fmtMoney(pipeline)}</td>
-      <td class="num">${fmtMoney(collected)}</td><td class="num">${fmtMoney(gen)}</td><td class="num">${fmtMoney2(exp)}</td>
+  h+=`</tbody><tfoot><tr><td>Total ${y}</td><td class="num">${yearClients.length}</td><td class="num">${fmtMoney2(pipeline)}</td>
+      <td class="num">${fmtMoney2(earnedY.new)}</td><td class="num">${fmtMoney2(earnedY.renew)}</td><td class="num">${fmtMoney2(earnedY.subs)}</td><td class="num">${fmtMoney2(earnedY.total)}</td>
+      <td class="num">${fmtMoney2(owedY)}</td><td class="num">${fmtMoney2(exp)}</td>
       <td class="num" style="color:${net>=0?'#0B9E5C':'#FF4D5E'}">${fmtMoney2(net)}</td></tr></tfoot></table>`;
+  /* every year on record, one line each */
+  const years=[...new Set(state.clients.map(c=>(c.month||'').slice(0,4)).concat(renewalHistory().map(x=>(x.h.at||'').slice(0,4))).filter(v=>/^\d{4}$/.test(v)))].sort();
+  if(years.length>1){
+    h+=`<table class="rp-t avoid"><thead><tr><th>All years</th><th class="num">Clients</th><th class="num">New paid</th><th class="num">Renewals</th><th class="num">Monthly</th><th class="num">Earned</th><th class="num">Expenses</th><th class="num">Net</th></tr></thead><tbody>`;
+    years.forEach(yy=>{ const e={new:0,renew:0,subs:0,total:0}; for(let m=1;m<=12;m++){ const p=earnedForMonth(yy+'-'+pad(m)); e.new+=p.new; e.renew+=p.renew; e.subs+=p.subs; e.total+=p.total; } const x=expensesForYear(+yy);
+      h+=`<tr><td class="nm">${yy}</td><td class="num">${state.clients.filter(c=>(c.month||'').startsWith(yy)&&notLost(c)).length}</td><td class="num">${rpM(e.new)}</td><td class="num">${rpM(e.renew)}</td><td class="num">${rpM(e.subs)}</td><td class="num" style="font-weight:800">${rpM(e.total)}</td><td class="num">${fmtMoney2(x)}</td><td class="num">${fmtMoney2(e.total-x)}</td></tr>`; });
+    h+='</tbody></table>';
+  }
+  h+='</section>';
 
-  /* ---------------- pipeline by stage ---------------- */
+  /* ---------------- 2 · pipeline by stage ---------------- */
   const byStage=STAGES.map(st=>{
-    const items=state.clients.filter(c=>c.month && c.month.startsWith(String(y)) && c.stage===st.id);
+    const items=state.clients.filter(c=>inYear(c) && c.stage===st.id && !c.trashed);
     return {st, n:items.length, v:items.reduce((a,c)=>a+cval(c),0)};
   }).filter(r=>r.n>0);
   const maxStage=Math.max(1,...byStage.map(r=>r.v));
-  h+=`<section class="rp-sec avoid"><div class="rp-h">Pipeline by stage</div>
-    <div class="rp-hs">Where every client of ${y} currently sits</div><div class="rp-pipe">`;
+  h+=`<section class="rp-sec avoid"><div class="rp-h">2 · Pipeline by stage</div>
+    <div class="rp-hs">Where every client of ${y} sits today</div><div class="rp-pipe">`;
   byStage.forEach(r=>{
     h+=`<div class="rp-prow"><div><b>${esc(r.st.name)}</b> <span style="color:#687182">· ${r.n}</span></div>
       <div class="rp-ptrack"><div class="rp-pfill" style="width:${Math.max(2,(r.v/maxStage)*100)}%;background:${r.st.hex}"></div></div>
-      <div class="num" style="text-align:right;font-weight:700">${fmtMoney(r.v)}</div></div>`;
+      <div class="num" style="text-align:right;font-weight:700">${fmtMoney2(r.v)}</div></div>`;
   });
+  if(!byStage.length) h+='<div class="rp-empty">No clients recorded for this year yet.</div>';
   h+=`</div></section><div class="pbreak"></div>`;
 
-  /* ---------------- month by month (the board) ---------------- */
-  h+=`<section class="rp-sec"><div class="rp-h">The board, month by month</div>
-    <div class="rp-hs">Every client of ${y}, grouped exactly as they sit on your board</div>`;
+  /* ---------------- 3 · month by month ---------------- */
+  h+=`<section class="rp-sec"><div class="rp-h">3 · Month by month</div>
+    <div class="rp-hs">Every month of ${y}: its money, every client on the board, the renewals that fall in it and the subscriptions collected</div>`;
   let any=false;
-  months.forEach(m=>{
+  const order=STAGES.map(s=>s.id);
+  months.forEach((m,mi)=>{
     const items=state.clients.filter(c=>c.month===m && notLost(c));
     const lost=state.clients.filter(c=>c.month===m && c.stage==='lost');
-    if(!items.length && !lost.length) return;
+    const trash=state.clients.filter(c=>c.month===m && c.trashed);
+    const ren=rpRenewalsOfMonth(m);
+    const subsPaid=(state.subs||[]).filter(s=>s.paid && s.paid[m]);
+    const e=earnedForMonth(m), x=expensesForMonth(m), ls=monthLogStats(m);
+    if(!items.length && !lost.length && !trash.length && !ren.length && !subsPaid.length && !ls.calls) return;
     any=true;
-    const tot=items.reduce((a,c)=>a+cval(c),0);
-    const pd=items.reduce((a,c)=>a+cpaid(c),0);
-    h+=`<div class="rp-m avoid"><div class="rp-mh"><span class="mn">${fmtMonth(m)}</span>
-      <span class="mv">${items.length} client${items.length===1?'':'s'} · <b>${fmtMoney(tot)}</b> booked · ${fmtMoney(pd)} collected${lost.length?` · ${lost.length} lost`:''}</span></div>`;
+    const tot=items.reduce((a,c)=>a+cval(c),0), owed=items.filter(isChasing).reduce((a,c)=>a+cowed(c),0);
+    h+=`<div class="rp-m"><div class="rp-mh avoid"><span class="mn">${fmtMonth(m)}</span>
+      <span class="mv">Earned <b>${fmtMoney2(e.total)}</b> · expenses ${fmtMoney2(x)} · net <b style="color:${e.total-x>=0?'#0B9E5C':'#FF4D5E'}">${fmtMoney2(e.total-x)}</b></span></div>
+      <div class="rp-mline avoid">${rpSplit(e)} &nbsp;·&nbsp; ${items.length} client${items.length===1?'':'s'} · ${fmtMoney2(tot)} booked · <span style="color:${owed?'#FF6B57':'inherit'}">${fmtMoney2(owed)} still owed</span>${ls.calls?` &nbsp;·&nbsp; ${ls.calls} calls → ${ls.booked} booked`:''}</div>`;
     if(items.length){
-      h+=`<table class="rp-t"><thead><tr><th>Client</th><th>Stage</th><th class="num">Value</th><th>Day</th><th>Time</th><th>Contact</th><th>Notes</th></tr></thead><tbody>`;
-      const order=STAGES.map(s=>s.id);
-      [...items].sort((a,b)=>{
-        const d=order.indexOf(a.stage)-order.indexOf(b.stage);
-        if(d) return d;
-        return String(a.day||'').localeCompare(String(b.day||''));
-      }).forEach(c=>{
-        const contact=[c.phone,c.viber&&('Viber '+c.viber),c.email].filter(Boolean).join('<br>');
-        h+=`<tr><td class="nm">${esc(c.name)}</td><td>${rpStageChip(c.stage)}</td>
-          <td class="num">${cval(c)?fmtMoney(cval(c)):'—'}${hasPart(c)?`<br><small style="font-weight:600;color:#0B9E5C">${fmtMoney(cpaid(c))} paid</small>`:''}</td><td>${c.day?fmtDay(c.day):'—'}</td>
-          <td>${esc(c.time||'—')}</td><td class="note">${contact||'—'}</td>
+      h+=`<table class="rp-t"><thead><tr><th>Client</th><th>Stage</th><th class="num">Value</th><th class="num">Paid</th><th class="num">Owed</th><th>Meeting</th><th>Contact</th><th>Notes</th></tr></thead><tbody>`;
+      [...items].sort((a,b)=>{ const d=order.indexOf(a.stage)-order.indexOf(b.stage); return d||String(a.day||'').localeCompare(String(b.day||'')); }).forEach(c=>{
+        const ex=cx(c).length?`<br><small style="color:#687182">incl. ${cx(c).map(v=>esc(v.name||'extra')+' '+fmtMoney2(+v.value||0)).join(' · ')}</small>`:'';
+        const pays=hasPart(c)?`<br><small style="color:#687182">${cpays(c).map(p=>fmtMoney2(p.amount)+' '+fmtDay(p.date)).join(' · ')}</small>`:'';
+        h+=`<tr><td class="nm">${esc(c.name)}</td><td>${rpStageChip(c.stage)}${isUnpaid(c)?rpFlagChip(c):''}</td>
+          <td class="num">${rpM(cval(c))}${ex}</td><td class="num" style="color:#0B9E5C">${rpM(cpaid(c))}${pays}</td><td class="num" style="color:${cowed(c)?'#FF6B57':'inherit'}">${rpM(cowed(c))}</td>
+          <td style="white-space:nowrap">${c.day?fmtDay(c.day):'—'}${c.time?' · '+esc(c.time):''}</td><td class="note">${rpContact(c)}</td>
           <td class="note">${esc(c.notes||'').replace(/\r?\n/g,'<br>')}</td></tr>`;
       });
-      h+='</tbody></table>';
-    } else {
-      h+='<div class="rp-empty">No active clients this month.</div>';
+      h+=`</tbody><tfoot><tr><td colspan="2">${items.length} client${items.length===1?'':'s'}</td><td class="num">${fmtMoney2(tot)}</td><td class="num">${fmtMoney2(items.reduce((a,c)=>a+cpaid(c),0))}</td><td class="num">${fmtMoney2(items.reduce((a,c)=>a+cowed(c),0))}</td><td colspan="3"></td></tr></tfoot></table>`;
+    } else h+='<div class="rp-empty">No active clients this month.</div>';
+    if(ren.length){
+      h+=`<table class="rp-t avoid"><thead><tr><th>Renewals of ${MONTHS[mi]}</th><th>Exact date</th><th>Status</th><th>Domain / note</th><th class="num">Amount</th></tr></thead><tbody>`;
+      ren.forEach(v=>{ h+=`<tr><td class="nm">${esc(v.r.name)}${v.r.phone?`<br><small style="font-weight:500;color:#687182">${esc(v.r.phone)}</small>`:''}</td><td>${fmtDate(v.date)}</td><td>${rpRenewStatus(v)}</td><td class="note">${esc(v.r.note||'')}</td><td class="num">${fmtMoney2(v.value)}</td></tr>`; });
+      h+=`</tbody><tfoot><tr><td colspan="4">${ren.filter(v=>v.status!=='lost').length} renewal${ren.filter(v=>v.status!=='lost').length===1?'':'s'} worth</td><td class="num">${fmtMoney2(ren.filter(v=>v.status!=='lost').reduce((a,v)=>a+v.value,0))}</td></tr></tfoot></table>`;
     }
-    if(lost.length){
-      h+=`<div class="rp-empty">Didn't convert: ${lost.map(c=>esc(c.name)).join(' · ')}</div>`;
-    }
+    if(subsPaid.length) h+=`<div class="rp-note"><b>Monthly subscriptions collected:</b> ${subsPaid.map(s=>esc(s.name)+' '+fmtMoney2(s.value)).join(' · ')}</div>`;
+    if(trash.length) h+=`<div class="rp-note"><b style="color:#FF4D5E">Trash · lost money:</b> ${trash.map(c=>esc(c.name)+' '+fmtMoney2(cowed(c))).join(' · ')}</div>`;
+    if(lost.length) h+=`<div class="rp-note"><b>Didn't convert:</b> ${lost.map(c=>esc(c.name)).join(' · ')}</div>`;
     h+='</div>';
   });
-  if(!any) h+='<div class="rp-empty">No clients recorded for this year yet.</div>';
+  if(!any) h+='<div class="rp-empty">Nothing recorded for this year yet.</div>';
   h+=`</section><div class="pbreak"></div>`;
 
-  /* ---------------- what to do ---------------- */
+  /* ---------------- 4 · money still to collect ---------------- */
+  const unpaidAll=state.clients.filter(isUnpaid).filter(c=>cowed(c)>0 && c.stage!=='booked' && c.stage!=='thinking').sort((a,b)=>String(a.month||'').localeCompare(String(b.month||''))||String(a.name).localeCompare(String(b.name)));
+  const trashAll=state.clients.filter(isTrashed);
+  h+=`<section class="rp-sec"><div class="rp-h">4 · Money still to collect <span class="hc">· ${fmtMoney2(unpaidAll.filter(isChasing).reduce((a,c)=>a+cowed(c),0))} realistic · every year</span></div>
+    <div class="rp-hs">Work that is agreed and under way but not fully paid. Orange and red flags are money you have given up on — listed, never counted</div>`;
+  if(unpaidAll.length){
+    h+=`<table class="rp-t"><thead><tr><th>Client</th><th>Month</th><th>Stage</th><th class="num">Value</th><th class="num">Paid</th><th class="num">Owed</th><th class="num">Waiting</th><th>Contact</th></tr></thead><tbody>`;
+    unpaidAll.forEach(c=>{ const since=c.stageAt||c.updated||c.created||0; const d=since?Math.max(0,Math.floor((Date.now()-since)/864e5)):null;
+      h+=`<tr><td class="nm">${esc(c.name)}</td><td>${c.month?fmtMonth(c.month):'—'}</td><td>${rpStageChip(c.stage)}${rpFlagChip(c)}</td><td class="num">${rpM(cval(c))}</td><td class="num" style="color:#0B9E5C">${rpM(cpaid(c))}</td><td class="num" style="font-weight:800;color:${isGivenUp(c)?'#8A94A8':'#FF6B57'}">${fmtMoney2(cowed(c))}</td><td class="num">${d===null?'—':d+'d'}</td><td class="note">${rpContact(c)}</td></tr>`; });
+    h+=`</tbody><tfoot><tr><td colspan="5">Realistic (no orange / red)</td><td class="num">${fmtMoney2(unpaidAll.filter(isChasing).reduce((a,c)=>a+cowed(c),0))}</td><td colspan="2"></td></tr></tfoot></table>`;
+  } else h+='<div class="rp-empty">Nobody owes anything. </div>';
+  if(trashAll.length){
+    h+=`<table class="rp-t avoid"><thead><tr><th>Trash · money lost for good</th><th>Month</th><th>Was at</th><th>Reason</th><th class="num">Lost</th></tr></thead><tbody>`;
+    trashAll.forEach(c=>{ h+=`<tr><td class="nm">${esc(c.name)}</td><td>${c.month?fmtMonth(c.month):'—'}</td><td>${c.trashStage?esc(stageById(c.trashStage).name):'—'}</td><td class="note">${esc(c.trashReason||'')}</td><td class="num">${fmtMoney2(cowed(c))}</td></tr>`; });
+    h+=`</tbody><tfoot><tr><td colspan="4">${trashAll.length} client${trashAll.length===1?'':'s'} · loss rate ${LS.lostPct}% of everyone who said yes</td><td class="num">${fmtMoney2(trashAll.reduce((a,c)=>a+cowed(c),0))}</td></tr></tfoot></table>`;
+  }
+  h+='</section>';
+
+  /* ---------------- 5 · renewals ---------------- */
+  h+=`<section class="rp-sec"><div class="rp-h">5 · Renewals <span class="hc">· ${openRenewals.length} clients · ${fmtMoney2(openRenewals.reduce((a,r)=>a+(+r.value||0),0))} a year</span></div>
+    <div class="rp-hs">Every client who renews, by exact date — overdue in red, the next 30 days in orange</div>`;
+  if(openRenewals.length){
+    h+=`<table class="rp-t"><thead><tr><th>Renews on</th><th>When</th><th>Client</th><th>Domain / note</th><th>Last renewed</th><th class="num">Amount</th></tr></thead><tbody>`;
+    let lastM='';
+    openRenewals.forEach(r=>{
+      const mk=r.date.slice(0,7);
+      if(mk!==lastM){ lastM=mk; const grp=openRenewals.filter(v=>v.date.slice(0,7)===mk); h+=`<tr class="rp-grp"><td colspan="5">${fmtMonth(mk)} · ${grp.length}</td><td class="num">${fmtMoney2(grp.reduce((a,v)=>a+(+v.value||0),0))}</td></tr>`; }
+      h+=`<tr><td>${fmtDate(r.date)}</td><td>${rpDueLabel(r.date)}</td><td class="nm">${esc(r.name)}${r.phone?`<br><small style="font-weight:500;color:#687182">${esc(r.phone)}</small>`:''}</td><td class="note">${esc(r.note||'')}</td><td>${r.lastRenewed?fmtDate(r.lastRenewed):'—'}</td><td class="num">${fmtMoney2(r.value)}</td></tr>`;
+    });
+    h+=`</tbody><tfoot><tr><td colspan="5">Total a year</td><td class="num">${fmtMoney2(openRenewals.reduce((a,r)=>a+(+r.value||0),0))}</td></tr></tfoot></table>`;
+  } else h+='<div class="rp-empty">No renewals recorded.</div>';
+  const renHist=renewalHistory().filter(v=>(v.h.at||'').startsWith(String(y))).sort((a,b)=>String(a.h.at).localeCompare(String(b.h.at)));
+  if(renHist.length){
+    h+=`<table class="rp-t avoid"><thead><tr><th>Renewed in ${y} · income</th><th>Paid on</th><th>Was due</th><th class="num">Amount</th></tr></thead><tbody>`;
+    renHist.forEach(v=>{ h+=`<tr><td class="nm">${esc(v.r.name)}</td><td>${fmtDate(v.h.at)}</td><td>${fmtDate(v.h.due)}</td><td class="num">${fmtMoney2(v.h.value)}</td></tr>`; });
+    h+=`</tbody><tfoot><tr><td colspan="3">${renHist.length} renewed</td><td class="num">${fmtMoney2(renHist.reduce((a,v)=>a+(+v.h.value||0),0))}</td></tr></tfoot></table>`;
+  }
+  if(lostRenewals.length){
+    h+=`<table class="rp-t avoid"><thead><tr><th>Lost · won't renew</th><th>Was due</th><th>Domain / note</th><th class="num">Amount</th></tr></thead><tbody>`;
+    lostRenewals.forEach(r=>{ h+=`<tr><td class="nm">${esc(r.name)}</td><td>${fmtDate(r.date)}</td><td class="note">${esc(r.note||'')}</td><td class="num">${fmtMoney2(r.value)}</td></tr>`; });
+    h+=`</tbody><tfoot><tr><td colspan="3">${lostRenewals.length} lost</td><td class="num">${fmtMoney2(lostRenewals.reduce((a,r)=>a+(+r.value||0),0))}</td></tr></tfoot></table>`;
+  }
+  h+='</section>';
+
+  /* ---------------- 6 · subscriptions ---------------- */
+  h+=`<section class="rp-sec avoid"><div class="rp-h">6 · Monthly subscriptions <span class="hc">· ${fmtMoney2(subsTotal)} / month</span></div>
+    <div class="rp-hs">Recurring income — ✓ marks the months of ${y} that were collected</div>`;
+  if((state.subs||[]).length){
+    h+=`<table class="rp-t"><thead><tr><th>Client</th><th class="num">Per month</th>${MONTHS.map(n=>`<th style="text-align:center">${n.slice(0,3)}</th>`).join('')}<th class="num">Collected</th></tr></thead><tbody>`;
+    state.subs.forEach(s=>{ const n=months.filter(m=>(s.paid||{})[m]).length;
+      h+=`<tr><td class="nm">${esc(s.name)}</td><td class="num">${fmtMoney2(s.value)}</td>${months.map(m=>`<td style="text-align:center;color:#0B9E5C;font-weight:800">${(s.paid||{})[m]?'✓':'<span style="color:#D5DBE7">·</span>'}</td>`).join('')}<td class="num">${fmtMoney2(n*(+s.value||0))}</td></tr>`; });
+    h+=`</tbody><tfoot><tr><td>Total</td><td class="num">${fmtMoney2(subsTotal)}</td><td colspan="12"></td><td class="num">${fmtMoney2(earnedY.subs)}</td></tr></tfoot></table>`;
+  } else h+='<div class="rp-empty">No monthly subscriptions.</div>';
+  h+='</section>';
+
+  /* ---------------- 7 · expenses ---------------- */
+  ensureExpenses();
+  h+=`<section class="rp-sec avoid"><div class="rp-h">7 · Expenses <span class="hc">· ${fmtMoney2(exp)} in ${y}</span></div>
+    <div class="rp-hs">Fixed monthly costs (a month with its own amount is shown as it was) plus ${fmtMoney2(state.expenses.perWebsite)} domain cost per website paid</div>
+    <table class="rp-t"><thead><tr><th>Cost</th>${MONTHS.map(n=>`<th class="num">${n.slice(0,3)}</th>`).join('')}<th class="num">Year</th></tr></thead><tbody>`;
+  state.expenses.recurring.forEach(r=>{ let t=0; h+=`<tr><td class="nm">${esc(r.name)}</td>${months.map(m=>{ const a=recAmount(r,m); t+=a; return `<td class="num"${recHasOverride(r,m)?' style="font-weight:800"':''}>${Math.round(a*100)/100}</td>`; }).join('')}<td class="num">${fmtMoney2(t)}</td></tr>`; });
+  { let t=0; h+=`<tr><td class="nm">Domains · websites paid</td>${months.map(m=>{ const a=websitesSold(m)*(+state.expenses.perWebsite||0); t+=a; return `<td class="num">${a?Math.round(a*100)/100:'—'}</td>`; }).join('')}<td class="num">${fmtMoney2(t)}</td></tr>`; }
+  h+=`</tbody><tfoot><tr><td>Total</td>${months.map(m=>`<td class="num">${Math.round(expensesForMonth(m))}</td>`).join('')}<td class="num">${fmtMoney2(exp)}</td></tr></tfoot></table></section>`;
+
+  /* ---------------- 8 · calls & meetings ---------------- */
+  h+=`<section class="rp-sec avoid"><div class="rp-h">8 · Calls &amp; meetings <span class="hc">· counted since ${fmtDate(statsSince())}</span></div>
+    <div class="rp-hs">Cold calls from Quick Log, what they turned into, and how many meetings became paying clients</div>`;
+  if(YS.calls || YS.meetClients){
+    h+=`<table class="rp-t"><thead><tr><th>Month</th><th class="num">Calls</th><th class="num">Booked</th><th class="num">SMS</th><th class="num">No</th><th class="num">Call → booked</th><th class="num">Days worked</th><th class="num">Calls / day</th><th class="num">Meetings</th><th class="num">Became clients</th><th class="num">Meeting → client</th></tr></thead><tbody>`;
+    YS.months.forEach((s,i)=>{ if(!s.calls && !s.meetClients) return; h+=`<tr><td class="nm">${MONTHS[i]}</td><td class="num">${s.calls}</td><td class="num">${s.booked}</td><td class="num">${s.sms}</td><td class="num">${s.nos}</td><td class="num">${rpPct(s.callConv)}</td><td class="num">${s.workingDays}</td><td class="num">${Math.round(s.avgCalls*10)/10}</td><td class="num">${s.meetClients}</td><td class="num">${s.converted}</td><td class="num">${rpPct(s.meetConv)}</td></tr>`; });
+    h+=`</tbody><tfoot><tr><td>Total ${y}</td><td class="num">${YS.calls}</td><td class="num">${YS.booked}</td><td class="num">${YS.sms}</td><td class="num">${YS.nos}</td><td class="num">${rpPct(YS.callConv)}</td><td class="num">${YS.workingDays}</td><td class="num">${Math.round(YS.avgCalls*10)/10}</td><td class="num">${YS.meetClients}</td><td class="num">${YS.converted}</td><td class="num">${rpPct(YS.meetConv)}</td></tr></tfoot></table>`;
+  } else h+='<div class="rp-empty">No calls counted yet for this year.</div>';
+  h+='</section>';
+
+  /* ---------------- 9 · callbacks ---------------- */
+  const prio=(Array.isArray(state.prio)?state.prio:[]).filter(w=>!w.done);
+  const warm=(state.warm||[]).filter(w=>!w.done);
+  const sched=(state.sched||[]).filter(s=>!s.done).sort((a,b)=>String(a.month).localeCompare(String(b.month)));
+  h+=`<section class="rp-sec"><div class="rp-h">9 · Callbacks <span class="hc">· ${prio.length+warm.length+sched.length} people to call</span></div>
+    <div class="rp-hs">Call first, warm leads to call back, and the ones who said "call me later"</div>`;
+  const cbT=(title,list,withMonth)=>{ if(!list.length) return ''; let t=`<table class="rp-t avoid"><thead><tr><th>${title}</th>${withMonth?'<th>Call in</th>':''}<th>Phone</th><th>Note</th></tr></thead><tbody>`; list.forEach(w=> t+=`<tr><td class="nm">${esc(w.name)}</td>${withMonth?`<td>${w.month?fmtMonth(w.month):'—'}</td>`:''}<td>${esc(w.phone||'—')}</td><td class="note">${esc(w.note||'')}</td></tr>`); return t+'</tbody></table>'; };
+  h+=cbT('Call first',prio)+cbT('Warm lead',warm)+cbT('Scheduled',sched,true);
+  if(!prio.length && !warm.length && !sched.length) h+='<div class="rp-empty">No callbacks waiting.</div>';
+  h+='</section>';
+
+  /* ---------------- 10 · chats ---------------- */
+  const liveChats=chats.filter(t=>!t.archived).sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||String(b.lastAt).localeCompare(String(a.lastAt)));
+  h+=`<section class="rp-sec avoid"><div class="rp-h">10 · Client chats <span class="hc">· ${liveChats.length} open${chats.length-liveChats.length?` · ${chats.length-liveChats.length} archived`:''}</span></div>
+    <div class="rp-hs">Every client conversation, where their website stands and who wrote last</div>`;
+  if(liveChats.length){
+    h+=`<table class="rp-t"><thead><tr><th>Client</th><th>Stage</th><th>Last message</th><th>Wrote last</th><th>Contact</th><th>Website</th></tr></thead><tbody>`;
+    liveChats.forEach(t=>{ h+=`<tr><td class="nm">${t.pin?'★ ':''}${esc(t.name)}</td><td>${esc((CH_STAGES.find(s=>s[0]===chStage(t))||['','—'])[1])}</td><td>${t.lastAt?fmtDate(String(t.lastAt).slice(0,10)):'—'}</td><td>${t.lastFrom==='client'?'<span class="rp-overdue">client — waiting for you</span>':t.lastFrom==='claude'?'Claude':'you'}</td><td class="note">${[t.phone,t.email].filter(Boolean).map(esc).join('<br>')||'—'}</td><td class="note">${esc((t.site||'').replace(/^https?:\/\//,''))}</td></tr>`; });
+    h+='</tbody></table>';
+  } else h+='<div class="rp-empty">No client chats (or the chats could not be read — sign in with sync).</div>';
+  h+='</section>';
+
+  /* ---------------- 11 · leads ---------------- */
+  const leads=Array.isArray(state.leads)?state.leads:[];
+  if(leads.length){
+    const LST={new:'Not called yet',na:'No answer',g:'Booked',y:'SMS sent',r:'No',x:'Dropped'};
+    const lists={}; leads.forEach(l=>{ const k=l.list||'new'; (lists[k]=lists[k]||{n:0}).n++; lists[k][l.status||'new']=(lists[k][l.status||'new']||0)+1; });
+    let names={}; try{ names=ldLists(); }catch(e){}
+    h+=`<section class="rp-sec avoid"><div class="rp-h">11 · Leads <span class="hc">· ${leads.length} in the CRM</span></div>
+      <div class="rp-hs">The cold-calling lists and what happened to them</div>
+      <table class="rp-t"><thead><tr><th>List</th><th class="num">Leads</th>${Object.values(LST).map(v=>`<th class="num">${v}</th>`).join('')}</tr></thead><tbody>`;
+    Object.keys(lists).forEach(k=>{ h+=`<tr><td class="nm">${esc((names[k]&&names[k].t)||k)}</td><td class="num">${lists[k].n}</td>${Object.keys(LST).map(s=>`<td class="num">${lists[k][s]||'—'}</td>`).join('')}</tr>`; });
+    h+=`</tbody><tfoot><tr><td>Total</td><td class="num">${leads.length}</td>${Object.keys(LST).map(s=>`<td class="num">${leads.filter(l=>(l.status||'new')===s).length}</td>`).join('')}</tr></tfoot></table></section>`;
+  }
+
+  /* ---------------- 12 · to do & ideas ---------------- */
   const todos=(state.todos||[]).filter(t=>!t.done);
   const cats=(state.noteCats&&state.noteCats.length?state.noteCats:DEFAULT_TODO_CATS);
   const asapOpen=(Array.isArray(state.asap)?state.asap:[]).filter(t=>!t.done).sort((a,b)=>(a.sort||0)-(b.sort||0));
-  if(asapOpen.length){
-    h+=`<section class="rp-sec avoid"><div class="rp-h">Do ASAP <span class="hc">· ${asapOpen.length} open</span></div>
-      <div class="rp-hs">The numbered list from Home — red means super-high priority</div>`;
-    asapOpen.forEach((t,i)=>{ h+=`<div class="rp-li prio-${t.hot?'high':'none'}"><span class="d"></span><span class="t">${i+1}. ${esc(t.text)}</span></div>`; });
-    h+='</section>';
-  }
-  h+=`<section class="rp-sec"><div class="rp-h">What to do <span class="hc">· ${todos.length} open</span></div>
-    <div class="rp-hs">Your To Do board — red dot means high priority</div>`;
+  h+=`<section class="rp-sec"><div class="rp-h">12 · To do &amp; ideas <span class="hc">· ${asapOpen.length+todos.length} open</span></div>
+    <div class="rp-hs">Do ASAP (numbered, red = super-high priority), the To Do board and the ideas list</div>`;
+  if(asapOpen.length){ h+='<div class="rp-card" style="margin-bottom:4mm"><h4>Do ASAP</h4>'; asapOpen.forEach((t,i)=>{ h+=`<div class="rp-li prio-${t.hot?'high':'none'}"><span class="d"></span><span class="t">${i+1}. ${esc(t.text)}</span></div>`; }); h+='</div>'; }
   if(todos.length){
     h+='<div class="rp-cols">';
+    const rank={high:0,mid:1,low:2,none:3};
     cats.forEach(cat=>{
-      const list=todos.filter(t=>t.cat===cat);
-      if(!list.length) return;
+      const list=todos.filter(t=>t.cat===cat); if(!list.length) return;
       h+=`<div class="rp-card"><h4>${esc(cat)} <span style="color:#687182;font-weight:600">· ${list.length}</span></h4>`;
-      const rank={high:0,mid:1,low:2,none:3};
-      [...list].sort((a,b)=>(rank[a.prio]??3)-(rank[b.prio]??3)).forEach(t=>{
-        h+=`<div class="rp-li prio-${esc(t.prio||'none')}"><span class="d"></span><span class="t">${esc(t.text)}${t.note?`<div class="s">${esc(t.note)}</div>`:''}</span></div>`;
-      });
+      [...list].sort((a,b)=>(rank[a.prio]??3)-(rank[b.prio]??3)).forEach(t=>{ h+=`<div class="rp-li prio-${esc(t.prio||'none')}"><span class="d"></span><span class="t">${esc(t.text)}${t.note?`<div class="s">${esc(t.note)}</div>`:''}</span></div>`; });
       h+='</div>';
     });
     const uncat=todos.filter(t=>!cats.includes(t.cat));
-    if(uncat.length){
-      h+='<div class="rp-card"><h4>Other</h4>';
-      uncat.forEach(t=>{ h+=`<div class="rp-li prio-${esc(t.prio||'none')}"><span class="d"></span><span class="t">${esc(t.text)}</span></div>`; });
-      h+='</div>';
-    }
+    if(uncat.length){ h+='<div class="rp-card"><h4>Other</h4>'; uncat.forEach(t=>{ h+=`<div class="rp-li prio-${esc(t.prio||'none')}"><span class="d"></span><span class="t">${esc(t.text)}</span></div>`; }); h+='</div>'; }
     h+='</div>';
-  } else h+='<div class="rp-empty">Nothing outstanding.</div>';
+  }
+  const ideas=(state.ideas||[]).filter(i=>i.status!=='done');
+  if(ideas.length){ h+='<div class="rp-card" style="margin-top:4mm"><h4>Ideas <span style="color:#687182;font-weight:600">· '+ideas.length+'</span></h4>'; ideas.forEach(i=>{ h+=`<div class="rp-li prio-${esc(i.prio||'none')}"><span class="d"></span><span class="t">${esc(i.title||'')}${i.detail?`<div class="s">${esc(i.detail)}</div>`:''}</span></div>`; }); h+='</div>'; }
+  if(!asapOpen.length && !todos.length && !ideas.length) h+='<div class="rp-empty">Nothing outstanding.</div>';
   h+='</section>';
 
-  /* ---------------- callbacks ---------------- */
-  const warm=(state.warm||[]).filter(w=>!w.done);
-  const sched=(state.sched||[]).filter(s=>!s.done).sort((a,b)=>String(a.month).localeCompare(String(b.month)));
-  h+=`<section class="rp-sec"><div class="rp-h">Callbacks <span class="hc">· ${warm.length + sched.length} people to chase</span></div>
-    <div class="rp-hs">Warm leads to call back, and the ones who said "call me later"</div>`;
-  if(warm.length){
-    h+=`<table class="rp-t avoid"><thead><tr><th>Warm lead</th><th>Phone</th><th>Note</th></tr></thead><tbody>`;
-    warm.forEach(w=> h+=`<tr><td class="nm">${esc(w.name)}</td><td>${esc(w.phone||'—')}</td><td class="note">${esc(w.note||'')}</td></tr>`);
-    h+='</tbody></table>';
-  }
-  if(sched.length){
-    h+=`<table class="rp-t avoid"><thead><tr><th>Call in</th><th>Name</th><th>Note</th></tr></thead><tbody>`;
-    sched.forEach(s=> h+=`<tr><td class="nm">${s.month?fmtMonth(s.month):'—'}</td><td>${esc(s.name)}</td><td class="note">${esc(s.note||'')}</td></tr>`);
-    h+='</tbody></table>';
-  }
-  if(!warm.length && !sched.length) h+='<div class="rp-empty">No callbacks scheduled.</div>';
-  h+='</section>';
-
-  /* ---------------- renewals ---------------- */
-  h+=`<section class="rp-sec"><div class="rp-h">Renewals <span class="hc">· ${openRenewals.length} tracked</span></div>
-    <div class="rp-hs">Sorted by date — overdue in red, next 30 days in orange</div>`;
-  if(openRenewals.length){
-    h+=`<table class="rp-t"><thead><tr><th>Due</th><th>When</th><th>Client</th><th class="num">Amount</th></tr></thead><tbody>`;
-    openRenewals.forEach(r=>{
-      h+=`<tr><td>${fmtDate(r.date)}</td><td>${rpDueLabel(r.date)}</td><td class="nm">${esc(r.name)}</td><td class="num">${fmtMoney(r.value)}</td></tr>`;
-    });
-    h+=`</tbody><tfoot><tr><td colspan="3">Total tracked</td><td class="num">${fmtMoney(openRenewals.reduce((a,r)=>a+(+r.value||0),0))}</td></tr></tfoot></table>`;
-  } else h+='<div class="rp-empty">No renewals recorded.</div>';
-  h+='</section>';
-
-  /* ---------------- subscriptions ---------------- */
-  if((state.subs||[]).length){
-    h+=`<section class="rp-sec avoid"><div class="rp-h">Monthly subscriptions <span class="hc">· ${fmtMoney2(subsTotal)} / month</span></div>
-      <div class="rp-hs">Recurring income, and which months of ${y} are marked paid</div>
-      <table class="rp-t"><thead><tr><th>Client</th><th class="num">Per month</th><th>Paid months in ${y}</th></tr></thead><tbody>`;
-    state.subs.forEach(s=>{
-      const paid=months.map((m,i)=>((s.paid||{})[m]?MONTHS[i].slice(0,3):null)).filter(Boolean);
-      h+=`<tr><td class="nm">${esc(s.name)}</td><td class="num">${fmtMoney2(s.value)}</td>
-        <td class="note">${paid.length?paid.join(' · '):'—'}</td></tr>`;
-    });
-    h+=`</tbody><tfoot><tr><td>Total</td><td class="num">${fmtMoney2(subsTotal)}</td><td></td></tr></tfoot></table></section>`;
-  }
-
-  h+=`<div class="rp-foot" style="margin-top:6mm">Advon CRM · full-year report for ${y} · generated ${new Date().toLocaleString('en-GB')}</div>`;
+  h+=`<div class="rp-foot" style="margin-top:6mm">Advon CRM · complete report for ${y} · generated ${genAt} · for another year, pick it on the Year tab first</div>`;
 
   $('#printArea').innerHTML=h;
-  toast('Choose "Save as PDF" as the destination');
-  setTimeout(()=>window.print(), 120);
+  toast('In the print window choose «Save as PDF»');
+  setTimeout(()=>window.print(), 150);
 }
 
-function backup(){
-  download('advon-crm-backup-'+todayIso()+'.json', new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));
-  toast('Backup downloaded — this file is NOT encrypted, keep it somewhere safe');
-}
-
-/* ---- Encrypted export / import ----------------------------------
-   Same AES-256-GCM key as the app. Safe to keep in cloud storage or email to
-   yourself: without the passphrase the file is meaningless.               */
-async function backupEncrypted(){
-  if(!CUR_KEY || !state){ toast('Nothing to export'); return; }
-  try{
-    const blob=await aesEnc(CUR_KEY, JSON.stringify(state));
-    const file={
-      format:'advon-crm-encrypted-backup',
-      version:1,
-      exportedAt:new Date().toISOString(),
-      device:deviceId(),
-      clients:(state.clients||[]).length,
-      salt:VAULT.salt,          /* so a future build can re-derive the key */
-      iv:blob.iv, ct:blob.ct
-    };
-    download('advon-crm-encrypted-'+todayIso()+'.json',
-      new Blob([JSON.stringify(file,null,2)],{type:'application/json'}));
-    toast('Encrypted backup downloaded ('+file.clients+' clients)');
-  }catch(e){ toast('Export failed: '+(e.message||e)); }
-}
-
-$('#restoreEncFile').addEventListener('change',e=>{
-  const f=e.target.files[0]; if(!f) return;
-  const r=new FileReader();
-  r.onload=async()=>{
-    try{
-      const file=JSON.parse(r.result);
-      if(!file.iv || !file.ct) throw new Error('not an Advon CRM encrypted backup');
-      const plain=await aesDec(CUR_KEY, file.iv, file.ct);
-      const data=JSON.parse(plain);
-      if(!data.clients) throw new Error('no client records inside');
-      const when=file.exportedAt?new Date(file.exportedAt).toLocaleString():'unknown date';
-      if(confirm('Restore '+(data.clients.length)+' clients from the backup made '+when+
-                 '?\n\nEverything currently in the CRM will be replaced.')){
-        state=data;
-        normalizeState();
-        await saveNow();
-        renderAll();
-        toast('Restored '+data.clients.length+' clients');
-      }
-    }catch(err){
-      toast('Could not restore: '+(err.message||'wrong passphrase or damaged file'));
+/* ==================================================================
+   BACKUP EVERYTHING  ·  RESTORE
+   ================================================================== */
+const BACKUP_URL='/api/backup';
+/* a tiny ZIP writer/reader — no library, works offline; text is deflated when the browser can, photos are stored as they are */
+const Zip={
+  _t:null,
+  crc(u8){ if(!this._t){ this._t=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c=c&1?0xEDB88320^(c>>>1):c>>>1; this._t[n]=c>>>0; } } let c=0xFFFFFFFF; for(let i=0;i<u8.length;i++) c=this._t[(c^u8[i])&0xFF]^(c>>>8); return (c^0xFFFFFFFF)>>>0; },
+  async pipe(u8, stream){ return new Uint8Array(await new Response(new Blob([u8]).stream().pipeThrough(stream)).arrayBuffer()); },
+  async build(files){
+    const enc=new TextEncoder(), parts=[], central=[]; let off=0;
+    const d=new Date(), dosT=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1), dosD=((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate();
+    for(const f of files){
+      const name=enc.encode(f.name), raw=f.data, crc=this.crc(raw);
+      let body=raw, method=0;
+      if(raw.length>200 && /\.(json|csv|txt|md|html)$/i.test(f.name) && typeof CompressionStream!=='undefined'){ try{ const z=await this.pipe(raw,new CompressionStream('deflate-raw')); if(z.length<raw.length){ body=z; method=8; } }catch(e){} }
+      const lh=new DataView(new ArrayBuffer(30)); lh.setUint32(0,0x04034b50,true); lh.setUint16(4,20,true); lh.setUint16(6,0x0800,true); lh.setUint16(8,method,true); lh.setUint16(10,dosT,true); lh.setUint16(12,dosD,true); lh.setUint32(14,crc,true); lh.setUint32(18,body.length,true); lh.setUint32(22,raw.length,true); lh.setUint16(26,name.length,true);
+      parts.push(new Uint8Array(lh.buffer),name,body);
+      const ch=new DataView(new ArrayBuffer(46)); ch.setUint32(0,0x02014b50,true); ch.setUint16(4,20,true); ch.setUint16(6,20,true); ch.setUint16(8,0x0800,true); ch.setUint16(10,method,true); ch.setUint16(12,dosT,true); ch.setUint16(14,dosD,true); ch.setUint32(16,crc,true); ch.setUint32(20,body.length,true); ch.setUint32(24,raw.length,true); ch.setUint16(28,name.length,true); ch.setUint32(42,off,true);
+      central.push(new Uint8Array(ch.buffer),name);
+      off+=30+name.length+body.length;
     }
-    e.target.value='';
-  };
-  r.readAsText(f);
-});
-
-/* ---- Plain CSV of every client ----------------------------------
-   The worst-case escape hatch: readable in Excel or Numbers with no app,
-   no passphrase and no internet.                                        */
-function exportAllClientsCSV(){
-  const rows=[['Name','Value (EUR)','Paid so far (EUR)','Still owed (EUR)','Stage','Month','Day','Time','Phone','Viber','Email','Notes']];
-  (state.clients||[])
-    .slice()
-    .sort((a,b)=>String(a.month||'').localeCompare(String(b.month||''))||String(a.name||'').localeCompare(String(b.name||'')))
-    .forEach(c=>rows.push([
-      c.name||'', cval(c), cpaid(c), (notLost(c)?cowed(c):0),
-      (()=>{ try{ return stageById(c.stage).name; }catch(e){ return c.stage||''; } })(),
-      c.month?fmtMonth(c.month):'', c.day||'', c.time||'',
-      c.phone||'', c.viber||'', c.email||'', (c.notes||'').replace(/\r?\n/g,' · ')
-    ]));
-  download('advon-crm-all-clients-'+todayIso()+'.csv', csvBlob(rows));
-  toast('CSV downloaded — '+((state.clients||[]).length)+' clients');
-}
-$('#restoreFile').addEventListener('change',e=>{
-  const f=e.target.files[0]; if(!f) return;
-  const r=new FileReader();
-  r.onload=()=>{
-    try{
-      const data=JSON.parse(r.result);
-      if(!data.clients) throw 0;
-      if(confirm('Replace everything with this backup? Current data will be overwritten.')){
-        state=data; state.clients||=[]; state.logs||=[]; state.warm||=[]; state.sched||=[]; state.renewals||=[]; state.todos||=[]; state.subs||=[]; state.targets||={}; state.targets.yearly||={}; state.targets.monthly||={}; state.ideas||=[]; state.workdays||={}; state.leads||=[]; ensureExpenses(); ensureLogs();
-        state.clients.forEach(c=>{ if(OLD_STAGE_MAP[c.stage]) c.stage=OLD_STAGE_MAP[c.stage]; });
-        save(); renderAll(); toast('Backup restored');
+    const csize=central.reduce((a,p)=>a+p.length,0);
+    const end=new DataView(new ArrayBuffer(22)); end.setUint32(0,0x06054b50,true); end.setUint16(8,files.length,true); end.setUint16(10,files.length,true); end.setUint32(12,csize,true); end.setUint32(16,off,true);
+    return new Blob([...parts,...central,new Uint8Array(end.buffer)],{type:'application/zip'});
+  },
+  async read(buf){
+    const u8=new Uint8Array(buf), dv=new DataView(buf), dec=new TextDecoder(); let e=-1;
+    for(let i=u8.length-22;i>=Math.max(0,u8.length-66000);i--){ if(dv.getUint32(i,true)===0x06054b50){ e=i; break; } }
+    if(e<0) throw new Error('not a zip file');
+    const n=dv.getUint16(e+10,true); let p=dv.getUint32(e+16,true); const out=[];
+    for(let k=0;k<n;k++){
+      if(dv.getUint32(p,true)!==0x02014b50) throw new Error('damaged zip');
+      const method=dv.getUint16(p+10,true), csz=dv.getUint32(p+20,true), nl=dv.getUint16(p+28,true), xl=dv.getUint16(p+30,true), cl=dv.getUint16(p+32,true), lo=dv.getUint32(p+42,true);
+      const name=dec.decode(u8.subarray(p+46,p+46+nl));
+      const start=lo+30+dv.getUint16(lo+26,true)+dv.getUint16(lo+28,true);
+      const body=u8.subarray(start,start+csz);
+      if(!name.endsWith('/')){
+        let data;
+        if(method===0) data=body.slice();
+        else if(method===8){ if(typeof DecompressionStream==='undefined') throw new Error('this browser cannot open compressed backups — use Chrome or Safari 16.4+'); data=await this.pipe(body,new DecompressionStream('deflate-raw')); }
+        else throw new Error('unsupported zip compression');
+        out.push({name,data});
       }
-    }catch{ toast('That file is not a valid Advon CRM backup'); }
-    e.target.value='';
-  };
-  r.readAsText(f);
+      p+=46+nl+xl+cl;
+    }
+    return out;
+  }
+};
+/* the progress / confirm window */
+function bkModal(title, html){ $('#bkupTitle').textContent=title; $('#bkupBody').innerHTML=html; $('#bkupOverlay').classList.add('open'); }
+function bkClose(){ $('#bkupOverlay').classList.remove('open'); }
+function bkProgress(title, line, frac){ bkModal(title, `<div class="bk-prog"><div class="bk-bar"><i style="width:${Math.round(Math.max(0.03,Math.min(1,frac||0))*100)}%"></i></div><p id="bkLine">${esc(line)}</p><p class="bk-sub">Keep this tab open until it finishes.</p></div>`); }
+const bkHdr=()=>({'x-crm-auth':SYNC_TOKEN});
+const BK_README=`ADVON CRM — FULL BACKUP
+=======================
+Made: {when}
+This one file holds everything. Keep it somewhere private (it is NOT locked with a password):
+your Mac + one more place, for example a USB stick or your own Google Drive.
+
+WHAT IS INSIDE
+  crm/state.json      the whole CRM exactly as it was: clients, money, part payments, renewals, monthly
+                      subscriptions, expenses, call log, callbacks, leads you worked on, to-dos, ideas, targets, settings
+  crm/clients.csv     every client, readable in Excel / Numbers
+  crm/renewals.csv    every renewal with its exact date, readable in Excel / Numbers
+  server/…            every file the server keeps in the private data repo ({repo}):
+                      chats/ (every conversation + the photos and files clients sent), leads/ (lead lists and the
+                      ads inbox), intake/ (client material), brief/, and crm-data.json (the locked copy of the CRM)
+  manifest.json       what was counted when the backup was made — used to check a restore
+
+HOW TO PUT IT BACK — the easy way
+  1. Open advonmedia.com/crm and sign in.
+  2. Export (top right) → «Restore from a backup…» → choose this file.
+  3. The CRM shows what is inside and asks what to put back:
+       • the CRM itself (clients, money, renewals, calls…)
+       • the chats, leads and client files on the server — tick this only if those were lost too
+  4. Press Restore. It saves and syncs to every device by itself.
+
+IF EVERYTHING IS GONE (the website, the repos, the lot) — give this file to Claude and say «restore the CRM from this backup»
+  • The CRM's code lives in the GitHub repo agelmet/advon-media-visual (also on the Mac: ~/Desktop/advon-media). Netlify project «advonmediaa» deploys it.
+  • The data lives in the PRIVATE GitHub repo {repo}. If it is gone: create a new private repo, make a fine-grained token with
+    Contents read/write on it, and set these in Netlify → Environment variables: CRM_GH_TOKEN, CRM_GH_REPO, CRM_GH_BRANCH (main),
+    CRM_AUTH_HASH. Optional ones the site also uses: GCAL_ICS_URL, RESEND_API_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, LEAD_NOTIFY_TO.
+  • Then the easy way above puts all the data back: state.json through the CRM, and everything under server/ into the data repo
+    (same paths, without the «server/» in front).
+  • crm/state.json is plain JSON — even with no CRM at all, every client, phone number and amount can be read from it.
+`;
+function bkClientRows(){
+  const rows=[['Name','Value (EUR)','Paid so far (EUR)','Still owed (EUR)','Stage','Flag','Month','Meeting day','Time','Phone','Viber','Email','Trashed','Notes']];
+  (state.clients||[]).slice().sort((a,b)=>String(a.month||'').localeCompare(String(b.month||''))||String(a.name||'').localeCompare(String(b.name||''))).forEach(c=>rows.push([
+    c.name||'', cval(c), cpaid(c), (notLost(c)?cowed(c):0), (()=>{ try{ return stageById(c.stage).name; }catch(e){ return c.stage||''; } })(), (REM_FLAGS[remFlag(c)]||{}).name||'',
+    c.month?fmtMonth(c.month):'', c.day||'', c.time||'', c.phone||'', c.viber||'', c.email||'', c.trashed?'yes':'', (c.notes||'').replace(/\r?\n/g,' · ') ]));
+  return rows;
+}
+function bkRenewalRows(){
+  const rows=[['Client','Renews on','Amount (EUR)','Phone','Domain / note','Last renewed','Will not renew','Payments so far']];
+  (state.renewals||[]).slice().sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))).forEach(r=>rows.push([r.name||'', r.date||'', +r.value||0, r.phone||'', r.note||'', r.lastRenewed||'', r.lost?'yes':'', (r.history||[]).map(h=>h.at+' €'+h.value).join(' | ')]));
+  return rows;
+}
+function bkCounts(s, chatsIdx, serverFiles){
+  return { clients:(s.clients||[]).length, renewals:(s.renewals||[]).length, subscriptions:(s.subs||[]).length, callLogDays:(s.logs||[]).length, leads:(s.leads||[]).length,
+    callbacks:(s.warm||[]).length+(s.sched||[]).length+((s.prio||[]).length||0), todos:(s.todos||[]).length, ideas:(s.ideas||[]).length,
+    chats:chatsIdx==null?null:chatsIdx.length, serverFiles:serverFiles==null?null:serverFiles };
+}
+async function backupEverything(){
+  if(!state){ toast('Nothing to back up'); return; }
+  const enc=new TextEncoder(), files=[], add=(name,data)=>files.push({name, data: typeof data==='string'?enc.encode(data):data});
+  const missing=[]; let server=null, chatsIdx=null;
+  try{
+    bkProgress('Backing up everything','Packing the CRM…',0.05);
+    add('crm/state.json', JSON.stringify(state,null,1));
+    add('crm/clients.csv', csvText(bkClientRows()));
+    add('crm/renewals.csv', csvText(bkRenewalRows()));
+    if(SYNC_TOKEN && !window.DEMO_CHATS){
+      bkProgress('Backing up everything','Asking the server what it holds…',0.08);
+      const r=await fetch(BACKUP_URL+'?list=1',{headers:bkHdr(),cache:'no-store'});
+      if(!r.ok) throw new Error(r.status===404?'the server does not have the backup service yet — wait two minutes after the update and try again':'the server answered '+r.status);
+      server=await r.json();
+      const list=server.files||[]; let done=0, next=0;
+      const worker=async()=>{ while(next<list.length){ const f=list[next++]; let ok=false;
+          for(let a=0;a<3&&!ok;a++){ try{ const b=await fetch(BACKUP_URL+'?blob='+f.sha,{headers:bkHdr(),cache:'no-store'}); if(b.ok){ add('server/'+f.path, new Uint8Array(await b.arrayBuffer())); ok=true; } else if(b.status===413||b.status===404) break; }catch(e){} if(!ok) await new Promise(r=>setTimeout(r,700*(a+1))); }
+          if(!ok) missing.push(f.path);
+          done++; const l=$('#bkLine'); if(l){ l.textContent='Downloading from the server… '+done+' of '+list.length+' files'; const bar=document.querySelector('#bkupBody .bk-bar i'); if(bar) bar.style.width=Math.round((0.1+0.8*done/list.length)*100)+'%'; } } };
+      await Promise.all([worker(),worker(),worker(),worker()]);
+      const ci=files.find(f=>f.name==='server/chats/index.json'); if(ci){ try{ chatsIdx=JSON.parse(new TextDecoder().decode(ci.data)); }catch(e){} }
+    }
+    const when=new Date();
+    const manifest={ format:'advon-full-backup', version:1, madeAt:when.toISOString(), madeOn:deviceId(), demo:!!window.DEMO_CHATS,
+      counts:bkCounts(state, chatsIdx, server?(server.files||[]).length-missing.length:null),
+      dataRepo: server?{repo:server.repo, branch:server.branch, head:server.head, snapshotsLeftOut:server.snapshots||0}:null,
+      serverIncluded:!!server, missing, files:files.map(f=>({path:f.name, bytes:f.data.length})) };
+    add('manifest.json', JSON.stringify(manifest,null,1));
+    files.unshift({name:'READ ME FIRST - how to restore.txt', data:enc.encode(BK_README.replace('{when}',when.toLocaleString('en-GB')).replace(/\{repo\}/g,(server&&server.repo)||'agelmet/advon-crm-data'))});
+    bkProgress('Backing up everything','Building the file…',0.95);
+    const zip=await Zip.build(files);
+    const stamp=todayIso()+'_'+pad(when.getHours())+pad(when.getMinutes());
+    download('ADVON-FULL-BACKUP-'+stamp+'.zip', zip);
+    ensureMeta(); state.meta.lastFullBackup=when.toISOString(); save(); renderBackupHint();
+    const c=manifest.counts, mb=(zip.size/1048576).toFixed(1);
+    bkModal('Backup downloaded ✓', `<div class="bk-done"><p><b>ADVON-FULL-BACKUP-${esc(stamp)}.zip</b> · ${mb} MB — it is in your Downloads folder.</p>
+      <ul><li><b>${c.clients}</b> clients · <b>${c.renewals}</b> renewals · <b>${c.subscriptions}</b> subscriptions · <b>${c.leads}</b> leads · <b>${c.callLogDays}</b> call-log entries</li>
+      ${server?`<li><b>${c.chats??0}</b> chats and <b>${c.serverFiles}</b> server files (messages, photos, lead lists, client material)</li>`:`<li class="warn">Server files are NOT inside (${window.DEMO_CHATS?'this is the demo':'you are not signed in with sync'}) — the CRM itself is.</li>`}
+      ${missing.length?`<li class="warn">${missing.length} file${missing.length===1?'':'s'} could not be downloaded: ${esc(missing.slice(0,4).join(', '))}${missing.length>4?'…':''}</li>`:''}</ul>
+      <p class="bk-sub">Keep it on your Mac and in one more place (USB stick or your Google Drive). It is not locked with a password, so keep it private. To bring everything back: Export → «Restore from a backup…» → this file. Or hand it to Claude.</p>
+      <div class="bk-btns"><button class="btn" id="bkOk" style="background:var(--grad);color:#fff">Done</button></div></div>`);
+    $('#bkOk').addEventListener('click',bkClose);
+  }catch(e){
+    bkModal('Backup did not finish', `<div class="bk-done"><p class="warn">${esc(e.message||String(e))}</p><p class="bk-sub">Nothing was changed. Try again — if the server part keeps failing you can still save the CRM alone.</p><div class="bk-btns"><button class="btn btn-ghost" id="bkCrmOnly">Save the CRM alone</button><button class="btn" id="bkOk" style="background:var(--grad);color:#fff">Close</button></div></div>`);
+    $('#bkOk').addEventListener('click',bkClose);
+    $('#bkCrmOnly').addEventListener('click',()=>{ download('advon-crm-backup-'+todayIso()+'.json', new Blob([JSON.stringify(state,null,2)],{type:'application/json'})); bkClose(); toast('CRM-only backup downloaded'); });
+  }
+}
+async function mailSafetyCopy(){
+  if(window.DEMO_CHATS || !SYNC_TOKEN){ toast(window.DEMO_CHATS?'The demo has no server — nothing to e-mail':'Sign in with sync first'); return; }
+  toast('Preparing the safety copy…');
+  try{
+    const r=await fetch(BACKUP_URL+'?mail=1',{method:'POST',headers:bkHdr()}); const p=await r.json().catch(()=>({}));
+    if(!r.ok || !p.ok) throw new Error(p.error||('server answered '+r.status));
+    toast('Safety copy e-mailed to '+p.to+' ('+Math.round(p.bytes/1024)+' KB)');
+  }catch(e){ toast('Could not e-mail the copy: '+(e.message||e)); }
+}
+
+/* ---- restore: the full .zip, an old plain .json, or an old encrypted .json — one button takes them all ---- */
+$('#restoreAnyFile').addEventListener('change',async e=>{
+  const f=e.target.files[0]; e.target.value=''; if(!f) return;
+  try{
+    const buf=await f.arrayBuffer(); const u8=new Uint8Array(buf);
+    if(u8[0]===0x50 && u8[1]===0x4B) return restoreFromZip(f.name, buf);
+    const file=JSON.parse(new TextDecoder().decode(u8));
+    if(file && file.iv && file.ct){
+      if(!CUR_KEY) throw new Error('this is an encrypted backup — sign in first');
+      let data; try{ data=JSON.parse(await aesDec(CUR_KEY, file.iv, file.ct)); }catch(err){ throw new Error('this encrypted backup was made with a different passphrase'); }
+      return restoreConfirm({name:f.name, data, madeAt:file.exportedAt||'', server:[]});
+    }
+    if(file && Array.isArray(file.clients)) return restoreConfirm({name:f.name, data:file, madeAt:(file.meta&&file.meta.lastFullBackup)||'', server:[]});
+    throw new Error('that file is not an Advon CRM backup');
+  }catch(err){ toast('Could not read the backup: '+(err.message||err)); }
 });
+async function restoreFromZip(name, buf){
+  bkProgress('Reading the backup','Opening '+name+'…',0.3);
+  try{
+    const entries=await Zip.read(buf), dec=new TextDecoder();
+    const st=entries.find(x=>x.name==='crm/state.json'); if(!st) throw new Error('there is no crm/state.json inside — not an Advon full backup');
+    const data=JSON.parse(dec.decode(st.data)); if(!Array.isArray(data.clients)) throw new Error('the CRM data inside is damaged');
+    let manifest={}; const mf=entries.find(x=>x.name==='manifest.json'); if(mf){ try{ manifest=JSON.parse(dec.decode(mf.data)); }catch(e){} }
+    const server=entries.filter(x=>/^server\/(chats|leads|intake|brief)\//.test(x.name) && !x.name.includes('..')).map(x=>({path:x.name.slice(7), data:x.data}));
+    restoreConfirm({name, data, madeAt:manifest.madeAt||'', server, manifest});
+  }catch(err){ bkClose(); toast('Could not read the backup: '+(err.message||err)); }
+}
+function restoreConfirm(bk){
+  const c=bkCounts(bk.data, null, null), now=bkCounts(state, null, null);
+  let chatsN=null; const ci=bk.server.find(f=>f.path==='chats/index.json'); if(ci){ try{ chatsN=JSON.parse(new TextDecoder().decode(ci.data)).length; }catch(e){} }
+  const when=bk.madeAt?new Date(bk.madeAt).toLocaleString('en-GB'):'unknown date';
+  const canServer=bk.server.length && SYNC_TOKEN && !window.DEMO_CHATS;
+  const row=(label,a,b)=>`<tr><td>${label}</td><td class="num"><b>${a}</b></td><td class="num">${b}</td></tr>`;
+  bkModal('Restore from a backup', `<div class="bk-done">
+    <p><b>${esc(bk.name)}</b><br><span class="bk-sub">made ${esc(when)}</span></p>
+    <table class="bk-cmp"><thead><tr><th></th><th class="num">In the backup</th><th class="num">In the CRM now</th></tr></thead><tbody>
+      ${row('Clients',c.clients,now.clients)}${row('Renewals',c.renewals,now.renewals)}${row('Subscriptions',c.subscriptions,now.subscriptions)}${row('Call-log entries',c.callLogDays,now.callLogDays)}${row('Leads',c.leads,now.leads)}${row('To-dos',c.todos,now.todos)}
+    </tbody></table>
+    <label class="bk-chk"><input type="checkbox" id="rsCrm" checked> <span><b>Put back the CRM</b> — clients, money, renewals, calls, to-dos. Replaces what is in the CRM now.</span></label>
+    <label class="bk-chk${canServer?'':' off'}"><input type="checkbox" id="rsSrv"${canServer?'':' disabled'}> <span><b>Also put back the chats, leads and client files on the server</b> — ${bk.server.length?`${chatsN??'?'} chats · ${bk.server.length} files. Tick this only if they were lost: files with the same name are replaced by the backup's.`:'this backup file has none inside.'}${bk.server.length&&!canServer?' Sign in with sync to use this.':''}</span></label>
+    <p class="bk-sub">Before anything is replaced, a copy of what is in the CRM right now is downloaded to your Downloads folder, so this can always be undone.</p>
+    <div class="bk-btns"><button class="btn btn-ghost" id="rsCancel">Cancel</button><button class="btn" id="rsGo" style="background:var(--grad);color:#fff">Restore</button></div></div>`);
+  $('#rsCancel').addEventListener('click',bkClose);
+  $('#rsGo').addEventListener('click',()=>{ const crm=$('#rsCrm').checked, srv=$('#rsSrv').checked; if(!crm&&!srv){ toast('Tick what to put back'); return; } runRestore(bk, crm, srv); });
+}
+async function runRestore(bk, doCrm, doServer){
+  try{
+    if(doCrm){
+      bkProgress('Restoring','Saving a copy of the current CRM first…',0.05);
+      if(state && (state.clients||[]).length) download('advon-crm-BEFORE-restore-'+todayIso()+'.json', new Blob([JSON.stringify(state)],{type:'application/json'}));
+      state=bk.data; normalizeState(); ensureMeta(); state.meta.restoredAt=new Date().toISOString(); state.meta.restoredFrom=bk.madeAt||bk.name;
+      memStore=state; await saveNow(); renderAll();
+    }
+    let sent=0;
+    if(doServer){
+      const put=[]; let i=0;
+      for(const f of bk.server){
+        bkProgress('Restoring','Sending files back to the server… '+(++i)+' of '+bk.server.length,0.1+0.8*i/bk.server.length);
+        let sha=null;
+        for(let a=0;a<3&&!sha;a++){ try{ const r=await fetch(BACKUP_URL+'?blob=1',{method:'POST',headers:{...bkHdr(),'Content-Type':'application/octet-stream'},body:f.data}); if(r.ok) sha=(await r.json()).sha; }catch(e){} if(!sha) await new Promise(r=>setTimeout(r,800*(a+1))); }
+        if(!sha) throw new Error('the server did not accept '+f.path);
+        put.push({path:f.path, sha});
+      }
+      bkProgress('Restoring','Writing everything in one go…',0.95);
+      for(let k=0;k<put.length;k+=400){ const r=await fetch(BACKUP_URL+'?restore=1',{method:'POST',headers:{...bkHdr(),'Content-Type':'application/json'},body:JSON.stringify({files:put.slice(k,k+400), from:bk.madeAt||bk.name})}); const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok) throw new Error(p.error||('server answered '+r.status)); sent+=p.written||0; }
+      try{ Chats.head=null; Chats.cache={}; await Chats.pull(true); }catch(e){}
+      try{ Leads.pull(false); }catch(e){}
+    }
+    bkModal('Restored ✓', `<div class="bk-done"><ul>${doCrm?`<li>The CRM is back as it was${bk.madeAt?' on '+esc(new Date(bk.madeAt).toLocaleString('en-GB')):''}: <b>${(state.clients||[]).length}</b> clients, <b>${(state.renewals||[]).length}</b> renewals. It syncs to your other devices by itself.</li>`:''}${doServer?`<li><b>${sent}</b> server files are back (chats, leads, client material).</li>`:''}</ul>
+      ${doCrm?'<p class="bk-sub">The CRM you had a minute ago was saved to Downloads as «advon-crm-BEFORE-restore-…json» — restore that file to undo this.</p>':''}<div class="bk-btns"><button class="btn" id="bkOk" style="background:var(--grad);color:#fff">Done</button></div></div>`);
+    $('#bkOk').addEventListener('click',bkClose);
+  }catch(e){
+    bkModal('Restore stopped', `<div class="bk-done"><p class="warn">${esc(e.message||String(e))}</p><p class="bk-sub">${doCrm?'The CRM part was restored; the server files were not all written. ':''}You can run the restore again — it is safe to repeat.</p><div class="bk-btns"><button class="btn" id="bkOk" style="background:var(--grad);color:#fff">Close</button></div></div>`);
+    $('#bkOk').addEventListener('click',bkClose);
+  }
+}
 
 /* ---------- init ---------- */
 function unlockUI(){ $('#loginScreen').style.display='none'; document.body.classList.remove('locked'); }
@@ -7419,10 +7755,29 @@ const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, ca
     }catch(e){ if(m&&keep){ m.deleted=false; m.text=keep.text; m.files=keep.files; renderChats(); } toast('Could not delete'); }
   },
   async meta(slug, data){
-    if(window.DEMO_CHATS){ const t=this.list.find(x=>x.slug===slug); if(t){ Object.assign(t,data); if(data.suggest===null) delete t.suggest; } renderChats(); return {ok:true, thread:t, link:'https://advonmedia.com/c/'+(t&&t.code)}; }
+    if(window.DEMO_CHATS){ const t=this.list.find(x=>x.slug===slug); if(t){ Object.assign(t,data); delete t.unread; if(data.pin && typeof t.ord!=='number') t.ord=this.list.filter(x=>x.pin).length; if(data.pin===false) delete t.ord; if(data.suggest===null) delete t.suggest; } renderChats(); return {ok:true, thread:t, link:'https://advonmedia.com/c/'+(t&&t.code)}; }
     const r=await fetch(CHAT_URL+'?t='+encodeURIComponent(slug)+'&meta=1',{method:'POST', headers:{...this.hdr(),'Content-Type':'application/json'}, body:JSON.stringify(data)});
     const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok) throw new Error(p.error||'could not save');
     const i=this.list.findIndex(t=>t.slug===slug); if(i>=0) this.list[i]=p.thread; if(this.cur===slug) this.thread=p.thread; this.head=null; renderChats(); if('stage' in data){ try{ chSyncBoard(); }catch(e){} } return p;
+  },
+  /* priority, order, unread, delete (20 Sept 2026) */
+  async pin(slug, on){ try{ await this.meta(slug,{pin:!!on}); toast(on?'Priority — kept on top of the list':'Removed from priority'); }catch(e){ toast('Could not save'); } },
+  async unread(slug){ const t=this.list.find(x=>x.slug===slug); if(window.DEMO_CHATS){ if(t) t.unreadAdmin=Math.max(1,t.unreadAdmin||0); renderChats(); return; } try{ if(this.cur===slug) this.close(); await this.meta(slug,{unread:true}); toast('Marked as unread'); }catch(e){ toast('Could not save'); } },
+  async order(slugs){
+    slugs.forEach((sl,i)=>{ const t=this.list.find(x=>x.slug===sl); if(t){ t.pin=true; t.ord=i; } }); renderChatList();
+    if(window.DEMO_CHATS) return;
+    try{ const r=await fetch(CHAT_URL+'?order=1',{method:'POST', headers:{...this.hdr(),'Content-Type':'application/json'}, body:JSON.stringify({slugs})}); const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok) throw new Error(p.error||'x'); this.head=null; }catch(e){ toast('Could not save the order'); this.head=null; this.pull(false); }
+  },
+  async remove(slug){
+    const t=this.list.find(x=>x.slug===slug); if(!t) return;
+    if(!confirm('Delete the chat with '+t.name+' for good?\n\n• every message and file in it is removed\n• '+t.name+"'s link stops working\n\nIf you only want it out of the way, use Archive instead.")) return;
+    if(window.DEMO_CHATS){ window.DEMO_CHATS.threads=window.DEMO_CHATS.threads.filter(x=>x.slug!==slug); delete window.DEMO_CHATS.messages[slug]; this.list=this.list.filter(x=>x.slug!==slug); if(this.cur===slug) this.close(); renderChats(); toast('Chat deleted'); return; }
+    try{
+      const r=await fetch(CHAT_URL+'?t='+encodeURIComponent(slug)+'&remove=1',{method:'POST', headers:this.hdr()}); const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok) throw new Error(p.error||'could not delete');
+      this.list=this.list.filter(x=>x.slug!==slug); delete this.cache[slug]; if(this.cur===slug) this.close(); this.head=null; renderChats();
+      try{ (state.clients||[]).forEach(c=>{ if(c.chat===slug) delete c.chat; }); }catch(e){}
+      toast('Chat with '+t.name+' deleted');
+    }catch(e){ toast('Could not delete the chat — '+(e.message||'try again')); }
   },
   start(){ this.pull(false); clearInterval(this.timer); this.timer=setInterval(()=>{ if(document.visibilityState!=='visible') return; if(curView==='chats' || Date.now()-this.lastAt>90*1000) this.pull(false); }, 20*1000); }
 };
@@ -7498,7 +7853,31 @@ async function chShrink(file){
   if(!/^image\/(jpeg|png|webp|heic|heif)$/i.test(file.type)) return file;
   try{ const bmp=await createImageBitmap(file).catch(()=>null); if(!bmp) return file; const MAX=1800; let {width:w,height:h}=bmp; if(Math.max(w,h)<=MAX && file.size<1.2e6){ bmp.close(); return file; } const s=Math.min(1,MAX/Math.max(w,h)); const c=document.createElement('canvas'); c.width=Math.round(w*s); c.height=Math.round(h*s); c.getContext('2d').drawImage(bmp,0,0,c.width,c.height); bmp.close(); const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.86)); return blob?new File([blob],file.name.replace(/\.[^.]+$/,'')+'.jpg',{type:'image/jpeg'}):file; }catch(e){ return file; }
 }
-function renderChats(){ renderChatList(); renderChatThread(true); renderChatsBadge(); renderHomeChats(); }
+/* Priority chats first, in the order Angelo gave them (t.ord); everyone else by the latest message */
+let chDragSlug=null;
+function chOrder(a,b){ return (b.pin?1:0)-(a.pin?1:0) || (a.pin&&b.pin ? ((a.ord??1e9)-(b.ord??1e9)) : 0) || String(b.lastAt).localeCompare(String(a.lastAt)); }
+function chMovePin(slug, dir){ const pins=Chats.list.filter(t=>t.pin&&!t.archived).sort(chOrder).map(t=>t.slug); const i=pins.indexOf(slug), j=i+dir; if(i<0||j<0||j>=pins.length) return; [pins[i],pins[j]]=[pins[j],pins[i]]; Chats.order(pins); }
+function chRowMenu(slug, anchor, x, y){
+  const t=Chats.list.find(v=>v.slug===slug), m=$('#chMenu'); if(!t||!m) return;
+  const pins=Chats.list.filter(v=>v.pin&&!v.archived).sort(chOrder).map(v=>v.slug), pi=pins.indexOf(slug);
+  m.innerHTML=(t.archived?'':`<button data-a="pin"><i>${t.pin?'☆':'★'}</i>${t.pin?'Remove from priority':'Make it a priority'}</button>`)
+    +(t.pin&&pi>0?'<button data-a="up"><i>↑</i>Move up</button>':'')+(t.pin&&pi>=0&&pi<pins.length-1?'<button data-a="down"><i>↓</i>Move down</button>':'')
+    +(t.archived?'':'<button data-a="unread"><i>●</i>Mark as unread</button>')
+    +'<button data-a="edit"><i>✎</i>Edit details</button><button data-a="link"><i>🔗</i>Copy the client link</button><div class="sep"></div>'
+    +`<button data-a="archive"><i>▣</i>${t.archived?'Bring back from the archive':'Archive (keeps everything)'}</button><button data-a="delete" class="danger"><i>🗑</i>Delete chat…</button>`;
+  m.classList.add('open');
+  const r=anchor?anchor.getBoundingClientRect():{left:x,bottom:y,right:x}; const w=m.offsetWidth||220, hh=m.offsetHeight||260;
+  m.style.left=Math.max(8,Math.min(window.innerWidth-w-8,(anchor?r.right-w:r.left)))+'px';
+  m.style.top=Math.max(8,Math.min(window.innerHeight-hh-8,r.bottom+4))+'px';
+  m.onclick=async e=>{ const b=e.target.closest('[data-a]'); if(!b) return; m.classList.remove('open'); const a=b.dataset.a;
+    if(a==='pin') Chats.pin(slug,!t.pin); else if(a==='up') chMovePin(slug,-1); else if(a==='down') chMovePin(slug,1); else if(a==='unread') Chats.unread(slug);
+    else if(a==='edit') chOpenModal(t); else if(a==='link') chCopy(chLink(t)); else if(a==='delete') Chats.remove(slug);
+    else if(a==='archive'){ try{ await Chats.meta(slug,{archived:!t.archived}); toast(t.archived?'Back in the list':'Archived — the client link is paused'); }catch(err){ toast('Could not save'); } } };
+}
+document.addEventListener('click',e=>{ const m=document.getElementById('chMenu'); if(m && m.classList.contains('open') && !e.target.closest('#chMenu') && !e.target.closest('[data-more]')) m.classList.remove('open'); });
+window.addEventListener('scroll',()=>{ const m=document.getElementById('chMenu'); if(m) m.classList.remove('open'); },true);
+function renderChats(){ renderChatList(); renderChatThread(true); renderChatsBadge(); renderHomeChats();
+  if(Chats.wantOpen && Chats.list.some(t=>t.slug===Chats.wantOpen)){ const sl=Chats.wantOpen; Chats.wantOpen=null; setTimeout(()=>{ switchView('chats'); Chats.open(sl); },0); } }
 function renderChatsBadge(){
   const n=chWaiting().length; const b=$('#chatsTabN'); if(b){ b.textContent=n; b.hidden=!n; b.title=n+' chat'+(n===1?'':'s')+' waiting for your reply'; }
   const w=chWaiting().length; const wn=$('#chWaitN'); if(wn) wn.textContent=w?w:'';
@@ -7511,15 +7890,26 @@ function renderChatList(){
   if(Chats.filter==='waiting') rows=rows.filter(t=>t.lastFrom==='client');
   if(Chats.filter==='quiet') rows=rows.filter(t=>t.lastFrom!=='client' && (Date.now()-Date.parse(t.lastAt))/864e5>=3);
   if(q) rows=rows.filter(t=>[t.name,t.phone,t.email,t.site,t.lastText].join(' ').toLowerCase().includes(q));
-  rows.sort((a,b)=>String(b.lastAt).localeCompare(String(a.lastAt)));
+  rows.sort(chOrder);
+  const nPin=rows.filter(t=>t.pin).length;
   if(Chats.state==='error') box.innerHTML=`<div class="bk-err" style="margin:12px">Could not read the chats — ${esc(Chats.err)}</div>`;
   else if(!rows.length) box.innerHTML=`<div class="ch-empty">${Chats.list.length?'<b>Nothing here</b>Try another filter.':'<b>No chats yet</b>Press <b style="display:inline">New</b>, give the client a name, copy their private link and send it on Viber. From then on you talk here.'}</div>`;
-  else box.innerHTML=rows.map(t=>`<div class="ch-row${t.slug===Chats.cur?' on':''}${(t.unreadAdmin||0)?' unread':''}" data-slug="${esc(t.slug)}">
+  else box.innerHTML=rows.map((t,i)=>`${nPin&&i===0?`<div class="ch-grp prio">★ Priority · ${nPin}${nPin>1?' <span style="font-weight:600;text-transform:none;letter-spacing:0">— drag to reorder</span>':''}</div>`:''}${nPin&&i===nPin&&rows.length>nPin?'<div class="ch-grp">Everyone else</div>':''}<div class="ch-row${t.slug===Chats.cur?' on':''}${(t.unreadAdmin||0)?' unread':''}${t.pin?' pin':''}" data-slug="${esc(t.slug)}"${t.pin&&nPin>1?' draggable="true"':''}>
       <div class="ch-av${Chats.online.includes(t.slug)?' online':''}" style="background:${chColor(t.name)}">${esc(chInitials(t.name))}<i></i></div>
-      <div><div class="n">${esc(t.name)}<span class="ch-stage">${esc((CH_STAGES.find(s=>s[0]===chStage(t))||['','—'])[1])}</span></div><div class="p">${t.lastFrom==='client'?'':t.lastFrom==='claude'?'Claude: ':'You: '}${esc(t.lastText||(t.n?'':'link created — nothing sent yet'))}</div></div>
-      <div class="r"><span class="t">${esc(chWhen(t.lastAt))}</span>${(t.unreadAdmin||0)?`<span class="ch-badge">${t.unreadAdmin}</span>`:chWaitChip(t)}</div>
+      <div><div class="n">${t.pin?'<span class="ch-star" title="Priority">★</span>':''}${esc(t.name)}<span class="ch-stage">${esc((CH_STAGES.find(s=>s[0]===chStage(t))||['','—'])[1])}</span></div><div class="p">${t.lastFrom==='client'?'':t.lastFrom==='claude'?'Claude: ':'You: '}${esc(t.lastText||(t.n?'':'link created — nothing sent yet'))}</div></div>
+      <div class="r"><span class="t">${esc(chWhen(t.lastAt))}</span><span class="r2">${(t.unreadAdmin||0)?`<span class="ch-badge">${t.unreadAdmin}</span>`:chWaitChip(t)}<button class="ch-more" data-more="${esc(t.slug)}" title="Priority, move, mark unread, archive, delete" aria-label="Chat options">⋯</button></span></div>
     </div>`).join('');
-  box.querySelectorAll('[data-slug]').forEach(el=>el.addEventListener('click',()=>Chats.open(el.dataset.slug)));
+  box.querySelectorAll('[data-slug]').forEach(el=>{
+    el.addEventListener('click',e=>{ const m=e.target.closest('[data-more]'); if(m){ e.stopPropagation(); chRowMenu(m.dataset.more, m); return; } Chats.open(el.dataset.slug); });
+    el.addEventListener('contextmenu',e=>{ e.preventDefault(); chRowMenu(el.dataset.slug, null, e.clientX, e.clientY); });
+    if(el.draggable){
+      el.addEventListener('dragstart',e=>{ chDragSlug=el.dataset.slug; el.classList.add('dragging'); try{ e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',chDragSlug); }catch(_){} });
+      el.addEventListener('dragend',()=>{ chDragSlug=null; box.querySelectorAll('.dragging,.drag-over').forEach(x=>x.classList.remove('dragging','drag-over')); });
+      el.addEventListener('dragover',e=>{ if(!chDragSlug||chDragSlug===el.dataset.slug) return; e.preventDefault(); el.classList.add('drag-over'); });
+      el.addEventListener('dragleave',()=>el.classList.remove('drag-over'));
+      el.addEventListener('drop',e=>{ e.preventDefault(); const from=chDragSlug, to=el.dataset.slug; chDragSlug=null; if(!from||from===to) return; const all=Chats.list.filter(t=>t.pin&&!t.archived).sort(chOrder).map(t=>t.slug), ti=all.indexOf(to); if(ti<0||all.indexOf(from)<0) return; const pins=all.filter(x=>x!==from); pins.splice(ti,0,from); Chats.order(pins); });
+    }
+  });
 }
 function chTick(m,t){
   if(m.state==='pending') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2.5 2.5"/></svg>';
@@ -7540,8 +7930,10 @@ function renderChatThread(keep){
       <select id="chStage" title="Where this client is — the client sees it as a progress bar">${CH_STAGES.map(s=>`<option value="${s[0]}"${chStage(t)===s[0]?' selected':''}>${s[1]}</option>`).join('')}</select>
       ${client?`<button class="ch-ib" id="chBoard" title="Open on the Board">Board</button>`:''}
       <button class="ch-ib" id="chCopy" title="Copy the client's private link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>Link</button>
-      <button class="ch-ib" id="chEdit" title="Name, phone, e-mail, site, archive">Edit</button>
+      ${t.archived?'':`<button class="ch-ib${t.pin?' on':''}" id="chPin" title="${t.pin?'Priority — click to remove':'Keep this chat on top of the list'}">${t.pin?'★ Priority':'☆ Priority'}</button>`}
+      <button class="ch-ib" id="chEdit" title="Name, phone, e-mail, site, archive, delete">Edit</button>
     </div>`;
+  { const pb=$('#chPin'); if(pb) pb.addEventListener('click',()=>Chats.pin(t.slug,!t.pin)); }
   $('#chBack').addEventListener('click',()=>Chats.close());
   $('#chStage').addEventListener('change',async e=>{ const v=e.target.value; try{ await Chats.meta(t.slug,{stage:v}); const qi=CH_STAGE_MSG[v]; const tx=$('#chTxt'); if(qi!=null && !tx.value.trim()){ const tt=Chats.list.find(x=>x.slug===t.slug)||t; tx.value=chFill(CH_QUICK[qi][1], tt); tx.dispatchEvent(new Event('input')); tx.focus(); toast('Stage saved — a ready message is in the box, edit it and press send'); } else toast('Stage updated — the client sees it too'); }catch(err){ toast('Could not save the stage'); } });
   const bd=$('#chBoard'); if(bd) bd.addEventListener('click',()=>openModal(client.id));
@@ -7582,7 +7974,10 @@ function renderChatSuggest(t){
   box.hidden=false;
   const stName=s.stage&&(CH_STAGES.find(x=>x[0]===s.stage)||[])[1];
   box.innerHTML=`<div class="sg-h">✦ Claude prepared this reply<small>${esc(chWhen(s.at||''))}</small></div>
-    ${s.plan?`<p class="sg-plan"><b>What was done:</b> ${esc(s.plan)}</p>`:''}
+    ${s.asked?`<p class="sg-ask"><b>${esc(t.name)} asked:</b> ${esc(s.asked)}</p>`:''}
+    ${s.plan?`<p class="sg-plan"><b>${s.mode==='intend'?'What I intend to do':'What was done'}:</b> ${esc(s.plan)}</p>`:''}
+    ${Array.isArray(s.steps)&&s.steps.length?`<ul class="sg-steps">${s.steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
+    ${s.draft?`<p class="sg-plan"><b>Check it:</b> <a href="${esc(s.draft)}" target="_blank" rel="noopener">${esc(String(s.draft).replace(/^https?:\/\//,''))} ↗</a></p>`:''}
     <div class="sg-t">${chLinkify(s.text)}</div>
     <div class="sg-b"><button class="go" id="sgSend">Send it${stName&&s.stage!==chStage(t)?' · stage → '+esc(stName):''}</button><button id="sgEdit">Edit first</button><button class="no" id="sgNo">Dismiss</button></div>`;
   $('#sgEdit').addEventListener('click',()=>{ const tx=$('#chTxt'); tx.value=s.text; tx.dispatchEvent(new Event('input')); tx.focus(); box.hidden=true; });
@@ -7603,7 +7998,7 @@ function chOpenModal(t){
     ${t?'':`<label>First message (sent from you, waiting when they open the link)</label><textarea id="chmWelcome" style="min-height:150px">${esc(welcome)}</textarea>
     <label>Second message — what we need at this stage (leave empty to skip)</label><textarea id="chmWelcome2" style="min-height:150px">${esc(CH_YLIKO)}</textarea>`}
     ${t?`<div class="ch-link"><code>${esc(chLink(t))}</code><button class="ch-ib" id="chmCopy">Copy</button></div>`:''}
-    <div class="btns">${t?`<button class="btn btn-ghost btn-danger" id="chmArchive">${t.archived?'Restore':'Archive'}</button><button class="btn btn-ghost" id="chmNewLink" title="Old link stops working">New link</button>`:''}<button class="btn btn-ghost" id="chmCancel">Cancel</button><button class="btn" id="chmSave" style="background:var(--grad);color:#fff">${t?'Save':'Create link'}</button></div>`;
+    <div class="btns" style="flex-wrap:wrap">${t?`<button class="btn btn-ghost btn-danger" id="chmDelete" title="Removes the chat, its messages and files for good">Delete</button><button class="btn btn-ghost" id="chmArchive">${t.archived?'Restore':'Archive'}</button><button class="btn btn-ghost" id="chmNewLink" title="Old link stops working">New link</button>`:''}<button class="btn btn-ghost" id="chmCancel">Cancel</button><button class="btn" id="chmSave" style="background:var(--grad);color:#fff">${t?'Save':'Create link'}</button></div>`;
   ov.classList.add('open'); setTimeout(()=>$('#chmName').focus(),50);
   const data=()=>({name:$('#chmName').value.trim(), phone:$('#chmPhone').value.trim(), email:$('#chmEmail').value.trim(), site:$('#chmSite').value.trim(), stage:$('#chmStage').value});
   $('#chmCancel').addEventListener('click',()=>ov.classList.remove('open'));
@@ -7617,6 +8012,7 @@ function chOpenModal(t){
     }catch(e){ toast(e.message||'Could not save'); $('#chmSave').disabled=false; }
   });
   const ar=$('#chmArchive'); if(ar) ar.addEventListener('click',async()=>{ try{ await Chats.meta(t.slug,{archived:!t.archived}); ov.classList.remove('open'); toast(t.archived?'Restored':'Archived — the client link is paused'); }catch(e){ toast('Could not save'); } });
+  const dl=$('#chmDelete'); if(dl) dl.addEventListener('click',()=>{ ov.classList.remove('open'); Chats.remove(t.slug); });
   const nl=$('#chmNewLink'); if(nl) nl.addEventListener('click',async()=>{ if(!confirm('Make a new link? The old one stops working and you must send the new one to the client.')) return; try{ const p=await Chats.meta(t.slug,{newLink:true}); ov.classList.remove('open'); chShowLink(p.thread); }catch(e){ toast('Could not save'); } });
 }
 function chShowLink(t){
@@ -7634,10 +8030,10 @@ function chShowLink(t){
 }
 function renderHomeChats(){
   const body=$('#homeChats'), hint=$('#homeChatsHint'); if(!body) return;
-  const w=chWaiting().sort((a,b)=>String(a.lastAt).localeCompare(String(b.lastAt)));
+  const w=chWaiting().sort((a,b)=>(b.pin?1:0)-(a.pin?1:0) || (a.pin&&b.pin?((a.ord??1e9)-(b.ord??1e9)):0) || String(a.lastAt).localeCompare(String(b.lastAt)));
   if(hint) hint.textContent=Chats.state==='off'?'sign in with sync':Chats.state==='error'?'offline':(w.length?w.length+' waiting for a reply':'all answered');
   if(!w.length){ body.innerHTML=`<div class="home-empty">${Chats.list.length?'Every client has an answer. Nice.':'No client chats yet — create the first link in Chats.'}</div>`; return; }
-  body.innerHTML='<div class="hc-rows">'+w.slice(0,6).map(t=>`<div class="ch-row unread" data-chat="${esc(t.slug)}"><div class="ch-av" style="background:${chColor(t.name)};width:38px;height:38px;font-size:13px">${esc(chInitials(t.name))}</div><div><div class="n">${esc(t.name)}</div><div class="p">${esc(t.lastText||'')}</div></div><div class="r"><span class="t">${esc(chWhen(t.lastAt))}</span>${chWaitChip(t)}</div></div>`).join('')+'</div>';
+  body.innerHTML='<div class="hc-rows">'+w.slice(0,6).map(t=>`<div class="ch-row unread" data-chat="${esc(t.slug)}"><div class="ch-av" style="background:${chColor(t.name)};width:38px;height:38px;font-size:13px">${esc(chInitials(t.name))}</div><div><div class="n">${t.pin?'<span class="ch-star">★</span>':''}${esc(t.name)}</div><div class="p">${esc(t.lastText||'')}</div></div><div class="r"><span class="t">${esc(chWhen(t.lastAt))}</span>${chWaitChip(t)}</div></div>`).join('')+'</div>';
   body.querySelectorAll('[data-chat]').forEach(el=>el.addEventListener('click',()=>{ switchView('chats'); Chats.open(el.dataset.chat); }));
 }
 (function chatsWire(){
@@ -7675,6 +8071,10 @@ function renderHomeChats(){
   const fit=()=>{ const tb=document.querySelector('.topbar'); if(tb) document.documentElement.style.setProperty('--ch-top',Math.round(tb.getBoundingClientRect().bottom+30)+'px'); };
   window.addEventListener('resize',fit); setTimeout(fit,50); setTimeout(fit,1500);
   if(location.hash==='#chats') setTimeout(()=>switchView('chats'),300);
+  const chFromHash=()=>{ const m=/^#chat=([a-z0-9-]{2,50})$/.exec(location.hash||''); if(!m) return; Chats.wantOpen=m[1]; try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} if(Chats.list.length) renderChats(); else setTimeout(()=>switchView('chats'),300); };
+  chFromHash(); window.addEventListener('hashchange',chFromHash);
+  $('#bkupClose').addEventListener('click',()=>$('#bkupOverlay').classList.remove('open'));
+  setTimeout(()=>{ try{ renderBackupHint(); }catch(e){} },2500);
 })();
 </script>
 </body>

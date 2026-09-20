@@ -103,8 +103,7 @@ Then open the CRM → **Export** → **Sync setup…** → **Test connection**.
 
 ## Step 6 — confirm it actually works across devices
 
-**Take a backup first:** Export → **Export backup (encrypted)** and Export →
-**Plain CSV — every client**. Keep both files. Then:
+**Take a backup first:** Export → **Backup everything**. Keep the file. Then:
 
 1. On the device that holds your data, change a client's notes. Watch the pill
    go **Syncing…** then **Synced just now**.
