@@ -11,6 +11,7 @@
 //       POST /api/chat?c=<code>                   JSON {text, files:[{sha,name,bytes,type,w,h}]} → append a client message
 //       POST /api/chat?c=<code>&file=1            multipart {file} → loose blob (no commit) → {sha}
 //       POST /api/chat?c=<code>&seen=1            → the client has read everything (clears their unread counter)
+//       POST /api/chat?c=<code>&contact=1         JSON {email} → the client leaves the e-mail where replies should be announced
 //       GET  /api/chat?c=<code>&file=<path>       → one attachment of THAT thread
 //   • the CRM «Chats» tab (x-crm-auth, the same sync token as every other CRM route)
 //       GET  /api/chat?list=1[&h=<head>]          → {threads:[…], notify:{email,telegram}, head}
@@ -110,11 +111,11 @@ const online = new Map();            // slug → last time the client page polle
 const getIndex = (c) => coreIndex(c);
 const getMessages = (c, slug) => coreMessages(c, slug);
 const current = (c) => currentHead(c);
-const publicThread = (t) => ({ slug: t.slug, name: t.name, stage: normStage(t.stage), site: t.site || '', adminSeenAt: t.adminSeenAt || null, createdAt: t.createdAt, log: (t.log || []).slice(-3) });
+const publicThread = (t) => ({ slug: t.slug, name: t.name, stage: normStage(t.stage), site: t.site || '', adminSeenAt: t.adminSeenAt || null, createdAt: t.createdAt, hasEmail: !!t.email, log: (t.log || []).slice(-3) });
 
 // ---------- the write: append a message ----------
 async function appendMessage(c, slug, msg, blobFiles = []) {
-  let thread = null;
+  let thread = null, dup = null;
   await ghCommit(c, `chat: ${slug} ← ${msg.from}`, async (ctx) => {
     const { data: idx } = await ctx.readJson(INDEX_PATH, []);
     const list = Array.isArray(idx) ? idx : [];
@@ -122,7 +123,10 @@ async function appendMessage(c, slug, msg, blobFiles = []) {
     if (!t) throw Object.assign(new Error('no thread'), { code: 'no_thread' });
     const { data: msgs } = await ctx.readJson(`${DIR}/${slug}/messages.json`, []);
     const arr = Array.isArray(msgs) ? msgs : [];
+    // the same message sent twice (a retry after a lost answer, a double tap) is stored once
+    if (msg.cid) { const twin = arr.slice(-40).find((x) => x.cid === msg.cid && x.from === msg.from); if (twin) { dup = twin; thread = t; return null; } }
     arr.push(msg);
+    if (msg.from !== 'client' && t.suggest) delete t.suggest;      // an answer went out — Claude's suggestion is history
     t.lastAt = msg.at; t.lastFrom = msg.from; t.lastText = (msg.text || (msg.files && msg.files.length ? '📎 ' + msg.files.map((f) => f.name).join(', ') : '')).slice(0, 140); t.n = arr.length;
     if (msg.from === 'client') { t.unreadAdmin = (t.unreadAdmin || 0) + 1; t.clientSeenAt = msg.at; t.unreadClient = 0; t.remindersSent = 0; t.lastReminderAt = null; }
     else { t.unreadClient = (t.unreadClient || 0) + 1; t.adminSeenAt = msg.at; t.unreadAdmin = 0; if (msg.from === 'claude') t.lastClaudeAt = msg.at; }
@@ -133,8 +137,9 @@ async function appendMessage(c, slug, msg, blobFiles = []) {
       { path: INDEX_PATH, content: JSON.stringify(list, null, 1) },
     ];
   });
+  if (dup) return { thread, dup };
   forgetHead();
-  return thread;
+  return { thread, dup: null };
 }
 function normFiles(slug, id, files) {
   return (Array.isArray(files) ? files : []).slice(0, MAX_FILES)
@@ -296,6 +301,27 @@ export async function POST(req) {
       return json({ ok: true, changed });
     }
 
+    // ---- the client tells us where to announce our replies ----
+    if (who === 'client' && q('contact') === '1') {
+      if (limited(req, 'ccontact', 10, 60 * 60 * 1000)) return json({ error: 'slow down' }, 429);
+      let body; try { body = await req.json(); } catch { return json({ error: 'bad json' }, 400); }
+      const email = clean(body.email, 120).toLowerCase();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) return json({ error: 'bad email' }, 400);
+      let out = null;
+      await ghCommit(c, `chat: ${slug} e-mail added by the client`, async (ctx) => {
+        const { data: idx } = await ctx.readJson(INDEX_PATH, []);
+        const list = Array.isArray(idx) ? idx : [];
+        const t = list.find((x) => x.slug === slug); if (!t) return null;
+        if (t.email === email || (t.email && t.emailBy !== 'client')) { out = t; return null; }   // an address Angelo typed is never replaced from the link
+        t.email = email; t.emailBy = 'client';
+        t.log = (t.log || []).concat([{ at: nowIso(), by: 'system', text: `Ο πελάτης έδωσε e-mail για ειδοποιήσεις: ${email}` }]).slice(-30);
+        out = t;
+        return [{ path: INDEX_PATH, content: JSON.stringify(list, null, 1) }];
+      });
+      forgetHead();
+      return json({ ok: true, thread: out ? publicThread(out) : null });
+    }
+
     // ---- delete one message (the client takes back their own; the CRM can remove any) ----
     if (q('del')) {
       if (!slug) return json({ error: 'no thread' }, 400);
@@ -375,6 +401,7 @@ export async function POST(req) {
         if ('stage' in body && STAGES.includes(body.stage)) { if (t.stage !== body.stage) { t.stage = body.stage; t.stageAt = nowIso(); t.remindersSent = 0; t.lastReminderAt = null; } }
         if (typeof body.log === 'string' && body.log.trim()) { t.log = (t.log || []).concat([{ at: nowIso(), by: 'angelo', text: clean(body.log, 400) }]).slice(-30); }
         if ('archived' in body) t.archived = !!body.archived;
+        if (body.suggest === null) delete t.suggest;
         if (body.newLink === true) t.code = `${t.slug}-${rnd(7)}`;
         out = t;
         return [{ path: INDEX_PATH, content: JSON.stringify(list, null, 1) }];
@@ -392,10 +419,12 @@ export async function POST(req) {
     const files = who === 'claude' ? [] : normFiles(slug, id, body.files);
     if (!text && !files.length) return json({ error: 'empty' }, 400);
     const msg = { id, from: who, text, files: stripSha(files), at: nowIso() };
+    const cid = clean(body.cid, 40); if (/^[\w-]{6,40}$/.test(cid)) msg.cid = cid;
     if (who === 'client' && body.ua) msg.ua = clean(body.ua, 200);
-    let t;
-    try { t = await appendMessage(c, slug, msg, files); }
+    let t, dup;
+    try { ({ thread: t, dup } = await appendMessage(c, slug, msg, files)); }
     catch (e) { if (e.code === 'no_thread') return json({ error: 'unknown link' }, 404); throw e; }
+    if (dup) return json({ ok: true, message: dup, thread: who === 'client' ? publicThread(t) : t, duplicate: true });
     // e-mail / Telegram go out from netlify/functions/chat-notify.mjs (every 5 min) — nothing to wait for here
     return json({ ok: true, message: msg, thread: who === 'client' ? publicThread(t) : t });
   } catch (e) {

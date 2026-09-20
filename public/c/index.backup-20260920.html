@@ -136,20 +136,6 @@ a{color:inherit}
 /* stage hint + chips + guide sheet */
 .stagehint{font-size:12.5px;font-weight:600;color:var(--muted);background:#fff;border-bottom:1px solid var(--line);padding:0 16px 10px;line-height:1.45}
 .stagehint a{color:var(--brand);font-weight:800;text-decoration:none}
-.mailbar{position:relative;background:linear-gradient(135deg,#EEF5FF,#E8F8FD);border:1px solid #CFE0F7;border-radius:16px;padding:11px 12px;margin:0 0 10px;animation:mbIn .35s ease-out}
-.mailbar[hidden]{display:none}
-@keyframes mbIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.mailbar .mb-t b{display:block;font-size:14px;color:var(--ink)}
-.mailbar .mb-t span{display:block;font-size:12.5px;color:var(--muted);line-height:1.4;margin-top:2px}
-.mailbar .mb-r{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
-.mailbar input{flex:1 1 170px;min-width:0;height:42px;border:1px solid #CFE0F7;border-radius:12px;padding:0 12px;font:inherit;font-size:16px;background:#fff;color:var(--ink);outline:none}
-.mailbar input:focus{border-color:var(--brand);box-shadow:0 0 0 4px rgba(47,127,224,.12)}
-.mailbar input.bad{border-color:#FF4D5E;box-shadow:0 0 0 4px rgba(255,77,94,.12)}
-.mailbar button{height:42px;border:0;border-radius:12px;padding:0 16px;font:inherit;font-weight:800;font-size:14px;cursor:pointer}
-.mailbar #mbOk{background:var(--brand);color:#fff}
-.mailbar #mbOk:disabled{opacity:.6}
-.mailbar #mbNo{position:absolute;top:4px;right:4px;width:34px;height:34px;padding:0;background:transparent;color:var(--muted);font-size:14px}
-.mailbar .mb-t{padding-right:30px}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:0 2px 10px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chips:empty{display:none}
@@ -236,11 +222,6 @@ a{color:inherit}
   <div class="feed" id="feed"><div class="skel"><i></i></div></div>
   <button class="newpill" id="newpill">↓ Νέο μήνυμα</button>
   <footer class="dock" id="dock" hidden>
-    <form class="mailbar" id="mailbar" hidden novalidate>
-      <div class="mb-t"><b>🔔 Να σας ειδοποιούμε όταν απαντάμε;</b><span>Γράψτε το e-mail σας — θα παίρνετε ένα μήνυμα κάθε φορά που σας γράφουμε εδώ. Τίποτε άλλο.</span></div>
-      <div class="mb-r"><input type="email" id="mbEmail" inputmode="email" autocomplete="email" placeholder="to-email-sas@gmail.com" aria-label="Το e-mail σας"><button type="submit" id="mbOk">Εντάξει</button></div>
-      <button type="button" id="mbNo" aria-label="Όχι τώρα" title="Όχι τώρα">✕</button>
-    </form>
     <div class="chips" id="chips"></div>
     <div class="tray" id="tray"></div>
     <div class="bar">
@@ -248,7 +229,7 @@ a{color:inherit}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.4 11.05l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.65 5.65l-9.2 9.2a2 2 0 0 1-2.83-2.83l8.5-8.5"/></svg>
       </button>
       <input type="file" id="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.mp4,.mov,.heic" hidden>
-      <div class="input"><textarea id="txt" rows="1" placeholder="Γράψτε μήνυμα…" enterkeyhint="enter"></textarea></div>
+      <div class="input"><textarea id="txt" rows="1" placeholder="Γράψτε μήνυμα…" enterkeyhint="send"></textarea></div>
       <button class="send" id="send" disabled aria-label="Αποστολή">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a1 1 0 0 0-1.38 1.13L3.7 11h7.3a1 1 0 1 1 0 2H3.7l-1.68 6.27A1 1 0 0 0 3.4 20.4z"/></svg>
       </button>
@@ -379,8 +360,6 @@ function linkify(t){
   return s.replace(/\u0001(\d+)\u0001/g,(m,i)=>keep[+i]);
 }
 const fileUrl=p=>API+'?c='+encodeURIComponent(code)+'&file='+encodeURIComponent(p);
-/* small per-device memory (a draft in progress, «not now» on the e-mail bar) — the page works the same without it */
-const mem={get(k){try{return localStorage.getItem('advon_c_'+code+'_'+k);}catch(e){return null;}},set(k,v){try{v==null?localStorage.removeItem('advon_c_'+code+'_'+k):localStorage.setItem('advon_c_'+code+'_'+k,v);}catch(e){}}};
 let toastT; function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2600);}
 
 /* ---------- render ---------- */
@@ -467,9 +446,6 @@ function renderHead(){
   if(idx<0){st.hidden=true;return;}
   st.hidden=false; st.innerHTML=STAGES.map((s,i)=>'<div class="st'+(i<idx?' done':i===idx?' now':'')+'"><span class="dot">'+(i<idx?'✓':i+1)+'</span><span class="lbl">'+s[1]+'</span><span class="bar"></span></div>').join('');
   const sh=$('#stagehint'); sh.hidden=false; sh.innerHTML=esc(STAGE_HINT[stg]||'')+(stg==='yliko'?' <a href="#" data-sheet="yliko">Τι χρειαζόμαστε →</a>':' <a href="#" data-sheet="odigos">Οδηγός αλλαγών →</a>');
-  /* no e-mail on file → ask once, gently; «not now» keeps it away for a week */
-  const mb=$('#mailbar'); const snooze=+mem.get('mbno')||0;
-  mb.hidden=!!t.hasEmail || (Date.now()-snooze<7*864e5) || !state.msgs.length;
   const chips=$('#chips'); chips.innerHTML=(CHIPS[stg]||[]).map((c,i)=>'<button class="chip" data-chip="'+i+'"><span>'+c[0]+'</span>'+esc(c[1])+'</button>').join('');
 }
 
@@ -510,7 +486,7 @@ function schedule(){
   clearTimeout(state.timer);
   const hidden=document.visibilityState!=='visible';
   const idle=Date.now()-state.lastActive>3*60000;
-  const ms=hidden?45000:idle?15000:5000;
+  const ms=hidden?45000:idle?12000:4000;
   state.timer=setTimeout(async()=>{await load(false);schedule();},ms);
 }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'){state.lastActive=Date.now();load(false).then(()=>{if(state.msgs.some(m=>m.from!=='client'))markSeen();});} schedule(); });
@@ -555,7 +531,7 @@ document.addEventListener('drop',e=>{e.preventDefault();dragN=0;$('#drop').class
 
 async function send(){
   if(sendBtn.disabled)return;
-  const text=txt.value.trim(), q=state.queue.splice(0); txt.value=''; txt.style.height='auto'; renderTray(); updateSend(); clearTimeout(draftT); mem.set('draft',null);
+  const text=txt.value.trim(), q=state.queue.splice(0); txt.value=''; txt.style.height='auto'; renderTray(); updateSend();
   const id='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
   const pm={id,from:'client',text,at:new Date().toISOString(),state:'pending',progress:q.length?0:null,files:q.map(x=>({name:x.file.name,bytes:x.file.size,local:x.url})),_q:q};
   state.pending.push(pm); render(false);
@@ -575,11 +551,11 @@ async function push(pm){
       done++; pm.progress=done/q.length; render(true);
     }
     await Promise.all(Array.from({length:Math.min(3,q.length)},async()=>{ while(next<q.length){ await one(next++); } }));
-    const r=await fetch(API+'?c='+encodeURIComponent(code),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:pm.text,files:files.filter(Boolean),cid:pm.id,ua:navigator.userAgent.slice(0,120)})});
+    const r=await fetch(API+'?c='+encodeURIComponent(code),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:pm.text,files:files.filter(Boolean),ua:navigator.userAgent.slice(0,120)})});
     const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok)throw new Error(p.error||'Η αποστολή απέτυχε');
     state.pending=state.pending.filter(x=>x.id!==pm.id);
     (pm._q||[]).forEach(x=>x.url&&setTimeout(()=>URL.revokeObjectURL(x.url),60000));
-    if(!state.msgs.some(m=>m.id===p.message.id)) state.msgs.push(p.message); if(p.thread)state.thread=Object.assign(state.thread||{},p.thread); state.head=null;
+    state.msgs.push(p.message); if(p.thread)state.thread=Object.assign(state.thread||{},p.thread); state.head=null;
     render(false);
   }catch(e){ pm.state='failed'; pm.err=e.message; render(true); toast(e.message||'Δεν στάλθηκε'); }
 }
@@ -622,24 +598,6 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('#lb').classList.
 $('#newpill').addEventListener('click',()=>{feed.scrollTop=feed.scrollHeight;$('#newpill').classList.remove('on');});
 feed.addEventListener('scroll',()=>{if(feed.scrollHeight-feed.scrollTop-feed.clientHeight<60)$('#newpill').classList.remove('on');},{passive:true});
 function blip(){try{const a=new (window.AudioContext||window.webkitAudioContext)();const o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.setValueAtTime(880,a.currentTime);o.frequency.exponentialRampToValueAtTime(1320,a.currentTime+.08);g.gain.setValueAtTime(.0001,a.currentTime);g.gain.exponentialRampToValueAtTime(.12,a.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+.22);o.connect(g).connect(a.destination);o.start();o.stop(a.currentTime+.24);}catch(e){}}
-
-/* ---------- e-mail for alerts ---------- */
-$('#mbNo').addEventListener('click',()=>{ mem.set('mbno',String(Date.now())); $('#mailbar').hidden=true; });
-$('#mailbar').addEventListener('submit',async e=>{
-  e.preventDefault();
-  const inp=$('#mbEmail'), v=inp.value.trim();
-  if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v)){ inp.classList.add('bad'); inp.focus(); toast('Ελέγξτε το e-mail — κάτι λείπει'); return; }
-  inp.classList.remove('bad'); $('#mbOk').disabled=true;
-  try{
-    const r=await fetch(API+'?c='+encodeURIComponent(code)+'&contact=1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v})});
-    const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok) throw new Error(p.error||'x');
-    if(state.thread) state.thread.hasEmail=true; state.head=null; $('#mailbar').hidden=true; toast('Τέλεια — θα σας ειδοποιούμε στο '+v);
-  }catch(err){ toast('Δεν αποθηκεύτηκε — δοκιμάστε ξανά'); }
-  $('#mbOk').disabled=false;
-});
-/* ---------- a half-written message survives a reload (phones love to reload a tab you left for a minute) ---------- */
-{ const d=mem.get('draft'); if(d){ txt.value=d; setTimeout(()=>txt.dispatchEvent(new Event('input')),0); } }
-let draftT; txt.addEventListener('input',()=>{ clearTimeout(draftT); draftT=setTimeout(()=>mem.set('draft',txt.value.trim()?txt.value:null),400); });
 
 /* ---------- go ---------- */
 if(!code){showError();}

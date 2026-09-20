@@ -12,7 +12,7 @@
 //   &test=telegram → one test ping + diagnosis (bot name, which chats wrote to it) · &test=email → one test e-mail to LEAD_NOTIFY_TO
 
 import { ghConf, ghReady, commit as ghCommit } from '../../lib/ghdata.js';
-import { INDEX_PATH, OUTBOX_PATH, SITE_URL, STAGE_EL, currentHead, forgetHead, getIndex, getMessages, readChatJson, mailConf, emailOk, sendEmail, sendTelegram, telegramDiag, newMessageMail, reminderMail, chatLink } from '../../lib/chatcore.js';
+import { INDEX_PATH, OUTBOX_PATH, SITE_URL, STAGE_EL, currentHead, forgetHead, getIndex, getMessages, readChatJson, mailConf, emailOk, sendEmail, sendTelegram, telegramDiag, newMessageMail, reminderMail, chatLink, politeHour } from '../../lib/chatcore.js';
 
 export const config = { schedule: '*/5 * * * *' };
 
@@ -57,6 +57,7 @@ export default async (req) => {
   const upd = (t, f) => { Object.assign(t, f); patch.set(t.slug, { ...(patch.get(t.slug) || {}), ...f }); };
   const log = (t, text) => upd(t, { log: (t.log || []).concat([{ at: nowIso(), by: 'system', text }]).slice(-30) });
   const now = Date.now();
+  const polite = politeHour();
 
   for (const t of idx) {
     if (t.archived) continue;
@@ -95,9 +96,19 @@ export default async (req) => {
       }
     }
 
-    // 3. reminders — we wrote last, silence for 3+ days, not live
+    // 3a. quiet for 3+ days and NO e-mail on the card → nothing can remind the client, so Angelo is told once (he nudges on Viber)
+    if (polite && canTg && t.lastFrom !== 'client' && t.stage !== 'live' && !emailOk(t.email) && now - lastAt >= REMIND_AFTER && (t.quietPingAt || '') < (t.lastAt || '')) {
+      if (dry) { report.sent.push(`[dry] quiet-no-email ${t.slug}`); }
+      else {
+        const opened = !!t.clientSeenAt;
+        const a = await sendTelegram(mc, `🔕 ${t.name} (${STAGE_EL[t.stage] || t.stage}) — σιωπή ${Math.floor((now - lastAt) / DAY)} μέρες και δεν έχουμε e-mail του, άρα δεν παίρνει υπενθυμίσεις.${opened ? '' : ' Δεν έχει ανοίξει ΚΑΝ τον σύνδεσμο.'} Στείλε του ένα Viber: ${chatLink(t)}`);
+        if (a.ok) { upd(t, { quietPingAt: t.lastAt }); log(t, 'Telegram στον Άγγελο: σιωπή χωρίς e-mail'); report.sent.push(`quiet-no-email ${t.slug}`); }
+      }
+    }
+
+    // 3. reminders — we wrote last, silence for 3+ days, not live (09:00–20:00 Athens, never on a Sunday)
     const lastRem = Date.parse(t.lastReminderAt || 0) || 0;
-    if (t.lastFrom !== 'client' && t.stage !== 'live' && emailOk(t.email) && canMail && now - lastAt >= REMIND_AFTER && (t.remindersSent || 0) < REMIND_MAX && now - lastRem >= REMIND_AFTER && (t.clientNotifiedAt || '') >= (t.lastAt || '')) {
+    if (polite && t.lastFrom !== 'client' && t.stage !== 'live' && emailOk(t.email) && canMail && now - lastAt >= REMIND_AFTER && (t.remindersSent || 0) < REMIND_MAX && now - lastRem >= REMIND_AFTER && (t.clientNotifiedAt || '') >= (t.lastAt || '')) {
       const mail = reminderMail(t);
       if (mail) {
         if (dry) { report.sent.push(`[dry] reminder ${t.slug}`); continue; }
@@ -140,7 +151,13 @@ export default async (req) => {
           for (const [slug, f] of patch) { const t = list.find((x) => x.slug === slug); if (t) Object.assign(t, f); }
           files.push({ path: INDEX_PATH, content: JSON.stringify(list, null, 1) });
         }
-        if (outChanged) files.push({ path: OUTBOX_PATH, content: JSON.stringify(kept, null, 1) });
+        if (outChanged) {
+          const { data: liveBox } = await ctx.readJson(OUTBOX_PATH, []);
+          const mine = new Map(kept.map((o) => [o.id, o]));
+          const gone = new Set(box.filter((o) => !kept.includes(o)).map((o) => o.id));
+          const merged = (Array.isArray(liveBox) ? liveBox : []).filter((o) => !gone.has(o.id)).map((o) => (mine.has(o.id) && mine.get(o.id).sentAt ? { ...o, sentAt: mine.get(o.id).sentAt } : o));
+          files.push({ path: OUTBOX_PATH, content: JSON.stringify(merged.slice(-200), null, 1) });
+        }
         return files;
       });
       forgetHead();
