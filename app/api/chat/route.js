@@ -11,7 +11,6 @@
 //       POST /api/chat?c=<code>                   JSON {text, files:[{sha,name,bytes,type,w,h}]} → append a client message
 //       POST /api/chat?c=<code>&file=1            multipart {file} → loose blob (no commit) → {sha}
 //       POST /api/chat?c=<code>&seen=1            → the client has read everything (clears their unread counter)
-//       POST /api/chat?c=<code>&contact=1         JSON {email} → the client leaves the e-mail where replies should be announced
 //       GET  /api/chat?c=<code>&file=<path>       → one attachment of THAT thread
 //   • the CRM «Chats» tab (x-crm-auth, the same sync token as every other CRM route)
 //       GET  /api/chat?list=1[&h=<head>]          → {threads:[…], notify:{email,telegram}, head}
@@ -111,7 +110,7 @@ const online = new Map();            // slug → last time the client page polle
 const getIndex = (c) => coreIndex(c);
 const getMessages = (c, slug) => coreMessages(c, slug);
 const current = (c) => currentHead(c);
-const publicThread = (t) => ({ slug: t.slug, name: t.name, stage: normStage(t.stage), site: t.site || '', adminSeenAt: t.adminSeenAt || null, createdAt: t.createdAt, hasEmail: !!t.email, log: (t.log || []).slice(-3) });
+const publicThread = (t) => ({ slug: t.slug, name: t.name, stage: normStage(t.stage), site: t.site || '', adminSeenAt: t.adminSeenAt || null, createdAt: t.createdAt, log: (t.log || []).slice(-3) });
 
 // ---------- the write: append a message ----------
 async function appendMessage(c, slug, msg, blobFiles = []) {
@@ -299,27 +298,6 @@ export async function POST(req) {
       });
       if (changed) forgetHead();
       return json({ ok: true, changed });
-    }
-
-    // ---- the client tells us where to announce our replies ----
-    if (who === 'client' && q('contact') === '1') {
-      if (limited(req, 'ccontact', 10, 60 * 60 * 1000)) return json({ error: 'slow down' }, 429);
-      let body; try { body = await req.json(); } catch { return json({ error: 'bad json' }, 400); }
-      const email = clean(body.email, 120).toLowerCase();
-      if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) return json({ error: 'bad email' }, 400);
-      let out = null;
-      await ghCommit(c, `chat: ${slug} e-mail added by the client`, async (ctx) => {
-        const { data: idx } = await ctx.readJson(INDEX_PATH, []);
-        const list = Array.isArray(idx) ? idx : [];
-        const t = list.find((x) => x.slug === slug); if (!t) return null;
-        if (t.email === email || (t.email && t.emailBy !== 'client')) { out = t; return null; }   // an address Angelo typed is never replaced from the link
-        t.email = email; t.emailBy = 'client';
-        t.log = (t.log || []).concat([{ at: nowIso(), by: 'system', text: `Ο πελάτης έδωσε e-mail για ειδοποιήσεις: ${email}` }]).slice(-30);
-        out = t;
-        return [{ path: INDEX_PATH, content: JSON.stringify(list, null, 1) }];
-      });
-      forgetHead();
-      return json({ ok: true, thread: out ? publicThread(out) : null });
     }
 
     // ---- delete one message (the client takes back their own; the CRM can remove any) ----

@@ -1836,19 +1836,6 @@ body.dark .chip.money.part{color:#FFB3A6;}
 body.dark .rem-btn.part{border-color:#1D4E39;}
 .chase-row .cr-val{display:flex; flex-direction:column; align-items:flex-end; line-height:1.15;}
 .chase-row .cr-part{font-family:'Manrope',system-ui,sans-serif; font-size:9.5px; font-weight:700; color:var(--deep); letter-spacing:0;}
-.paypop{position:fixed; z-index:130; background:var(--surface); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow-lg); padding:14px; width:300px; max-width:calc(100vw - 20px); animation:ppIn .16s ease-out;}
-@keyframes ppIn{from{opacity:0; transform:translateY(-4px) scale(.98);}to{opacity:1; transform:none;}}
-.paypop h5{font-family:'Sora'; font-size:14px; margin:0 0 2px;}
-.paypop .pp-sub{font-size:11.5px; color:var(--muted); font-weight:600; margin:0 0 10px;}
-.paypop .pp-sub .g{color:var(--deep);} .paypop .pp-sub .r{color:var(--coral);}
-.paypop .pp-quick{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:9px;}
-.paypop .pp-quick button{flex:1 1 auto; border:1px solid #BFEBD4; background:var(--green-soft); color:var(--deep); font-weight:800; font-size:12px; padding:8px 10px; border-radius:11px;}
-.paypop .pp-quick button:hover{filter:brightness(.97);}
-.paypop .pp-row{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;}
-.paypop input{width:100%; border:1px solid var(--line); border-radius:11px; padding:9px 11px; background:var(--bg); font-size:13.5px; min-width:0;}
-.paypop input:focus{outline:none; border-color:var(--brand); box-shadow:0 0 0 4px rgba(47,127,224,.10); background:var(--surface);}
-.paypop .pp-foot{display:flex; justify-content:flex-end; gap:8px; margin-top:10px;}
-.paypop .pp-foot .btn{padding:9px 14px;}
 .pay-field{background:linear-gradient(135deg,rgba(14,198,115,.06),rgba(14,198,115,.02)); border:1px solid #CDEEDD; border-radius:14px; padding:12px 12px 10px;}
 body.dark .pay-field{border-color:#1D4E39;}
 .pay-sum:empty{display:none;}
@@ -1874,6 +1861,21 @@ body.dark .pay-field{border-color:#1D4E39;}
 .modal-body{overflow-y:auto; overscroll-behavior:contain; min-height:0; align-content:start; -webkit-overflow-scrolling:touch;}
 .modal-foot{padding-top:14px; border-top:1px solid var(--line); background:var(--surface);}
 @media(max-width:560px){ .overlay{padding:10px;} .modal{max-height:calc(100dvh - 20px);} }
+
+.toast.undo{pointer-events:auto; display:flex; align-items:center; gap:14px; padding:10px 10px 10px 20px;}
+.toast .t-undo{background:rgba(255,255,255,.18); color:#fff; font-weight:800; font-size:12.5px; padding:7px 13px; border-radius:10px; border:0; cursor:pointer;}
+.toast .t-undo:hover{background:rgba(255,255,255,.32);}
+.pay-quick{display:flex; gap:7px; flex-wrap:wrap;}
+.pay-quick:not(:empty){margin-bottom:8px;}
+.pay-quick button{flex:1 1 auto; border:0; border-radius:12px; padding:11px 14px; font-size:13px; font-weight:800; cursor:pointer; transition:filter .12s, transform .12s;}
+.pay-quick button:active{transform:scale(.98);}
+.pay-quick button.half{background:linear-gradient(135deg,#0EC673,#0AA55F); color:#fff; box-shadow:0 4px 14px rgba(14,198,115,.32);}
+.pay-quick button.rest{background:var(--surface); border:1px solid var(--line); color:var(--ink);}
+.pay-quick button:hover{filter:brightness(1.04);}
+.pay-more{background:transparent; border:0; color:var(--muted); font-size:12px; font-weight:700; cursor:pointer; padding:2px 0;}
+.pay-more:hover{color:var(--brand); text-decoration:underline;}
+.pay-add[hidden]{display:none;}
+.rem-btn.part{font-weight:800;}
 
 /* Chats: Claude's suggested reply, waiting for one tap */
 .ch-sug{border:1px solid #D9CEFF; background:linear-gradient(135deg,#F6F2FF,#EFF6FF); border-radius:14px; padding:11px 12px; margin-bottom:10px;}
@@ -2455,16 +2457,17 @@ body.dark .ch-sug{background:linear-gradient(135deg,#1E1A33,#15202F); border-col
         <div class="xtra-tot" id="mXtraTot"></div>
       </div>
       <div class="field pay-field" id="mPayField">
-        <label>Money received so far <span style="font-weight:400;text-transform:none;letter-spacing:0;">(deposit / half up front — leave empty if nothing yet)</span></label>
+        <label>Money received so far <span style="font-weight:400;text-transform:none;letter-spacing:0;">(one tap for half — the usual deposit)</span></label>
         <div class="pay-sum" id="mPaySum"></div>
         <div class="xtra-list" id="mPayList"></div>
-        <div class="pay-add">
+        <div class="pay-quick" id="mPayQuick"></div>
+        <button type="button" class="pay-more" id="mPayMore">+ another amount</button>
+        <div class="pay-add" id="mPayRow" hidden>
           <input id="mPayAmt" type="number" min="0" step="0.01" inputmode="decimal" placeholder="€ amount">
           <input id="mPayDate" type="date">
           <input id="mPayNote" placeholder="note — e.g. προκαταβολή">
           <button type="button" class="btn btn-ghost" id="mPayAdd">Add</button>
         </div>
-        <div class="xtra-quick" id="mPayQuick"></div>
       </div>
       <div class="field-row">
         <div class="field"><label>Day</label><input id="mDay" type="date"></div>
@@ -2754,7 +2757,16 @@ const fmtDate=d=>{ if(!d) return ''; const [y,m,dd]=d.split('-'); return dd+'/'+
 const fmtDay=d=>{ if(!d) return ''; const [y,m,dd]=d.split('-'); return dd+'/'+m; };
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tint=(hex,a)=>{ const n=parseInt(hex.slice(1),16); return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'; };
-function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
+function toast(msg, soft){ const t=$('#toast'); if(soft && t.classList.contains('undo') && t.classList.contains('show')) return; t.classList.remove('undo'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200); }
+/* the same toast with an Undo button — every one-click action that writes money uses it */
+function toastUndo(msg, undo, secs){
+  const t=$('#toast');
+  t.innerHTML=`<span>${esc(msg)}</span><button type="button" class="t-undo">Undo</button>`;
+  t.classList.add('show','undo');
+  const close=()=>{ t.classList.remove('show','undo'); clearTimeout(t._h); };
+  t.querySelector('.t-undo').addEventListener('click',()=>{ close(); undo(); });
+  clearTimeout(t._h); t._h=setTimeout(close,(secs||7)*1000);
+}
 
 /* ---------- inline SVG icons (professional, no emojis) ---------- */
 const SVG=(p,sw)=>`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw||2}" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
@@ -3194,41 +3206,29 @@ function addPayment(id, amount, date, note){
   const c=state.clients.find(x=>x.id===id); amount=Math.round((+amount||0)*100)/100;
   if(!c || !(amount>0)) return false;
   if(!Array.isArray(c.pays)) c.pays=[];
-  c.pays.push({id:uid(), amount, date:date||todayIso(), note:String(note||'').trim()});
+  const pay={id:uid(), amount, date:date||todayIso(), note:String(note||'').trim()};
+  const prevStage=c.stage;
+  c.pays.push(pay);
   c.updated=Date.now();
   let full=false;
   if(c.stage!=='paid' && c.stage!=='lost' && !c.trashed && cval(c)>0 && cpaysTotal(c)>=cval(c)){ c.stage='paid'; c.stageAt=Date.now(); delete c.remFlag; c.thinkAt=null; delete c.thinkAck; full=true; }
   save(); renderAll();
-  toast(full ? c.name+' paid in full → Paid' : c.name+' · '+fmtMoney2(amount)+' received · '+fmtMoney2(cowed(c))+' still owed');
+  toastUndo(full ? c.name+' paid in full → Paid' : c.name+' · '+fmtMoney2(amount)+' in — '+fmtMoney2(cowed(c))+' still owed', ()=>undoPayment(c.id, pay.id, prevStage));
   return true;
 }
-/* small pop-over: «they paid part of it» — amount, date, one tap for half / the rest */
-let payPop=null;
-function closePayPop(){ if(payPop){ payPop.remove(); payPop=null; } }
-document.addEventListener('click',e=>{ if(payPop && !e.target.closest('.paypop') && !e.target.closest('[data-part]')) closePayPop(); });
-window.addEventListener('resize',closePayPop);
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') closePayPop(); });
-function openPayPop(c, anchor){
-  closePayPop();
-  const owed=cowed(c), half=Math.round(cval(c)/2*100)/100;
-  const d=document.createElement('div'); d.className='paypop';
-  d.innerHTML=`<h5>${esc(c.name)}</h5>
-    <p class="pp-sub">${cpaid(c)?`Paid so far <b class="g">${fmtMoney2(cpaid(c))}</b> of ${fmtMoney2(cval(c))} · `:''}still owed <b class="r">${fmtMoney2(owed)}</b></p>
-    <div class="pp-quick">${half>0&&half<owed?`<button type="button" data-a="${half}">Half · ${fmtMoney2(half)}</button>`:''}<button type="button" data-a="${owed}">All of it · ${fmtMoney2(owed)}</button></div>
-    <div class="pp-row"><input type="number" min="0" step="0.01" inputmode="decimal" placeholder="€ amount" class="pp-amt"><input type="date" class="pp-date" value="${todayIso()}"></div>
-    <input type="text" class="pp-note" placeholder="Note (optional) — e.g. προκαταβολή, IRIS">
-    <div class="pp-foot"><button type="button" class="btn btn-ghost pp-cancel">Cancel</button><button type="button" class="btn btn-brand pp-save">Save payment</button></div>`;
-  document.body.appendChild(d); payPop=d;
-  const r=anchor.getBoundingClientRect(), w=d.offsetWidth||290, h=d.offsetHeight||240;
-  d.style.left=Math.max(10,Math.min(window.innerWidth-w-10, r.right-w))+'px';
-  d.style.top=(r.bottom+8+h>window.innerHeight ? Math.max(10,r.top-h-8) : r.bottom+8)+'px';
-  const amt=d.querySelector('.pp-amt');
-  d.querySelectorAll('.pp-quick button').forEach(b=>b.addEventListener('click',()=>{ amt.value=b.dataset.a; amt.focus(); }));
-  const go=()=>{ const a=+amt.value||0; if(!(a>0)){ amt.focus(); return; } if(a>owed+0.005 && !confirm('That is more than the '+fmtMoney2(owed)+' still owed. Save it anyway?')) return; const id=c.id, dt=d.querySelector('.pp-date').value, nt=d.querySelector('.pp-note').value; closePayPop(); addPayment(id,a,dt,nt); };
-  d.querySelector('.pp-save').addEventListener('click',go);
-  d.querySelector('.pp-cancel').addEventListener('click',closePayPop);
-  d.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); go(); } });
-  setTimeout(()=>amt.focus(),30);
+/* ONE CLICK = half up front. That is what almost every client does; any other amount is typed
+   into the client card («+ another amount»). Both are undoable from the toast. */
+function payHalf(id){
+  const c=state.clients.find(x=>x.id===id); if(!c) return;
+  const half=Math.round(cval(c)/2*100)/100;
+  if(!(half>0)){ toast('Give the client a value first'); return; }
+  addPayment(id, half, todayIso(), 'προκαταβολή');
+}
+function undoPayment(cid, payId, prevStage){
+  const c=state.clients.find(x=>x.id===cid); if(!c) return;
+  c.pays=cpays(c).filter(x=>x.id!==payId);
+  if(prevStage && c.stage==='paid' && prevStage!=='paid'){ c.stage=prevStage; c.stageAt=Date.now(); }
+  c.updated=Date.now(); save(); renderAll(); toast(c.name+' · payment removed');
 }
 /* every extra-service name used so far, newest first — feeds the suggestions list */
 function xtraNames(){
@@ -4721,14 +4721,14 @@ function remRowEl(c){
     </div>
     <div class="rem-val${hasPart(c)?' part':''}">${fmtMoney2(cowed(c))}${hasPart(c)?`<small><b>${fmtMoney2(cpaid(c))}</b> paid of ${fmtMoney2(cval(c))}</small><i class="rv-bar"><u style="width:${Math.round(cpaid(c)/cval(c)*100)}%"></u></i>`:''}</div>
     <div class="rem-actions">
-      <button class="rem-btn part" data-part="${c.id}" title="They paid part of it (deposit / half up front)">½ Part</button>
+      ${(!hasPart(c) && cval(c)>0)?`<button class="rem-btn part" data-half="${c.id}" title="One click — they paid half up front (${fmtMoney2(Math.round(cval(c)/2*100)/100)}). Any other amount: open the client card.">½ Half now</button>`:''}
       <button class="rem-btn paid" data-paid="${c.id}" title="They paid everything — move to Paid">${IC.check} Paid</button>
       <button class="rem-btn trash" data-trash="${c.id}" title="Money is gone — move to the Trash">${IC.trash}</button>
     </div>`;
   row.querySelectorAll('.rem-dot').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); setRemFlag(c.id,b.dataset.flag); }));
   row.querySelector('.rem-main').addEventListener('click',()=>openModal(c.id));
   row.querySelector('[data-paid]').addEventListener('click',e=>{ e.stopPropagation(); markPaidFromRemaining(c.id); });
-  row.querySelector('[data-part]').addEventListener('click',e=>{ e.stopPropagation(); openPayPop(c, e.currentTarget); });
+  const halfBtn=row.querySelector('[data-half]'); if(halfBtn) halfBtn.addEventListener('click',e=>{ e.stopPropagation(); payHalf(c.id); });
   row.querySelector('[data-trash]').addEventListener('click',e=>{ e.stopPropagation(); trashClient(c.id); });
   return row;
 }
@@ -5997,7 +5997,7 @@ function openModal(id, presetDay){
   modalXtras = c ? cx(c).map(e=>({id:e.id||uid(), name:String(e.name||''), value:+e.value||0})) : [];
   renderXtras();
   modalPays = c ? cpays(c).map(x=>({id:x.id||uid(), amount:+x.amount||0, date:x.date||'', note:String(x.note||'')})) : [];
-  $('#mPayAmt').value=''; $('#mPayNote').value=''; $('#mPayDate').value=todayIso();
+  $('#mPayAmt').value=''; $('#mPayNote').value=''; $('#mPayDate').value=todayIso(); $('#mPayRow').hidden=true;
   $('#mDay').value=c?(c.day||''):(presetDay||''); $('#mTime').value=c?(c.time||''):'';
   $('#mMonth').value=c?c.month:(presetDay?presetDay.slice(0,7):curMonth);
   $('#mNotes').value=c?(c.notes||''):'';
@@ -6044,8 +6044,8 @@ function renderPays(){
     sum.innerHTML=`<div class="ps-line"><span class="g">${fmtMoney2(Math.min(got,total||got))} received</span><span class="r">${fmtMoney2(owed)} still owed</span></div><i class="ps-bar"><u style="width:${pct}%"></u></i>`+(total>0&&got>=total?`<div class="ps-note">Everything is in — saving moves the card to «Paid».</div>`:'')+(total>0&&got>total?`<div class="ps-note warn">The payments add up to more than the card's value (${fmtMoney2(total)}).</div>`:'');
   } else { sum.className='pay-sum'; sum.innerHTML=''; }
   const owed=Math.max(0,total-got), half=Math.round(total/2*100)/100, q=[];
-  if(!isPaid && total>0){ if(!got && half>0) q.push([half,'Half up front · '+fmtMoney2(half)]); if(owed>0) q.push([owed,(got?'The rest · ':'All of it · ')+fmtMoney2(owed)]); }
-  $('#mPayQuick').innerHTML=q.map(([a,t])=>`<button type="button" data-a="${a}">+ ${t}</button>`).join('');
+  if(!isPaid && total>0){ if(!got && half>0) q.push([half,'½ Half up front · '+fmtMoney2(half),'half']); if(owed>0) q.push([owed,(got?'The rest · ':'Paid in full · ')+fmtMoney2(owed),'rest']); }
+  $('#mPayQuick').innerHTML=q.map(([a,t,cl])=>`<button type="button" class="${cl}" data-a="${a}">${t}</button>`).join('');
 }
 function addPayRow(amount){
   const a=Math.round((+(amount??$('#mPayAmt').value)||0)*100)/100;
@@ -6055,6 +6055,7 @@ function addPayRow(amount){
   renderPays();
 }
 $('#mPayAdd').addEventListener('click',()=>addPayRow());
+$('#mPayMore').addEventListener('click',()=>{ const r=$('#mPayRow'); r.hidden=!r.hidden; if(!r.hidden) $('#mPayAmt').focus(); });
 ['#mPayAmt','#mPayNote'].forEach(sel=>$(sel).addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); addPayRow(); } }));
 $('#mPayList').addEventListener('click',e=>{ const b=e.target.closest('.xx'); if(!b) return; modalPays.splice(+b.dataset.i,1); renderPays(); });
 $('#mPayQuick').addEventListener('click',e=>{ const b=e.target.closest('button[data-a]'); if(!b) return; addPayRow(+b.dataset.a); });
@@ -7318,7 +7319,7 @@ const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, ca
         const before=new Map(this.list.map(t=>[t.slug,t.unreadAdmin||0]));
         this.list=Array.isArray(p.threads)?p.threads:[]; this.head=p.head; this.notify=p.notify||null; this.online=p.onlineSlugs||[]; this.state='ok'; this.err=''; this.lastAt=Date.now();
         const fresh=this.list.filter(t=>(t.unreadAdmin||0)>(before.get(t.slug)||0) && before.size);
-        if(fresh.length){ toast('💬 '+fresh.map(t=>t.name).join(', ')+' wrote to you'); if(this.cur && fresh.some(t=>t.slug===this.cur)) this.pullThread(true); }
+        if(fresh.length){ toast('💬 '+fresh.map(t=>t.name).join(', ')+' wrote to you', true); if(this.cur && fresh.some(t=>t.slug===this.cur)) this.pullThread(true); }
         this.prefetch();
       } else { this.state='ok'; this.lastAt=Date.now(); }
     }catch(e){ this.state='error'; this.err=String((e&&e.message)||e); }
@@ -7449,16 +7450,21 @@ function chClientFor(t){
   return m.length===1 ? m[0] : null;
 }
 function chThreadFor(c){ try{ return c&&c.chat ? (Chats.list.find(t=>t.slug===c.chat && !t.archived)||null) : null; }catch(e){ return null; } }   /* a function (hoisted) + try: the Board renders before this part of the file has run */
+const chMailDone=new Set();
+const chMailOk=e=>/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(String(e||''));
 function chSyncBoard(){
   if(!state || !Array.isArray(state.clients) || !Chats.list.length) return;
-  let changed=false; const moved=[];
+  let changed=false; const moved=[], mail=[];
   Chats.list.filter(t=>!t.archived).forEach(t=>{
     const c=chClientFor(t); if(!c) return;
     if(c.chat!==t.slug){ c.chat=t.slug; changed=true; }
+    /* the Board card already has their e-mail — copy it onto the chat so alerts and reminders work */
+    if(!t.email && chMailOk(c.email) && !chMailDone.has(t.slug)){ chMailDone.add(t.slug); mail.push([t, c.email]); }
     const want=CH2BOARD[chStage(t)];
     if(want && BOARD_RANK[c.stage]!=null && BOARD_RANK[want]>BOARD_RANK[c.stage]){ moved.push(c.name+' → '+stageById(want).name); c.stage=want; c.stageAt=Date.now(); c.updated=Date.now(); changed=true; }
   });
-  if(changed){ save(); renderAll(); if(moved.length) toast('Board updated from the chats: '+moved.join(' · ')); }
+  if(changed){ save(); renderAll(); if(moved.length) toast('Board updated from the chats: '+moved.join(' · '), true); }
+  mail.forEach(([t,em])=>{ Chats.meta(t.slug,{email:em}).then(()=>toast(t.name+' · e-mail taken from the Board — alerts on', true)).catch(()=>chMailDone.delete(t.slug)); });
 }
 const chUnread=()=>Chats.list.filter(t=>!t.archived).reduce((n,t)=>n+((t.unreadAdmin||0)>0?1:0),0);
 const chWaiting=()=>Chats.list.filter(t=>!t.archived && t.lastFrom==='client');
