@@ -37,8 +37,8 @@ export default function FAQ() {
     {
       qEl: 'Πόσο διαρκεί η παράδοση μιας ιστοσελίδας;',
       qEn: 'How long does website delivery take?',
-      aEl: 'Από τη στιγμή που έχουμε λάβει όλο το υλικό — φωτογραφίες, κείμενα, λογότυπο, και ό,τι άλλο χρειαστεί — παραδίδουμε το πρώτο δείγμα σε <strong>7–14 ημέρες</strong>. Από εκεί, κάνουμε όσες αλλαγές χρειαστούν μέχρι να είναι ακριβώς όπως τη θέλετε.',
-      aEn: 'Once we have received all the material — photos, texts, logo, and anything else needed — we deliver the first draft within <strong>7–14 days</strong>. From there, we make as many changes as needed until it\'s exactly how you want it.'
+      aEl: 'Από τη στιγμή που έχουμε λάβει όλο το υλικό — φωτογραφίες, κείμενα, λογότυπο, και ό,τι άλλο χρειαστεί — παραδίδουμε το πρώτο δείγμα σε <strong>5–10 ημέρες</strong>. Από εκεί, κάνουμε όσες αλλαγές χρειαστούν μέχρι να είναι ακριβώς όπως τη θέλετε.',
+      aEn: 'Once we have received all the material — photos, texts, logo, and anything else needed — we deliver the first draft within <strong>5–10 days</strong>. From there, we make as many changes as needed until it\'s exactly how you want it.'
     },
     {
       qEl: 'Πώς μπορώ να επικοινωνήσω μαζί σας;',
