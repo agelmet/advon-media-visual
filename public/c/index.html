@@ -439,7 +439,7 @@ a{color:inherit}
     <h4>Συχνές ερωτήσεις</h4>
     <ul>
       <li><b>Πόσο διαρκεί;</b> Από τη στιγμή που πατάτε «Ξεκινήστε την ιστοσελίδα μου», το πρώτο draft έρχεται σε 5–10 ημέρες. Μετά, όσες αλλαγές χρειαστούν — κάθε γύρος αλλαγών ολοκληρώνεται μέσα σε 24 ώρες.</li>
-      <li><b>Το domain (π.χ. epitheto-epaggelma.gr);</b> Περιλαμβάνεται, χωρίς επιπλέον κόστος. Όταν η σελίδα είναι έτοιμη, σας ζητάμε 2–3 ονόματα με σειρά προτίμησης και ελέγχουμε τι είναι διαθέσιμο.</li>
+      <li><b>Το domain (π.χ. epitheto-epaggelma.gr);</b> Περιλαμβάνεται, χωρίς επιπλέον κόστος. Όταν η σελίδα είναι έτοιμη, μας γράφετε το όνομα που θέλετε και ελέγχουμε ότι είναι διαθέσιμο.</li>
       <li><b>Τι περιλαμβάνει η φιλοξενία (hosting);</b> Τον server όπου «ζει» η σελίδα, το domain, την ασφάλεια, τα backups και τη συνεχή λειτουργία της — όλα σε ένα.</li>
       <li><b>Θα με βρίσκουν στο Google;</b> Ναι — κάθε σελίδα φτιάχνεται με σωστή δομή, ταχύτητα και τα στοιχεία που χρειάζεται το Google. Το Google Business Profile τη βοηθά ακόμη περισσότερο.</li>
       <li><b>Μπορώ να αλλάξω κάτι μόνος μου;</b> Με τον Πίνακα Διαχείρισης, ναι — κείμενα και εικόνες, όποτε θέλετε.</li>
@@ -455,8 +455,8 @@ a{color:inherit}
 <div class="sheet" id="golive"><div class="sheet-card">
   <div class="sheet-head"><b>Πάμε live 🚀</b><button class="sx" aria-label="Κλείσιμο">✕</button></div>
   <div class="sheet-body">
-    <p class="lead">Τέλεια! Για να δημοσιεύσουμε την ιστοσελίδα σας χρειαζόμαστε μόνο το όνομά της (domain). Γράψτε 2–3 επιλογές με σειρά προτίμησης — ελέγχουμε ποια είναι διαθέσιμη, την αγοράζουμε εμείς (περιλαμβάνεται) και σε 1–2 ημέρες είστε online.</p>
-    <div class="dform"><input id="d1" autocomplete="off" autocapitalize="none" placeholder="1η επιλογή, π.χ. epitheto-epaggelma.gr"><input id="d2" autocomplete="off" autocapitalize="none" placeholder="2η επιλογή (προαιρετικά)"><input id="d3" autocomplete="off" autocapitalize="none" placeholder="3η επιλογή (προαιρετικά)"></div>
+    <p class="lead">Τέλεια! Για να δημοσιεύσουμε την ιστοσελίδα σας χρειαζόμαστε μόνο το όνομά της (domain). Γράψτε το όνομα που θέλετε — ελέγχουμε ότι είναι διαθέσιμο, το αγοράζουμε εμείς (περιλαμβάνεται) και σε 1–2 ημέρες είστε online.</p>
+    <div class="dform"><input id="d1" autocomplete="off" autocapitalize="none" inputmode="url" placeholder="π.χ. epitheto-epaggelma.gr"></div>
     <label class="addon" id="dFormWrap"><input type="checkbox" id="dForm"><span><b>Προσθέστε και Φόρμα Επικοινωνίας</b><small>Η πιο συχνή προσθήκη · 50€ εφάπαξ — οι επισκέπτες σας σάς γράφουν από τη σελίδα και το μήνυμα έρχεται στο e-mail σας.</small></span></label>
     <p class="lead" style="font-size:13px">Συμβουλή: απλό και επαγγελματικό, με λατινικούς χαρακτήρες και χωρίς κενά — π.χ. epitheto-epaggelma.gr ή onoma-epitheto.gr.</p>
     <button class="big" id="dGo">Όλα καλά — πάμε live 🚀</button>
@@ -787,7 +787,7 @@ document.addEventListener('click',e=>{
 $('#chips').addEventListener('click',e=>{ const b=e.target.closest('[data-chip]'); if(!b) return; const c=chipsFor(state.thread)[+b.dataset.chip]; if(!c) return; txt.value=c[2]; txt.dispatchEvent(new Event('input')); txt.focus(); let pos=c[2].indexOf('\n1. '); if(pos>=0) pos+=4; else { const j=c[2].indexOf(': \n'); pos=j>=0?j+2:txt.value.length; } txt.setSelectionRange(pos,pos); });
 $('#ready').addEventListener('click',e=>{
   const b=e.target.closest('[data-ready]'); if(!b) return; const k=b.dataset.ready;
-  if(k==='live'){ ['d1','d2','d3'].forEach(id=>{ document.getElementById(id).value=''; }); $('#dForm').checked=false; $('#dFormWrap').hidden=!formOffer(); openSheet('golive'); setTimeout(()=>$('#d1').focus(),120); return; }
+  if(k==='live'){ $('#d1').value=''; $('#dForm').checked=false; $('#dFormWrap').hidden=!formOffer(); openSheet('golive'); setTimeout(()=>$('#d1').focus(),120); return; }
   const cf={build:['Ξεκινάμε;','Στείλατε ό,τι θέλατε; Δεν πειράζει αν λείπει κάτι — ξεκινάμε τώρα και το προσθέτουμε στην πορεία. Σε 5–10 ημέρες θα έχετε εδώ το πρώτο draft.','Ναι, ξεκινήστε ✅'],changes:['Τις στείλατε όλες;','Θα κάνουμε όλες τις αλλαγές που μας γράψατε μαζί και θα σας ενημερώσουμε εδώ — συνήθως μέσα σε 24 ώρες. Αν θυμηθείτε κάτι ακόμη, γράψτε το μας πριν πατήσετε.','Ναι, τις έστειλα όλες ✏️']}[k]; if(!cf) return;
   $('#cfTitle').textContent=cf[0]; $('#cfText').textContent=cf[1]; const y=$('#cfYes'); y.textContent=cf[2]; y.dataset.kind=k; y.disabled=false; openSheet('confirm');
 });
@@ -803,11 +803,11 @@ document.addEventListener('click',e=>{
   const y=$('#cfYes'); y.textContent='Ναι, τη θέλω'; y.dataset.kind='form'; y.disabled=false; openSheet('confirm');
 },true);
 $('#dGo').addEventListener('click',async e=>{
-  const ds=['d1','d2','d3'].map(id=>document.getElementById(id).value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/.*$/,'')).filter(Boolean);
-  if(!ds.length){ toast('Γράψτε τουλάχιστον ένα όνομα (domain)'); $('#d1').focus(); return; }
+  const ds=['d1'].map(id=>document.getElementById(id).value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/.*$/,'')).filter(Boolean);
+  if(!ds.length){ toast('Γράψτε το όνομα (domain) που θέλετε'); $('#d1').focus(); return; }
   const btn=e.currentTarget; btn.disabled=true;
   const wantForm=$('#dForm')&&$('#dForm').checked&&!$('#dFormWrap').hidden;
-  await pressReady('live', '🚀 Όλα καλά, είναι όπως το ήθελα — πάμε live!\n\nDomain που θα ήθελα, με σειρά προτίμησης:\n'+ds.map((d,i)=>(i+1)+'. '+d).join('\n')+(wantForm?'\n\n'+FORM_TXT:''));
+  await pressReady('live', '🚀 Όλα καλά, είναι όπως το ήθελα — πάμε live!\n\nDomain που θα ήθελα: '+ds[0]+(wantForm?'\n\n'+FORM_TXT:''));
   btn.disabled=false;
 });
 $('#lbx').addEventListener('click',()=>$('#lb').classList.remove('on'));
