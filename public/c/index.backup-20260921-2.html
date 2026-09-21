@@ -202,7 +202,6 @@ a{color:inherit}
 .sheet-body .note{background:#FFF7E6;border-radius:12px;padding:10px 12px;color:#8A6D1F;font-weight:600}
 /* ready bar — the ONE thing we need from the client at this stage, as a button (21 Sept 2026) */
 .ready{margin:0 2px 10px;border-radius:18px;padding:12px 14px;background:linear-gradient(135deg,#EAF3FF,#E8FBF3);border:1.5px solid #CFE3FA;display:grid;gap:9px}
-.ready[hidden]{display:none}
 .ready p{font-size:13px;font-weight:600;color:#3C4658;line-height:1.42;margin:0}
 .ready .rb{display:flex;gap:8px;flex-wrap:wrap}
 .ready .rb button{flex:1 1 170px;min-height:46px;border-radius:14px;font-weight:800;font-size:14.5px;padding:10px 12px;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:transform .15s,box-shadow .15s;white-space:nowrap}
@@ -226,103 +225,6 @@ a{color:inherit}
   .st .dot{width:19px;height:19px;font-size:10px}
   .st .bar{min-width:8px;margin:0 5px}
   .stagehint{padding:0 12px 9px;font-size:12px}
-}
-/* contact-form offer (21 Sept 2026) */
-.up{margin:14px auto 6px;max-width:440px;background:#fff;border:1.5px solid #DCE7F7;border-radius:18px;padding:12px 13px;box-shadow:0 6px 22px rgba(20,40,80,.07);animation:in .35s cubic-bezier(.2,.8,.2,1) both}
-.up-h{display:flex;align-items:center;gap:10px}
-.up-ic{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,#EAF3FF,#E3F8FC);color:var(--brand);flex:none}
-.up-ic svg{width:19px;height:19px}
-.up-t{flex:1;min-width:0}
-.up-t b{display:block;font-size:14px;font-weight:800;line-height:1.25}
-.up-t small{display:block;font-size:11.5px;font-weight:700;color:var(--brand)}
-.up-x{width:28px;height:28px;border-radius:9px;color:#98A2B8;font-size:13px;flex:none}
-.up p{font-size:13px;color:var(--muted);font-weight:500;line-height:1.45;margin:8px 0 10px}
-.up-b{display:flex;gap:8px}
-.up-b button{flex:1;min-height:38px;border-radius:12px;font-weight:800;font-size:13px}
-.up-go{background:var(--me);color:#fff;box-shadow:0 5px 14px rgba(47,127,224,.28)}
-.up-no{background:#F1F5FB;color:var(--muted)}
-.x.xf{background:linear-gradient(135deg,#EFF6FF,#EAFBF7);border:1.5px solid #CFE3FA}
-.xh b em{font-style:normal;display:inline-block;margin-left:6px;font-size:10.5px;font-weight:800;color:#0B7A47;background:#DDF6E9;padding:2px 7px;border-radius:999px;vertical-align:2px}
-.xbtn{display:block;width:100%;margin-top:9px;min-height:40px;border-radius:12px;background:var(--me);color:#fff;font-weight:800;font-size:13.5px;box-shadow:0 5px 14px rgba(47,127,224,.25)}
-.xbtn:disabled{background:#DDF6E9;color:#0B7A47;box-shadow:none;cursor:default}
-.addon{display:flex;gap:10px;align-items:flex-start;background:#F5F8FD;border:1.5px solid var(--line);border-radius:14px;padding:11px 12px;margin:2px 0 10px;cursor:pointer}
-.addon[hidden]{display:none}
-.addon input{width:20px;height:20px;margin-top:1px;accent-color:var(--brand);flex:none}
-.addon b{display:block;font-size:14px;color:var(--ink)}
-.addon small{display:block;font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.4;margin-top:2px}
-.addon:has(input:checked){border-color:var(--brand);background:#EFF6FF}
-/* ---------- phones: smaller type, compact bars, everything reachable with a thumb (21 Sept 2026) ---------- */
-@media (max-width:560px){
-  body{font-size:14.5px}
-  .top{gap:9px;padding:8px 10px;padding-top:calc(8px + env(safe-area-inset-top,0px))}
-  .top .logo{width:36px;height:36px;border-radius:11px}
-  .top .logo i{width:11px;height:11px;border-width:2px}
-  .top .who b{font-size:14.5px}
-  .top .who small{font-size:11px}
-  .top .act{gap:4px}
-  .top .act a,.top .act button{height:34px;width:34px;padding:0;justify-content:center;border-radius:10px}
-  .top .act svg{width:17px;height:17px}
-  .stages{padding:7px 10px 8px}
-  .st{gap:5px}
-  .st .dot{width:18px;height:18px;font-size:9.5px;border-width:1.5px}
-  .st .lbl{font-size:10.5px}
-  .st .bar{min-width:6px;margin:0 5px}
-  .st.now .dot{box-shadow:0 0 0 3px rgba(47,127,224,.16);animation:none}
-  .stagehint{padding:0 12px 8px;font-size:12px;line-height:1.4;cursor:pointer}
-  .stagehint .tx{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .stagehint.open .tx{display:block}
-  .feed{padding:10px 10px 8px}
-  .day{margin:10px 0 8px}
-  .day span{font-size:10.5px;padding:4px 10px}
-  .av{width:26px;height:26px;border-radius:8px}
-  .row{gap:6px}
-  .bub{max-width:84%;font-size:14.5px;line-height:1.42;padding:8px 11px 6px;border-radius:16px}
-  .bub .meta{font-size:10px;margin-top:3px}
-  .pics{margin:-3px -6px 5px}
-  .file .n{max-width:170px;font-size:13px}
-  .hello{margin:12px 6px 6px;padding:18px 16px}
-  .hello h2{font-size:17px}
-  .hello p{font-size:13px}
-  .dock{padding:8px 10px calc(8px + var(--safe-b))}
-  .ready{margin:0 0 8px;padding:9px 10px;border-radius:15px;gap:7px}
-  .ready p{font-size:12px;line-height:1.38}
-  .ready .rb{flex-wrap:nowrap;gap:6px}
-  .ready .rb button{flex:1 1 0;min-width:0;min-height:40px;font-size:13px;padding:8px 8px;border-radius:12px;white-space:normal;line-height:1.2;text-align:center}
-  .ready.done p{font-size:12.5px}
-  .chips{gap:6px;padding:0 0 8px}
-  .chip{height:30px;padding:0 11px;font-size:12px;gap:5px;border-width:1px}
-  .tray .t{width:56px;height:56px}
-  .bar{gap:6px}
-  .ibtn,.send{width:40px;height:40px;border-radius:12px}
-  .ibtn svg{width:20px;height:20px}.send svg{width:18px;height:18px}
-  .input{border-radius:14px;padding:2px 6px 2px 12px}
-  .input textarea{padding:8px 0;max-height:110px}
-  .hint{display:none}
-  .newpill{bottom:calc(150px + var(--safe-b));font-size:12px;padding:7px 13px}
-  .sheet-card{max-height:92dvh;border-radius:20px 20px 0 0}
-  .sheet-head{padding:12px 14px;font-size:15px}
-  .sheet-head button{width:32px;height:32px;border-radius:10px;font-size:14px}
-  .sheet-body{padding:12px 14px calc(16px + var(--safe-b));font-size:13.5px;line-height:1.45}
-  .sheet-body h4{font-size:11.5px;margin:14px 0 6px}
-  .sheet-body li,.sheet-body .nb,.sheet-body .tl div{padding:8px 10px;border-radius:10px}
-  .x{padding:10px 11px;font-size:12.5px}
-  .xh b{font-size:13.5px}
-  .xh span{font-size:11px;padding:2px 8px}
-  .dform input{height:42px}
-  .sheet-body .big{min-height:46px;font-size:14.5px}
-  .sheet-body .quiet{min-height:40px;font-size:13.5px}
-  .up{margin:12px 4px 4px;padding:10px 11px;border-radius:16px}
-  .up-ic{width:32px;height:32px;border-radius:10px}
-  .up-t b{font-size:13.5px}
-  .up p{font-size:12.5px;margin:6px 0 9px}
-  .up-b button{min-height:36px;font-size:12.5px}
-  /* typing: fold the explanations away so the conversation keeps the room above the keyboard */
-  body.typing .stagehint,body.typing .ready,body.typing .stages{display:none}
-}
-@media (max-width:360px){
-  .top .who small{display:none}
-  .st .lbl{font-size:9.5px}
-  .ready .rb button{font-size:12px}
 }
 @media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important;scroll-behavior:auto!important} }
 </style>
@@ -429,10 +331,10 @@ a{color:inherit}
     <p class="lead">Ό,τι μπορεί να χρειαστείτε πέρα από τη βασική ιστοσελίδα, με απλά λόγια. Για οποιοδήποτε από αυτά, γράψτε μας εδώ.</p>
     <h4>Extras — προαιρετικά</h4>
     <div class="xg">
-      <div class="x xf" id="xForm"><div class="xh"><b>Φόρμα Επικοινωνίας <em>Η πιο συχνή επιλογή</em></b><span>50€ εφάπαξ</span></div>Οι επισκέπτες σας σάς γράφουν απευθείας από τη σελίδα — ακόμη κι όταν δεν μπορείτε να σηκώσετε το τηλέφωνο — και το μήνυμα έρχεται αμέσως στο e-mail σας. Χωρίς μηνιαία χρέωση.<button class="xbtn" data-up="yes">Τη θέλω στη σελίδα μου</button></div>
       <div class="x"><div class="xh"><b>Αλλαγές μετά τη δημοσίευση</b><span>50€ / αίτημα</span></div>Μέχρι να δημοσιευτεί η σελίδα, οι αλλαγές είναι απεριόριστες. Μετά, κάθε αίτημα αλλαγών ολοκληρώνεται εντός 3 εργάσιμων ημερών — και ένα αίτημα μπορεί να περιλαμβάνει πολλές λεπτομερείς αλλαγές.</div>
       <div class="x"><div class="xh"><b>Πίνακας Διαχείρισης (Admin Panel)</b><span>180€ εφάπαξ</span></div>Ένας απλός πίνακας ώστε να αλλάζετε μόνοι σας κείμενα και εικόνες όποτε θέλετε — δωρεάν, έως 5 αλλαγές τον μήνα.</div>
       <div class="x"><div class="xh"><b>Ενότητα Άρθρων / Σεμιναρίων</b><span>70€ εφάπαξ</span></div>Αποκλειστική ενότητα άρθρων, σεμιναρίων ή εργαστηρίων. Ανεβάζετε και επεξεργάζεστε το περιεχόμενο μόνοι σας, ανεξάρτητα.</div>
+      <div class="x"><div class="xh"><b>Φόρμα Επικοινωνίας</b><span>50€ εφάπαξ</span></div>Φόρμα μέσα στη σελίδα σας. Κάθε φορά που κάποιος τη συμπληρώνει, λαμβάνετε αμέσως e-mail στη διεύθυνση που επιλέγετε.</div>
       <div class="x"><div class="xh"><b>Google Business Profile</b><span>90€ εφάπαξ</span></div>Στήνουμε ή διορθώνουμε το προφίλ σας στο Google (Maps &amp; αναζήτηση), το συνδέουμε με τη σελίδα σας και σας δίνουμε κάρτα NFC για να αφήνουν οι πελάτες σας κριτική με ένα άγγιγμα.</div>
       <div class="x"><div class="xh"><b>Online ραντεβού · AI βοηθός · QR μενού</b><span>ρωτήστε μας</span></div>Σελίδα κρατήσεων με αυτόματες υπενθυμίσεις, βοηθός που απαντά στους επισκέπτες σας 24/7, ψηφιακό μενού χωρίς επανεκτυπώσεις.</div>
     </div>
@@ -457,7 +359,6 @@ a{color:inherit}
   <div class="sheet-body">
     <p class="lead">Τέλεια! Για να δημοσιεύσουμε την ιστοσελίδα σας χρειαζόμαστε μόνο το όνομά της (domain). Γράψτε 2–3 επιλογές με σειρά προτίμησης — ελέγχουμε ποια είναι διαθέσιμη, την αγοράζουμε εμείς (περιλαμβάνεται) και σε 1–2 ημέρες είστε online.</p>
     <div class="dform"><input id="d1" autocomplete="off" autocapitalize="none" placeholder="1η επιλογή, π.χ. epitheto-epaggelma.gr"><input id="d2" autocomplete="off" autocapitalize="none" placeholder="2η επιλογή (προαιρετικά)"><input id="d3" autocomplete="off" autocapitalize="none" placeholder="3η επιλογή (προαιρετικά)"></div>
-    <label class="addon" id="dFormWrap"><input type="checkbox" id="dForm"><span><b>Προσθέστε και Φόρμα Επικοινωνίας</b><small>Η πιο συχνή προσθήκη · 50€ εφάπαξ — οι επισκέπτες σας σάς γράφουν από τη σελίδα και το μήνυμα έρχεται στο e-mail σας.</small></span></label>
     <p class="lead" style="font-size:13px">Συμβουλή: απλό και επαγγελματικό, με λατινικούς χαρακτήρες και χωρίς κενά — π.χ. epitheto-epaggelma.gr ή onoma-epitheto.gr.</p>
     <button class="big" id="dGo">Όλα καλά — πάμε live 🚀</button>
     <button class="quiet sx">Όχι ακόμη</button>
@@ -486,19 +387,7 @@ function stageHint(t){
   return 'Η ιστοσελίδα σας είναι online! Για οποιαδήποτε αλλαγή ή ερώτηση, γράψτε μας εδώ.';
 }
 const curStage=t=>t&&t.stage==='payment'?'changes':(t&&t.stage)||'yliko';
-const READY_TXT={build:'✅ Έστειλα ό,τι ήθελα — μπορείτε να ξεκινήσετε την ιστοσελίδα μου!',changes:'✅ Έστειλα όλες τις αλλαγές μου — μπορείτε να προχωρήσετε.'};
-/* the contact form (50€) — the add-on most clients take. Offered quietly: one small card under the conversation once the
-   client has a draft to look at, one unticked line in «πάμε live», and first place in Extras. Never when Angelo ticked
-   «has a contact form» in the CRM (t.form), never again once asked for or dismissed on this device. */
-const FORM_TXT='📨 Θα ήθελα να προσθέσετε και τη Φόρμα Επικοινωνίας στην ιστοσελίδα μου (50€ εφάπαξ).';
-const formAsked=()=>state.msgs.concat(state.pending).some(m=>m.from==='client'&&!m.deleted&&/φόρμα επικοινωνίας/i.test(m.text||''));
-const formOffer=()=>{ const t=state.thread; return !!t && !t.form && !formAsked(); };
-const ENV_IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 8l9 6 9-6"/></svg>';
-function upsellItem(){
-  const t=state.thread; if(!formOffer()||mem.get('formNo')) return null;
-  if(!/^(draft|changes|live)$/.test(curStage(t))) return null;
-  return {key:'up|form',html:'<div class="up" role="note"><div class="up-h"><span class="up-ic">'+ENV_IC+'</span><div class="up-t"><b>Φόρμα Επικοινωνίας</b><small>Η πιο συχνή προσθήκη · 50€ εφάπαξ</small></div><button class="up-x" data-up="no" aria-label="Απόκρυψη">✕</button></div><p>Οι επισκέπτες σας σάς γράφουν απευθείας από τη σελίδα — ακόμη κι όταν δεν μπορείτε να σηκώσετε το τηλέφωνο — και το μήνυμα έρχεται αμέσως στο e-mail σας.</p><div class="up-b"><button class="up-go" data-up="yes">Τη θέλω</button><button class="up-no" data-up="no">Όχι, ευχαριστώ</button></div></div>'};
-}
+const READY_TXT={build:'✅ Έστειλα ό,τι είχα — μπορείτε να ξεκινήσετε την ιστοσελίδα μου!',changes:'✅ Έστειλα όλες τις αλλαγές μου — μπορείτε να προχωρήσετε.'};
 const CHIP_ALLAGES=['✏️','Θέλω αλλαγές','Θα ήθελα τις εξής αλλαγές:\n1. \n2. \n3. '];
 const CHIP_FOTO=['📷','Στέλνω φωτογραφίες','Σας στέλνω φωτογραφίες για την ιστοσελίδα: '];
 const CHIP_Q=['❓','Έχω ερώτηση','Έχω μια ερώτηση: '];
@@ -562,7 +451,6 @@ function items(){
     out.push({key,html:'<div class="'+cls+'" data-id="'+esc(m.id)+'">'+(me?'':'<div class="av"><img src="/img/advon-icon-180.png" alt=""></div>')+'<div class="bub'+(m.state?' '+m.state:'')+(m.deleted?' gone':'')+(m.kind&&!m.deleted?' kind':'')+'">'+bubble(m,me)+'</div></div>'});
     prev=m;
   });
-  const up=all.length?upsellItem():null; if(up) out.push(up);
   return out;
 }
 function node(it){const d=document.createElement('div');d.innerHTML=it.html;const el=d.firstElementChild;el.dataset.k=it.key;requestAnimationFrame(()=>{el.style.animation='none';});return el;}
@@ -608,10 +496,9 @@ function renderHead(){
   const st=$('#stages'); const stg=t.stage==='payment'?'changes':t.stage; const idx=STAGES.findIndex(s=>s[0]===stg);
   if(idx<0){st.hidden=true;return;}
   st.hidden=false; st.innerHTML=STAGES.map((s,i)=>'<div class="st'+(i<idx?' done':i===idx?' now':'')+'"><span class="dot">'+(i<idx?'✓':i+1)+'</span><span class="lbl">'+s[1]+'</span><span class="bar"></span></div>').join('');
-  const sh=$('#stagehint'); sh.hidden=false; sh.innerHTML='<span class="tx">'+esc(stageHint(t))+(stg==='yliko'?' <a href="#" data-sheet="yliko">Τι χρειαζόμαστε →</a>':stg==='live'?'':' <a href="#" data-sheet="odigos">Οδηγός αλλαγών →</a>')+'</span>';
+  const sh=$('#stagehint'); sh.hidden=false; sh.innerHTML=esc(stageHint(t))+(stg==='yliko'?' <a href="#" data-sheet="yliko">Τι χρειαζόμαστε →</a>':stg==='live'?'':' <a href="#" data-sheet="odigos">Οδηγός αλλαγών →</a>');
   const chips=$('#chips'); chips.innerHTML=chipsFor(t).map((c,i)=>'<button class="chip" data-chip="'+i+'"><span>'+c[0]+'</span>'+esc(c[1])+'</button>').join('');
   renderReady(t);
-  const xb=document.querySelector('#xForm .xbtn'); if(xb){ xb.hidden=!!t.form; const asked=formAsked(); xb.disabled=asked; xb.textContent=asked?'✓ Το ζητήσατε — θα την προσθέσουμε':'Τη θέλω στη σελίδα μου'; }
 }
 /* the ready bar: one big button per stage, then a green «we got it» card until we move the stage on */
 function renderReady(t){
@@ -619,7 +506,7 @@ function renderReady(t){
   const stg=curStage(t), r=t.ready&&t.ready.kind;
   if(stg==='live'){ el.hidden=true; el.innerHTML=''; return; }
   el.hidden=false; el.classList.toggle('done',!!r);
-  if(r==='build') el.innerHTML='<p>✅ Το λάβαμε! Ετοιμάζουμε το πρώτο draft της ιστοσελίδας σας — θα το βρείτε εδώ σε 3–10 ημέρες. Θυμηθήκατε κάτι; Γράψτε το μας.</p>';
+  if(r==='build') el.innerHTML='<p>✅ Το λάβαμε! Ετοιμάζουμε το πρώτο draft της ιστοσελίδας σας — θα το βρείτε εδώ σε 5–10 ημέρες. Θυμηθήκατε κάτι; Γράψτε το μας.</p>';
   else if(r==='changes') el.innerHTML='<p>✏️ Τις λάβαμε! Κάνουμε τις αλλαγές σας — έτοιμες συνήθως μέσα σε 24 ώρες. Θα σας γράψουμε εδώ μόλις είναι.</p>';
   else if(r==='live') el.innerHTML='<p>🚀 Τέλεια! Ελέγχουμε το domain, το αγοράζουμε και σας ενημερώνουμε εδώ μόλις η ιστοσελίδα σας είναι online (1–2 ημέρες).</p>';
   else if(stg==='yliko') el.innerHTML='<p>'+(t.dat?'Στείλατε τις φωτογραφίες σας; Πατήστε εδώ και ξεκινάμε. Δεν έχετε ακόμη; Πατήστε το έτσι κι αλλιώς — βάζουμε προσωρινές και τις αλλάζουμε μετά.':'Μόλις στείλετε ό,τι έχετε — έστω και λίγα — πατήστε εδώ. Ό,τι λείπει το προσθέτουμε στην πορεία.')+'</p><div class="rb"><button class="go" data-ready="build">✅ Ξεκινήστε την ιστοσελίδα μου</button></div>';
@@ -698,9 +585,6 @@ tray.addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(!b)re
 $('#attach').addEventListener('click',()=>fileIn.click());
 fileIn.addEventListener('change',()=>{addFiles([...fileIn.files]);fileIn.value='';});
 txt.addEventListener('input',()=>{txt.style.height='auto';txt.style.height=Math.min(140,txt.scrollHeight)+'px';updateSend();});
-txt.addEventListener('focus',()=>document.body.classList.add('typing'));
-txt.addEventListener('blur',()=>setTimeout(()=>{ if(document.activeElement!==txt) document.body.classList.remove('typing'); },150));
-$('#stagehint').addEventListener('click',e=>{ if(e.target.closest('a')) return; e.currentTarget.classList.toggle('open'); });
 txt.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey&&!/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){e.preventDefault();send();} });
 sendBtn.addEventListener('click',send);
 document.addEventListener('paste',e=>{const fs=[...(e.clipboardData&&e.clipboardData.files||[])];if(fs.length){e.preventDefault();addFiles(fs);}});
@@ -787,27 +671,16 @@ document.addEventListener('click',e=>{
 $('#chips').addEventListener('click',e=>{ const b=e.target.closest('[data-chip]'); if(!b) return; const c=chipsFor(state.thread)[+b.dataset.chip]; if(!c) return; txt.value=c[2]; txt.dispatchEvent(new Event('input')); txt.focus(); let pos=c[2].indexOf('\n1. '); if(pos>=0) pos+=4; else { const j=c[2].indexOf(': \n'); pos=j>=0?j+2:txt.value.length; } txt.setSelectionRange(pos,pos); });
 $('#ready').addEventListener('click',e=>{
   const b=e.target.closest('[data-ready]'); if(!b) return; const k=b.dataset.ready;
-  if(k==='live'){ ['d1','d2','d3'].forEach(id=>{ document.getElementById(id).value=''; }); $('#dForm').checked=false; $('#dFormWrap').hidden=!formOffer(); openSheet('golive'); setTimeout(()=>$('#d1').focus(),120); return; }
-  const cf={build:['Ξεκινάμε;','Στείλατε ό,τι θέλατε; Δεν πειράζει αν λείπει κάτι — ξεκινάμε τώρα και το προσθέτουμε στην πορεία. Σε 5–10 ημέρες θα έχετε εδώ το πρώτο draft.','Ναι, ξεκινήστε ✅'],changes:['Τις στείλατε όλες;','Θα κάνουμε όλες τις αλλαγές που μας γράψατε μαζί και θα σας ενημερώσουμε εδώ — συνήθως μέσα σε 24 ώρες. Αν θυμηθείτε κάτι ακόμη, γράψτε το μας πριν πατήσετε.','Ναι, τις έστειλα όλες ✏️']}[k]; if(!cf) return;
+  if(k==='live'){ ['d1','d2','d3'].forEach(id=>{ document.getElementById(id).value=''; }); openSheet('golive'); setTimeout(()=>$('#d1').focus(),120); return; }
+  const cf={build:['Ξεκινάμε;','Στείλατε ό,τι είχατε; Δεν πειράζει αν λείπει κάτι — ξεκινάμε τώρα και το προσθέτουμε στην πορεία. Σε 5–10 ημέρες θα έχετε εδώ το πρώτο draft.','Ναι, ξεκινήστε ✅'],changes:['Τις στείλατε όλες;','Θα κάνουμε όλες τις αλλαγές που μας γράψατε μαζί και θα σας ενημερώσουμε εδώ — συνήθως μέσα σε 24 ώρες. Αν θυμηθείτε κάτι ακόμη, γράψτε το μας πριν πατήσετε.','Ναι, τις έστειλα όλες ✏️']}[k]; if(!cf) return;
   $('#cfTitle').textContent=cf[0]; $('#cfText').textContent=cf[1]; const y=$('#cfYes'); y.textContent=cf[2]; y.dataset.kind=k; y.disabled=false; openSheet('confirm');
 });
-$('#cfYes').addEventListener('click',async e=>{ const k=e.currentTarget.dataset.kind; e.currentTarget.disabled=true;
-  if(k==='form'){ closeSheets(); await send({text:FORM_TXT}); renderHead(); render(true); toast('Το λάβαμε — θα την προσθέσουμε'); return; }
-  await pressReady(k, READY_TXT[k]); });
-/* the contact-form offer: «Τη θέλω» asks once for a yes, «Όχι, ευχαριστώ» hides it on this device for good */
-document.addEventListener('click',e=>{
-  const b=e.target.closest('[data-up]'); if(!b) return; e.preventDefault(); e.stopPropagation();
-  if(b.dataset.up==='no'){ mem.set('formNo','1'); render(true); toast('Εντάξει — τη βρίσκετε πάντα στα Extras'); return; }
-  if(!formOffer()) return;
-  $('#cfTitle').textContent='Φόρμα Επικοινωνίας'; $('#cfText').textContent='Θα την προσθέσουμε στην ιστοσελίδα σας και θα σας ενημερώσουμε εδώ μόλις είναι έτοιμη. Κόστος 50€ εφάπαξ, χωρίς μηνιαία χρέωση.';
-  const y=$('#cfYes'); y.textContent='Ναι, τη θέλω'; y.dataset.kind='form'; y.disabled=false; openSheet('confirm');
-},true);
+$('#cfYes').addEventListener('click',async e=>{ const k=e.currentTarget.dataset.kind; e.currentTarget.disabled=true; await pressReady(k, READY_TXT[k]); });
 $('#dGo').addEventListener('click',async e=>{
   const ds=['d1','d2','d3'].map(id=>document.getElementById(id).value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/.*$/,'')).filter(Boolean);
   if(!ds.length){ toast('Γράψτε τουλάχιστον ένα όνομα (domain)'); $('#d1').focus(); return; }
   const btn=e.currentTarget; btn.disabled=true;
-  const wantForm=$('#dForm')&&$('#dForm').checked&&!$('#dFormWrap').hidden;
-  await pressReady('live', '🚀 Όλα καλά, είναι όπως το ήθελα — πάμε live!\n\nDomain που θα ήθελα, με σειρά προτίμησης:\n'+ds.map((d,i)=>(i+1)+'. '+d).join('\n')+(wantForm?'\n\n'+FORM_TXT:''));
+  await pressReady('live', '🚀 Όλα καλά, είναι όπως το ήθελα — πάμε live!\n\nDomain που θα ήθελα, με σειρά προτίμησης:\n'+ds.map((d,i)=>(i+1)+'. '+d).join('\n'));
   btn.disabled=false;
 });
 $('#lbx').addEventListener('click',()=>$('#lb').classList.remove('on'));

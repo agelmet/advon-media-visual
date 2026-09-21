@@ -18,7 +18,7 @@
 //       GET  /api/chat?t=<slug>[&h=<head>]        → {thread, messages, head}
 //       POST /api/chat?t=<slug>                   JSON {text, files} → append an Advon message (+ e-mail to the client)
 //       POST /api/chat?t=<slug>&seen=1            → Angelo has read the thread
-//       POST /api/chat?t=<slug>&meta=1            JSON {name,email,phone,site,stage,archived,pin,unread,dat,ready:null} → edit the card
+//       POST /api/chat?t=<slug>&meta=1            JSON {name,email,phone,site,stage,archived,pin,unread,dat,form,ready:null} → edit the card
 //                                                  (pin:true = «Priority», kept on top of the list; unread:true = mark as unread again)
 //       POST /api/chat?order=1                    JSON {slugs:[…]} → the Priority chats in the order Angelo dragged them (ord = position)
 //       POST /api/chat?t=<slug>&remove=1          → DELETE the chat for good: card, messages and files leave the repo in one commit and
@@ -118,7 +118,7 @@ const getMessages = (c, slug) => coreMessages(c, slug);
 const current = (c) => currentHead(c);
 // what the client page may see of a card — plus `dat` (Angelo ticked «has a doctoranytime profile», so the page asks only for
 // photos) and `ready` ({kind:'build'|'changes'|'live', at} — the button the client pressed last, cleared when the stage moves on)
-const publicThread = (t) => ({ slug: t.slug, name: t.name, stage: normStage(t.stage), site: t.site || '', adminSeenAt: t.adminSeenAt || null, createdAt: t.createdAt, log: (t.log || []).slice(-3), dat: !!t.dat, ready: t.ready || null });
+const publicThread = (t) => ({ slug: t.slug, name: t.name, stage: normStage(t.stage), site: t.site || '', adminSeenAt: t.adminSeenAt || null, createdAt: t.createdAt, log: (t.log || []).slice(-3), dat: !!t.dat, form: !!t.form, ready: t.ready || null });
 const READY_KINDS = ['build', 'changes', 'live'];
 
 // ---------- the write: append a message ----------
@@ -239,7 +239,7 @@ export async function GET(req) {
       const L = [`CHATS — ${waiting.length} conversation(s) waiting for an answer (${idx.length} active)`];
       waiting.sort((a, b) => (b.pin ? 1 : 0) - (a.pin ? 1 : 0) || (a.ord ?? 1e9) - (b.ord ?? 1e9) || String(a.lastAt).localeCompare(String(b.lastAt)));
       const READY_EN = { build: 'READY TO BUILD (pressed «ξεκινήστε»)', changes: 'READY FOR CHANGES (pressed «έστειλα όλες τις αλλαγές»)', live: 'WANTS TO GO LIVE (pressed «πάμε live» — domain in the message)' };
-      const flags = (t) => `${t.pin ? '★ PRIORITY ' : ''}${t.ready && READY_EN[t.ready.kind] ? '✅ ' + READY_EN[t.ready.kind] + ' ' : ''}${t.dat ? '[doctoranytime] ' : ''}`;
+      const flags = (t) => `${t.pin ? '★ PRIORITY ' : ''}${t.ready && READY_EN[t.ready.kind] ? '✅ ' + READY_EN[t.ready.kind] + ' ' : ''}${t.dat ? '[doctoranytime] ' : ''}${t.form ? '[has contact form] ' : ''}`;
       waiting.forEach((t) => L.push(`  • ${flags(t)}${t.name} (${t.slug}) — stage ${t.stage} — ${t.unreadAdmin || 0} unread — last ${String(t.lastAt).slice(0, 16).replace('T', ' ')}: «${(t.lastText || '').slice(0, 160)}»`));
       const readyQuiet = idx.filter((t) => t.ready && t.lastFrom !== 'client');
       if (readyQuiet.length) { L.push(`STILL FLAGGED — the client pressed a button and we have written since, but the work is not marked done (clearReady / the READY badge in the CRM):`); readyQuiet.forEach((t) => L.push(`  • ${flags(t)}${t.name} (${t.slug}) — stage ${t.stage}`)); }
@@ -456,6 +456,7 @@ export async function POST(req) {
         if ('phone' in body) t.phone = clean(body.phone, 40);
         if ('site' in body) t.site = clean(body.site, 200);
         if ('stage' in body && STAGES.includes(body.stage)) { if (t.stage !== body.stage) { t.stage = body.stage; t.stageAt = nowIso(); t.remindersSent = 0; t.lastReminderAt = null; delete t.ready; } }
+        if ('form' in body) t.form = !!body.form;                     // the site already has the contact form — the page stops offering it (50€ add-on)
         if ('dat' in body) t.dat = !!body.dat;                        // «has a doctoranytime profile» — the client page then asks only for photos
         if (body.ready === null) delete t.ready;                       // Angelo ticked the READY badge off (the work is done)
         if (typeof body.log === 'string' && body.log.trim()) { t.log = (t.log || []).concat([{ at: nowIso(), by: 'angelo', text: clean(body.log, 400) }]).slice(-30); }
