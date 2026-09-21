@@ -402,6 +402,27 @@
     animation: featuredGlow 3.2s ease-in-out infinite;
   }
 
+  /* ─── Plans: "what you get" tiles + Growth card (21 Sept 2026) — transform/opacity only ─── */
+  .get-tile {
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
+  }
+  .get-tile:hover {
+    transform: translateY(-4px);
+    border-color: rgba(71, 200, 245, 0.35);
+  }
+  .growth-card {
+    overflow: visible;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
+  }
+  .growth-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.32);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .get-tile, .growth-card { transition: none; }
+    .get-tile:hover, .growth-card:hover { transform: none; }
+  }
+
   /* ─── Smooth Accordion ─── */
   .acc-body {
     display: grid;

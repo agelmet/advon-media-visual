@@ -12,6 +12,36 @@ import { useLangStore } from '@/store/langStore';
 import ScrollReveal from '@/components/ScrollReveal';
 import TiltCard from '@/components/TiltCard';
 
+// 21 Sept 2026 — the clear "what you get" list and the two plan lists.
+// Wording rule: only what we really do (no "server updates", no call
+// recording — we count taps on the phone button and form submissions).
+const GET_LIST = [
+  { el: 'Σχεδιασμός από το μηδέν', en: 'Designed from scratch', subEl: 'Ποτέ έτοιμο template', subEn: 'Never a ready-made template' },
+  { el: 'Πρώτα για κινητό', en: 'Mobile first', subEl: 'Γρήγορη σε κάθε συσκευή', subEn: 'Fast on every device' },
+  { el: 'Έτοιμη για το Google', en: 'Ready for Google', subEl: 'SEO από την πρώτη μέρα', subEn: 'SEO from day one' },
+  { el: 'Ελληνικά & Αγγλικά', en: 'Greek & English', subEl: 'Δίγλωσση από την αρχή', subEn: 'Bilingual from the start' },
+  { el: 'Δείγμα σε 5–\u206010\u00A0ημέρες', en: 'Draft in 5–\u206010\u00A0days', subEl: 'Χωρίς προκαταβολή', subEn: 'No deposit' },
+];
+
+const HOSTING_LIST = [
+  { el: 'Φιλοξενία σε παγκόσμιο δίκτυο (CDN)', en: 'Hosting on a global network (CDN)' },
+  { el: 'Πιστοποιητικό ασφαλείας SSL', en: 'SSL security certificate' },
+  { el: 'Αυτόματα backups', en: 'Automatic backups' },
+  { el: 'Τακτικός έλεγχος ότι η σελίδα λειτουργεί σωστά', en: 'Regular checks that the site works properly' },
+  { el: 'Τεχνική υποστήριξη', en: 'Technical support' },
+  { el: 'Απεριόριστες αλλαγές μέχρι τη δημοσίευση', en: 'Unlimited changes until the site is published' },
+];
+
+const GROWTH_LIST = [
+  { el: '1 άρθρο κάθε μήνα, γραμμένο για το Google (SEO)', en: '1 article every month, written for Google (SEO)' },
+  { el: 'Ενότητα άρθρων στη σελίδα σας, χωρίς επιπλέον χρέωση', en: 'An articles section on your site, at no extra charge' },
+  { el: 'Εγκατάσταση Google Analytics', en: 'Google Analytics setup' },
+  { el: 'Παρακολούθηση επισκεψιμότητας', en: 'Traffic monitoring' },
+  { el: 'Μέτρηση των κλικ στο τηλέφωνο και των φορμών', en: 'Tracking of phone-button taps and form submissions' },
+  { el: 'Μηνιαία αναφορά με προτάσεις βελτίωσης', en: 'Monthly report with improvement suggestions' },
+  { el: 'Προτεραιότητα στις αλλαγές', en: 'Priority on change requests' },
+];
+
 export default function KataskeviPricing() {
   const { lang } = useLangStore();
   const [billingAnnual, setBillingAnnual] = useState(true);
@@ -20,112 +50,200 @@ export default function KataskeviPricing() {
     <section className="pb-20">
       <div className="max-w-6xl mx-auto px-6">
 
-        {/* ─── HOSTING PRICING TOGGLE ─── */}
-        <ScrollReveal delay={60} direction="scale" className="mt-4">
-          <div className="text-center mb-10">
-            <span className="section-label">{lang === 'el' ? 'Φιλοξενία (Hosting)' : 'Hosting'}</span>
+        {/* ─── WHAT EVERY WEBSITE COMES WITH (21 Sept 2026) ─── */}
+        <ScrollReveal delay={40} direction="fade" className="mt-4">
+          <div className="text-center mb-8">
+            <span className="section-label">{lang === 'el' ? 'Σε κάθε ιστοσελίδα' : 'In every website'}</span>
+            <h2 className="text-3xl md:text-4xl font-black font-display text-white tracking-tight">
+              {lang === 'el' ? 'Τι παίρνετε, ξεκάθαρα' : 'What you get, clearly'}
+            </h2>
+          </div>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {GET_LIST.map((g) => (
+              <li
+                key={g.en}
+                className="get-tile glass-panel rounded-2xl p-5 text-center flex flex-col items-center sm:last:col-span-2 lg:last:col-span-1"
+              >
+                <span className="w-10 h-10 rounded-xl bg-electric-cyan/10 border border-electric-cyan/30 flex items-center justify-center mb-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span className="text-white font-bold text-sm leading-snug mb-1">{lang === 'el' ? g.el : g.en}</span>
+                <span className="text-gray-400 text-xs leading-snug">{lang === 'el' ? g.subEl : g.subEn}</span>
+              </li>
+            ))}
+          </ul>
+        </ScrollReveal>
+
+        {/* ─── PACKAGES: HOSTING (annual / monthly) + GROWTH ─── */}
+        <ScrollReveal delay={60} direction="scale" className="mt-20">
+          <div className="text-center mb-12">
+            <span className="section-label">{lang === 'el' ? 'Πακέτα' : 'Plans'}</span>
             <h2 className="text-3xl md:text-4xl font-black font-display mb-3 text-white tracking-tight">
               {lang === 'el' ? 'Τιμολόγηση Φιλοξενίας' : 'Hosting Pricing'}
             </h2>
             <p className="text-gray-500 text-base max-w-xl mx-auto">
-              {lang === 'el' ? 'Επιλέξτε τον τρόπο χρέωσης που σας βολεύει.' : 'Choose the billing cycle that suits you best.'}
+              {lang === 'el'
+                ? 'Δύο πακέτα. Η κατασκευή της ιστοσελίδας είναι δωρεάν και στα δύο.'
+                : 'Two plans. The website build is free in both.'}
             </p>
-
-            {/* Toggle */}
-            <div className="inline-flex items-center gap-2 mt-6 p-1.5 rounded-full bg-white/5 border border-white/12">
-              <button
-                onClick={() => setBillingAnnual(true)}
-                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${billingAnnual ? 'bg-electric-cyan text-[#050a0e] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
-              >
-                {lang === 'el' ? 'Ετήσια' : 'Annual'}
-              </button>
-              <button
-                onClick={() => setBillingAnnual(false)}
-                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${!billingAnnual ? 'bg-electric-cyan text-[#050a0e] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
-              >
-                {lang === 'el' ? 'Μηνιαία' : 'Monthly'}
-              </button>
-            </div>
           </div>
 
-          {/* Single card — swaps on toggle */}
-          <div className="max-w-md mx-auto">
-            {billingAnnual ? (
-              /* Annual card */
-              <div key="annual" className="pricing-swap-in pricing-featured glass-panel rounded-2xl p-8 border-2 border-electric-cyan/60 relative shadow-[0_0_50px_rgba(71,200,245,0.18)]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-6 max-w-5xl mx-auto items-stretch">
+
+            {/* ── Hosting card — price swaps on the toggle ── */}
+            <div
+              key={billingAnnual ? 'annual' : 'monthly'}
+              className="pricing-swap-in pricing-featured glass-panel rounded-2xl p-8 border-2 border-electric-cyan/60 relative shadow-[0_0_50px_rgba(71,200,245,0.18)] flex flex-col"
+            >
+              {billingAnnual && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full bg-electric-cyan text-[#050a0e] text-[0.6rem] font-black tracking-[0.2em] uppercase shadow-[0_0_20px_rgba(71,200,245,0.5)] whitespace-nowrap">
                   {lang === 'el' ? 'ΚΑΛΥΤΕΡΗ ΤΙΜΗ' : 'BEST VALUE'}
                 </div>
-                <div className="text-electric-cyan text-xs font-black uppercase tracking-widest mb-4 mt-1">
-                  {lang === 'el' ? 'Ετήσια Χρέωση' : 'Annual Billing'}
+              )}
+              <div className="flex items-center justify-between gap-3 mb-4 mt-1 min-h-[38px]">
+                <div className="text-electric-cyan text-xs font-black uppercase tracking-widest">
+                  {lang === 'el' ? 'Φιλοξενία' : 'Hosting'}
                 </div>
-                <div className="flex items-end gap-2 mb-0.5">
-                  <span className="text-5xl font-black text-white">10.83€</span>
-                  <span className="text-gray-500 mb-1.5 text-sm">{lang === 'el' ? '/μήνα' : '/month'}</span>
+                {/* Toggle */}
+                <div className="inline-flex items-center gap-1 p-1 rounded-full bg-white/5 border border-white/12" role="group" aria-label={lang === 'el' ? 'Τρόπος χρέωσης' : 'Billing cycle'}>
+                  <button
+                    type="button"
+                    onClick={() => setBillingAnnual(true)}
+                    aria-pressed={billingAnnual}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${billingAnnual ? 'bg-electric-cyan text-[#050a0e] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
+                  >
+                    {lang === 'el' ? 'Ετήσια' : 'Annual'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setBillingAnnual(false)}
+                    aria-pressed={!billingAnnual}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${!billingAnnual ? 'bg-electric-cyan text-[#050a0e] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
+                  >
+                    {lang === 'el' ? 'Μηνιαία' : 'Monthly'}
+                  </button>
                 </div>
-                <p className="text-gray-500 text-xs mb-1">{lang === 'el' ? '(+ΦΠΑ)' : '(+VAT)'}</p>
-                <p className="text-gray-500 text-xs leading-relaxed mb-5">
-                  {lang === 'el'
+              </div>
+              <div className="flex items-end gap-2 mb-0.5">
+                <span className="text-5xl font-black text-white">{billingAnnual ? '10.83€' : '15€'}</span>
+                <span className="text-gray-500 mb-1.5 text-sm">{lang === 'el' ? '/μήνα' : '/month'}</span>
+              </div>
+              <p className="text-gray-500 text-xs mb-1">{lang === 'el' ? '(+ΦΠΑ)' : '(+VAT)'}</p>
+              <p className="text-gray-500 text-xs leading-relaxed mb-5 min-h-[2.6em]">
+                {billingAnnual
+                  ? (lang === 'el'
                     ? 'Τιμολογείται ως 130€/χρόνο, με την παράδοση του πρώτου δείγματος της σελίδας σας.'
-                    : 'Billed as €130/year, upon delivery of the first draft of your website.'}
-                </p>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 bg-electric-cyan/8 border border-electric-cyan/25 rounded-xl px-4 py-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-                    <span className="text-electric-cyan font-bold text-sm">
-                      {lang === 'el' ? 'Domain name δωρεάν — περιλαμβάνεται' : 'Domain name free — included'}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span className="text-gray-300 text-sm font-semibold">
-                      {lang === 'el' ? 'Εξοικονομείτε 50€ τον χρόνο' : 'Save €50 per year'}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                    <span className="text-gray-400 text-sm">
-                      {lang === 'el' ? 'Ελάχιστη δέσμευση 1 έτος' : 'Minimum commitment 1 year'}
-                    </span>
-                  </div>
+                    : 'Billed as €130/year, upon delivery of the first draft of your website.')
+                  : (lang === 'el' ? 'Χρέωση μία φορά τον μήνα' : 'Billed once per month')}
+              </p>
+
+              <div className="flex items-center gap-3 bg-electric-cyan/8 border border-electric-cyan/25 rounded-xl px-4 py-3 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                <span className="text-electric-cyan font-bold text-sm">
+                  {lang === 'el' ? 'Domain name δωρεάν — περιλαμβάνεται' : 'Domain name free — included'}
+                </span>
+              </div>
+              <ul className="space-y-2.5 mb-6">
+                {HOSTING_LIST.map((r) => (
+                  <li key={r.en} className="flex items-start gap-3 text-sm text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>{lang === 'el' ? r.el : r.en}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-auto space-y-3">
+                <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span className="text-gray-300 text-sm font-semibold">
+                    {billingAnnual
+                      ? (lang === 'el' ? 'Εξοικονομείτε 50€ τον χρόνο' : 'Save €50 per year')
+                      : (lang === 'el' ? '180€/χρόνο με μηνιαία πληρωμή' : '€180/year with monthly payments')}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                  <span className="text-gray-400 text-sm">
+                    {billingAnnual
+                      ? (lang === 'el' ? 'Ελάχιστη δέσμευση 1 έτος' : 'Minimum commitment 1 year')
+                      : (lang === 'el' ? 'Ελάχιστη δέσμευση 12 μήνες' : 'Minimum 12-month commitment')}
+                  </span>
                 </div>
               </div>
-            ) : (
-              /* Monthly card */
-              <div key="monthly" className="pricing-swap-in glass-panel rounded-2xl p-8 border-2 border-electric-cyan/60 relative shadow-[0_0_50px_rgba(71,200,245,0.18)]">
-                <div className="text-gray-300 text-xs font-black uppercase tracking-widest mb-4">
-                  {lang === 'el' ? 'Μηνιαία Χρέωση' : 'Monthly Billing'}
-                </div>
-                <div className="flex items-end gap-2 mb-0.5">
-                  <span className="text-5xl font-black text-white">15€</span>
-                  <span className="text-gray-500 mb-1.5 text-sm">{lang === 'el' ? '/μήνα' : '/month'}</span>
-                </div>
-                <p className="text-gray-500 text-xs mb-1">{lang === 'el' ? '(+ΦΠΑ)' : '(+VAT)'}</p>
-                <p className="text-gray-400 text-sm mb-5">
-                  {lang === 'el' ? 'Χρέωση μία φορά τον μήνα' : 'Billed once per month'}
-                </p>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 bg-electric-cyan/8 border border-electric-cyan/25 rounded-xl px-4 py-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-                    <span className="text-electric-cyan font-bold text-sm">
-                      {lang === 'el' ? 'Domain name δωρεάν — περιλαμβάνεται' : 'Domain name free — included'}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span className="text-gray-300 text-sm font-semibold">
-                      {lang === 'el' ? '180€/χρόνο με μηνιαία πληρωμή' : '€180/year with monthly payments'}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                    <span className="text-gray-400 text-sm">
-                      {lang === 'el' ? 'Ελάχιστη δέσμευση 12 μήνες' : 'Minimum 12-month commitment'}
-                    </span>
-                  </div>
+            </div>
+
+            {/* ── Growth card — 39.58€/month paid yearly (475€) or 49€/month ── */}
+            <div key={billingAnnual ? 'g-annual' : 'g-monthly'} className="pricing-swap-in growth-card glass-panel rounded-2xl p-8 border-2 border-white/15 relative flex flex-col">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full bg-white text-[#050a0e] text-[0.6rem] font-black tracking-[0.2em] uppercase whitespace-nowrap">
+                {lang === 'el' ? 'ΝΕΟ' : 'NEW'}
+              </div>
+              <div className="flex items-center justify-between gap-3 mb-4 mt-1 min-h-[38px]">
+                <div className="text-white text-xs font-black uppercase tracking-widest">Growth</div>
+                {/* Toggle — same state as the hosting card, so both cards always show the same billing cycle */}
+                <div className="inline-flex items-center gap-1 p-1 rounded-full bg-white/5 border border-white/12" role="group" aria-label={lang === 'el' ? 'Τρόπος χρέωσης Growth' : 'Growth billing cycle'}>
+                  <button
+                    type="button"
+                    onClick={() => setBillingAnnual(true)}
+                    aria-pressed={billingAnnual}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${billingAnnual ? 'bg-white text-[#050a0e]' : 'text-gray-400 hover:text-white'}`}
+                  >
+                    {lang === 'el' ? 'Ετήσια' : 'Annual'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setBillingAnnual(false)}
+                    aria-pressed={!billingAnnual}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${!billingAnnual ? 'bg-white text-[#050a0e]' : 'text-gray-400 hover:text-white'}`}
+                  >
+                    {lang === 'el' ? 'Μηνιαία' : 'Monthly'}
+                  </button>
                 </div>
               </div>
-            )}
+              <div className="flex items-end gap-2 mb-0.5">
+                <span className="text-5xl font-black text-white">{billingAnnual ? '39.58€' : '49€'}</span>
+                <span className="text-gray-500 mb-1.5 text-sm">{lang === 'el' ? '/μήνα' : '/month'}</span>
+              </div>
+              <p className="text-gray-500 text-xs mb-1">{lang === 'el' ? '(+ΦΠΑ)' : '(+VAT)'}</p>
+              <p className="text-gray-500 text-xs leading-relaxed mb-5 min-h-[2.6em]">
+                {billingAnnual
+                  ? (lang === 'el'
+                    ? 'Τιμολογείται ως 475€/χρόνο, με προπληρωμή για όλο το έτος.'
+                    : 'Billed as €475/year, paid upfront for the whole year.')
+                  : (lang === 'el' ? 'Χρέωση μία φορά τον μήνα' : 'Billed once per month')}
+              </p>
+
+              <div className="flex items-center gap-3 bg-electric-cyan/8 border border-electric-cyan/25 rounded-xl px-4 py-3 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                <span className="text-electric-cyan font-bold text-sm">
+                  {lang === 'el' ? 'Όλα όσα περιλαμβάνει η Φιλοξενία' : 'Everything in Hosting'}
+                </span>
+              </div>
+              <ul className="space-y-2.5 mb-6">
+                {GROWTH_LIST.map((r) => (
+                  <li key={r.en} className="flex items-start gap-3 text-sm text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>{lang === 'el' ? r.el : r.en}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-auto space-y-3">
+                <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span className="text-gray-300 text-sm font-semibold">
+                    {billingAnnual
+                      ? (lang === 'el' ? 'Εξοικονομείτε 113€ τον χρόνο' : 'Save €113 per year')
+                      : (lang === 'el' ? '588€/χρόνο με μηνιαία πληρωμή' : '€588/year with monthly payments')}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-gray-400 shrink-0" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                  <span className="text-gray-400 text-sm">
+                    {lang === 'el' ? 'Και για ιστοσελίδες που έχουμε ήδη φτιάξει' : 'Also for websites we have already built'}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <p className="text-center text-gray-600 text-xs mt-5">
