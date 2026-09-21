@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { useLangStore } from '@/store/langStore';
 import ScrollReveal from '@/components/ScrollReveal';
 import TiltCard from '@/components/TiltCard';
+import GrowthWhy from '@/components/service/GrowthWhy';
 
 // 21 Sept 2026 — the clear "what you get" list and the two plan lists.
 // Wording rule: only what we really do (no "server updates", no call
@@ -33,10 +34,11 @@ const HOSTING_LIST = [
 ];
 
 const GROWTH_LIST = [
-  { el: '1 άρθρο κάθε μήνα, γραμμένο για το Google (SEO)', en: '1 article every month, written for Google (SEO)' },
+  { el: '3 άρθρα κάθε μήνα, γραμμένα για το Google (SEO)', en: '3 articles every month, written for Google (SEO)' },
   { el: 'Ενότητα άρθρων στη σελίδα σας, χωρίς επιπλέον χρέωση', en: 'An articles section on your site, at no extra charge' },
-  { el: 'Εγκατάσταση Google Analytics', en: 'Google Analytics setup' },
-  { el: 'Παρακολούθηση επισκεψιμότητας', en: 'Traffic monitoring' },
+  { el: '1 αλλαγή στη σελίδα κάθε μήνα, χωρίς χρέωση (αξίας 50€)', en: '1 change on your site every month, free of charge (worth €50)' },
+  { el: 'Google Search Console: με ποιες αναζητήσεις σας βρίσκουν και σε ποια θέση', en: 'Google Search Console: which searches find you, and in what position' },
+  { el: 'Google Analytics και παρακολούθηση επισκεψιμότητας', en: 'Google Analytics and traffic monitoring' },
   { el: 'Μέτρηση των κλικ στο τηλέφωνο και των φορμών', en: 'Tracking of phone-button taps and form submissions' },
   { el: 'Μηνιαία αναφορά με προτάσεις βελτίωσης', en: 'Monthly report with improvement suggestions' },
   { el: 'Προτεραιότητα στις αλλαγές', en: 'Priority on change requests' },
@@ -218,7 +220,7 @@ export default function KataskeviPricing() {
                   {lang === 'el' ? 'Όλα όσα περιλαμβάνει η Φιλοξενία' : 'Everything in Hosting'}
                 </span>
               </div>
-              <ul className="space-y-2.5 mb-6">
+              <ul className="space-y-2.5 mb-4">
                 {GROWTH_LIST.map((r) => (
                   <li key={r.en} className="flex items-start gap-3 text-sm text-gray-300">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
@@ -226,6 +228,8 @@ export default function KataskeviPricing() {
                   </li>
                 ))}
               </ul>
+
+              <GrowthWhy lang={lang} billingAnnual={billingAnnual} />
 
               <div className="mt-auto space-y-3">
                 <div className="flex items-center gap-3 bg-white/4 border border-white/8 rounded-xl px-4 py-3">

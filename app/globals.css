@@ -684,3 +684,24 @@
     display: none !important;
   }
 }
+
+/* ─── «Γιατί όλα αυτά;» — Growth pop-up (21 Sept 2026) · transform/opacity only ─── */
+.why-backdrop { background: rgba(3, 6, 10, 0.82); animation: backdropIn 0.25s ease both; }
+.why-panel { max-height: calc(100dvh - 24px); animation: whySheetIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; overflow: hidden; }
+@media (min-width: 640px) { .why-panel { max-height: calc(100dvh - 40px); animation-name: modalIn; } }
+.why-body { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.why-glow { position: absolute; inset: -40% -20% auto -20%; height: 70%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(71, 200, 245, 0.16), rgba(71, 200, 245, 0) 70%); animation: whyGlow 7s ease-in-out infinite alternate; }
+.why-in { opacity: 0; animation: whyIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms) both; }
+.why-bar { width: 100%; transform-origin: left center; transform: scaleX(0); animation: whyBar 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms) forwards; }
+.why-dot::after { content: ''; position: absolute; inset: -1px; border-radius: 9999px; border: 1px solid rgba(71, 200, 245, 0.6); animation: whyPing 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+@keyframes whySheetIn { from { opacity: 0; transform: translateY(60px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes whyIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes whyBar { from { transform: scaleX(0); } to { transform: scaleX(var(--w, 1)); } }
+@keyframes whyGlow { from { transform: translateX(-6%) scale(1); opacity: 0.7; } to { transform: translateX(6%) scale(1.08); opacity: 1; } }
+@keyframes whyPing { 0% { transform: scale(1); opacity: 0.9; } 70%, 100% { transform: scale(1.9); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .why-backdrop, .why-panel, .why-glow, .why-dot::after { animation: none; }
+  .why-in { animation: none; opacity: 1; }
+  .why-bar { animation: none; transform: scaleX(var(--w, 1)); }
+}
