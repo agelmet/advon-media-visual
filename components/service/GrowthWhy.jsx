@@ -36,8 +36,8 @@ const REASONS = [
     icon: <><path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"/></>,
     tEl: 'Η σελίδα σας μένει πάντα ενημερωμένη',
     tEn: 'Your site is always up to date',
-    dEl: 'Νέα υπηρεσία, νέο ωράριο, νέα φωτογραφία: μία αλλαγή κάθε μήνα περιλαμβάνεται, χωρίς τα 50€ που κοστίζει κανονικά κάθε αίτημα.',
-    dEn: 'A new service, new opening hours, a new photo: one change every month is included, without the €50 each request normally costs.',
+    dEl: 'Νέα υπηρεσία, νέο ωράριο, νέες φωτογραφίες, νέα κείμενα: κάθε μήνα μας στέλνετε σε ένα μήνυμα όλες τις αλλαγές που θέλετε και τις κάνουμε, χωρίς τα 50€ που κοστίζει κανονικά κάθε αίτημα αλλαγών.',
+    dEn: 'A new service, new opening hours, new photos, new texts: every month you send us all the changes you want in one message and we make them, without the €50 a change request normally costs.',
   },
 ];
 
@@ -79,7 +79,7 @@ export default function GrowthWhy({ lang, billingAnnual }) {
   const COMPARE = [
     { el: 'Μηνιαία υπηρεσία SEO από εταιρεία', en: 'Monthly SEO service from an agency', vEl: '150–900€ / μήνα', vEn: '€150–900 / month', w: 1 },
     { el: '3 άρθρα από επαγγελματία κειμενογράφο', en: '3 articles from a professional copywriter', vEl: '≈ 100€ / μήνα', vEn: '≈ €100 / month', w: 0.34 },
-    { el: '1 αλλαγή στην ιστοσελίδα', en: '1 change on the website', vEl: '50€', vEn: '€50', w: 0.2 },
+    { el: '1 αίτημα αλλαγών στην ιστοσελίδα', en: '1 change request on the website', vEl: '50€', vEn: '€50', w: 0.2 },
   ];
 
   return (
@@ -184,8 +184,8 @@ export default function GrowthWhy({ lang, billingAnnual }) {
                 </ul>
                 <p className="text-gray-500 text-xs mt-4 leading-relaxed">
                   {el
-                    ? 'Ενδεικτικές τιμές της ελληνικής αγοράς, Σεπτέμβριος 2026. Όλες οι τιμές χωρίς ΦΠΑ.'
-                    : 'Indicative prices in the Greek market, September 2026. All prices exclude VAT.'}
+                    ? 'Ενδεικτικές τιμές της ελληνικής αγοράς. Όλες οι τιμές χωρίς ΦΠΑ.'
+                    : 'Indicative prices in the Greek market. All prices exclude VAT.'}
                 </p>
               </div>
 
@@ -193,8 +193,8 @@ export default function GrowthWhy({ lang, billingAnnual }) {
                 <h4 className="text-white font-bold text-base mb-2">{el ? 'Πώς γίνεται σε αυτή την τιμή;' : 'How is this price possible?'}</h4>
                 <p className="text-gray-400 text-sm leading-relaxed">
                   {el
-                    ? 'Την ιστοσελίδα σας την έχουμε φτιάξει εμείς, άρα τη γνωρίζουμε ήδη και δεν υπάρχει κόστος εγκατάστασης. Και δουλεύουμε με δικά μας εργαλεία αυτοματισμού, που μας επιτρέπουν να κάνουμε γρήγορα δουλειά που αλλού θέλει μέρες.'
-                    : 'We built your website ourselves, so we already know it and there is no setup cost. And we work with our own automation tools, which let us do quickly what takes days elsewhere.'}
+                    ? 'Ξέρουμε ότι σήμερα όλα έχουν ακριβύνει και ότι για μια μικρή επιχείρηση ή έναν επαγγελματία κάθε ευρώ μετράει. Θέλουμε να βοηθήσουμε όσους δεν έχουν τον προϋπολογισμό μιας μεγάλης εταιρείας να έχουν κι αυτοί μια ιστοσελίδα που δουλεύει για αυτούς, γι\' αυτό κρατάμε την τιμή χαμηλή. Και επειδή την ιστοσελίδα σας την έχουμε φτιάξει εμείς, τη γνωρίζουμε ήδη.'
+                    : 'We know that everything has become more expensive and that for a small business or a professional every euro counts. We want to help people without a big company\'s budget to also have a website that works for them, so we keep the price low. And because we built your website ourselves, we already know it.'}
                 </p>
               </div>
 

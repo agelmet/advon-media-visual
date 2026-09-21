@@ -36,7 +36,7 @@ const HOSTING_LIST = [
 const GROWTH_LIST = [
   { el: '3 άρθρα κάθε μήνα, γραμμένα για το Google (SEO)', en: '3 articles every month, written for Google (SEO)' },
   { el: 'Ενότητα άρθρων στη σελίδα σας, χωρίς επιπλέον χρέωση', en: 'An articles section on your site, at no extra charge' },
-  { el: '1 αλλαγή στη σελίδα κάθε μήνα, χωρίς χρέωση (αξίας 50€)', en: '1 change on your site every month, free of charge (worth €50)' },
+  { el: '1 αίτημα αλλαγών κάθε μήνα, χωρίς χρέωση (αξίας 50€): όλες οι αλλαγές που θέλετε, σε ένα μήνυμα', en: '1 change request every month, free of charge (worth €50): every change you want, in one message' },
   { el: 'Google Search Console: με ποιες αναζητήσεις σας βρίσκουν και σε ποια θέση', en: 'Google Search Console: which searches find you, and in what position' },
   { el: 'Google Analytics και παρακολούθηση επισκεψιμότητας', en: 'Google Analytics and traffic monitoring' },
   { el: 'Μέτρηση των κλικ στο τηλέφωνο και των φορμών', en: 'Tracking of phone-button taps and form submissions' },
