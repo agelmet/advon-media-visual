@@ -320,6 +320,13 @@ body[data-view="calendar"] .stat-pill.meet-pill{display:flex; flex-basis:150px; 
 .card .c-prio.low{background:var(--green-soft); color:var(--deep);}
 .card.pr-high{box-shadow:0 0 0 1.5px var(--red), var(--shadow);}
 .card.pr-high:hover{box-shadow:0 0 0 1.5px var(--red), 0 6px 20px -6px var(--red);}
+.card.is-paid{background:linear-gradient(140deg,#D7F7E6 0%,#BDEFD4 100%); border-color:#8FDDB5; border-left-color:#0B9E5C; --c:#0B9E5C;}
+.card.is-paid .c-name{color:#064D2C;}
+.card.is-paid .chip{background:rgba(255,255,255,.6);}
+.card.is-paid .chip.money{background:#0B9E5C; color:#fff;}
+body.dark .card.is-paid{background:linear-gradient(140deg,rgba(14,198,115,.30),rgba(11,158,92,.20)); border-color:rgba(14,198,115,.45);}
+body.dark .card.is-paid .c-name{color:#B9F5D5;}
+body.dark .card.is-paid .chip{background:rgba(0,0,0,.18);}
 .card .c-added{font-family:'Inter'; font-weight:600; font-size:10px; color:var(--muted); margin-left:6px; opacity:.75; white-space:nowrap;}
 .chip.contact{cursor:pointer; text-decoration:none; padding:3px 6px;}
 .chip.contact:hover{background:var(--blue-soft);}
@@ -448,6 +455,13 @@ body.dark .ycard .m-earned b{color:#3BE38F;}
 .fin-row .fr-amt.cost{color:var(--coral);} .fin-row .fr-amt.pos{color:var(--deep);} .fin-row .fr-amt.neg{color:var(--coral);}
 .fin-row.tot{border-top:2px solid var(--line); border-bottom:none; margin-top:4px; padding-top:12px;}
 .fin-net{border-radius:14px; padding:15px 16px; background:var(--green-soft); border:1px solid rgba(14,198,115,.28);}
+.fin-wealth{margin-top:10px; border-radius:14px; padding:14px 16px; background:linear-gradient(135deg,#0B2A1C,#0E4A2F); color:#fff; cursor:pointer; box-shadow:0 12px 26px -16px rgba(11,158,92,.7); transition:transform .15s;}
+.fin-wealth:hover{transform:translateY(-1px);}
+.fin-wealth .k{font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.7); display:flex; align-items:center; gap:6px;}
+.fin-wealth .k .ic{width:14px; height:14px;}
+.fin-wealth .v{font-family:'Sora'; font-weight:800; font-size:30px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; margin-top:4px; color:#6FF0AE;}
+.fin-wealth .sub{font-size:11.5px; color:rgba(255,255,255,.72); font-weight:600; margin-top:4px; line-height:1.45;}
+.fin-wealth .sub b{color:#6FF0AE;} .fin-wealth .sub b.neg{color:#FFB39F;}
 .fin-net.neg{background:var(--coral-soft); border-color:rgba(255,107,87,.3);}
 .fin-net .k{font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
 .fin-net .v{font-family:'Sora'; font-weight:800; font-size:30px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; color:var(--deep); margin-top:4px;}
@@ -598,6 +612,18 @@ body.dark .cb-item .w-wait{background:rgba(255,255,255,.08);}
 .cb-acts button .ic{width:1em; height:1em;}
 .cb-acts .a-book{background:var(--green); border-color:var(--green); color:#fff;}
 .cb-acts .a-no{background:var(--red-soft); border-color:transparent; color:#C21F33;}
+.cb-acts .a-na{background:var(--yellow-soft); border-color:transparent; color:#8A6D00;}
+.cb-item .w-wait.na{background:var(--yellow-soft); color:#8A6D00;}
+.cb-item .w-wait.na.hot{background:var(--red-soft); color:#C21F33;}
+.cb-pr{display:inline-flex; align-items:center; gap:4px; font-size:9px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; padding:2px 7px; border-radius:6px; margin-right:7px; vertical-align:1px; border:1px dashed var(--line); background:transparent; color:var(--muted); cursor:pointer; font-family:inherit;}
+.cb-pr i{width:6px; height:6px; border-radius:99px; background:currentColor; display:block;}
+.cb-acts .a-pr{color:var(--muted);}
+@media (max-width:900px){ .cb-acts{flex-wrap:wrap;} }
+.cb-pr.high{background:var(--red-soft); color:var(--red); border:0;}
+.cb-pr.medium{background:var(--yellow-soft); color:#8A6D00; border:0;}
+.cb-pr.low{background:var(--green-soft); color:var(--deep); border:0;}
+.cb-item.pr-high{box-shadow:inset 3px 0 0 var(--red);}
+.cb-item.pr-medium{box-shadow:inset 3px 0 0 var(--yellow);}
 .cb-acts .a-x{padding:4px 6px; color:var(--muted);}
 .cb-acts .a-x:hover{color:var(--ink);}
 .cb-chips{display:flex; gap:5px; flex-wrap:wrap; align-items:center; padding:10px 14px; border-bottom:1px solid var(--line);}
@@ -1087,6 +1113,15 @@ body.dark .ql-card input:focus{background:#fff;}
 .stats-sec-head .ico{width:34px; height:34px; border-radius:11px; display:grid; place-items:center; flex-shrink:0; background:var(--blue-soft); color:var(--blue);}
 .stats-sec-head h3{font-size:15.5px; font-weight:800; letter-spacing:-.01em;}
 .stats-sec-head p{font-size:11.5px; color:var(--muted); font-weight:500;}
+.stats-go{margin-left:auto; display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:800; border-radius:99px; padding:7px 14px; background:var(--green); color:#fff; border:0; cursor:pointer; box-shadow:0 6px 16px -8px var(--green); animation:statsGo 2.4s ease-in-out infinite;}
+.stats-go .ic{width:14px; height:14px;}
+.stats-go:hover{filter:brightness(1.06); transform:translateY(-1px);}
+.stats-go.re{background:var(--bg); color:var(--muted); border:1px solid var(--line); box-shadow:none; animation:none; font-weight:700; padding:4px 11px; font-size:11px;}
+.stats-go.re:hover{color:var(--ink);}
+.stats-sec-head .tag + .stats-go{margin-left:6px;}
+.hg-note .stats-go{margin-left:6px; padding:4px 11px; font-size:11px; vertical-align:1px;}
+@keyframes statsGo{0%,100%{box-shadow:0 6px 16px -8px var(--green);}50%{box-shadow:0 0 0 5px rgba(14,198,115,.18), 0 6px 16px -8px var(--green);}}
+@media (prefers-reduced-motion:reduce){.stats-go{animation:none;}}
 .stats-sec-head .tag{margin-left:auto; font-size:11px; font-weight:700; color:var(--muted); background:var(--bg); border:1px solid var(--line); border-radius:99px; padding:4px 11px; font-variant-numeric:tabular-nums;}
 .ql-stat-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:14px; align-items:stretch;}
 @media(max-width:1120px){.ql-stat-grid{grid-template-columns:repeat(3,1fr);}}
@@ -1958,6 +1993,12 @@ body.dark .ch-sug{background:linear-gradient(135deg,#1E1A33,#15202F); border-col
 .ch-ready button{height:24px; padding:0 9px; border-radius:7px; background:#fff; color:var(--deep); font-size:11.5px; font-weight:800; border:1px solid rgba(11,158,92,.3);}
 .ch-ib.on{background:var(--green-soft); color:var(--deep);}
 .ch-ib.live{background:var(--ink); color:#fff;}
+.ch-ib.pay{background:var(--green-soft); color:var(--deep);}
+.ch-ib.pay.full{background:var(--green); color:#fff;}
+.ch-ib.pay:hover{filter:brightness(.97);} .ch-ib.pay.full:hover{background:var(--deep); color:#fff;}
+.ch-ib.paid{background:var(--green); color:#fff;}
+.ch-stage.paid{background:var(--green); color:#fff;}
+.ch-stage.part{background:var(--green-soft); color:var(--deep);}
 .ch-ib.live:hover{background:var(--brand); color:#fff;}
 .ch-nomail{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:800; color:#B85F00; background:var(--orange-soft); border-radius:999px; padding:2px 9px; cursor:pointer; border:0;}
 .chip.chat{background:var(--blue-soft); color:var(--brand); font-weight:700; cursor:pointer;}
@@ -3524,6 +3565,7 @@ function dropHandlers(el, stageId){
       if(stageId==='thinking'){ if(!cl.thinkAt) cl.thinkAt=Date.now(); thinkOpen=true; }
       else { cl.thinkAt=null; delete cl.thinkAck; }
       save(); renderAll(); toast(cl.name+' → '+stageById(stageId).name);
+      if(cl.chat){ try{ chSyncBoard(); }catch(err){} }
     }
   });
 }
@@ -3627,7 +3669,8 @@ function cardEl(c,st){
   el.className='card'; el.draggable=true;
   const cc=c.color||'';
   el.style.setProperty('--c', cc||st.c); el.style.setProperty('--cs', cc? tint(cc,.14) : st.cs);
-  if(c.fill) el.style.background=tint(cc||st.hex, getComputedStyle(document.body).getPropertyValue('--soft-shade')||.11);
+  if(c.stage==='paid') el.classList.add('is-paid');
+  else if(c.fill) el.style.background=tint(cc||st.hex, getComputedStyle(document.body).getPropertyValue('--soft-shade')||.11);
   const isLost=c.stage==='lost';
   const idx=FLOW.findIndex(s=>s.id===c.stage);
   const nextName= (!isLost && idx>=0 && idx<FLOW.length-1) ? FLOW[idx+1].name : null;
@@ -3913,6 +3956,7 @@ function renderYear(){
   renderYearStats();
 }
 /* Expenses + net profit live here — out of the banner, with room to breathe. */
+document.addEventListener('click',e=>{ if(e.target.closest('#finWealth')) editWealthBase(); });
 function renderYearFinance(yGenerated, yExp, yNet, rTotal, pots){
   const el=$('#yearFinance'); if(!el) return;
   pots=pots||{yPaid:0,subCollected:0,rPaid:0,ytd:0,toCollect:0,rCount:0};
@@ -3957,8 +4001,33 @@ function renderYearFinance(yGenerated, yExp, yNet, rTotal, pots){
           <div class="v">${fmtMoney2(Math.round(yNet))}</div>
           <div class="sub">generated − expenses${pots.rPaid?` · includes ${fmtMoney2(Math.round(pots.rPaid))} from renewals`:''}</div>
         </div>
+        ${(()=>{ const x=wealthNow(); if(!x) return ''; const g=Math.round(x.gained); return `<div class="fin-wealth" id="finWealth" title="Click to change the starting amount">
+          <div class="k">${IC.wallet} Total profit</div>
+          <div class="v">${fmtMoney2(Math.round(x.total))}</div>
+          <div class="sub">started at ${fmtMoney2(x.w.base)} on ${fmtDate(x.w.since)} · <b class="${g<0?'neg':''}">${g<0?'−':'+'}${fmtMoney2(Math.abs(g))}</b> since then · only money actually received, minus expenses</div>
+        </div>`; })()}
       </div>
     </div>`;
+}
+/* 22 Sept 2026 — «Total profit»: starts at €46,000 and grows the same way net profit does, but ONLY with money
+   actually received (new websites paid + deposits, renewals, monthly subscriptions) minus expenses.
+   anchor = that real profit on the day it started, so only what comes in after it moves the number. */
+function realProfitToDate(){
+  const cm=todayIso().slice(0,7); const yEnd=+cm.slice(0,4); let y0=yEnd;
+  const seeY=v=>{ const y=+String(v||'').slice(0,4); if(y>2000 && y<y0) y0=y; };
+  (state.clients||[]).forEach(c=>seeY(c.month));
+  (state.renewals||[]).forEach(r=>(r.history||[]).forEach(h=>seeY(h.at)));
+  (state.subs||[]).forEach(x=>Object.keys(x.paid||{}).forEach(seeY));
+  let sum=0;
+  for(let y=y0;y<=yEnd;y++) for(let m=1;m<=12;m++){ const k=y+'-'+pad(m); if(k>cm) break; sum+=earnedForMonth(k).total-expensesForMonth(k); }
+  return Math.round(sum*100)/100;
+}
+function wealthNow(){ ensureMeta(); const w=state.meta.wealth; if(!w) return null; return {w, total:(+w.base||0)+(realProfitToDate()-(+w.anchor||0)), gained:realProfitToDate()-(+w.anchor||0)}; }
+function editWealthBase(){
+  const x=wealthNow(); if(!x) return;
+  const v=prompt('Total profit — the starting amount (it was €'+(+x.w.base).toLocaleString('en-US')+' on '+fmtDate(x.w.since)+').\nEverything received since then keeps adding on top.\n\nStarting amount in €:', x.w.base);
+  if(v===null) return; const n=parseFloat(String(v).replace(/[€\s,]/g,'')); if(isNaN(n)){ toast('Write a number, e.g. 46000'); return; }
+  x.w.base=Math.round(n*100)/100; save(); renderAll(); toast('Starting amount saved');
 }
 /* The yearly call/revenue statistics — relocated here from Quick Log. */
 function renderYearStats(){
@@ -3995,7 +4064,22 @@ function logsForMonth(key){ return state.logs.filter(l=>(l.date||'').slice(0,7)=
 /* Statistics count from a start date only (default 15 Sept 2026 — the proper cold-calling
    restart). Older entries stay in the log for reference but never touch a number. */
 const STATS_SINCE_DEFAULT='2026-09-15';
-function statsSince(){ ensureMeta(); return /^\d{4}-\d{2}-\d{2}$/.test(state.meta.statsSince||'') ? state.meta.statsSince : STATS_SINCE_DEFAULT; }
+const STATS_PAUSED='9999-12-31';
+/* 22 Sept 2026: statistics stay at zero until Angelo presses «Start counting» — from that day on everything counts */
+function statsPaused(){ ensureMeta(); return !!state.meta.statsPaused; }
+function statsBtn(small){
+  if(statsPaused()) return `<button type="button" class="stats-go" data-stats-start title="Nothing is counted yet — press to start counting from today">${IC.phone} Start counting from today</button>`;
+  return `<button type="button" class="stats-go re${small?' sm':''}" data-stats-start title="Counting since ${fmtDate(statsSince())} — press to start again from today">↻ Restart from today</button>`;
+}
+function statsStartUI(){
+  const t=todayIso(), paused=statsPaused();
+  if(!confirm(paused ? 'Start counting your call statistics from today, '+fmtDate(t)+'?\n\nCold calls, booked, SMS, no\'s, conversion and working days all start from zero today. Nothing is deleted.'
+                     : 'Start the call statistics again from today, '+fmtDate(t)+'?\n\nEverything before today stops counting (nothing is deleted).')) return;
+  ensureMeta(); state.meta.statsPaused=false; state.meta.statsSince=t; state.meta.callStatsResetAt=new Date().toISOString();
+  save(); renderAll(); toast(paused?'Counting starts today — good luck with the calls!':'Statistics restarted — counting from today');
+}
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-stats-start]'); if(!b) return; e.preventDefault(); e.stopPropagation(); statsStartUI(); });
+function statsSince(){ ensureMeta(); if(state.meta.statsPaused) return STATS_PAUSED; return /^\d{4}-\d{2}-\d{2}$/.test(state.meta.statsSince||'') ? state.meta.statsSince : STATS_SINCE_DEFAULT; }
 const statLog = l => (l.date||'') >= statsSince();
 const statClient = c => ((c.day && /^\d{4}-\d{2}-\d{2}$/.test(c.day)) ? c.day : (c.month? c.month+'-01' : '')) >= statsSince();
 function dayStats(iso, raw){
@@ -4033,7 +4117,7 @@ function monthStatsHtml(m,key){
   <div class="stats-sec-head">
     <span class="ico">${IC.bars}</span>
     <div><h3>${fmtMonth(key)} — statistics</h3><p>${statsSinceLabel()||'How the month is going.'} · year totals on the Year tab.</p></div>
-    <span class="tag">${m.calls} cold calls · ${m.booked} booked</span>
+    ${statsPaused()?'':`<span class="tag">${m.calls} cold calls · ${m.booked} booked</span>`}${statsBtn(true)}
   </div>
   <div class="ql-stat-grid">
     <div class="qs-pill"><div class="k">${IC.phone} Cold calls</div><div class="v">${m.calls}</div><div class="sub">call volume · cold only</div></div>
@@ -4063,7 +4147,7 @@ function yearStatsHtml(y,year){
   <div class="stats-sec-head">
     <span class="ico">${IC.bars}</span>
     <div><h3>${year} — year totals</h3><p>${statsSinceLabel()||'Everything you logged this year, added up'}</p></div>
-    <span class="tag">${y.calls} cold calls · ${y.booked} booked</span>
+    ${statsPaused()?'':`<span class="tag">${y.calls} cold calls · ${y.booked} booked</span>`}${statsBtn(true)}
   </div>
   <div class="ql-stat-grid">
     <div class="qs-pill"><div class="k">${IC.phone} Cold calls</div><div class="v">${y.calls}</div><div class="sub">call volume · cold only</div></div>
@@ -4116,7 +4200,7 @@ function renderQuickLog(){
       <div class="daylog-head${isToday?' today':''}">
         <span class="dl-date">${fmtDate(iso)}</span>
         <span class="dl-dow">${dow}${isToday?' · today':''}</span>
-        ${counted?'':`<span class="dl-badge" title="Before the statistics restart on ${fmtDate(statsSince())} — kept for reference, not counted">${IC.ban} not counted</span>`}
+        ${counted?'':`<span class="dl-badge" title="${statsPaused()?'Statistics are paused — press «Start counting from today» to begin':'Before the statistics restart on '+fmtDate(statsSince())+' — kept for reference, not counted'}">${IC.ban} not counted</span>`}
         <div class="daylog-counts">
           <span class="dl-badge calls" title="Cold calls made">${IC.phone}${ds.calls} calls</span>
           <span class="dl-badge g" title="Booked">${ds.booked} booked</span>
@@ -4302,6 +4386,17 @@ function cbCounts(){
   return { warmLeft, warmDone, over, cur, later, schedDone, prio, now:prio+warmLeft+over+cur, called:warmDone+schedDone+prioDone, total:warm.length+sched.length+(state.prio||[]).length };
 }
 const cbWaitDays=t=>Math.max(0,Math.floor((Date.now()-(t||Date.now()))/864e5));
+/* 22 Sept 2026 — priority per callback (high / medium / low) and «No answer» with the days you tried */
+const CB_PR={high:['High',0],medium:['Medium',1],low:['Low',3]}; const CB_PR_NEXT={'':'high',high:'medium',medium:'low',low:''};
+const cbPrRank=x=>x&&CB_PR[x.pr]?CB_PR[x.pr][1]:2;
+const cbTriedToday=x=>Array.isArray(x.tries)&&x.tries[x.tries.length-1]===todayIso();
+function cbSort(arr, cmp){ return arr.sort((a,b)=>cbPrRank(a)-cbPrRank(b) || (cbTriedToday(a)?1:0)-(cbTriedToday(b)?1:0) || (cmp?cmp(a,b):0)); }
+function cbNoAnswer(item, listName){
+  if(!Array.isArray(item.tries)) item.tries=[];
+  item.tries.push(todayIso()); item.updated=Date.now();
+  save(); cbRefresh();
+  toastUndo(item.name+' → no answer · tried '+item.tries.length+(item.tries.length===1?' time':' times')+' — stays in the list', ()=>{ item.tries.pop(); save(); cbRefresh(); });
+}
 let cbDrag=null;
 function renderCbBanner(){
   const el=$('#cbBanner'); if(!el) return;
@@ -4342,12 +4437,17 @@ function cbItemEl(item, cls, listName){
   if(item.phone) meta.push(`<a class="w-phone" href="tel:${esc(item.phone)}">${IC.phone}${esc(item.phone)}</a>`);
   if(listName==='warm' && !item.done) meta.push(`<span class="w-wait${wait>=7?' hot':''}">${wait===0?'added today':wait===1?'waiting 1 day':'waiting '+wait+' days'}</span>`);
   if(listName==='sched' && !item.done && cls==='over') meta.push(`<span class="w-wait hot">was due ${item.month?fmtMonth(item.month):'—'}</span>`);
+  if(Array.isArray(item.tries) && item.tries.length){ const n=item.tries.length; meta.push(`<span class="w-wait na${n>=3?' hot':''}" title="Called, no answer">${IC.hourglass} no answer ${item.tries.map(fmtDay).join(', ')} · ${n} ${n===1?'try':'tries'}</span>`); }
   if(item.done && item.doneAt) meta.push(`<span class="w-wait">called ${fmtDay(isoDate(new Date(item.doneAt)))}</span>`);
+  const pr=CB_PR[item.pr]?item.pr:'';
+  if(pr) row.classList.add('pr-'+pr);
   row.innerHTML=`<button class="w-check" title="${item.done?'Not called yet — put it back':'Mark called'}">${item.done?IC.check:''}</button>
-    <div class="w-main"><div class="w-name">${esc(item.name)}</div>${meta.length?`<div class="w-meta">${meta.join('')}</div>`:''}</div>
+    <div class="w-main"><div class="w-name">${item.done||!pr?'':`<button class="cb-pr ${pr}" title="Priority: ${CB_PR[pr][0]} — click to change (High → Medium → Low → none)"><i></i>${CB_PR[pr][0]}</button>`}${esc(item.name)}</div>${meta.length?`<div class="w-meta">${meta.join('')}</div>`:''}</div>
     <div class="cb-acts">
       ${item.done?'':`<button class="a-book" title="They said yes — logs a Booked call for today and adds them to the Board">${IC.check}Booked</button>
       <button class="a-no" title="They said no — logs the no for today">${IC.x}No</button>
+      <button class="a-na" title="Didn't answer — keeps them in the list with today's date">${IC.hourglass}No answer</button>
+      ${pr?'':`<button class="a-pr" title="Give this call a priority (High → Medium → Low)">${IC.flag}Priority</button>`}
       ${listName==='sched'?`<button class="a-now" title="Call in the next days — move to Warm leads">${IC.fire}Now</button>`:`<button class="a-later" title="Not now — move to Scheduled callbacks for a later month">${IC.calendar}Later</button>`}`}
       <button class="a-x" title="Remove">${IC.x}</button>
     </div>`;
@@ -4355,17 +4455,19 @@ function cbItemEl(item, cls, listName){
   row.querySelector('.a-x').addEventListener('click',()=>{ state[listName]=state[listName].filter(x=>x.id!==item.id); save(); cbRefresh(); });
   const bk=row.querySelector('.a-book'); if(bk) bk.addEventListener('click',()=>cbOutcome(item, listName, 'g'));
   const no=row.querySelector('.a-no'); if(no) no.addEventListener('click',()=>cbOutcome(item, listName, 'r'));
+  const na=row.querySelector('.a-na'); if(na) na.addEventListener('click',()=>cbNoAnswer(item, listName));
+  row.querySelectorAll('.cb-pr,.a-pr').forEach(pb=>{ pb.addEventListener('mousedown',e=>e.stopPropagation()); pb.addEventListener('click',e=>{ e.stopPropagation(); const nx=CB_PR_NEXT[item.pr||'']; if(nx) item.pr=nx; else delete item.pr; item.updated=Date.now(); save(); cbRefresh(); toast(item.name+(nx?' · priority '+CB_PR[nx][0]:' · priority cleared')); }); });
   const lt=row.querySelector('.a-later'); if(lt) lt.addEventListener('click',()=>{
     const cm=cbMonthKey(); const [y,m]=cm.split('-').map(Number); const next=(m===12?(y+1)+'-01':y+'-'+pad(m+1));
     const v=prompt('Call '+item.name+' in which month? (YYYY-MM)', next); if(v===null) return;
     const mk=v.trim(); if(!/^\d{4}-\d{2}$/.test(mk)){ toast('Write the month like 2026-10'); return; }
     state[listName]=state[listName].filter(x=>x.id!==item.id);
-    state.sched.push({id:uid(), name:item.name, phone:item.phone||'', month:mk, note:item.note||'', done:false, created:Date.now()});
+    state.sched.push({id:uid(), name:item.name, phone:item.phone||'', month:mk, note:item.note||'', done:false, created:Date.now(), ...(item.pr?{pr:item.pr}:{}), ...(item.tries&&item.tries.length?{tries:item.tries.slice()}:{})});
     save(); cbRefresh(); toast(item.name+' → call in '+fmtMonth(mk));
   });
   const nw=row.querySelector('.a-now'); if(nw) nw.addEventListener('click',()=>{
     state[listName]=state[listName].filter(x=>x.id!==item.id);
-    state.warm.push({id:uid(), name:item.name, phone:item.phone||'', note:item.note||'', done:false, created:Date.now()});
+    state.warm.push({id:uid(), name:item.name, phone:item.phone||'', note:item.note||'', done:false, created:Date.now(), ...(item.pr?{pr:item.pr}:{}), ...(item.tries&&item.tries.length?{tries:item.tries.slice()}:{})});
     save(); cbRefresh(); toast(item.name+' → warm leads · call in the next days');
   });
   return row;
@@ -4384,7 +4486,7 @@ function cbCalledGroup(items, listName){
 function renderWarm(){
   const el=$('#warmList'); if(!el) return; el.innerHTML='';
   state.warm||=[];
-  const open=state.warm.filter(w=>!w.done).sort((a,b)=>(a.created||0)-(b.created||0));
+  const open=cbSort(state.warm.filter(w=>!w.done),(a,b)=>(a.created||0)-(b.created||0));
   const done=state.warm.filter(w=>w.done).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
   const hn=$('#warmHeadN'); if(hn) hn.innerHTML=`<b>${open.length}</b><small>left to call</small>`;
   if(!open.length && !done.length){ el.innerHTML='<div class="empty-note">No warm leads waiting. Nice and clean.</div>'; renderCbBanner(); return; }
@@ -4423,9 +4525,9 @@ function renderSched(){
   const done=state.sched.filter(s=>s.done).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
   const hn=$('#schedHeadN'); if(hn) hn.innerHTML=`<b>${open.length}</b><small>to call</small>`;
   if(!open.length && !done.length){ el.innerHTML='<div class="empty-note">Nothing scheduled. Add the "call me in October" people here.</div>'; renderCbBanner(); return; }
-  const over=open.filter(s=>s.month && s.month<cm).sort((a,b)=>String(a.month).localeCompare(String(b.month)));
-  const cur=open.filter(s=>s.month===cm).sort((a,b)=>(a.created||0)-(b.created||0));
-  const later=open.filter(s=>!s.month || s.month>cm);
+  const over=cbSort(open.filter(s=>s.month && s.month<cm),(a,b)=>String(a.month).localeCompare(String(b.month)));
+  const cur=cbSort(open.filter(s=>s.month===cm),(a,b)=>(a.created||0)-(b.created||0));
+  const later=cbSort(open.filter(s=>!s.month || s.month>cm),(a,b)=>(a.created||0)-(b.created||0));
   const grp=(cls,title,items)=>{ const g=document.createElement('div'); g.className='cb-group'; g.innerHTML=`<div class="cb-group-h ${cls}">${title} <span class="n">${items.length}</span></div>`; items.forEach(s=>g.appendChild(cbItemEl(s,cls,'sched'))); return g; };
   if(over.length) el.appendChild(grp('over', IC.flag+' Overdue — should have been called already', over));
   const curG=grp('cur', IC.calendar+' '+fmtMonth(cm)+' — due this month', cur);
@@ -4452,7 +4554,7 @@ $('#schedMonth').addEventListener('change',renderSchedChips);
 function ensurePrio(){ if(!Array.isArray(state.prio)) state.prio=[]; }
 function renderPrio(){
   const el=$('#prioList'); if(!el) return; ensurePrio(); el.innerHTML='';
-  const open=state.prio.filter(p=>!p.done), done=state.prio.filter(p=>p.done).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
+  const open=cbSort(state.prio.filter(p=>!p.done)), done=state.prio.filter(p=>p.done).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
   const hn=$('#prioHeadN'); if(hn) hn.innerHTML=`<b>${open.length}</b><small>to call</small>`;
   if(!open.length && !done.length){ el.innerHTML='<div class="empty-note">Nobody here yet. Drag a warm lead or a scheduled callback into this box — or type a name above — and it becomes your next call.</div>'; return; }
   if(open.length){
@@ -5498,7 +5600,7 @@ function renderHome(){
     <p>${today.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · here's your day at a glance</p>
     <div class="hero-groups">
       <div class="hg calls">
-        <div class="hg-title">${IC.phone} Calls <span class="hg-note">${statsSince()>todayI ? 'counting from '+fmtDay(statsSince()) : ''}</span></div>
+        <div class="hg-title">${IC.phone} Calls <span class="hg-note">${statsPaused() ? statsBtn() : statsSince()>todayI ? 'counting from '+fmtDay(statsSince()) : ''}</span></div>
         <div class="hero-stats">
           <div class="hs"><div class="k">Cold calls today</div><div class="v b">${todayCalls.calls}</div></div>
           <div class="hs"><div class="k">${monthName} cold calls</div><div class="v b">${mStats.calls}</div></div>
@@ -5945,6 +6047,7 @@ function wireAsap(el){
    Clients, renewals, subscriptions and money are never touched by this. */
 function ensureMeta(){ if(!state.meta||typeof state.meta!=='object') state.meta={}; }
 function statsSinceLabel(){
+  if(statsPaused()) return 'Paused — nothing is counted until you press «Start counting from today»';
   const since=statsSince();
   return (since>todayIso() ? 'Counting starts ' : 'Counting from ')+fmtDate(since)+' — anything before that day is not counted';
 }
@@ -5977,7 +6080,7 @@ function resetCallStatsUI(){
   if(v===null) return;
   const d=String(v).trim();
   if(!/^\d{4}-\d{2}-\d{2}$/.test(d) || isNaN(Date.parse(d+'T00:00'))){ toast('Enter a date like 2026-09-15'); return; }
-  ensureMeta(); state.meta.statsSince=d; state.meta.callStatsResetAt=new Date().toISOString();
+  ensureMeta(); state.meta.statsPaused=false; state.meta.statsSince=d; state.meta.callStatsResetAt=new Date().toISOString();
   save(); renderAll(); toast('Call statistics now count from '+fmtDate(d));
 }
 function restoreCallLogsUI(){
@@ -6179,6 +6282,7 @@ $('#mSave').addEventListener('click',()=>{
   }
   else state.clients.push({id:uid(), ...data, created:Date.now(), updated:Date.now()});
   save(); renderAll(); closeModal(); toast(autoPaid ? name+' paid in full → moved to Paid' : 'Saved');
+  try{ chSyncBoard(); renderChats(); }catch(err){}
 });
 $('#mLost').addEventListener('click',()=>{
   const c=state.clients.find(x=>x.id===editingId); if(!c) return;
@@ -6459,7 +6563,7 @@ function ldItemEl(l){
   else meta.push(`<span class="w-nophone" data-addphone title="No phone yet — click to type it">${IC.phone} no phone yet · add</span>`);
   if(l.reviews) meta.push(`<span class="w-rev">★ ${l.reviews}${l.score?' · '+l.score:''}</span>`);
   if(l.url) meta.push(`<a href="${esc(l.url)}" target="_blank" rel="noopener" style="color:var(--brand);font-weight:700;">doctoranytime ↗</a>`);
-  if(ldIsCheck(l) || !l.url) meta.push(`<a class="w-look" href="${esc(ldLookup(l))}" target="_blank" rel="noopener" title="Google this name — website or not?">${IC.search} Google</a><a class="w-look" href="${esc(ldMaps(l))}" target="_blank" rel="noopener" title="Google Maps — phone + website">Maps</a>`);
+  meta.push(`<a class="w-look" href="${esc(ldLookup(l))}" target="_blank" rel="noopener" title="Google this name — website or not?">${IC.search} Google</a><a class="w-look" href="${esc(ldMaps(l))}" target="_blank" rel="noopener" title="Google Maps — phone + website">Maps</a>`);
   if(!ldFilter.list && ldListOf(l)!=='new' && ldOpen(l)) meta.push(`<span class="w-list">${esc(ldListInfo(ldListOf(l)).t||'')}</span>`);
   if(l.list==='ads' && l.at){ const m=Math.max(0,Math.round((Date.now()-Date.parse(l.at))/60000)); meta.push(`<span class="w-try${m<=15?' hot':''}" title="Filled in the ads form">🔥 ads form · ${m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'} ago${m<=5?' · CALL NOW':''}</span>`); }
   if(l.note) meta.push(`<span class="w-note">${esc(l.note)}</span>`);
@@ -6503,7 +6607,7 @@ function renderLdFocus(){
       <div class="f-name">${esc(l.name)}</div>
       <div class="f-spec">${esc(l.spec||'')}${l.city?' · '+esc(l.city):''}${l.addr?' · '+esc(l.addr):''}</div>
       ${l.phone?`<a class="f-phone" href="tel:+30${esc(l.phone)}">${IC.phone}${esc(ldFmtPhone(l.phone))}</a>`:`<div class="f-nophone" id="ldFocusPhone">${IC.phone} No phone yet — look it up, then type it: <input type="tel" placeholder="69… / 21…" autocomplete="off"><button type="button">Save</button></div>`}
-      <div class="f-meta">${l.reviews?`<span class="chip">★ ${l.reviews} reviews${l.score?' · '+l.score+'/10':''}</span>`:''}${l.url?`<a class="chip" href="${esc(l.url)}" target="_blank" rel="noopener">doctoranytime profile ↗</a>`:''}${(ldIsCheck(l)||!l.url)?`<a class="chip" href="${esc(ldLookup(l))}" target="_blank" rel="noopener">${IC.search} Google ↗</a><a class="chip" href="${esc(ldMaps(l))}" target="_blank" rel="noopener">Maps ↗</a>`:''}<span class="chip">${esc(ldListInfo(ldListOf(l)).t||'')}</span>${l.note?`<span class="chip">${esc(l.note)}</span>`:''}${l.status==='na'?`<span class="chip" style="background:var(--yellow-soft);color:#8A6400;">no answer on ${l.tries.map(fmtDay).join(', ')}</span>`:''}</div>
+      <div class="f-meta">${l.reviews?`<span class="chip">★ ${l.reviews} reviews${l.score?' · '+l.score+'/10':''}</span>`:''}${l.url?`<a class="chip" href="${esc(l.url)}" target="_blank" rel="noopener">doctoranytime profile ↗</a>`:''}${true?`<a class="chip" href="${esc(ldLookup(l))}" target="_blank" rel="noopener">${IC.search} Google ↗</a><a class="chip" href="${esc(ldMaps(l))}" target="_blank" rel="noopener">Maps ↗</a>`:''}<span class="chip">${esc(ldListInfo(ldListOf(l)).t||'')}</span>${l.note?`<span class="chip">${esc(l.note)}</span>`:''}${l.status==='na'?`<span class="chip" style="background:var(--yellow-soft);color:#8A6400;">no answer on ${l.tries.map(fmtDay).join(', ')}</span>`:''}</div>
     </div><div class="f-right">next in line<b>${q.length-idx-1}</b>logging on ${fmtDay(todayIso())}</div></div>
     <div class="f-acts"><button class="g">${IC.check} Booked<small>1 · meeting set</small></button><button class="y">${IC.message} SMS sent<small>2 · wants info</small></button><button class="r">${IC.x} No<small>3 · not interested</small></button><button class="n">${IC.hourglass} No answer<small>4 · try another day</small></button></div>
     <div class="ld-book" id="ldFocusBook"></div>
@@ -6973,7 +7077,7 @@ function exportYearReport(){
   h+=`</tbody><tfoot><tr><td>Total</td>${months.map(m=>`<td class="num">${Math.round(expensesForMonth(m))}</td>`).join('')}<td class="num">${fmtMoney2(exp)}</td></tr></tfoot></table></section>`;
 
   /* ---------------- 8 · calls & meetings ---------------- */
-  h+=`<section class="rp-sec avoid"><div class="rp-h">8 · Calls &amp; meetings <span class="hc">· counted since ${fmtDate(statsSince())}</span></div>
+  h+=`<section class="rp-sec avoid"><div class="rp-h">8 · Calls &amp; meetings <span class="hc">· ${statsPaused()?'paused — not counting yet':'counted since '+fmtDate(statsSince())}</span></div>
     <div class="rp-hs">Cold calls from Quick Log, what they turned into, and how many meetings became paying clients</div>`;
   if(YS.calls || YS.meetClients){
     h+=`<table class="rp-t"><thead><tr><th>Month</th><th class="num">Calls</th><th class="num">Booked</th><th class="num">SMS</th><th class="num">No</th><th class="num">Call → booked</th><th class="num">Days worked</th><th class="num">Calls / day</th><th class="num">Meetings</th><th class="num">Became clients</th><th class="num">Meeting → client</th></tr></thead><tbody>`;
@@ -7291,7 +7395,13 @@ async function runRestore(bk, doCrm, doServer){
 /* ---------- init ---------- */
 function unlockUI(){ $('#loginScreen').style.display='none'; document.body.classList.remove('locked'); }
 function lockUI(){ $('#loginScreen').style.display='grid'; document.body.classList.add('locked'); $('#loginErr').style.display='none'; $('#loginPass').value=''; setTimeout(()=>$('#loginUser').focus(),50); }
-function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); if(migrateCallStats()){ save(); setTimeout(()=>toast('Cold-call statistics cleared — every month and the year start from your next logged call'),900); } renderAll(); Bookings.start(); setTimeout(()=>Chats.start(),3200); }
+function migrate20260922(){
+  ensureMeta(); let ch=false;
+  if(!state.meta.statsPause20260922){ state.meta.statsPause20260922=1; /* demo: counting runs so people see numbers */ ch=true; }
+  if(!state.meta.wealth || typeof state.meta.wealth.base!=='number'){ state.meta.wealth={base:46000, anchor:realProfitToDate()-2480, since:todayIso()} /* demo: pretend some profit came in since */; ch=true; }
+  return ch;
+}
+function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; if(migrate20260922()) save(); $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); if(migrateCallStats()){ save(); setTimeout(()=>toast('Cold-call statistics cleared — every month and the year start from your next logged call'),900); } renderAll(); Bookings.start(); setTimeout(()=>Chats.start(),3200); }
 let loggingIn=false;
 async function tryLogin(){
   if(loggingIn) return;
@@ -7803,8 +7913,14 @@ const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, ca
    card moves FORWARD with the chat stage (Υλικό → Need info, Πρώτο draft → Draft · Review, Αλλαγές →
    Making changes). It never moves a card backwards and never touches Waiting payment / Paid / Thinking / Lost —
    money stays Angelo's call. */
-const CH2BOARD={yliko:'needinfo', draft:'review', changes:'changes'};
+/* 22 Sept 2026 — both directions, as Angelo named them: Need info = Material · Building = First draft ·
+   Draft · Review = Changes (Making changes is Changes too). Move the chat → the Board card follows; move the
+   Board card → the chat follows. Booked / Waiting payment / Paid / Thinking / Lost never move the chat, and a chat
+   never pulls a card out of them. c.chatStage / c.chatBoard remember what both sides were at the last sync. */
+const CH2BOARD={yliko:'needinfo', draft:'building', changes:'review'};
+const BOARD2CH={needinfo:'yliko', building:'draft', review:'changes', changes:'changes'};
 const BOARD_RANK={booked:0, needinfo:1, building:2, review:3, changes:4};
+const chPendStage={};
 const CH_GL={α:'a',β:'v',γ:'g',δ:'d',ε:'e',ζ:'z',η:'i',θ:'th',ι:'i',κ:'k',λ:'l',μ:'m',ν:'n',ξ:'x',ο:'o',π:'p',ρ:'r',σ:'s',ς:'s',τ:'t',υ:'i',φ:'f',χ:'ch',ψ:'ps',ω:'o'};
 const chLatin=s=>bkFold(s).split('').map(ch=>CH_GL[ch]??ch).join('').replace(/w/g,'o').replace(/[yu]/g,'i').replace(/[^0-9a-z\s]+/g,' ').split(/\s+/).filter(w=>w.length>1);
 function chSameName(a,b){
@@ -7825,16 +7941,30 @@ const chMailDone=new Set();
 const chMailOk=e=>/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(String(e||''));
 function chSyncBoard(){
   if(!state || !Array.isArray(state.clients) || !Chats.list.length) return;
-  let changed=false; const moved=[], mail=[];
+  let changed=false; const moved=[], mail=[], push=[];
   Chats.list.filter(t=>!t.archived).forEach(t=>{
     const c=chClientFor(t); if(!c) return;
     if(c.chat!==t.slug){ c.chat=t.slug; changed=true; }
     /* the Board card already has their e-mail — copy it onto the chat so alerts and reminders work */
     if(!t.email && chMailOk(c.email) && !chMailDone.has(t.slug)){ chMailDone.add(t.slug); mail.push([t, c.email]); }
-    const want=CH2BOARD[chStage(t)];
-    if(want && BOARD_RANK[c.stage]!=null && BOARD_RANK[want]>BOARD_RANK[c.stage]){ moved.push(c.name+' → '+stageById(want).name); c.stage=want; c.stageAt=Date.now(); c.updated=Date.now(); changed=true; }
+    if(chPendStage[t.slug]) return;
+    const cs=chStage(t), want=CH2BOARD[cs];
+    const moveCard=()=>{ if(want && BOARD_RANK[c.stage]!=null && BOARD2CH[c.stage]!==cs){ moved.push(c.name+' → '+stageById(want).name); c.stage=want; c.stageAt=Date.now(); c.updated=Date.now(); } };
+    if(c.chatStage==null){   /* first time: remember both sides, only ever move the card forward */
+      if(want && BOARD_RANK[c.stage]!=null && BOARD_RANK[want]>BOARD_RANK[c.stage]) moveCard();
+      c.chatStage=cs; c.chatBoard=c.stage; changed=true; return;
+    }
+    if(cs!==c.chatStage){ moveCard(); c.chatStage=cs; c.chatBoard=c.stage; changed=true; return; }   /* the chat moved */
+    if(c.stage!==c.chatBoard){                                                                      /* the Board moved */
+      c.chatBoard=c.stage; changed=true;
+      const to=BOARD2CH[c.stage];
+      if(to && to!==cs && !t.archived) push.push([t,to,c,cs]);
+    }
   });
   if(changed){ save(); renderAll(); if(moved.length) toast('Board updated from the chats: '+moved.join(' · '), true); }
+  push.forEach(([t,to,c,was])=>{ chPendStage[t.slug]=to; c.chatStage=to;
+    Chats.meta(t.slug,{stage:to}).then(()=>{ delete chPendStage[t.slug]; toast(t.name+' · chat moved to «'+((CH_STAGES.find(s=>s[0]===to)||['',to])[1])+'» — the client sees it too', true); })
+      .catch(()=>{ delete chPendStage[t.slug]; c.chatStage=was; c.chatBoard=null; save(); toast('Could not move '+t.name+'\'s chat — try again from Chats'); }); });
   mail.forEach(([t,em])=>{ Chats.meta(t.slug,{email:em}).then(()=>toast(t.name+' · e-mail taken from the Board — alerts on', true)).catch(()=>chMailDone.delete(t.slug)); });
 }
 const chUnread=()=>Chats.list.filter(t=>!t.archived).reduce((n,t)=>n+((t.unreadAdmin||0)>0?1:0),0);
@@ -7931,7 +8061,7 @@ function renderChatList(){
   else if(!rows.length) box.innerHTML=`<div class="ch-empty">${Chats.list.length?'<b>Nothing here</b>Try another filter.':'<b>No chats yet</b>Press <b style="display:inline">New</b>, give the client a name, copy their private link and send it on Viber. From then on you talk here.'}</div>`;
   else box.innerHTML=rows.map((t,i)=>`${nPin&&i===0?`<div class="ch-grp prio">★ Priority · ${nPin}${nPin>1?' <span style="font-weight:600;text-transform:none;letter-spacing:0">— drag to reorder</span>':''}</div>`:''}${nPin&&i===nPin&&rows.length>nPin?'<div class="ch-grp">Everyone else</div>':''}<div class="ch-row${t.slug===Chats.cur?' on':''}${(t.unreadAdmin||0)?' unread':''}${t.pin?' pin':''}" data-slug="${esc(t.slug)}"${t.pin&&nPin>1?' draggable="true"':''}>
       <div class="ch-av${Chats.online.includes(t.slug)?' online':''}" style="background:${chColor(t.name)}">${esc(chInitials(t.name))}<i></i></div>
-      <div><div class="n">${t.pin?'<span class="ch-star" title="Priority">★</span>':''}${esc(t.name)}<span class="ch-stage">${esc((CH_STAGES.find(s=>s[0]===chStage(t))||['','—'])[1])}</span></div><div class="p">${t.lastFrom==='client'?'':t.lastFrom==='claude'?'Claude: ':'You: '}${esc(t.lastText||(t.n?'':'link created — nothing sent yet'))}</div></div>
+      <div><div class="n">${t.pin?'<span class="ch-star" title="Priority">★</span>':''}${esc(t.name)}<span class="ch-stage">${esc((CH_STAGES.find(s=>s[0]===chStage(t))||['','—'])[1])}</span>${(()=>{ const c=chClientFor(t); return !c?'':c.stage==='paid'?'<span class="ch-stage paid" title="Paid in full">✓ paid</span>':hasPart(c)?'<span class="ch-stage part" title="'+esc(fmtMoney2(cpaid(c)))+' received">½ paid</span>':''; })()}</div><div class="p">${t.lastFrom==='client'?'':t.lastFrom==='claude'?'Claude: ':'You: '}${esc(t.lastText||(t.n?'':'link created — nothing sent yet'))}</div></div>
       <div class="r"><span class="t">${esc(chWhen(t.lastAt))}</span><span class="r2">${(t.unreadAdmin||0)?`<span class="ch-badge">${t.unreadAdmin}</span>`:chWaitChip(t)}<button class="ch-more" data-more="${esc(t.slug)}" title="Priority, move, mark unread, archive, delete" aria-label="Chat options">⋯</button></span></div>
     </div>`).join('');
   box.querySelectorAll('[data-slug]').forEach(el=>{
@@ -7966,6 +8096,9 @@ function renderChatThread(keep){
       ${t.archived?'':`<button class="ch-ib${t.dat?' on':''}" id="chDat" title="${t.dat?'Has a doctoranytime profile — the page asks only for photos. Click to turn off.':'Click if the client has a doctoranytime profile: the page then asks only for photos and we start from the profile.'}">${t.dat?'✓ doctoranytime':'doctoranytime?'}</button>`}
       ${t.archived?'':`<button class="ch-ib${t.form?' on':''}" id="chForm" title="${t.form?'The site has the contact form — the client page no longer offers it. Click to turn off.':'Tick when the site has (or was sold) the contact form: the client page then stops offering the 50€ form.'}">${t.form?'✓ contact form':'contact form?'}</button>`}
       ${t.archived||chStage(t)==='live'?'':`<button class="ch-ib live" id="chLive" title="You bought and connected the domain: sends the «domain connected + review» message, saves the domain as the site and moves the chat to Live">🌐 Domain connected</button>`}
+      ${client?(client.stage==='paid'?`<button class="ch-ib paid on" id="chPaidInfo" title="Paid in full — in the bank and in New money. Click to open the card.">✓ Paid ${fmtMoney(cval(client))}</button>`
+        :cval(client)>0?`${cpaid(client)>0?'':`<button class="ch-ib pay" id="chPayHalf" title="They paid half up front — ${fmtMoney2(Math.round(cval(client)/2*100)/100)} goes in the bank and New money">½ Half paid</button>`}<button class="ch-ib pay full" id="chPayFull" title="They paid everything — ${fmtMoney2(cowed(client))} goes in the bank and New money, the Board card turns green">€ Paid${cpaid(client)>0?' the rest '+fmtMoney(cowed(client)):' '+fmtMoney(cval(client))}</button>`
+        :`<button class="ch-ib pay" id="chPayNoVal" title="Give the client a value on the Board first">€ Paid?</button>`):''}
       ${client?`<button class="ch-ib" id="chBoard" title="Open on the Board">Board</button>`:''}
       <button class="ch-ib" id="chCopy" title="Copy the client's private link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>Link</button>
       ${t.archived?'':`<button class="ch-ib${t.pin?' on':''}" id="chPin" title="${t.pin?'Priority — click to remove':'Keep this chat on top of the list'}">${t.pin?'★ Priority':'☆ Priority'}</button>`}
@@ -7975,6 +8108,10 @@ function renderChatThread(keep){
   $('#chBack').addEventListener('click',()=>Chats.close());
   $('#chStage').addEventListener('change',async e=>{ const v=e.target.value; try{ await Chats.meta(t.slug,{stage:v}); const qi=CH_STAGE_MSG[v]; const tx=$('#chTxt'); if(qi!=null && !tx.value.trim()){ const tt=Chats.list.find(x=>x.slug===t.slug)||t; tx.value=chFill(CH_QUICK[qi][1], tt); tx.dispatchEvent(new Event('input')); tx.focus(); toast('Stage saved — a ready message is in the box, edit it and press send'); } else toast('Stage updated — the client sees it too'); }catch(err){ toast('Could not save the stage'); } });
   const bd=$('#chBoard'); if(bd) bd.addEventListener('click',()=>openModal(client.id));
+  { const b=$('#chPaidInfo'); if(b) b.addEventListener('click',()=>openModal(client.id)); }
+  { const b=$('#chPayHalf'); if(b) b.addEventListener('click',()=>{ payHalf(client.id); renderChats(); }); }
+  { const b=$('#chPayFull'); if(b) b.addEventListener('click',()=>{ markPaidFromRemaining(client.id); renderChats(); }); }
+  { const b=$('#chPayNoVal'); if(b) b.addEventListener('click',()=>{ toast('Put the price on their Board card first'); openModal(client.id); }); }
   { const d=$('#chDat'); if(d) d.addEventListener('click',async()=>{ try{ await Chats.meta(t.slug,{dat:!t.dat}); toast(!t.dat?'doctoranytime profile — the client page now asks only for photos':'doctoranytime off — the page asks for the basics again'); }catch(e){ toast('Could not save'); } }); }
   { const f=$('#chForm'); if(f) f.addEventListener('click',async()=>{ try{ await Chats.meta(t.slug,{form:!t.form}); toast(!t.form?'Contact form ticked — the client page stops offering it':'Contact form off — the page offers it again (50€)'); }catch(e){ toast('Could not save'); } }); }
   { const r=$('#chReadyDone'); if(r) r.addEventListener('click',async()=>{ try{ await Chats.meta(t.slug,{ready:null}); toast('Flag removed'); }catch(e){ toast('Could not save'); } }); }
