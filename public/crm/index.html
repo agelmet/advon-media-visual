@@ -7840,7 +7840,13 @@ const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, ca
     txt.value=''; txt.style.height='auto'; renderChatTray();
     const pm={id:'p'+Date.now().toString(36), from:'advon', text, at:new Date().toISOString(), state:'pending', files:q.map(x=>({name:x.file.name, bytes:x.file.size, local:x.url})), _q:q};
     this.pending.push(pm); renderChatThread(false);
+    const slug=this.cur;
     await this.push(pm);
+    /* the first draft went out → the chat (and the Board card) move to «First draft» by themselves */
+    try{ const t=this.list.find(x=>x.slug===slug);
+      if(t && pm.state!=='failed' && chStage(t)==='yliko' && /ολοκληρώσουμε την κατασκευή/i.test(text)){
+        await this.meta(slug,{stage:'draft'}); try{ chSyncBoard(); }catch(e){} toast(t.name+' · first draft sent → chat moved to «First draft»', true); }
+    }catch(e){}
   },
   async push(pm){
     pm.state='pending'; renderChatThread(true);
@@ -7916,7 +7922,7 @@ const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, ca
    Board card → the chat follows. Booked / Waiting payment / Paid / Thinking / Lost never move the chat, and a chat
    never pulls a card out of them. c.chatStage / c.chatBoard remember what both sides were at the last sync. */
 const CH2BOARD={yliko:'needinfo', draft:'building', changes:'review'};
-const BOARD2CH={needinfo:'yliko', building:'draft', review:'changes', changes:'changes'};
+const BOARD2CH={needinfo:'yliko', review:'changes', changes:'changes'};   /* Building never moves the chat: it becomes «First draft» only when the draft is actually sent (22 Sept 2026) */
 const BOARD_RANK={booked:0, needinfo:1, building:2, review:3, changes:4};
 const chPendStage={};
 const CH_GL={α:'a',β:'v',γ:'g',δ:'d',ε:'e',ζ:'z',η:'i',θ:'th',ι:'i',κ:'k',λ:'l',μ:'m',ν:'n',ξ:'x',ο:'o',π:'p',ρ:'r',σ:'s',ς:'s',τ:'t',υ:'i',φ:'f',χ:'ch',ψ:'ps',ω:'o'};
@@ -7947,7 +7953,7 @@ function chSyncBoard(){
     if(!t.email && chMailOk(c.email) && !chMailDone.has(t.slug)){ chMailDone.add(t.slug); mail.push([t, c.email]); }
     if(chPendStage[t.slug]) return;
     const cs=chStage(t), want=CH2BOARD[cs];
-    const moveCard=()=>{ if(want && BOARD_RANK[c.stage]!=null && BOARD2CH[c.stage]!==cs){ moved.push(c.name+' → '+stageById(want).name); c.stage=want; c.stageAt=Date.now(); c.updated=Date.now(); } };
+    const moveCard=()=>{ if(want && c.stage!==want && BOARD_RANK[c.stage]!=null && BOARD2CH[c.stage]!==cs){ moved.push(c.name+' → '+stageById(want).name); c.stage=want; c.stageAt=Date.now(); c.updated=Date.now(); } };
     if(c.chatStage==null){   /* first time: remember both sides, only ever move the card forward */
       if(want && BOARD_RANK[c.stage]!=null && BOARD_RANK[want]>BOARD_RANK[c.stage]) moveCard();
       c.chatStage=cs; c.chatBoard=c.stage; changed=true; return;
