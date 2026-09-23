@@ -1245,6 +1245,9 @@ body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-s
 @media(max-width:640px){.home-hero{padding:12px 14px;} .home-hero h2,.home-hero p{white-space:normal;} .hg{flex-basis:100%; display:block; padding:8px 12px;} .hg-title{margin-bottom:6px;} .home-hero .hero-stats{display:grid; grid-template-columns:1fr 1fr; gap:4px 8px; justify-content:start;} .home-hero .hs .k{white-space:normal;}}
 .home-hero .hs .v.g{color:#4BE8A0;} .home-hero .hs .v.c{color:#FFB39F;} .home-hero .hs .v.b{color:#7FD9F5;}
 .home-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:start;}
+.home-pair{grid-column:1 / -1; display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:start;}
+.home-pair .hp-col{display:flex; flex-direction:column; gap:12px; min-width:0;}
+@media(max-width:1000px){.home-pair{grid-template-columns:1fr;}}
 .home-card .home-card-head{flex-wrap:wrap; row-gap:4px;}
 .home-card .home-card-head .hc-hint{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 @media(max-width:1000px){.home-grid{grid-template-columns:1fr;}}
@@ -2208,6 +2211,7 @@ body.dark .rm-new input{background:var(--surface);}
 <main class="view active" id="view-home">
   <div class="home-hero" id="homeHero"></div>
   <div class="home-grid">
+    <div class="home-pair">
     <section class="home-card asap-card">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft);color:var(--red)" data-ic="flag"></span><h3>Do ASAP</h3><span class="hc-hint">Click a line to edit · 🔥 = super-high priority · drag ⋮⋮ to reorder · from your phone: tell Claude «ASAP: …»</span></div>
       <div class="home-card-body asap-body" id="homeAsap"></div>
@@ -2225,14 +2229,17 @@ body.dark .rm-new input{background:var(--surface);}
       <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--brand)" data-ic="message"></span><h3>Client chats</h3><span class="hc-hint" id="homeChatsHint"></span><button class="hc-link" data-goto="chats">Open Chats</button></div>
       <div class="home-card-body" id="homeChats"></div>
     </section>
+    </div>
     <section class="home-card wide chase-card">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--coral-soft);color:var(--coral)" data-ic="phone"></span><h3>People to contact</h3><span class="hc-hint" id="homeChaseHint"></span><button class="hc-link" data-goto="remaining">Remaining</button><button class="hc-link" data-goto="renewals">Renewals</button></div>
       <div class="home-card-body" id="homeCollect"></div>
     </section>
+    <div class="home-pair">
     <section class="home-card">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--yellow-soft);color:#B8860B" data-ic="clock"></span><h3>Follow up after the meeting</h3><button class="hc-link" data-goto="board">Board</button></div>
       <div class="home-card-body" id="homeThink"></div>
     </section>
+    </div>
     <section class="home-card wide cash-card">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--green-soft);color:var(--deep)" data-ic="wallet"></span><h3>Cash forecast</h3><span class="hc-hint">What should come in, from what is already on the Board</span><button class="hc-link" data-goto="remaining">Remaining</button></div>
       <div class="home-card-body" id="homeCash"></div>
@@ -5725,8 +5732,28 @@ $('#expAdd').addEventListener('click',()=>{
 ['expName','expAmt'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')$('#expAdd').click();}));
 
 /* ---------- home dashboard ---------- */
+/* Home: the paired cards are dealt into two columns by HEIGHT (each card goes under the shorter column), so a tall card
+   never leaves a hole beside it. Re-runs whenever a card changes size (reminders / chats load later). 23 Sept 2026 */
+let hpTimer=null, hpObs=null;
+function homePack(){
+  document.querySelectorAll('.home-pair').forEach(pair=>{
+    let cols=[...pair.querySelectorAll(':scope > .hp-col')];
+    if(!cols.length){ cols=[document.createElement('div'),document.createElement('div')]; cols.forEach(c=>{ c.className='hp-col'; }); const cards=[...pair.querySelectorAll(':scope > .home-card')]; cards.forEach(c=>{ c.dataset.hpOrd=c.dataset.hpOrd||String([...pair.children].indexOf(c)); }); pair.append(cols[0],cols[1]); cards.forEach(c=>cols[0].appendChild(c)); }
+    const cards=[...pair.querySelectorAll('.home-card')].sort((a,b)=>(+a.dataset.hpOrd||0)-(+b.dataset.hpOrd||0));
+    if(!hpObs && window.ResizeObserver){ hpObs=new ResizeObserver(()=>{ clearTimeout(hpTimer); hpTimer=setTimeout(homePack,120); }); }
+    if(hpObs) cards.forEach(c=>{ if(!c.dataset.hpObs){ c.dataset.hpObs='1'; hpObs.observe(c); } });
+    const one=window.innerWidth<=1000;
+    const h=[0,0], want=[[],[]];
+    cards.forEach(c=>{ const i=one?0:(h[1]<h[0]?1:0); want[i].push(c); h[i]+=c.offsetHeight+12; });
+    const same=want.every((list,i)=>list.length===cols[i].children.length && list.every((c,j)=>cols[i].children[j]===c));
+    if(same) return;
+    want.forEach((list,i)=>list.forEach(c=>cols[i].appendChild(c)));
+  });
+}
+window.addEventListener('resize',()=>{ clearTimeout(hpTimer); hpTimer=setTimeout(homePack,150); });
 function renderHome(){
   if(!state) return;
+  setTimeout(homePack,0);
   const today=new Date(); const todayI=todayIso();
   const hr=today.getHours();
   const greet= hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
