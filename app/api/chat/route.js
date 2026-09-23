@@ -524,6 +524,23 @@ export async function POST(req) {
     try { ({ thread: t, dup } = await appendMessage(c, slug, msg, files, { clearReady: who !== 'client' && body.clearReady === true })); }
     catch (e) { if (e.code === 'no_thread') return json({ error: 'unknown link' }, 404); throw e; }
     if (dup) return json({ ok: true, message: dup, thread: who === 'client' ? publicThread(t) : t, duplicate: true });
+    // «Όλα καλά — πάμε live» → Angelo gets «buy the domain … for …» at the top of Do ASAP (via /api/reminders)
+    if (who === 'client' && msg.kind === 'ready:live') {
+      try {
+        const dm = (msg.text || '').match(/Domain[^:\n]*:\s*([a-z0-9][a-z0-9.-]*\.[a-z]{2,})/i);
+        const domain = dm ? dm[1].toLowerCase() : '';
+        const item = { uid: `live-${slug}-${msg.id}`, day: new Date().toISOString().slice(0, 10), hot: true, slug,
+          text: `${t && t.demo ? '(δοκιμή) ' : ''}Αγόρασε το domain ${domain || '(δες το μήνυμα)'} για ${t ? t.name : slug} στο Papaki — μετά «🌐 Domain connected» στο chat` };
+        await ghCommit(c, `asap: buy ${domain || 'domain'} for ${slug}`, async (ctx) => {
+          const { data } = await ctx.readJson('asap/inbox.json', []);
+          const list = (Array.isArray(data) ? data : []).filter((x) => Date.now() - Date.parse(x.day || 0) < 90 * 864e5);
+          if (list.some((x) => x.uid === item.uid)) return null;
+          list.push(item);
+          return [{ path: 'asap/inbox.json', content: JSON.stringify(list, null, 1) }];
+        });
+        forgetHead();
+      } catch (e) { console.warn('asap inbox failed', e.message); }
+    }
     // the sandbox answers at once, the way the real flow would days later (lib/chatdemo.js)
     if (who === 'client' && t && t.demo) {
       try {

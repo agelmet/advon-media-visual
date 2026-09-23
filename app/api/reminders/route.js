@@ -50,6 +50,9 @@ export async function GET(req) {
     // «📌» events whose day has come (last 60 days) — the CRM adds each one to «Do ASAP» once
     const from60 = inAthens(new Date(Date.now() - 60 * 864e5)).day;
     const asap = parseAsap(ics).filter((a) => a.day >= from60 && a.day <= today).map(({ status, ...a }) => a);
+    // + things the server itself asks Angelo to do (e.g. «buy the domain» when a client presses «πάμε live»)
+    try { const r = ghReady(conf) ? await readAtHead(conf, 'asap/inbox.json') : null; const inbox = r && r.text ? JSON.parse(r.text) : [];
+      (Array.isArray(inbox) ? inbox : []).filter((a) => a && a.uid && a.text && (a.day || '') >= from60).forEach((a) => asap.push({ uid: a.uid, day: a.day, text: a.text, hot: !!a.hot })); } catch {}
     const items = withState(list, state).map((r) => ({ ...r, viber: viberText(r) }));
     if (k) {
       const L = [`REMINDERS — ${dayGreek(today)} — ${items.filter((r) => !r.done && r.day <= today).length} due, ${items.filter((r) => !r.done && r.day > today).length} upcoming`];

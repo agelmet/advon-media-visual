@@ -2057,6 +2057,11 @@ body.dark .rm-new input{background:var(--surface);}
 .rm-new button.gh{background:transparent; color:var(--muted); border:1px solid var(--line);}
 @media (max-width:640px){ .rm-new{grid-template-columns:1fr 1fr;} .rm-row{grid-template-columns:auto 1fr;} .rm-act{grid-column:1/3; justify-content:flex-start;} }
 /* Chats · «add the e-mail» bar + the demo (sandbox) chat */
+.ch-start{display:flex; flex-direction:column; gap:6px; margin:0 0 12px; padding:14px 16px; border-radius:14px; background:var(--blue-soft); border:1px solid rgba(47,127,224,.25); font-size:13px; color:var(--ink);}
+.ch-start b{font-size:14px;} .ch-start span{color:var(--muted); font-weight:600; font-size:12.5px;}
+.ch-start .cs-btns{display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;}
+.ch-start .cs-btns button{height:38px; padding:0 16px; border-radius:11px; border:0; background:var(--brand); color:#fff; font-size:13px; font-weight:800;}
+.ch-start .cs-btns button:disabled{opacity:.5;}
 .ch-askmail{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:0 0 10px; padding:10px 12px; border-radius:12px; background:var(--orange-soft); border:1px solid rgba(255,138,0,.3); font-size:12.5px; font-weight:700; color:#7A4A00;}
 .ch-askmail input{flex:1 1 180px; height:32px; border-radius:9px; border:1px solid rgba(255,138,0,.4); padding:0 10px; font-size:13px; background:#fff; color:var(--ink);}
 .ch-askmail button{height:32px; padding:0 12px; border-radius:9px; border:0; background:var(--brand); color:#fff; font-size:12px; font-weight:800;}
@@ -7874,22 +7879,22 @@ const chStage=t=>t&&t.stage==='payment'?'changes':(t&&t.stage)||'yliko';
 const CH_STAGE_MSG={draft:1, changes:4, live:5};   /* stage → CH_QUICK index offered after a stage change */
 const CH_READY_EN={build:['✅ Ready to build','pressed «Ξεκινήστε την ιστοσελίδα μου» — build the first draft'],changes:['✏️ Ready for changes','pressed «Έστειλα όλες τις αλλαγές» — do every change, then reply'],live:['🚀 Wants to go live','pressed «Όλα καλά — πάμε live» — the domain is in the message: buy + connect it, then «Domain connected»']};
 const CH_WELCOME='Καλώς ήρθατε! 👋\n\nΑυτή είναι η προσωπική σας σελίδα για την ιστοσελίδα σας: εδώ μας στέλνετε φωτογραφίες, αλλαγές και ερωτήσεις, κι εδώ σας απαντάμε. Κρατήστε τον σύνδεσμο — είναι δικός σας και δεν αλλάζει.\n\n📊 Πάνω-πάνω βλέπετε πάντα σε ποιο στάδιο βρισκόμαστε και τι χρειαζόμαστε από εσάς σε αυτό το στάδιο. Στόχος μας: να χρειάζεται όσο το δυνατόν λιγότερος χρόνος από τη δική σας πλευρά — εμείς φτιάχνουμε, εσείς ελέγχετε.\n\n👉 Σε κάθε στάδιο υπάρχει ένα κουμπί («Ξεκινήστε την ιστοσελίδα μου», «Έστειλα όλες τις αλλαγές», «Πάμε live»). Πατήστε το όταν τελειώσετε — έτσι ξέρουμε ότι μπορούμε να προχωρήσουμε.';
-const CH_YLIKO_DAT='Στάδιο 1 · Υλικό 📷\n\nΚαλά νέα: τα κείμενα και τα στοιχεία σας (υπηρεσίες, βιογραφικό, διεύθυνση, ωράριο) τα έχουμε ήδη από το προφίλ σας στο doctoranytime, οπότε δεν χρειάζεται να γράψετε τίποτα.\n\nΤο μόνο που χρειαζόμαστε είναι οι φωτογραφίες σας σε καλή ανάλυση (από το doctoranytime κατεβαίνουν σε χαμηλή ποιότητα): εσείς, ο χώρος σας και το λογότυπό σας αν υπάρχει. Στείλτε τις εδώ ή με e-mail στο advonmd@gmail.com — όπως σας βολεύει. Αρχεία πάνω από 4 MB: μέσω wetransfer.com.\n\nΑν έχετε κάτι συγκεκριμένο στο μυαλό σας (μια ιστοσελίδα που σας αρέσει, ένα χρώμα, κάτι που θέλετε να τονίσουμε), γράψτε το μας. Αλλιώς το αναλαμβάνουμε εντελώς εμείς — και ό,τι θέλετε το αλλάζουμε μετά, στο draft.\n\nΜόλις στείλετε τις φωτογραφίες, πατήστε το κουμπί «Ξεκινήστε την ιστοσελίδα μου». Σε 5–10 ημέρες θα βρείτε εδώ το πρώτο draft. ⏱️';
-const CH_YLIKO_PLAIN='Στάδιο 1 · Υλικό 📷\n\nΓια να ξεκινήσουμε, στείλτε μας ό,τι από τα παρακάτω έχετε εύκολα. Τίποτα δεν είναι υποχρεωτικό — ό,τι λείπει το συμπληρώνουμε εμείς:\n\n1. Φωτογραφίες: εσείς, ο χώρος σας, το λογότυπό σας αν υπάρχει (εδώ ή στο advonmd@gmail.com — πάνω από 4 MB μέσω wetransfer.com)\n2. Δυο λόγια για εσάς: σπουδές, εμπειρία, τι σας ξεχωρίζει — και σε bullet points είναι μια χαρά, τα κείμενα τα γράφουμε εμείς\n3. Οι υπηρεσίες σας, με μια σειρά\n4. Στοιχεία επικοινωνίας: τηλέφωνο, e-mail, διεύθυνση, ωράριο, social\n\nΈχετε προφίλ κάπου online (doctoranytime, Google, Facebook); Στείλτε μας τον σύνδεσμο και παίρνουμε από εκεί ό,τι χρειαζόμαστε.\n\nΔεν έχετε φωτογραφίες ακόμη; Κανένα πρόβλημα — ξεκινάμε με προσωρινές και τις αντικαθιστούμε όταν τις έχετε.\n\nΜόλις στείλετε ό,τι έχετε, πατήστε το κουμπί «Ξεκινήστε την ιστοσελίδα μου». Σε 5–10 ημέρες θα βρείτε εδώ το πρώτο draft. ⏱️';
+const CH_YLIKO_DAT='Στάδιο 1 · Υλικό 📷\n\nΤα κείμενα και τα στοιχεία σας τα παίρνουμε από το προφίλ σας στο doctoranytime — δεν χρειάζεται να γράψετε τίποτα.\n\nΧρειαζόμαστε μόνο τις φωτογραφίες σας σε καλή ανάλυση: εσείς, ο χώρος σας και το λογότυπο αν υπάρχει. Στείλτε τις εδώ, στη συνομιλία.\n\nΜόλις τις στείλετε, πατήστε «Ξεκινήστε την ιστοσελίδα μου» — το πρώτο draft έρχεται σε 5–10 ημέρες. ⏱️';
+const CH_YLIKO_PLAIN='Στάδιο 1 · Υλικό 📷\n\nΣτείλτε μας εδώ ό,τι έχετε εύκολα — τίποτα δεν είναι υποχρεωτικό και τα κείμενα τα γράφουμε εμείς:\n\n1. Φωτογραφίες: εσείς, ο χώρος σας, το λογότυπο αν υπάρχει\n2. Δυο λόγια για εσάς (και σε bullet points)\n3. Οι υπηρεσίες σας\n4. Τηλέφωνο, διεύθυνση, ωράριο\n\nΈχετε προφίλ online (doctoranytime, Google, Facebook); Στείλτε μας τον σύνδεσμο.\n\nΜετά πατήστε «Ξεκινήστε την ιστοσελίδα μου» — το πρώτο draft έρχεται σε 5–10 ημέρες. ⏱️';
 const CH_YLIKO=CH_YLIKO_PLAIN;
 /* the message Angelo sends from the «Domain connected» button (stage → Live); {domain} = the connected domain */
 const CH_DOMAIN_LIVE='Συνδέθηκε και το domain name με την ιστοσελίδα σας, οπότε μπορείτε πλέον να τη βλέπετε εδώ: {domain}\n\nΘα μας βοηθούσε πάρα πολύ αν μπορούσατε να μας αφήσετε μια πολύ σύντομη αξιολόγηση (αν θέλετε και με το επώνυμο-επάγγελμά σας στο τέλος).\n\nΓια την αξιολόγηση μπορείτε να μπείτε εδώ:\n\nhttps://g.co/kgs/wXBAZWP\n\nΚαι αν έχετε άλλους γνωστούς ελεύθερους επαγγελματίες ή ανθρώπους με μικρές επιχειρήσεις που μπορεί να ενδιαφέρονταν με τις ίδιες συνθήκες, μπορείτε να τους στείλετε τα στοιχεία μου.\n\nΕυχαριστούμε πολύ για την άψογη συνεργασία 🙏\nΣτη διάθεσή σας για ό,τι χρειαστείτε';
 const CH_QUICK=[
   ['Received','Έλαβα, ευχαριστώ πολύ! Θα το δω και θα σας ενημερώσω μέσα στην ημέρα.'],
-  ['First draft · plain (hosting + domain)','Καλησπέρα σας {name},\n\nεργαστήκαμε με τη δική σας ιστοσελίδα και οι 4 μας, και καταφέραμε μόλις να ολοκληρώσουμε την κατασκευή μιας καλής πρώτης εικόνας της ιστοσελίδας σας. Μπορείτε να τη δείτε εδώ:\n{site}\n\nΑνοίξτε την και από υπολογιστή, να δείτε πώς φαίνεται κι εκεί.\n\n✏️ Αν θέλετε οποιαδήποτε αλλαγή — μικρή ή μεγάλη — γράψτε τη μας εδώ, αριθμημένα (1., 2., 3.), όσο πιο συγκεκριμένα γίνεται: οι αλλαγές είναι απεριόριστες μέχρι τη δημοσίευση. Μόλις τις στείλετε όλες, πατήστε «Έστειλα όλες τις αλλαγές» και τις κάνουμε μέσα σε 24 ώρες. Παραδείγματα: [Οδηγός αλλαγών](#odigos)\n\n🚀 Αν είναι ήδη όπως τη θέλετε, πατήστε «Όλα καλά — πάμε live» και γράψτε μας το domain που θα θέλατε (π.χ. epitheto-epaggelma.gr).\n\nΓια τη μεταφορά (για τη φιλοξενία και το domain name μαζί, για 365 ημέρες που μετράνε από τη μέρα που θα ολοκληρώσουμε), που γίνεται κανονικά κατά την παράδοση του πρώτου draft: αν ΔΕΝ θέλετε απόδειξη-τιμολόγιο μπορείτε να μπείτε εδώ:\nhttps://buy.stripe.com/9B68wP37b6doajUc1Q3cc06\nΑλλιώς θα χρειαστούμε το ΑΦΜ σας και θα προστεθεί ΦΠΑ.\n\nΜόλις γίνει, αγοράζουμε αμέσως και το domain name που θα μας πείτε.\n\nΕυχαριστούμε πολύ!'],
-  ['First draft · with contact form','Καλησπέρα σας {name},\n\nεργαστήκαμε με τη δική σας ιστοσελίδα και οι 4 μας, και καταφέραμε μόλις να ολοκληρώσουμε την κατασκευή μιας καλής πρώτης εικόνας της ιστοσελίδας σας. Μπορείτε να τη δείτε εδώ:\n{site}\n\nΑνοίξτε την και από υπολογιστή, να δείτε πώς φαίνεται κι εκεί.\n\n✏️ Αν θέλετε οποιαδήποτε αλλαγή — μικρή ή μεγάλη — γράψτε τη μας εδώ, αριθμημένα (1., 2., 3.), όσο πιο συγκεκριμένα γίνεται: οι αλλαγές είναι απεριόριστες μέχρι τη δημοσίευση. Μόλις τις στείλετε όλες, πατήστε «Έστειλα όλες τις αλλαγές» και τις κάνουμε μέσα σε 24 ώρες. Παραδείγματα: [Οδηγός αλλαγών](#odigos)\n\n🚀 Αν είναι ήδη όπως τη θέλετε, πατήστε «Όλα καλά — πάμε live» και γράψτε μας το domain που θα θέλατε (π.χ. epitheto-epaggelma.gr).\n\nΓια τη μεταφορά (για τη φιλοξενία και το domain name μαζί, για 365 ημέρες που μετράνε από τη μέρα που θα ολοκληρώσουμε, συν τη ΦΟΡΜΑ επικοινωνίας που φτιάξαμε και συνδέσαμε με το e-mail σας), που γίνεται κανονικά κατά την παράδοση του πρώτου draft: αν ΔΕΝ θέλετε απόδειξη-τιμολόγιο μπορείτε να μπείτε εδώ:\nhttps://buy.stripe.com/5kQ8wP37bcBM0Jk1nc3cc0k\nΑλλιώς θα χρειαστούμε το ΑΦΜ σας και θα προστεθεί ΦΠΑ.\n\nΜόλις γίνει, αγοράζουμε αμέσως και το domain name που θα μας πείτε.\n\nΕυχαριστούμε πολύ!'],
-  ['First draft · with articles section','Καλησπέρα σας {name},\n\nεργαστήκαμε με τη δική σας ιστοσελίδα και οι 4 μας, και καταφέραμε μόλις να ολοκληρώσουμε την κατασκευή μιας καλής πρώτης εικόνας της ιστοσελίδας σας. Μπορείτε να τη δείτε εδώ:\n{site}\n\nΑνοίξτε την και από υπολογιστή, να δείτε πώς φαίνεται κι εκεί.\n\n✏️ Αν θέλετε οποιαδήποτε αλλαγή — μικρή ή μεγάλη — γράψτε τη μας εδώ, αριθμημένα (1., 2., 3.), όσο πιο συγκεκριμένα γίνεται: οι αλλαγές είναι απεριόριστες μέχρι τη δημοσίευση. Μόλις τις στείλετε όλες, πατήστε «Έστειλα όλες τις αλλαγές» και τις κάνουμε μέσα σε 24 ώρες. Παραδείγματα: [Οδηγός αλλαγών](#odigos)\n\n🚀 Αν είναι ήδη όπως τη θέλετε, πατήστε «Όλα καλά — πάμε live» και γράψτε μας το domain που θα θέλατε (π.χ. epitheto-epaggelma.gr).\n\nΓια τη μεταφορά (για τη φιλοξενία και το domain name μαζί, για 365 ημέρες που μετράνε από τη μέρα που θα ολοκληρώσουμε, συν τη σύνδεση με την ενότητα άρθρων που θα ελέγχετε εσείς), που γίνεται κανονικά κατά την παράδοση του πρώτου draft: αν ΔΕΝ θέλετε απόδειξη-τιμολόγιο μπορείτε να μπείτε εδώ:\nhttps://buy.stripe.com/3cI5kDazDdFQbnY9TI3cc0q\nΑλλιώς θα χρειαστούμε το ΑΦΜ σας και θα προστεθεί ΦΠΑ.\n\nΓια τα άρθρα θα σας εξηγήσουμε στο τέλος πώς θα τα γράφετε εσείς — είναι πολύ εύκολο από τη δική σας πλευρά.\n\nΜόλις γίνει, αγοράζουμε αμέσως και το domain name που θα μας πείτε.\n\nΕυχαριστούμε πολύ!'],
+  ['First draft · plain (hosting + domain)','Καλησπέρα σας {name},\n\nεργαστήκαμε με τη δική σας ιστοσελίδα και οι 4 μας, και καταφέραμε μόλις να ολοκληρώσουμε την κατασκευή μιας καλής πρώτης εικόνας της ιστοσελίδας σας. Μπορείτε να τη δείτε εδώ:\n{site}\n\nΑνοίξτε την και από υπολογιστή, να δείτε πώς φαίνεται κι εκεί.\n\n✏️ Αν θέλετε οποιαδήποτε αλλαγή — μικρή ή μεγάλη — γράψτε τη μας εδώ, αριθμημένα (1., 2., 3.), όσο πιο συγκεκριμένα γίνεται: οι αλλαγές είναι απεριόριστες μέχρι τη δημοσίευση. Μόλις τις στείλετε όλες, πατήστε «Έστειλα όλες τις αλλαγές» και τις κάνουμε μέσα σε 24 ώρες. Παραδείγματα: [Οδηγός αλλαγών](#odigos)\n\n🚀 Αν είναι ήδη όπως τη θέλετε, πατήστε «Όλα καλά — πάμε live» και γράψτε μας το domain που θα θέλατε (π.χ. epitheto-epaggelma.gr).\n\nΓια τη μεταφορά (για τη φιλοξενία και το domain name μαζί, για 365 ημέρες που μετράνε από τη μέρα που θα ολοκληρώσουμε), που γίνεται κατά την παράδοση του πρώτου draft: αν ΔΕΝ θέλετε απόδειξη-τιμολόγιο μπορείτε να μπείτε εδώ:\nhttps://buy.stripe.com/9B68wP37b6doajUc1Q3cc06\nΑλλιώς θα χρειαστούμε το ΑΦΜ σας και θα προστεθεί ΦΠΑ.\n\nΜόλις γίνει, αγοράζουμε αμέσως και το domain name που θα μας πείτε.\n\nΕυχαριστούμε πολύ!'],
+  ['First draft · with contact form','Καλησπέρα σας {name},\n\nεργαστήκαμε με τη δική σας ιστοσελίδα και οι 4 μας, και καταφέραμε μόλις να ολοκληρώσουμε την κατασκευή μιας καλής πρώτης εικόνας της ιστοσελίδας σας. Μπορείτε να τη δείτε εδώ:\n{site}\n\nΑνοίξτε την και από υπολογιστή, να δείτε πώς φαίνεται κι εκεί.\n\n✏️ Αν θέλετε οποιαδήποτε αλλαγή — μικρή ή μεγάλη — γράψτε τη μας εδώ, αριθμημένα (1., 2., 3.), όσο πιο συγκεκριμένα γίνεται: οι αλλαγές είναι απεριόριστες μέχρι τη δημοσίευση. Μόλις τις στείλετε όλες, πατήστε «Έστειλα όλες τις αλλαγές» και τις κάνουμε μέσα σε 24 ώρες. Παραδείγματα: [Οδηγός αλλαγών](#odigos)\n\n🚀 Αν είναι ήδη όπως τη θέλετε, πατήστε «Όλα καλά — πάμε live» και γράψτε μας το domain που θα θέλατε (π.χ. epitheto-epaggelma.gr).\n\nΓια τη μεταφορά (για τη φιλοξενία και το domain name μαζί, για 365 ημέρες που μετράνε από τη μέρα που θα ολοκληρώσουμε, συν τη ΦΟΡΜΑ επικοινωνίας που φτιάξαμε και συνδέσαμε με το e-mail σας), που γίνεται κατά την παράδοση του πρώτου draft: αν ΔΕΝ θέλετε απόδειξη-τιμολόγιο μπορείτε να μπείτε εδώ:\nhttps://buy.stripe.com/5kQ8wP37bcBM0Jk1nc3cc0k\nΑλλιώς θα χρειαστούμε το ΑΦΜ σας και θα προστεθεί ΦΠΑ.\n\nΜόλις γίνει, αγοράζουμε αμέσως και το domain name που θα μας πείτε.\n\nΕυχαριστούμε πολύ!'],
+  ['First draft · with articles section','Καλησπέρα σας {name},\n\nεργαστήκαμε με τη δική σας ιστοσελίδα και οι 4 μας, και καταφέραμε μόλις να ολοκληρώσουμε την κατασκευή μιας καλής πρώτης εικόνας της ιστοσελίδας σας. Μπορείτε να τη δείτε εδώ:\n{site}\n\nΑνοίξτε την και από υπολογιστή, να δείτε πώς φαίνεται κι εκεί.\n\n✏️ Αν θέλετε οποιαδήποτε αλλαγή — μικρή ή μεγάλη — γράψτε τη μας εδώ, αριθμημένα (1., 2., 3.), όσο πιο συγκεκριμένα γίνεται: οι αλλαγές είναι απεριόριστες μέχρι τη δημοσίευση. Μόλις τις στείλετε όλες, πατήστε «Έστειλα όλες τις αλλαγές» και τις κάνουμε μέσα σε 24 ώρες. Παραδείγματα: [Οδηγός αλλαγών](#odigos)\n\n🚀 Αν είναι ήδη όπως τη θέλετε, πατήστε «Όλα καλά — πάμε live» και γράψτε μας το domain που θα θέλατε (π.χ. epitheto-epaggelma.gr).\n\nΓια τη μεταφορά (για τη φιλοξενία και το domain name μαζί, για 365 ημέρες που μετράνε από τη μέρα που θα ολοκληρώσουμε, συν τη σύνδεση με την ενότητα άρθρων που θα ελέγχετε εσείς), που γίνεται κατά την παράδοση του πρώτου draft: αν ΔΕΝ θέλετε απόδειξη-τιμολόγιο μπορείτε να μπείτε εδώ:\nhttps://buy.stripe.com/3cI5kDazDdFQbnY9TI3cc0q\nΑλλιώς θα χρειαστούμε το ΑΦΜ σας και θα προστεθεί ΦΠΑ.\n\nΓια τα άρθρα θα σας εξηγήσουμε στο τέλος πώς θα τα γράφετε εσείς — είναι πολύ εύκολο από τη δική σας πλευρά.\n\nΜόλις γίνει, αγοράζουμε αμέσως και το domain name που θα μας πείτε.\n\nΕυχαριστούμε πολύ!'],
   ['Changes done · check + two buttons','Καλησπέρα σας {name},\n\nοι αλλαγές σας έγιναν:\n1. \n2. \n\nΔείτε τα εδώ: {site}\n(Αν δεν φαίνονται αμέσως, κάντε ανανέωση της σελίδας.)\n\nΕλέγξτε, παρακαλώ, όλη την ιστοσελίδα μια φορά — από την αρχή μέχρι το τέλος, και από κινητό — και μετά πατήστε ένα από τα δύο κουμπιά:\n\n✏️ Έχω κι άλλες αλλαγές → γράψτε τις εδώ και πατήστε «Έστειλα όλες τις αλλαγές».\n\n🚀 Όλα καλά → πατήστε «Όλα καλά — πάμε live» και γράψτε μας το domain που θα θέλατε (π.χ. epitheto-epaggelma.gr). Το ελέγχουμε, το αγοράζουμε και η ιστοσελίδα σας είναι online σε 1–2 ημέρες.'],
   ['Domain connected · review ask',CH_DOMAIN_LIVE],
   ['Ask for the domain','Τέλεια, χαίρομαι που σας αρέσει! Για να τη δημοσιεύσουμε χρειαζόμαστε το όνομα της σελίδας (domain). Προτείνουμε κάτι απλό και επαγγελματικό, όπως epitheto-epaggelma.gr ή onoma-epitheto.gr — ή ό,τι άλλο θέλετε. Στείλτε μου το όνομα που θέλετε και ελέγχω αμέσως ότι είναι διαθέσιμο.'],
   ['Nudge · press «Ξεκινήστε»','Τα έλαβα, ευχαριστώ πολύ! Μόλις στείλετε ό,τι άλλο έχετε (αν έχετε), πατήστε το κουμπί «Ξεκινήστε την ιστοσελίδα μου» — έτσι ξεκινάμε αμέσως και σε 5–10 ημέρες θα έχετε εδώ το πρώτο draft.'],
   ['Nudge · press «Έστειλα όλες τις αλλαγές»','Τις έλαβα! Αν αυτές είναι όλες οι αλλαγές, πατήστε το κουμπί «Έστειλα όλες τις αλλαγές» και τις κάνω όλες μαζί μέσα σε 24 ώρες. Αν θυμηθείτε κάτι ακόμη, γράψτε το μου πρώτα.'],
-  ['Need photos only','Για να ξεκινήσω χρειάζομαι μόνο λίγες φωτογραφίες σε καλή ανάλυση — εσείς, ο χώρος σας και το λογότυπο αν υπάρχει. Στείλτε τις εδώ ή στο advonmd@gmail.com όποτε σας βολεύει (τίποτα άλλο δεν είναι υποχρεωτικό) και πατήστε «Ξεκινήστε την ιστοσελίδα μου».'],
+  ['Need photos only','Για να ξεκινήσω χρειάζομαι μόνο λίγες φωτογραφίες σε καλή ανάλυση — εσείς, ο χώρος σας και το λογότυπο αν υπάρχει. Στείλτε τις εδώ, στη συνομιλία, όποτε σας βολεύει (τίποτα άλλο δεν είναι υποχρεωτικό) και πατήστε «Ξεκινήστε την ιστοσελίδα μου».'],
   ['FAQ · changes after publishing','Μέχρι τη δημοσίευση οι αλλαγές είναι απεριόριστες. Μετά τη δημοσίευση, κάθε αίτημα αλλαγών κοστίζει 50€ και ολοκληρώνεται εντός 3 εργάσιμων ημερών — ένα αίτημα μπορεί να περιλαμβάνει πολλές αλλαγές μαζί. Εναλλακτικά, με τον Πίνακα Διαχείρισης (180€ εφάπαξ) αλλάζετε μόνοι σας κείμενα και εικόνες όποτε θέλετε.'],
   ['FAQ · admin panel','Ο Πίνακας Διαχείρισης (180€ εφάπαξ) είναι μια απλή σελίδα διαχείρισης όπου αλλάζετε μόνοι σας κείμενα και εικόνες, όποτε θέλετε, χωρίς να χρειάζεστε εμάς — δωρεάν, έως 5 αλλαγές τον μήνα. Αν θέλετε, το ενσωματώνω στη σελίδα σας.'],
   ['FAQ · articles section','Η Ενότητα Άρθρων / Σεμιναρίων (70€ εφάπαξ) είναι ένα δικό σας τμήμα στη σελίδα όπου ανεβάζετε και επεξεργάζεστε άρθρα, σεμινάρια ή εργαστήρια μόνοι σας, όποτε θέλετε.'],
@@ -7914,6 +7919,7 @@ const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, ca
         const before=new Map(this.list.map(t=>[t.slug,t.unreadAdmin||0]));
         this.list=Array.isArray(p.threads)?p.threads:[]; this.head=p.head; this.notify=p.notify||null; this.online=p.onlineSlugs||[]; this.state='ok'; this.err=''; this.lastAt=Date.now();
         const fresh=this.list.filter(t=>(t.unreadAdmin||0)>(before.get(t.slug)||0) && before.size);
+        if(fresh.length && typeof Reminders!=='undefined' && Date.now()-Reminders.lastAt>20000) setTimeout(()=>Reminders.pull(false),4000);
         if(fresh.length){ toast('💬 '+fresh.map(t=>t.name).join(', ')+' wrote to you', true); if(this.cur && fresh.some(t=>t.slug===this.cur)) this.pullThread(true); }
         this.prefetch();
       } else { this.state='ok'; this.lastAt=Date.now(); }
@@ -8090,21 +8096,28 @@ const chMailOk=e=>/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(String(e||''));
    by itself — name, phone and e-mail from the card (bookings fill those in), the stage that matches, the welcome messages.
    Only cards moved after this version went live (state.meta.chatAutoSince); a chat with the same name is linked instead. */
 const CH_AUTO={needinfo:'yliko', building:'yliko', review:'draft', changes:'changes'};
-const chCreating=new Set();
-function chAutoCreate(){
-  if(!state || !Array.isArray(state.clients) || Chats.state!=='ok') return;
-  const since=(state.meta&&state.meta.chatAutoSince)||0; if(!since) return;
-  state.clients.filter(c=>!isTrashed(c) && CH_AUTO[c.stage] && !c.chat && !c.chatOff && (c.stageAt||0)>=since && String(c.name||'').trim().length>=2 && !chCreating.has(c.id)).forEach(c=>{
+const CH_AUTO_FROM='2026-09';          /* every card of September 2026 on, in one of those stages, has a chat (Angelo, 23 Sept 2026) */
+const chCreating=new Set(); let chAutoBusy=false;
+async function chAutoCreate(){
+  if(chAutoBusy || !state || !Array.isArray(state.clients) || Chats.state!=='ok') return;
+  const since=(state.meta&&state.meta.chatAutoSince)||0;
+  const todo=state.clients.filter(c=>!isTrashed(c) && CH_AUTO[c.stage] && !c.chat && !c.chatOff && ((c.month||'')>=CH_AUTO_FROM || (since && (c.stageAt||0)>=since)) && String(c.name||'').trim().length>=2 && !chCreating.has(c.id));
+  if(!todo.length) return;
+  chAutoBusy=true; const made=[];
+  for(const c of todo){                /* one at a time — each is one commit in the data repo */
     const same=Chats.list.find(t=>!t.archived && !t.demo && chSameName(t.name,c.name));
-    if(same){ c.chat=same.slug; save(); return; }
+    if(same){ c.chat=same.slug; save(); continue; }
     chCreating.add(c.id);
     const st=CH_AUTO[c.stage], from=stageById(c.stage).name;
-    const welcome=[CH_WELCOME]; if(c.stage==='needinfo') welcome.push(c.dat?CH_YLIKO_DAT:CH_YLIKO_PLAIN);
-    Chats.create({name:String(c.name).trim(), phone:c.phone||'', email:chMailOk(c.email)?c.email:'', stage:st, dat:!!c.dat, building:c.stage==='building', welcome, log:'Chat created by the Board («'+from+'»)'})
-      .then(p=>{ c.chat=p.thread.slug; c.chatStage=st; c.chatBoard=c.stage; c.updated=Date.now(); save(); renderAll(); if(!chMailOk(c.email)) chNeedMail.add(p.thread.slug); toast(c.name+' · chat created from the Board'+(chMailOk(c.email)?' — send them the link':' — no e-mail: open the chat and add it'), true); })
-      .catch(e=>{ toast('Could not create '+c.name+'\'s chat: '+(e.message||'')); })
-      .finally(()=>chCreating.delete(c.id));
-  });
+    try{
+      /* created EMPTY: nothing reaches the client until Angelo picks the welcome in the chat (Υλικό or Υλικό · doctoranytime) */
+      const p=await Chats.create({name:String(c.name).trim(), phone:c.phone||'', email:chMailOk(c.email)?c.email:'', stage:st, building:c.stage==='building', welcome:[], log:'Chat created by the Board («'+from+'») — nothing sent yet'});
+      c.chat=p.thread.slug; c.chatStage=st; c.chatBoard=c.stage; c.updated=Date.now(); save(); made.push(c.name);
+    }catch(e){ toast('Could not create '+c.name+'\'s chat: '+(e.message||'')); }
+    chCreating.delete(c.id);
+  }
+  chAutoBusy=false;
+  if(made.length){ renderAll(); toast((made.length===1?made[0]+' now has a chat':made.length+' clients now have a chat')+' — open it in Chats and pick the welcome', true); }
 }
 const chNeedMail=new Set();
 function chSyncBoard(){
@@ -8299,7 +8312,12 @@ function renderChatThread(keep){
   const lg=(t.log||[]).slice(-4); if(lg.length) out.push(`<div class="ch-log">${lg.map(l=>`<span><b>${esc(l.by==='system'?'auto':l.by)}</b> ${esc(chWhen(l.at))} · ${esc(l.text)}</span>`).join('')}</div>`);
   /* no e-mail on the card → ask for it right here (the client is never told about answers until it is there) */
   if(!t.email && !t.archived && !t.demo) out.push(`<div class="ch-askmail"><span>📧 I need ${esc(t.name.split(' ')[0])}'s e-mail — without it they get no alerts and no reminders.</span><input id="chMailIn" type="email" placeholder="name@example.gr" autocomplete="off"><button id="chMailSave">Save</button></div>`);
-  if(!all.length) out.push(`<div class="ch-empty"><b>Nothing sent yet</b>Send the link on Viber — ${esc(chLink(t))} — and write the first message here so they find it waiting.</div>`);
+  const sentAny=Chats.msgs.some(m=>m.from!=='client');
+  if(!sentAny && !t.demo && !t.archived){
+    const ylk=chStage(t)==='yliko';
+    out.push(`<div class="ch-start"><b>Nothing sent to ${esc(t.name.split(' ')[0])} yet.</b><span>${ylk?'Which one is it? One tap sends the welcome + what we need, and copies the link for Viber.':'One tap sends the welcome and copies the link for Viber — then the stage message is ready in the box.'}</span><div class="cs-btns">${ylk?`<button data-start="plain">📷 Υλικό</button><button data-start="dat">🩺 Υλικό · doctoranytime</button>`:`<button data-start="welcome">👋 Send the welcome</button>`}</div></div>`);
+  }
+  else if(!all.length) out.push(`<div class="ch-empty"><b>Nothing sent yet</b>Send the link on Viber — ${esc(chLink(t))} — and write the first message here so they find it waiting.</div>`);
   all.forEach((m,i)=>{
     const d=new Date(m.at); const dk=d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
     if(dk!==lastDay){ out.push(`<div class="ch-day"><span>${chDayLabel(m.at)}</span></div>`); lastDay=dk; prev=null; }
@@ -8316,6 +8334,7 @@ function renderChatThread(keep){
     prev=m;
   });
   { const keepVal=(()=>{ const i=$('#chMailIn'); return i&&document.activeElement===i?i.value:null; })(); feed.innerHTML=out.join(''); const i=$('#chMailIn'); if(i&&keepVal!=null){ i.value=keepVal; i.focus(); i.setSelectionRange(keepVal.length,keepVal.length); } }
+  feed.querySelectorAll('[data-start]').forEach(b=>b.addEventListener('click',()=>chStart(t,b.dataset.start)));
   { const sv=$('#chMailSave'), inp=$('#chMailIn'); if(sv&&inp){ const go=async()=>{ const em=inp.value.trim(); if(!chMailOk(em)){ toast('That does not look like an e-mail'); inp.focus(); return; } sv.disabled=true; try{ await Chats.meta(t.slug,{email:em}); const c=chClientFor(t); if(c&&!c.email){ c.email=em; save(); } chNeedMail.delete(t.slug); toast('E-mail saved — alerts and reminders are on for '+t.name); }catch(e){ sv.disabled=false; toast('Could not save'); } }; sv.addEventListener('click',go); inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); go(); } }); } }
   if(!keep || nearBottom) feed.scrollTop=feed.scrollHeight;
   feed.querySelectorAll('.ch-pics img[data-path]').forEach(async im=>{ if(im.getAttribute('src')) return; try{ const u=await Chats.fileUrl(im.dataset.path); if(u) im.src=u; }catch(e){} });
@@ -8510,6 +8529,21 @@ function renderHomeReminders(){
   const x=$('#rmNewX'); if(x) x.addEventListener('click',()=>{ R.newOpen=false; renderHomeReminders(); });
 }
 (function remWire(){ const n=$('#remNew'), r=$('#remRefresh'); if(n) n.addEventListener('click',()=>{ Reminders.newOpen=!Reminders.newOpen; renderHomeReminders(); if(Reminders.newOpen) setTimeout(()=>{ const e=$('#rmNewName'); if(e) e.focus(); },40); }); if(r) r.addEventListener('click',()=>Reminders.pull(true)); })();
+/* the first messages of a chat, with one tap: welcome (+ the Υλικό message, plain or doctoranytime) */
+async function chStart(t, kind){
+  const texts=[CH_WELCOME]; if(kind==='plain') texts.push(CH_YLIKO_PLAIN); if(kind==='dat') texts.push(CH_YLIKO_DAT);
+  document.querySelectorAll('[data-start]').forEach(b=>b.disabled=true);
+  try{
+    if(kind==='dat'||kind==='plain'){ if(!!t.dat!==(kind==='dat')) await Chats.meta(t.slug,{dat:kind==='dat'}); }
+    if(window.DEMO_CHATS){ const now=new Date().toISOString(); const arr=window.DEMO_CHATS.messages[t.slug]||(window.DEMO_CHATS.messages[t.slug]=[]); texts.forEach((x,i)=>arr.push({id:'s'+Date.now()+i,from:'advon',text:x,files:[],at:now})); const tt=window.DEMO_CHATS.threads.find(x=>x.slug===t.slug); if(tt){ tt.n=arr.length; tt.lastAt=now; tt.lastFrom='advon'; tt.lastText=texts[texts.length-1].slice(0,140); } }
+    else for(const [i,x] of texts.entries()){
+      const r=await fetch(CHAT_URL+'?t='+encodeURIComponent(t.slug),{method:'POST', headers:{...Chats.hdr(),'Content-Type':'application/json'}, body:JSON.stringify({text:x, cid:'st'+Date.now().toString(36)+i})});
+      const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok) throw new Error(p.error||'could not send');
+    }
+    Chats.head=null; Chats.thead=null; await Chats.pull(false); if(Chats.cur===t.slug) await Chats.pullThread(true);
+    const tt=Chats.list.find(x=>x.slug===t.slug)||t; chShowLink(tt);
+  }catch(e){ toast('Could not send: '+(e.message||'')); document.querySelectorAll('[data-start]').forEach(b=>b.disabled=false); }
+}
 /* a chat the Board created at «First draft» / «Changes» carries only the welcome — the matching message waits in the box */
 const chPrefilled=new Set();
 function chPrefillNew(t){
