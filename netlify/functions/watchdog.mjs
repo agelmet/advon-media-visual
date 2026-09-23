@@ -9,8 +9,13 @@
 // the data repo; the weekly "portfolio watchdog" agent reads that file and tells
 // Angelo what needs attention. Uses the same CRM_GH_* env vars as /api/crm.
 //
+// Google check (23 Sept 2026, after APOSTOLAKI sat 10 days as «Indexed, though blocked by robots.txt»): every site's
+// /robots.txt («Disallow: /» for all agents), a noindex <meta> in the HTML and an X-Robots-Tag noindex header are
+// flagged as problem «Google blocked: …», and a NEWLY blocked site sends Angelo a Telegram the same morning.
+//
 // Manual run: GET https://advonmedia.com/.netlify/functions/watchdog?all=1&key=<CRM_AUTH_HASH prefix 12>
 import tls from 'node:tls';
+import { mailConf, sendTelegram, tgEsc } from '../../lib/chatcore.js';
 
 export const config = { schedule: '0 5 * * *' };
 
@@ -75,9 +80,33 @@ async function checkSite(site) {
     out.mailto = /href=["']mailto:/i.test(html);
     out.blankPage = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<[^>]+>/g, '').trim().length < 200;
     out.parked = /domain (is )?(parked|for sale)|this domain has expired|papaki\.com\/parking|hostinger.*parking/i.test(html);
+    // --- can Google read it? ---
+    const blocks = [];
+    if (/noindex/i.test(res.headers.get('x-robots-tag') || '')) blocks.push('X-Robots-Tag noindex header');
+    const head = html.split(/<\/head>/i)[0];
+    if (/<meta[^>]+name=["']?(robots|googlebot)["']?[^>]+content=["'][^"']*noindex/i.test(head)) blocks.push('noindex meta tag in the page');
+    try {
+      const rc = new AbortController(); const rt = setTimeout(() => rc.abort(), 5000);
+      const rr = await fetch(new URL('/robots.txt', res.url).href, { signal: rc.signal, headers: { 'User-Agent': 'Mozilla/5.0 (compatible; AdvonWatchdog/1.0)' } });
+      clearTimeout(rt);
+      if (rr.ok) {
+        // group rules by user-agent; blocked when the «*» (or Googlebot) group has «Disallow: /»
+        let agents = [], inRules = false, blocked = false;
+        for (const raw of (await rr.text()).split(/\r?\n/)) {
+          const line = raw.replace(/#.*/, '').trim(); if (!line) continue;
+          const m = line.match(/^([a-z-]+)\s*:\s*(.*)$/i); if (!m) continue;
+          const k = m[1].toLowerCase(), v = m[2].trim();
+          if (k === 'user-agent') { if (inRules) { agents = []; inRules = false; } agents.push(v.toLowerCase()); }
+          else { inRules = true; if (k === 'disallow' && v === '/' && agents.some((a) => a === '*' || a === 'googlebot')) blocked = true; }
+        }
+        if (blocked) blocks.push('robots.txt «Disallow: /»');
+      }
+    } catch {}
+    out.googleBlocked = blocks.length ? blocks.join(' + ') : null;
     if (res.status >= 400) out.problem = `HTTP ${res.status}`;
     else if (out.blankPage) out.problem = 'page is empty';
     else if (out.parked) out.problem = 'domain parked / expired';
+    else if (out.googleBlocked) out.problem = `Google blocked: ${out.googleBlocked}`;
   } catch (e) {
     out.ms = Date.now() - t0; out.status = 0; out.error = String(e.name === 'AbortError' ? 'timeout' : (e.cause && e.cause.code) || e.message).slice(0, 80);
     out.problem = /ENOTFOUND|EAI_AGAIN/.test(out.error) ? 'domain does not resolve (expired?)' : /CERT|certificate/i.test(out.error) ? 'SSL certificate problem' : `unreachable (${out.error})`;
@@ -112,8 +141,10 @@ export default async (req) => {
   const day = new Date().getUTCDay();
   const todays = manual ? sites : sites.filter((_, i) => i % 7 === day);
   const results = await pool(todays, CONCURRENCY, checkSite);
+  let prevReport = {};
   for (let attempt = 0; attempt < 3; attempt++) {
     const { sha, data } = await readJson(c, REPORT_PATH);
+    if (attempt === 0) prevReport = JSON.parse(JSON.stringify(data || {}));
     const rep = data && typeof data === 'object' ? data : { sites: {} };
     rep.sites = rep.sites || {};
     results.forEach((r) => { const prev = rep.sites[r.domain] || {}; rep.sites[r.domain] = { ...r, firstProblemAt: r.problem ? (prev.problem ? prev.firstProblemAt || r.checkedAt : r.checkedAt) : null }; });
@@ -122,5 +153,11 @@ export default async (req) => {
     catch (e) { if (attempt === 2) throw e; }
   }
   const problems = results.filter((r) => r.problem).map((r) => `${r.domain}: ${r.problem}`);
+  // Telegram the same morning for every site that has JUST become invisible to Google (not repeated daily).
+  const newlyBlocked = results.filter((r) => r.googleBlocked && !(prevReport.sites && prevReport.sites[r.domain] && prevReport.sites[r.domain].googleBlocked));
+  if (newlyBlocked.length) {
+    const lines = newlyBlocked.map((r) => `• <b>${tgEsc(r.domain)}</b> — ${tgEsc(r.googleBlocked)}`).join('\n');
+    await sendTelegram(mailConf(), `🚫 <b>Google cannot read ${newlyBlocked.length === 1 ? 'this site' : 'these sites'}</b>\n${lines}\n\nFix: in Cowork say «fix Google on ${tgEsc(newlyBlocked[0].domain)}» (draft.sh golive).`, { html: true }).catch(() => {});
+  }
   return new Response(JSON.stringify({ checked: results.length, problems }, null, 1), { status: 200, headers: { 'Content-Type': 'application/json' } });
 };
