@@ -134,8 +134,6 @@ a{color:inherit}
 .hint{text-align:center;font-size:11px;color:#98A2B8;font-weight:600;padding-top:8px}
 .hint a{color:var(--muted);text-decoration:none}
 /* stage hint + chips + guide sheet */
-.demoband{display:flex;align-items:center;gap:8px;background:#FFF4D6;color:#7A5A00;font-size:12px;font-weight:700;padding:7px 16px;border-bottom:1px solid #F5E2A8}
-.demoband[hidden]{display:none}
 .stagehint{font-size:12.5px;font-weight:600;color:var(--muted);background:#fff;border-bottom:1px solid var(--line);padding:0 16px 10px;line-height:1.45}
 .stagehint a{color:var(--brand);font-weight:800;text-decoration:none}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:0 2px 10px;scrollbar-width:none}
@@ -338,7 +336,6 @@ a{color:inherit}
   </header>
   <div class="stages" id="stages" hidden></div>
   <div class="stagehint" id="stagehint" hidden></div>
-  <div class="demoband" id="demoband" hidden>🧪 Δοκιμαστική συνομιλία — απαντά αμέσως, όπως θα απαντούσαμε στην πραγματικότητα μετά από μερικές ημέρες.</div>
   <div class="feed" id="feed"><div class="skel"><i></i></div></div>
   <button class="newpill" id="newpill">↓ Νέο μήνυμα</button>
   <footer class="dock" id="dock" hidden>
@@ -612,7 +609,6 @@ function renderHead(){
   if(idx<0){st.hidden=true;return;}
   st.hidden=false; st.innerHTML=STAGES.map((s,i)=>'<div class="st'+(i<idx?' done':i===idx?' now':'')+'"><span class="dot">'+(i<idx?'✓':i+1)+'</span><span class="lbl">'+s[1]+'</span><span class="bar"></span></div>').join('');
   const sh=$('#stagehint'); sh.hidden=false; sh.innerHTML='<span class="tx">'+esc(stageHint(t))+(stg==='yliko'?' <a href="#" data-sheet="yliko">Τι χρειαζόμαστε →</a>':stg==='live'?'':' <a href="#" data-sheet="odigos">Οδηγός αλλαγών →</a>')+'</span>';
-  { const db=$('#demoband'); if(db) db.hidden=!t.demo; }
   const chips=$('#chips'); chips.innerHTML=chipsFor(t).map((c,i)=>'<button class="chip" data-chip="'+i+'"><span>'+c[0]+'</span>'+esc(c[1])+'</button>').join('');
   renderReady(t);
   const xb=document.querySelector('#xForm .xbtn'); if(xb){ xb.hidden=!!t.form; const asked=formAsked(); xb.disabled=asked; xb.textContent=asked?'✓ Το ζητήσατε — θα την προσθέσουμε':'Τη θέλω στη σελίδα μου'; }

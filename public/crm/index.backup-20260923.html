@@ -1992,36 +1992,6 @@ body.dark .ch-sug{background:linear-gradient(135deg,#1E1A33,#15202F); border-col
 .ch-stage.paid{background:var(--green); color:#fff;}
 .ch-stage.part{background:var(--green-soft); color:var(--deep);}
 .ch-ib.live:hover{background:var(--brand); color:#fff;}
-/* Home · Client reminders (⏰ events in the Google Calendar «Advon Media», 23 Sept 2026) */
-.rem-card .home-card-body{display:flex; flex-direction:column; gap:6px;}
-.rm-grp{font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:6px 4px 0;}
-.rm-grp.over{color:var(--red);} .rm-grp.today{color:#B85F00;}
-.rm-row{display:grid; grid-template-columns:auto 1fr auto; gap:4px 12px; align-items:center; padding:9px 12px; border-radius:12px; background:var(--bg);}
-.rm-row.over{background:linear-gradient(90deg,var(--red-soft),var(--bg) 70%); border:1px solid rgba(255,107,87,.3);}
-.rm-row.today{background:linear-gradient(90deg,var(--orange-soft),var(--bg) 70%); border:1px solid rgba(255,138,0,.3);}
-.rm-row.done{opacity:.55;}
-.rm-when{font-family:'Sora'; font-weight:800; font-size:12px; color:var(--brand); min-width:86px; font-variant-numeric:tabular-nums; white-space:nowrap;}
-.rm-row.over .rm-when{color:var(--red);} .rm-row.today .rm-when{color:#B85F00;}
-.rm-main{min-width:0; font-size:13.5px;} .rm-main b{font-weight:800;} .rm-main small{display:block; font-size:11.5px; color:var(--muted); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.rm-act{display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;}
-.rm-act button{font-size:11.5px; font-weight:800; padding:6px 10px; border-radius:9px; border:1px solid var(--line); background:#fff; color:var(--ink); white-space:nowrap;}
-.rm-act .go{background:var(--brand); color:#fff; border-color:transparent;}
-body.dark .rm-act button{background:var(--surface);}
-.rm-foot{font-size:11.5px; color:var(--muted); padding:4px 4px 0; line-height:1.45;}
-.rm-foot b{color:var(--ink);}
-.rm-new{display:grid; grid-template-columns:1fr 1.4fr auto auto; gap:8px; align-items:end; padding:10px 12px; border-radius:12px; background:var(--bg); border:1px dashed var(--line);}
-.rm-new label{display:flex; flex-direction:column; gap:3px; font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.06em;}
-.rm-new input{height:34px; border-radius:9px; border:1px solid var(--line); padding:0 10px; font-size:13px; background:#fff; color:var(--ink); min-width:0;}
-body.dark .rm-new input{background:var(--surface);}
-.rm-new button{height:34px; font-size:12px; font-weight:800; padding:0 12px; border-radius:9px; border:0; background:var(--brand); color:#fff; white-space:nowrap;}
-.rm-new button.gh{background:transparent; color:var(--muted); border:1px solid var(--line);}
-@media (max-width:640px){ .rm-new{grid-template-columns:1fr 1fr;} .rm-row{grid-template-columns:auto 1fr;} .rm-act{grid-column:1/3; justify-content:flex-start;} }
-/* Chats · «add the e-mail» bar + the demo (sandbox) chat */
-.ch-askmail{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:0 0 10px; padding:10px 12px; border-radius:12px; background:var(--orange-soft); border:1px solid rgba(255,138,0,.3); font-size:12.5px; font-weight:700; color:#7A4A00;}
-.ch-askmail input{flex:1 1 180px; height:32px; border-radius:9px; border:1px solid rgba(255,138,0,.4); padding:0 10px; font-size:13px; background:#fff; color:var(--ink);}
-.ch-askmail button{height:32px; padding:0 12px; border-radius:9px; border:0; background:var(--brand); color:#fff; font-size:12px; font-weight:800;}
-.ch-demo{display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:800; color:#7A5A00; background:#FFF4D6; border-radius:999px; padding:2px 9px; margin-left:6px; vertical-align:middle;}
-.ch-demosel{height:34px; border-radius:10px; border:1px solid #F5E2A8; background:#FFF4D6; color:#7A5A00; font-size:12.5px; font-weight:800; padding:0 8px;}
 .ch-nomail{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:800; color:#B85F00; background:var(--orange-soft); border-radius:999px; padding:2px 9px; cursor:pointer; border:0;}
 .chip.chat{background:var(--blue-soft); color:var(--brand); font-weight:700; cursor:pointer;}
 .chip.chat.wait{background:var(--red-soft); color:var(--red);}
@@ -2187,10 +2157,6 @@ body.dark .rm-new input{background:var(--surface);}
       <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--blue)" data-ic="calendar"></span><h3>Booked meetings</h3><span class="hc-hint" id="homeWeekHint"></span><button class="hc-link" id="bkRefresh" title="Read the booking calendar again now">Check calendar</button><button class="hc-link" data-goto="calendar">Open calendar</button></div>
       <div class="home-card-body" id="homeWeek"></div>
       <div id="bkBody" class="bk-strip"></div>
-    </section>
-    <section class="home-card wide rem-card" id="homeRemCard">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--orange-soft);color:var(--orange)" data-ic="clock"></span><h3>Client reminders</h3><span class="hc-hint" id="homeRemHint"></span><button class="hc-link" id="remNew" title="Add a reminder — it goes into your Google Calendar «Advon Media» as a ⏰ event">+ New</button><button class="hc-link" id="remRefresh" title="Read the calendar again now">Check calendar</button></div>
-      <div class="home-card-body" id="homeRem"></div>
     </section>
     <section class="home-card wide chats-card" id="homeChatsCard">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--brand)" data-ic="message"></span><h3>Client chats</h3><span class="hc-hint" id="homeChatsHint"></span><button class="hc-link" data-goto="chats">Open Chats</button></div>
@@ -3680,7 +3646,7 @@ function dropHandlers(el, stageId){
       if(stageId==='thinking'){ if(!cl.thinkAt) cl.thinkAt=Date.now(); thinkOpen=true; }
       else { cl.thinkAt=null; delete cl.thinkAck; }
       save(); renderAll(); toast(cl.name+' → '+stageById(stageId).name);
-      try{ chSyncBoard(); }catch(err){}
+      if(cl.chat){ try{ chSyncBoard(); }catch(err){} }
     }
   });
 }
@@ -3830,9 +3796,8 @@ function markLost(id){
 /* bring a lost client back into the working pipeline */
 function reviveClient(id, toStage){
   const c=state.clients.find(x=>x.id===id); if(!c) return;
-  c.stage=toStage||'booked'; delete c.lostReason; c.lostAt=null; c.updated=Date.now(); c.stageAt=Date.now();
+  c.stage=toStage||'booked'; delete c.lostReason; c.lostAt=null; c.updated=Date.now();
   save(); renderAll(); toast(c.name+' → '+stageById(c.stage).name);
-  try{ chSyncBoard(); }catch(err){}
 }
 function qaSubmit(){
   const name=$('#qaName').value.trim(); if(!name){ $('#qaName').focus(); return; }
@@ -6942,7 +6907,6 @@ function switchView(v){
   $('#strip').style.display = (v==='year'||v==='renewals'||v==='ideas'||v==='monthly'||v==='remaining'||v==='leads'||v==='chats') ? 'none' : 'flex';
   if(v==='chats'){ if(Date.now()-Chats.lastAt>15*1000) Chats.pull(false); if(Chats.cur) Chats.pullThread(false); setTimeout(()=>Chats.seen(),400); }
   if(v==='leads' && Date.now()-Leads.lastAt>10*60*1000) Leads.pull(false);
-  if(v==='home' && Date.now()-Reminders.lastAt>5*60*1000) Reminders.pull(false);
   renderAll();
 }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchView(t.dataset.view)));
@@ -7596,11 +7560,9 @@ function migrate20260922(){
   ensureMeta(); let ch=false;
   if(!state.meta.statsPause20260922){ state.meta.statsPause20260922=1; if(!window.DEMO_CHATS) state.meta.statsPaused=true; ch=true; }
   if(!state.meta.wealth || typeof state.meta.wealth.base!=='number'){ state.meta.wealth={base:46000, anchor:realProfitToDate(), since:todayIso()}; ch=true; }
-  /* 23 Sept 2026: a card that enters a chat stage FROM NOW ON gets its chat created by itself (older cards are left alone) */
-  if(!state.meta.chatAutoSince){ state.meta.chatAutoSince=Date.now(); ch=true; }
   return ch;
 }
-function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; if(migrate20260922()) save(); $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); if(migrateCallStats()){ save(); setTimeout(()=>toast('Cold-call statistics cleared — every month and the year start from your next logged call'),900); } renderAll(); Bookings.start(); setTimeout(()=>Chats.start(),3200); setTimeout(()=>Leads.pull(false),1500); setTimeout(()=>Reminders.pull(false),2600); setTimeout(()=>Brief.send(false),4000); }
+function boot(){ document.body.dataset.view=document.querySelector('.tab.active').dataset.view; if(migrate20260922()) save(); $('#schedMonth').value=curMonth; $('#qlDate').value=todayIso(); if(migrateCallStats()){ save(); setTimeout(()=>toast('Cold-call statistics cleared — every month and the year start from your next logged call'),900); } renderAll(); Bookings.start(); setTimeout(()=>Chats.start(),3200); setTimeout(()=>Leads.pull(false),1500); setTimeout(()=>Brief.send(false),4000); }
 let loggingIn=false;
 async function tryLogin(){
   if(loggingIn) return;
@@ -7705,7 +7667,6 @@ function wireSyncEvents(){
     if(Date.now()-Sync.lastCheck>4000) Sync.pull(true);
     if(Date.now()-Bookings.lastAt>120000) Bookings.pull(false);
     if(Date.now()-Leads.lastAt>10*60*1000) Leads.pull(false);
-    if(Date.now()-Reminders.lastAt>5*60*1000) Reminders.pull(false);
   });
   /* back online → flush anything that failed while offline */
   window.addEventListener('online',()=>{ if(Sync.pendingFlag()) Sync.push(false); else Sync.pull(true); });
@@ -7787,7 +7748,7 @@ const CH_QUICK=[
   ['First draft · plain (hosting + domain)','Καλησπέρα σας {name},\n\nεργαστήκαμε με τη δική σας ιστοσελίδα και οι 4 μας, και καταφέραμε μόλις να ολοκληρώσουμε την κατασκευή μιας καλής πρώτης εικόνας της ιστοσελίδας σας. Μπορείτε να τη δείτε εδώ:\n{site}\n\nΑνοίξτε την και από υπολογιστή, να δείτε πώς φαίνεται κι εκεί.\n\n✏️ Αν θέλετε οποιαδήποτε αλλαγή — μικρή ή μεγάλη — γράψτε τη μας εδώ, αριθμημένα (1., 2., 3.), όσο πιο συγκεκριμένα γίνεται: οι αλλαγές είναι απεριόριστες μέχρι τη δημοσίευση. Μόλις τις στείλετε όλες, πατήστε «Έστειλα όλες τις αλλαγές» και τις κάνουμε μέσα σε 24 ώρες. Παραδείγματα: [Οδηγός αλλαγών](#odigos)\n\n🚀 Αν είναι ήδη όπως τη θέλετε, πατήστε «Όλα καλά — πάμε live» και γράψτε μας το domain που θα θέλατε (π.χ. epitheto-epaggelma.gr).\n\nΓια τη μεταφορά (για τη φιλοξενία και το domain name μαζί, για 365 ημέρες που μετράνε από τη μέρα που θα ολοκληρώσουμε), που γίνεται κανονικά κατά την παράδοση του πρώτου draft: αν ΔΕΝ θέλετε απόδειξη-τιμολόγιο μπορείτε να μπείτε εδώ:\nhttps://buy.stripe.com/9B68wP37b6doajUc1Q3cc06\nΑλλιώς θα χρειαστούμε το ΑΦΜ σας και θα προστεθεί ΦΠΑ.\n\nΜόλις γίνει, αγοράζουμε αμέσως και το domain name που θα μας πείτε.\n\nΕυχαριστούμε πολύ!'],
   ['First draft · with contact form','Καλησπέρα σας {name},\n\nεργαστήκαμε με τη δική σας ιστοσελίδα και οι 4 μας, και καταφέραμε μόλις να ολοκληρώσουμε την κατασκευή μιας καλής πρώτης εικόνας της ιστοσελίδας σας. Μπορείτε να τη δείτε εδώ:\n{site}\n\nΑνοίξτε την και από υπολογιστή, να δείτε πώς φαίνεται κι εκεί.\n\n✏️ Αν θέλετε οποιαδήποτε αλλαγή — μικρή ή μεγάλη — γράψτε τη μας εδώ, αριθμημένα (1., 2., 3.), όσο πιο συγκεκριμένα γίνεται: οι αλλαγές είναι απεριόριστες μέχρι τη δημοσίευση. Μόλις τις στείλετε όλες, πατήστε «Έστειλα όλες τις αλλαγές» και τις κάνουμε μέσα σε 24 ώρες. Παραδείγματα: [Οδηγός αλλαγών](#odigos)\n\n🚀 Αν είναι ήδη όπως τη θέλετε, πατήστε «Όλα καλά — πάμε live» και γράψτε μας το domain που θα θέλατε (π.χ. epitheto-epaggelma.gr).\n\nΓια τη μεταφορά (για τη φιλοξενία και το domain name μαζί, για 365 ημέρες που μετράνε από τη μέρα που θα ολοκληρώσουμε, συν τη ΦΟΡΜΑ επικοινωνίας που φτιάξαμε και συνδέσαμε με το e-mail σας), που γίνεται κανονικά κατά την παράδοση του πρώτου draft: αν ΔΕΝ θέλετε απόδειξη-τιμολόγιο μπορείτε να μπείτε εδώ:\nhttps://buy.stripe.com/5kQ8wP37bcBM0Jk1nc3cc0k\nΑλλιώς θα χρειαστούμε το ΑΦΜ σας και θα προστεθεί ΦΠΑ.\n\nΜόλις γίνει, αγοράζουμε αμέσως και το domain name που θα μας πείτε.\n\nΕυχαριστούμε πολύ!'],
   ['First draft · with articles section','Καλησπέρα σας {name},\n\nεργαστήκαμε με τη δική σας ιστοσελίδα και οι 4 μας, και καταφέραμε μόλις να ολοκληρώσουμε την κατασκευή μιας καλής πρώτης εικόνας της ιστοσελίδας σας. Μπορείτε να τη δείτε εδώ:\n{site}\n\nΑνοίξτε την και από υπολογιστή, να δείτε πώς φαίνεται κι εκεί.\n\n✏️ Αν θέλετε οποιαδήποτε αλλαγή — μικρή ή μεγάλη — γράψτε τη μας εδώ, αριθμημένα (1., 2., 3.), όσο πιο συγκεκριμένα γίνεται: οι αλλαγές είναι απεριόριστες μέχρι τη δημοσίευση. Μόλις τις στείλετε όλες, πατήστε «Έστειλα όλες τις αλλαγές» και τις κάνουμε μέσα σε 24 ώρες. Παραδείγματα: [Οδηγός αλλαγών](#odigos)\n\n🚀 Αν είναι ήδη όπως τη θέλετε, πατήστε «Όλα καλά — πάμε live» και γράψτε μας το domain που θα θέλατε (π.χ. epitheto-epaggelma.gr).\n\nΓια τη μεταφορά (για τη φιλοξενία και το domain name μαζί, για 365 ημέρες που μετράνε από τη μέρα που θα ολοκληρώσουμε, συν τη σύνδεση με την ενότητα άρθρων που θα ελέγχετε εσείς), που γίνεται κανονικά κατά την παράδοση του πρώτου draft: αν ΔΕΝ θέλετε απόδειξη-τιμολόγιο μπορείτε να μπείτε εδώ:\nhttps://buy.stripe.com/3cI5kDazDdFQbnY9TI3cc0q\nΑλλιώς θα χρειαστούμε το ΑΦΜ σας και θα προστεθεί ΦΠΑ.\n\nΓια τα άρθρα θα σας εξηγήσουμε στο τέλος πώς θα τα γράφετε εσείς — είναι πολύ εύκολο από τη δική σας πλευρά.\n\nΜόλις γίνει, αγοράζουμε αμέσως και το domain name που θα μας πείτε.\n\nΕυχαριστούμε πολύ!'],
-  ['Changes done · check + two buttons','Καλησπέρα σας {name},\n\nοι αλλαγές σας έγιναν:\n1. \n2. \n\nΔείτε τα εδώ: {site}\n(Αν δεν φαίνονται αμέσως, κάντε ανανέωση της σελίδας.)\n\nΕλέγξτε, παρακαλώ, όλη την ιστοσελίδα μια φορά — από την αρχή μέχρι το τέλος, και από κινητό — και μετά πατήστε ένα από τα δύο κουμπιά:\n\n✏️ Έχω κι άλλες αλλαγές → γράψτε τις εδώ και πατήστε «Έστειλα όλες τις αλλαγές».\n\n🚀 Όλα καλά → πατήστε «Όλα καλά — πάμε live» και γράψτε μας το domain που θα θέλατε (π.χ. epitheto-epaggelma.gr). Το ελέγχουμε, το αγοράζουμε και η ιστοσελίδα σας είναι online σε 1–2 ημέρες.'],
+  ['Changes done · check + two buttons','Καλησπέρα σας {name},\n\nοι αλλαγές σας έγιναν:\n1. \n2. \n\nΔείτε τα εδώ: {site}\n(Αν δεν φαίνονται αμέσως, κάντε ανανέωση της σελίδας.)\n\nΕλέγξτε, παρακαλώ, όλη την ιστοσελίδα μια φορά — από την αρχή μέχρι το τέλος, και από κινητό — και μετά πατήστε ένα από τα δύο κουμπιά:\n\n✏️ Έχω κι άλλες αλλαγές → γράψτε τις εδώ και πατήστε «Έστειλα όλες τις αλλαγές».\n\n🚀 Όλα καλά → πατήστε «Όλα καλά — πάμε live» και γράψτε μας το domain που θα θέλατε (π.χ. epitheto-epaggelma.gr — 2–3 επιλογές με σειρά προτίμησης). Το ελέγχουμε, το αγοράζουμε και η ιστοσελίδα σας είναι online σε 1–2 ημέρες.'],
   ['Domain connected · review ask',CH_DOMAIN_LIVE],
   ['Ask for the domain','Τέλεια, χαίρομαι που σας αρέσει! Για να τη δημοσιεύσουμε χρειαζόμαστε το όνομα της σελίδας (domain). Προτείνουμε κάτι απλό και επαγγελματικό, όπως epitheto-epaggelma.gr ή onoma-epitheto.gr — ή ό,τι άλλο θέλετε. Στείλτε μου το όνομα που θέλετε και ελέγχω αμέσως ότι είναι διαθέσιμο.'],
   ['Nudge · press «Ξεκινήστε»','Τα έλαβα, ευχαριστώ πολύ! Μόλις στείλετε ό,τι άλλο έχετε (αν έχετε), πατήστε το κουμπί «Ξεκινήστε την ιστοσελίδα μου» — έτσι ξεκινάμε αμέσως και σε 5–10 ημέρες θα έχετε εδώ το πρώτο draft.'],
@@ -7907,16 +7868,8 @@ const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, ca
       if(this.cur===slug){ if(!this.msgs.some(m=>m.id===p.message.id)) this.msgs.push(p.message); if(p.thread){ this.thread=p.thread; const i=this.list.findIndex(t=>t.slug===slug); if(i>=0) this.list[i]=p.thread; } this.thead=null; this.head=null; renderChats(); }
     }catch(e){ pm.state='failed'; pm.err=e.message; renderChatThread(true); toast(e.message||'Not sent'); }
   },
-  /* the sandbox: wipe the demo thread and start it again at a stage — the server seeds the stage's own intro */
-  async reset(slug, o){
-    if(window.DEMO_CHATS){ const t=window.DEMO_CHATS.threads.find(x=>x.slug===slug); if(!t) return; t.stage=o.stage||'yliko'; t.dat=!!o.dat; delete t.ready; const now=new Date().toISOString(); window.DEMO_CHATS.messages[slug]=[{id:'w1',from:'advon',text:CH_WELCOME,files:[],at:now},{id:'w2',from:'advon',text:t.stage==='yliko'?(t.dat?CH_YLIKO_DAT:CH_YLIKO_PLAIN):chFill(CH_QUICK[CH_STAGE_MSG[t.stage]||1][1],t),files:[],at:now}]; t.lastAt=now; t.lastFrom='advon'; t.lastText='…'; t.n=2; this.list=window.DEMO_CHATS.threads.slice(); this.cache={}; await this.open(slug); return; }
-    const r=await fetch(CHAT_URL+'?t='+encodeURIComponent(slug)+'&reset=1',{method:'POST', headers:{...this.hdr(),'Content-Type':'application/json'}, body:JSON.stringify(o||{})});
-    const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok) throw new Error(p.error||'could not restart');
-    const i=this.list.findIndex(t=>t.slug===slug); if(i>=0) this.list[i]=p.thread; delete this.cache[slug]; this.head=null; this.thead=null;
-    if(this.cur===slug){ this.msgs=[]; this.thread=p.thread; await this.pullThread(true); } renderChats();
-  },
   async create(data){
-    if(window.DEMO_CHATS){ const slug=((data.name||'client').toLowerCase().split('').map(ch=>CH_GL[ch]??ch).join('').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'c')+'-'+Date.now().toString(36).slice(-3); const wel=(Array.isArray(data.welcome)?data.welcome:[data.welcome]).filter(Boolean); const now=new Date().toISOString(); const t={slug, code:slug+'-demo', name:data.name, email:data.email, phone:data.phone, site:data.site, stage:data.stage||'yliko', dat:!!data.dat, demo:!!data.demo, createdAt:now, lastAt:now, lastFrom:'advon', lastText:(wel[wel.length-1]||'').slice(0,140), n:wel.length, unreadAdmin:0, unreadClient:wel.length, adminSeenAt:now, clientSeenAt:null, log:data.log?[{at:now,by:'system',text:data.log}]:[]}; if(data.building) t.ready={kind:'build', at:now, manual:true}; window.DEMO_CHATS.threads.unshift(t); window.DEMO_CHATS.messages[slug]=wel.map((w,i)=>({id:'w'+i,from:'advon',text:w,files:[],at:now})); this.list=window.DEMO_CHATS.threads.slice(); return {ok:true, thread:t, link:'https://advonmedia.com/c/'+t.code}; }
+    if(window.DEMO_CHATS){ const slug=(data.name||'client').toLowerCase().replace(/[^a-z0-9]+/g,'-')||('c'+Date.now()); const t={slug, code:slug+'-demo', name:data.name, email:data.email, phone:data.phone, site:data.site, stage:data.stage||'yliko', createdAt:new Date().toISOString(), lastAt:new Date().toISOString(), lastFrom:'advon', lastText:data.welcome||'', n:data.welcome?1:0, unreadAdmin:0, unreadClient:data.welcome?1:0}; window.DEMO_CHATS.threads.unshift(t); window.DEMO_CHATS.messages[slug]=data.welcome?[{id:'w',from:'advon',text:data.welcome,files:[],at:t.lastAt}]:[]; this.list=window.DEMO_CHATS.threads.slice(); return {ok:true, thread:t, link:'https://advonmedia.com/c/'+t.code}; }
     const r=await fetch(CHAT_URL+'?new=1',{method:'POST', headers:{...this.hdr(),'Content-Type':'application/json'}, body:JSON.stringify(data)});
     const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok) throw new Error(p.error||'could not create');
     this.head=null; await this.pull(false); return p;
@@ -7990,29 +7943,7 @@ function chClientFor(t){
 function chThreadFor(c){ try{ return c&&c.chat ? (Chats.list.find(t=>t.slug===c.chat && !t.archived)||null) : null; }catch(e){ return null; } }   /* a function (hoisted) + try: the Board renders before this part of the file has run */
 const chMailDone=new Set();
 const chMailOk=e=>/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(String(e||''));
-/* Board → chat (23 Sept 2026): a card that lands in Need info / Building / Draft·Review / Making changes without a chat gets one
-   by itself — name, phone and e-mail from the card (bookings fill those in), the stage that matches, the welcome messages.
-   Only cards moved after this version went live (state.meta.chatAutoSince); a chat with the same name is linked instead. */
-const CH_AUTO={needinfo:'yliko', building:'yliko', review:'draft', changes:'changes'};
-const chCreating=new Set();
-function chAutoCreate(){
-  if(!state || !Array.isArray(state.clients) || Chats.state!=='ok') return;
-  const since=(state.meta&&state.meta.chatAutoSince)||0; if(!since) return;
-  state.clients.filter(c=>!isTrashed(c) && CH_AUTO[c.stage] && !c.chat && !c.chatOff && (c.stageAt||0)>=since && String(c.name||'').trim().length>=2 && !chCreating.has(c.id)).forEach(c=>{
-    const same=Chats.list.find(t=>!t.archived && !t.demo && chSameName(t.name,c.name));
-    if(same){ c.chat=same.slug; save(); return; }
-    chCreating.add(c.id);
-    const st=CH_AUTO[c.stage], from=stageById(c.stage).name;
-    const welcome=[CH_WELCOME]; if(c.stage==='needinfo') welcome.push(c.dat?CH_YLIKO_DAT:CH_YLIKO_PLAIN);
-    Chats.create({name:String(c.name).trim(), phone:c.phone||'', email:chMailOk(c.email)?c.email:'', stage:st, dat:!!c.dat, building:c.stage==='building', welcome, log:'Chat created by the Board («'+from+'»)'})
-      .then(p=>{ c.chat=p.thread.slug; c.chatStage=st; c.chatBoard=c.stage; c.updated=Date.now(); save(); renderAll(); if(!chMailOk(c.email)) chNeedMail.add(p.thread.slug); toast(c.name+' · chat created from the Board'+(chMailOk(c.email)?' — send them the link':' — no e-mail: open the chat and add it'), true); })
-      .catch(e=>{ toast('Could not create '+c.name+'\'s chat: '+(e.message||'')); })
-      .finally(()=>chCreating.delete(c.id));
-  });
-}
-const chNeedMail=new Set();
 function chSyncBoard(){
-  try{ chAutoCreate(); }catch(e){}
   if(!state || !Array.isArray(state.clients) || !Chats.list.length) return;
   let changed=false; const moved=[], mail=[], push=[];
   Chats.list.filter(t=>!t.archived).forEach(t=>{
@@ -8040,8 +7971,8 @@ function chSyncBoard(){
       .catch(()=>{ delete chPendStage[t.slug]; c.chatStage=was; c.chatBoard=null; save(); toast('Could not move '+t.name+'\'s chat — try again from Chats'); }); });
   mail.forEach(([t,em])=>{ Chats.meta(t.slug,{email:em}).then(()=>toast(t.name+' · e-mail taken from the Board — alerts on', true)).catch(()=>chMailDone.delete(t.slug)); });
 }
-const chUnread=()=>Chats.list.filter(t=>!t.archived && !t.demo).reduce((n,t)=>n+((t.unreadAdmin||0)>0?1:0),0);
-const chWaiting=()=>Chats.list.filter(t=>!t.archived && !t.demo && t.lastFrom==='client');
+const chUnread=()=>Chats.list.filter(t=>!t.archived).reduce((n,t)=>n+((t.unreadAdmin||0)>0?1:0),0);
+const chWaiting=()=>Chats.list.filter(t=>!t.archived && t.lastFrom==='client');
 const chLink=t=>'https://advonmedia.com/c/'+t.code;
 const chSite=t=>t&&t.site?(/^https?:/.test(t.site)?t.site:'https://'+t.site):'';
 const CH_COLORS=['#2F7FE0','#7C5CFC','#0EC673','#FF8A00','#F45B9A','#35C7E9','#FF6B57','#B8860B'];
@@ -8082,7 +8013,6 @@ async function chDomainConnected(t){
 function chWaitChip(t){
   if(t.archived) return '';
   if(t.suggest && t.suggest.text) return '<span class="ch-wait sug" title="Claude prepared a reply — open the chat to send it">reply ready</span>';
-  if(t.ready && t.ready.manual) return '<span class="ch-wait" title="Being built — the Board put the card in Building">building</span>';
   if(t.ready && CH_READY_EN[t.ready.kind]) return '<span class="ch-wait ready" title="'+esc(CH_READY_EN[t.ready.kind][1])+'">'+esc(CH_READY_EN[t.ready.kind][0].replace(/^\S+\s/,''))+'</span>';
   if(t.lastFrom!=='client' && !t.clientSeenAt && t.n && (Date.now()-Date.parse(t.createdAt||t.lastAt))/36e5>=20) return '<span class="ch-wait never" title="The client has never opened the link — send it again on Viber">link not opened</span>';
   if(t.lastFrom==='client'){ const h=(Date.now()-Date.parse(t.lastAt))/36e5; const lbl=h<1?'waiting '+Math.max(1,Math.round(h*60))+' min':h<48?'waiting '+Math.round(h)+' h':'waiting '+Math.round(h/24)+' d'; return `<span class="ch-wait${h>24?' late':''}">${lbl}</span>`; }
@@ -8135,7 +8065,7 @@ function renderChatList(){
   else if(!rows.length) box.innerHTML=`<div class="ch-empty">${Chats.list.length?'<b>Nothing here</b>Try another filter.':'<b>No chats yet</b>Press <b style="display:inline">New</b>, give the client a name, copy their private link and send it on Viber. From then on you talk here.'}</div>`;
   else box.innerHTML=rows.map((t,i)=>`${nPin&&i===0?`<div class="ch-grp prio">★ Priority · ${nPin}${nPin>1?' <span style="font-weight:600;text-transform:none;letter-spacing:0">— drag to reorder</span>':''}</div>`:''}${nPin&&i===nPin&&rows.length>nPin?'<div class="ch-grp">Everyone else</div>':''}<div class="ch-row${t.slug===Chats.cur?' on':''}${(t.unreadAdmin||0)?' unread':''}${t.pin?' pin':''}" data-slug="${esc(t.slug)}"${t.pin&&nPin>1?' draggable="true"':''}>
       <div class="ch-av${Chats.online.includes(t.slug)?' online':''}" style="background:${chColor(t.name)}">${esc(chInitials(t.name))}<i></i></div>
-      <div><div class="n">${t.pin?'<span class="ch-star" title="Priority">★</span>':''}${esc(t.name)}<span class="ch-stage">${esc((CH_STAGES.find(s=>s[0]===chStage(t))||['','—'])[1])}</span>${t.demo?'<span class="ch-demo">🧪 demo</span>':''}${(()=>{ const c=chClientFor(t); return !c?'':c.stage==='paid'?'<span class="ch-stage paid" title="Paid in full">✓ paid</span>':hasPart(c)?'<span class="ch-stage part" title="'+esc(fmtMoney2(cpaid(c)))+' received">½ paid</span>':''; })()}</div><div class="p">${t.lastFrom==='client'?'':t.lastFrom==='claude'?'Claude: ':'You: '}${esc(t.lastText||(t.n?'':'link created — nothing sent yet'))}</div></div>
+      <div><div class="n">${t.pin?'<span class="ch-star" title="Priority">★</span>':''}${esc(t.name)}<span class="ch-stage">${esc((CH_STAGES.find(s=>s[0]===chStage(t))||['','—'])[1])}</span>${(()=>{ const c=chClientFor(t); return !c?'':c.stage==='paid'?'<span class="ch-stage paid" title="Paid in full">✓ paid</span>':hasPart(c)?'<span class="ch-stage part" title="'+esc(fmtMoney2(cpaid(c)))+' received">½ paid</span>':''; })()}</div><div class="p">${t.lastFrom==='client'?'':t.lastFrom==='claude'?'Claude: ':'You: '}${esc(t.lastText||(t.n?'':'link created — nothing sent yet'))}</div></div>
       <div class="r"><span class="t">${esc(chWhen(t.lastAt))}</span><span class="r2">${(t.unreadAdmin||0)?`<span class="ch-badge">${t.unreadAdmin}</span>`:chWaitChip(t)}<button class="ch-more" data-more="${esc(t.slug)}" title="Priority, move, mark unread, archive, delete" aria-label="Chat options">⋯</button></span></div>
     </div>`).join('');
   box.querySelectorAll('[data-slug]').forEach(el=>{
@@ -8164,9 +8094,8 @@ function renderChatThread(keep){
   const client=chClientFor(t);
   head.innerHTML=`<button class="ch-back" id="chBack" title="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
     <div class="ch-av${Chats.online.includes(t.slug)?' online':''}" style="background:${chColor(t.name)}">${esc(chInitials(t.name))}<i></i></div>
-    <div class="info"><b>${esc(t.name)}${t.archived?' <span class="ch-stage">archived</span>':''}${t.demo?'<span class="ch-demo" title="Sandbox: answers by itself, no alerts, invisible to the agent">🧪 demo</span>':''}</b><small>${t.phone?`<a href="tel:${esc(t.phone)}">${esc(t.phone)}</a>`:''}${t.email?`<a href="mailto:${esc(t.email)}">${esc(t.email)}</a>`:''}${t.site?`<a href="${esc(chSite(t))}" target="_blank" rel="noopener">${esc(t.site.replace(/^https?:\/\//,''))} ↗</a>`:''}${Chats.online.includes(t.slug)?'<span style="color:var(--deep)">● online now</span>':''}${!t.email&&!t.archived&&!t.demo?'<button class="ch-nomail" id="chNoMail" title="Without an e-mail the client is never told that you answered, and gets no reminders. They are asked for it on their page — or add it here.">⚠ no e-mail · no alerts</button>':''}${!t.clientSeenAt&&t.n&&!t.archived?'<span style="color:var(--muted)">link not opened yet</span>':''}</small>${t.ready&&CH_READY_EN[t.ready.kind]?`<div class="ch-ready" title="${esc(t.ready.manual?'The Board put this card in Building — the client page says «we got it, the draft is coming»; the agent will not build it':CH_READY_EN[t.ready.kind][1])}">${esc(t.ready.manual?'🔧 Building (from the Board)':CH_READY_EN[t.ready.kind][0])}<small>${esc(chWhen(t.ready.at))}</small><button id="chReadyDone" title="The work is done — take the flag off (it also goes off by itself when the stage moves on)">done ✓</button></div>`:''}</div>
+    <div class="info"><b>${esc(t.name)}${t.archived?' <span class="ch-stage">archived</span>':''}</b><small>${t.phone?`<a href="tel:${esc(t.phone)}">${esc(t.phone)}</a>`:''}${t.email?`<a href="mailto:${esc(t.email)}">${esc(t.email)}</a>`:''}${t.site?`<a href="${esc(chSite(t))}" target="_blank" rel="noopener">${esc(t.site.replace(/^https?:\/\//,''))} ↗</a>`:''}${Chats.online.includes(t.slug)?'<span style="color:var(--deep)">● online now</span>':''}${!t.email&&!t.archived?'<button class="ch-nomail" id="chNoMail" title="Without an e-mail the client is never told that you answered, and gets no reminders. They are asked for it on their page — or add it here.">⚠ no e-mail · no alerts</button>':''}${!t.clientSeenAt&&t.n&&!t.archived?'<span style="color:var(--muted)">link not opened yet</span>':''}</small>${t.ready&&CH_READY_EN[t.ready.kind]?`<div class="ch-ready" title="${esc(CH_READY_EN[t.ready.kind][1])}">${esc(CH_READY_EN[t.ready.kind][0])}<small>${esc(chWhen(t.ready.at))}</small><button id="chReadyDone" title="The work is done — take the flag off (it also goes off by itself when the stage moves on)">done ✓</button></div>`:''}</div>
     <div class="acts">
-      ${t.demo?`<select class="ch-demosel" id="chDemoReset" title="Wipe this test chat and start it again at a stage — the client page shows that stage's intro and answers at once"><option value="">↺ Restart at…</option><option value="yliko">Υλικό</option><option value="yliko-dat">Υλικό · doctoranytime</option><option value="draft">Πρώτο draft</option><option value="changes">Αλλαγές</option><option value="live">Live</option></select>`:''}
       <select id="chStage" title="Where this client is — the client sees it as a progress bar">${CH_STAGES.map(s=>`<option value="${s[0]}"${chStage(t)===s[0]?' selected':''}>${s[1]}</option>`).join('')}</select>
       ${t.archived?'':`<button class="ch-ib${t.dat?' on':''}" id="chDat" title="${t.dat?'Has a doctoranytime profile — the page asks only for photos. Click to turn off.':'Click if the client has a doctoranytime profile: the page then asks only for photos and we start from the profile.'}">${t.dat?'✓ doctoranytime':'doctoranytime?'}</button>`}
       ${t.archived?'':`<button class="ch-ib${t.form?' on':''}" id="chForm" title="${t.form?'The site has the contact form — the client page no longer offers it. Click to turn off.':'Tick when the site has (or was sold) the contact form: the client page then stops offering the 50€ form.'}">${t.form?'✓ contact form':'contact form?'}</button>`}
@@ -8191,18 +8120,14 @@ function renderChatThread(keep){
   { const f=$('#chForm'); if(f) f.addEventListener('click',async()=>{ try{ await Chats.meta(t.slug,{form:!t.form}); toast(!t.form?'Contact form ticked — the client page stops offering it':'Contact form off — the page offers it again (50€)'); }catch(e){ toast('Could not save'); } }); }
   { const r=$('#chReadyDone'); if(r) r.addEventListener('click',async()=>{ try{ await Chats.meta(t.slug,{ready:null}); toast('Flag removed'); }catch(e){ toast('Could not save'); } }); }
   { const lv=$('#chLive'); if(lv) lv.addEventListener('click',()=>chDomainConnected(t)); }
-  { const dr=$('#chDemoReset'); if(dr) dr.addEventListener('change',async e=>{ const v=e.target.value; if(!v) return; e.target.value=''; const st=v==='yliko-dat'?'yliko':v; if(!confirm('Restart the test chat at «'+((CH_STAGES.find(s=>s[0]===st)||['',st])[1])+'»? Everything in it is wiped and the stage\'s intro is sent again.')) return; try{ await Chats.reset(t.slug,{stage:st, dat:v==='yliko-dat'}); toast('Test chat restarted — open the client link to play'); }catch(err){ toast(err.message||'Could not restart'); } }); }
   $('#chCopy').addEventListener('click',()=>chCopy(chLink(t)));
   $('#chEdit').addEventListener('click',()=>chOpenModal(t));
-  const nm=$('#chNoMail'); if(nm) nm.addEventListener('click',()=>{ const i=$('#chMailIn'); if(i){ i.focus(); return; } chOpenModal(t); setTimeout(()=>{ const e=$('#chmEmail'); if(e) e.focus(); },80); });
+  const nm=$('#chNoMail'); if(nm) nm.addEventListener('click',()=>{ chOpenModal(t); setTimeout(()=>{ const e=$('#chmEmail'); if(e) e.focus(); },80); });
   renderChatSuggest(t);
-  chPrefillNew(t);
   const nearBottom=feed.scrollHeight-feed.scrollTop-feed.clientHeight<160;
   const all=Chats.msgs.concat(Chats.pending).sort((a,b)=>a.at<b.at?-1:1);
   const out=[]; let lastDay='', prev=null;
   const lg=(t.log||[]).slice(-4); if(lg.length) out.push(`<div class="ch-log">${lg.map(l=>`<span><b>${esc(l.by==='system'?'auto':l.by)}</b> ${esc(chWhen(l.at))} · ${esc(l.text)}</span>`).join('')}</div>`);
-  /* no e-mail on the card → ask for it right here (the client is never told about answers until it is there) */
-  if(!t.email && !t.archived && !t.demo) out.push(`<div class="ch-askmail"><span>📧 I need ${esc(t.name.split(' ')[0])}'s e-mail — without it they get no alerts and no reminders.</span><input id="chMailIn" type="email" placeholder="name@example.gr" autocomplete="off"><button id="chMailSave">Save</button></div>`);
   if(!all.length) out.push(`<div class="ch-empty"><b>Nothing sent yet</b>Send the link on Viber — ${esc(chLink(t))} — and write the first message here so they find it waiting.</div>`);
   all.forEach((m,i)=>{
     const d=new Date(m.at); const dk=d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
@@ -8219,8 +8144,7 @@ function renderChatThread(keep){
     out.push(`<div class="ch-msg ${me?'me':'them'}${m.from==='claude'?' claude':''}${prev&&prev.from!==m.from?' gap':''}"><div class="ch-bub${m.state?' '+m.state:''}${m.deleted?' gone':''}">${inner}</div></div>`);
     prev=m;
   });
-  { const keepVal=(()=>{ const i=$('#chMailIn'); return i&&document.activeElement===i?i.value:null; })(); feed.innerHTML=out.join(''); const i=$('#chMailIn'); if(i&&keepVal!=null){ i.value=keepVal; i.focus(); i.setSelectionRange(keepVal.length,keepVal.length); } }
-  { const sv=$('#chMailSave'), inp=$('#chMailIn'); if(sv&&inp){ const go=async()=>{ const em=inp.value.trim(); if(!chMailOk(em)){ toast('That does not look like an e-mail'); inp.focus(); return; } sv.disabled=true; try{ await Chats.meta(t.slug,{email:em}); const c=chClientFor(t); if(c&&!c.email){ c.email=em; save(); } chNeedMail.delete(t.slug); toast('E-mail saved — alerts and reminders are on for '+t.name); }catch(e){ sv.disabled=false; toast('Could not save'); } }; sv.addEventListener('click',go); inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); go(); } }); } }
+  feed.innerHTML=out.join('');
   if(!keep || nearBottom) feed.scrollTop=feed.scrollHeight;
   feed.querySelectorAll('.ch-pics img[data-path]').forEach(async im=>{ if(im.getAttribute('src')) return; try{ const u=await Chats.fileUrl(im.dataset.path); if(u) im.src=u; }catch(e){} });
   const n=$('#chNotify'); if(n) n.textContent=Chats.notify?(Chats.notify.email?'E-mail alerts on':'E-mail alerts off — add RESEND_API_KEY in Netlify')+(Chats.notify.telegram?' · Telegram on':''):'';
@@ -8255,13 +8179,12 @@ function chOpenModal(t){
     <label>Website (draft or live — the client gets a button to it)</label><input id="chmSite" value="${esc(t?t.site||'':'')}" placeholder="https://…">
     <label>Stage</label><select id="chmStage">${CH_STAGES.map(s=>`<option value="${s[0]}"${(t?chStage(t):'yliko')===s[0]?' selected':''}>${s[1]}</option>`).join('')}</select>
     <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="chmDat"${t&&t.dat?' checked':''} style="width:16px;height:16px"> Has a doctoranytime profile — we start from it, the client only sends photos</label>
-    <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="chmDemo"${t&&t.demo?' checked':''} style="width:16px;height:16px"> 🧪 Test chat (sandbox) — answers by itself at once, sends no alerts, the agent ignores it; «Restart at…» appears in the thread</label>
     ${t?'':`<label>First message (sent from you, waiting when they open the link)</label><textarea id="chmWelcome" style="min-height:150px">${esc(welcome)}</textarea>
     <label>Second message — what we need at this stage (leave empty to skip)</label><textarea id="chmWelcome2" style="min-height:150px">${esc(CH_YLIKO_PLAIN)}</textarea>`}
     ${t?`<div class="ch-link"><code>${esc(chLink(t))}</code><button class="ch-ib" id="chmCopy">Copy</button></div>`:''}
     <div class="btns" style="flex-wrap:wrap">${t?`<button class="btn btn-ghost btn-danger" id="chmDelete" title="Removes the chat, its messages and files for good">Delete</button><button class="btn btn-ghost" id="chmArchive">${t.archived?'Restore':'Archive'}</button><button class="btn btn-ghost" id="chmNewLink" title="Old link stops working">New link</button>`:''}<button class="btn btn-ghost" id="chmCancel">Cancel</button><button class="btn" id="chmSave" style="background:var(--grad);color:#fff">${t?'Save':'Create link'}</button></div>`;
   ov.classList.add('open'); setTimeout(()=>$('#chmName').focus(),50);
-  const data=()=>({name:$('#chmName').value.trim(), phone:$('#chmPhone').value.trim(), email:$('#chmEmail').value.trim(), site:$('#chmSite').value.trim(), stage:$('#chmStage').value, dat:$('#chmDat').checked, demo:$('#chmDemo').checked});
+  const data=()=>({name:$('#chmName').value.trim(), phone:$('#chmPhone').value.trim(), email:$('#chmEmail').value.trim(), site:$('#chmSite').value.trim(), stage:$('#chmStage').value, dat:$('#chmDat').checked});
   $('#chmCancel').addEventListener('click',()=>ov.classList.remove('open'));
   if(!t){ $('#chmDat').addEventListener('change',e=>{ const w2=$('#chmWelcome2'); if(w2 && (w2.value.trim()===CH_YLIKO_PLAIN.trim() || w2.value.trim()===CH_YLIKO_DAT.trim() || !w2.value.trim())) w2.value=e.target.checked?CH_YLIKO_DAT:CH_YLIKO_PLAIN; }); }
   const cp=$('#chmCopy'); if(cp) cp.addEventListener('click',()=>chCopy(chLink(t)));
@@ -8289,79 +8212,6 @@ function chShowLink(t){
   $('#chlCopy').addEventListener('click',()=>chCopy(chLink(t)));
   $('#chlCopyMsg').addEventListener('click',()=>chCopy($('#chlMsg').value));
   $('#chlDone').addEventListener('click',()=>ov.classList.remove('open'));
-}
-/* ---------- Client reminders (23 Sept 2026) ----------
-   The reminders are ⏰ events in the Google Calendar «Advon Media» (title «⏰ CLIENT — what we need»); Claude adds them from any
-   chat, Angelo from the Calendar app, or the «+ New» form here (it opens Google Calendar pre-filled). /api/reminders reads them,
-   the Netlify function reminders.mjs sends the day's list on Telegram + e-mail at 08:30, and «Done» hides one for good. */
-const Reminders={ list:[], today:'', state:'idle', err:'', lastAt:0, busy:false, newOpen:false,
-  hdr(){ return {'x-crm-auth':SYNC_TOKEN}; },
-  async pull(manual){
-    if(this.busy) return;
-    if(window.DEMO_REMINDERS){ this.list=window.DEMO_REMINDERS(); this.today=todayIso(); this.state='ok'; this.lastAt=Date.now(); renderHomeReminders(); return; }
-    if(!SYNC_TOKEN){ this.state='off'; renderHomeReminders(); return; }
-    this.busy=true; if(manual||this.state==='idle'){ this.state='loading'; renderHomeReminders(); }
-    try{
-      const r=await fetch('/api/reminders?_='+Date.now(),{headers:this.hdr(), cache:'no-store'});
-      let p={}; try{ p=await r.json(); }catch(e){}
-      if(!r.ok||!p.ok){ this.state='error'; this.err=(p&&p.error)||('the server answered '+r.status); }
-      else { this.list=Array.isArray(p.items)?p.items:[]; this.today=p.today||todayIso(); this.state='ok'; this.err=''; this.lastAt=Date.now(); }
-    }catch(e){ this.state='error'; this.err=e.message; }
-    this.busy=false; renderHomeReminders();
-  },
-  async done(uid, undo){
-    const r=this.list.find(x=>x.uid===uid); if(!r) return;
-    const was=r.done; r.done=!undo; renderHomeReminders();
-    if(window.DEMO_REMINDERS){ toast(undo?'Back on the list':'Done — off the list'); return; }
-    try{
-      const res=await fetch('/api/reminders?done=1',{method:'POST', headers:{...this.hdr(),'Content-Type':'application/json'}, body:JSON.stringify({uid, undo:!!undo})});
-      const p=await res.json().catch(()=>({})); if(!res.ok||!p.ok) throw new Error(p.error||'could not save');
-      if(!undo) toastUndo(r.client+' · reminder done', ()=>Reminders.done(uid,true)); else toast('Back on the list');
-    }catch(e){ r.done=was; renderHomeReminders(); toast(e.message||'Could not save'); }
-  },
-};
-const remDayLabel=day=>{ const [y,m,d]=day.split('-').map(Number); const dt=new Date(y,m-1,d); const t=new Date(); const dd=Math.round((dt-new Date(t.getFullYear(),t.getMonth(),t.getDate()))/864e5); const s=dt.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'}); return dd===0?'Today':dd===1?'Tomorrow':dd===-1?'Yesterday':s; };
-function remViber(r){ return r.viber||('Καλημέρα σας'+(/[Α-Ωα-ω]/.test(r.client)?' κ. '+r.client:'')+'! Ελπίζω να είστε καλά.\n\nΜια μικρή υπενθύμιση για την ιστοσελίδα σας — για να προχωρήσουμε θα χρειαστούμε: '+(r.what||'ό,τι είχαμε πει').replace(/[.\s]+$/,'')+'.\n\nΜπορείτε να μου τα στείλετε εδώ στο Viber ή στο advonmd@gmail.com (αρχεία πάνω από 4 MB μέσω wetransfer.com). Μόλις τα έχω, συνεχίζω αμέσως.\n\nΕυχαριστώ πολύ!'); }
-function remNewUrl(client, what, day){
-  const d=day.replace(/-/g,''); const text='⏰ '+client+' — '+what;
-  const details='Viber: '+remViber({client, what});
-  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(text)+'&dates='+d+'T090000/'+d+'T091500&ctz=Europe/Athens&details='+encodeURIComponent(details);
-}
-function renderHomeReminders(){
-  const body=$('#homeRem'), hint=$('#homeRemHint'); if(!body) return;
-  const R=Reminders, today=R.today||todayIso();
-  const live=R.list.filter(r=>!r.done), over=live.filter(r=>r.day<today), now=live.filter(r=>r.day===today);
-  const soon=live.filter(r=>r.day>today && r.day<=isoDate(new Date(Date.now()+14*864e5))), later=live.filter(r=>r.day>isoDate(new Date(Date.now()+14*864e5)));
-  const doneRecent=R.list.filter(r=>r.done && r.day>=isoDate(new Date(Date.now()-7*864e5))).slice(-6);
-  if(hint) hint.textContent=R.state==='off'?'sign in with sync':R.state==='error'?'calendar offline':R.state==='loading'?'reading the calendar…':(over.length+now.length)?`${over.length+now.length} due${soon.length?' · '+soon.length+' coming up':''}`:soon.length?`${soon.length} coming up`:'nothing pending';
-  const row=r=>`<div class="rm-row${r.done?' done':r.day<today?' over':r.day===today?' today':''}" data-uid="${esc(r.uid)}"><span class="rm-when">${esc(remDayLabel(r.day))}${r.time&&r.time!=='09:00'?' '+esc(r.time):''}</span><div class="rm-main"><b>${esc(r.client)}</b>${r.what?' — '+esc(r.what):''}<small>${r.done?'done ✓':r.sentOn===today?'sent to you this morning (Telegram + e-mail) · ':r.day<today?'still open since '+esc(remDayLabel(r.day))+' · ':''}${esc(r.desc||'')}</small></div><div class="rm-act">${r.done?`<button data-undo="${esc(r.uid)}">Undo</button>`:`<button data-copy="${esc(r.uid)}" title="Copy the ready Viber text">Copy Viber text</button><button class="go" data-done="${esc(r.uid)}" title="They sent it — take it off the list">✓ Done</button>`}</div></div>`;
-  let h='';
-  if(R.newOpen){ const dflt=isoDate(new Date(Date.now()+864e5)); h+=`<div class="rm-new"><label>Client<input id="rmNewName" placeholder="KOURAKOS"></label><label>What we need<input id="rmNewWhat" placeholder="υλικό για τη σελίδα"></label><label>On<input id="rmNewDay" type="date" value="${dflt}"></label><div style="display:flex;gap:6px"><button id="rmNewGo" title="Opens Google Calendar with the reminder filled in — press Save there">Add to calendar ↗</button><button class="gh" id="rmNewX">✕</button></div></div>`; }
-  if(R.state==='error') h+=`<div class="bk-err">Could not read the calendar — ${esc(R.err)}</div>`;
-  else if(R.state==='off') h+=`<div class="home-empty">Sign in with sync to see the reminders.</div>`;
-  else if(R.state==='loading'&&!R.list.length) h+=`<div class="home-empty">Reading the calendar…</div>`;
-  else if(!live.length&&!doneRecent.length) h+=`<div class="home-empty">Nothing to remind anyone about. Tell Claude «remind KOURAKOS on Friday for the material» (or press + New) and it shows up here.</div>`;
-  if(over.length) h+=`<div class="rm-grp over">Overdue · ${over.length}</div>`+over.map(row).join('');
-  if(now.length) h+=`<div class="rm-grp today">Today</div>`+now.map(row).join('');
-  if(soon.length) h+=`<div class="rm-grp">Next 14 days</div>`+soon.map(row).join('');
-  if(later.length) h+=`<div class="rm-foot">${later.length} more later: ${esc(later.slice(0,5).map(r=>r.client+' ('+remDayLabel(r.day)+')').join(' · '))}${later.length>5?' …':''}</div>`;
-  if(doneRecent.length) h+=`<div class="rm-grp">Done this week</div>`+doneRecent.map(row).join('');
-  if(R.state==='ok') h+=`<div class="rm-foot">Every morning at 08:30 the day's reminders reach you on <b>Telegram + e-mail</b> with the Viber text ready. To add one from anywhere: tell Claude, or add a «⏰ NAME — what» event in Google Calendar «Advon Media».</div>`;
-  body.innerHTML=h;
-  body.querySelectorAll('[data-done]').forEach(b=>b.addEventListener('click',()=>Reminders.done(b.dataset.done,false)));
-  body.querySelectorAll('[data-undo]').forEach(b=>b.addEventListener('click',()=>Reminders.done(b.dataset.undo,true)));
-  body.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',()=>{ const r=R.list.find(x=>x.uid===b.dataset.copy); if(r) chCopy(remViber(r)); }));
-  const go=$('#rmNewGo'); if(go) go.addEventListener('click',()=>{ const n=$('#rmNewName').value.trim(), w=$('#rmNewWhat').value.trim(), d=$('#rmNewDay').value; if(!n||!d){ toast('Client and date, please'); return; } window.open(remNewUrl(n,w,d),'_blank','noopener'); R.newOpen=false; renderHomeReminders(); toast('Press Save in Google Calendar — it appears here at the next check'); });
-  const x=$('#rmNewX'); if(x) x.addEventListener('click',()=>{ R.newOpen=false; renderHomeReminders(); });
-}
-(function remWire(){ const n=$('#remNew'), r=$('#remRefresh'); if(n) n.addEventListener('click',()=>{ Reminders.newOpen=!Reminders.newOpen; renderHomeReminders(); if(Reminders.newOpen) setTimeout(()=>{ const e=$('#rmNewName'); if(e) e.focus(); },40); }); if(r) r.addEventListener('click',()=>Reminders.pull(true)); })();
-/* a chat the Board created at «First draft» / «Changes» carries only the welcome — the matching message waits in the box */
-const chPrefilled=new Set();
-function chPrefillNew(t){
-  const tx=$('#chTxt'); if(!tx||!t||t.demo||chPrefilled.has(t.slug)) return;
-  const qi=CH_STAGE_MSG[chStage(t)]; if(qi==null || (t.n||0)>1 || tx.value.trim()) return;
-  const fromBoard=(t.log||[]).some(l=>/created by the Board/.test(l.text||'')); if(!fromBoard) return;
-  chPrefilled.add(t.slug); tx.value=chFill(CH_QUICK[qi][1], t); tx.dispatchEvent(new Event('input')); toast('The «'+CH_QUICK[qi][0]+'» message is ready in the box — add the link, edit, send', true);
 }
 function renderHomeChats(){
   const body=$('#homeChats'), hint=$('#homeChatsHint'); if(!body) return;

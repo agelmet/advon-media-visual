@@ -70,7 +70,7 @@ export default async (req) => {
   };
 
   for (const t of idx) {
-    if (t.archived) continue;
+    if (t.archived || t.demo) continue;          // demo (sandbox) chats never notify anyone
     const lastAt = Date.parse(t.lastAt || 0) || 0;
 
     // 1. client → Angelo
@@ -137,7 +137,7 @@ export default async (req) => {
 
   // 5. a reply prepared by Claude waits for Angelo's OK → one clear «approval needed» message per suggestion
   for (const t of idx) {
-    if (t.archived || !t.suggest || !t.suggest.text || !t.suggest.at) continue;
+    if (t.archived || t.demo || !t.suggest || !t.suggest.text || !t.suggest.at) continue;
     if ((t.suggestNotifiedAt || '') >= t.suggest.at) continue;
     if (now - (Date.parse(t.suggest.at) || 0) > 3 * DAY) { upd(t, { suggestNotifiedAt: t.suggest.at }); continue; }
     if (!canTg && !canMail) { report.skipped.push(`${t.slug}: approval (nothing configured)`); continue; }

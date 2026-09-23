@@ -39,6 +39,7 @@
 // reminders) are sent by netlify/functions/chat-notify.mjs every 5 minutes from the same files.
 
 import { ghReady, ghConf, commit as ghCommit, createBlob } from '@/lib/ghdata';
+import { demoSeed, demoReply } from '@/lib/chatdemo';
 import { DIR, INDEX_PATH, SITE_URL, STAGES, normStage, currentHead, forgetHead, getIndex as coreIndex, getMessages as coreMessages, readChatBuffer, headNow, mailConf, sendTelegram, telegramDiag, sendEmail, clientWroteNote, approvalNote, agentNote, newMessageMail, reminderMail } from '@/lib/chatcore';
 
 export const runtime = 'nodejs';
@@ -118,7 +119,7 @@ const getMessages = (c, slug) => coreMessages(c, slug);
 const current = (c) => currentHead(c);
 // what the client page may see of a card — plus `dat` (Angelo ticked «has a doctoranytime profile», so the page asks only for
 // photos) and `ready` ({kind:'build'|'changes'|'live', at} — the button the client pressed last, cleared when the stage moves on)
-const publicThread = (t) => ({ slug: t.slug, name: t.name, stage: normStage(t.stage), site: t.site || '', adminSeenAt: t.adminSeenAt || null, createdAt: t.createdAt, log: (t.log || []).slice(-3), dat: !!t.dat, form: !!t.form, ready: t.ready || null });
+const publicThread = (t) => ({ slug: t.slug, name: t.name, stage: normStage(t.stage), site: t.site || '', adminSeenAt: t.adminSeenAt || null, createdAt: t.createdAt, log: (t.log || []).slice(-3), dat: !!t.dat, form: !!t.form, ready: t.ready || null, demo: !!t.demo });
 const READY_KINDS = ['build', 'changes', 'live'];
 
 // ---------- the write: append a message ----------
@@ -139,6 +140,7 @@ async function appendMessage(c, slug, msg, blobFiles = [], opts = {}) {
     // until the stage moves on or we answer with clearReady, so the agent knows exactly when to build / change / publish
     if (msg.from === 'client' && msg.kind && msg.kind.startsWith('ready:')) t.ready = { kind: msg.kind.slice(6), at: msg.at, id: msg.id };
     if (msg.from !== 'client' && opts.clearReady) delete t.ready;
+    if (opts.patch) { if (opts.patch.stage && STAGES.includes(opts.patch.stage) && t.stage !== opts.patch.stage) { t.stage = opts.patch.stage; t.stageAt = msg.at; delete t.ready; } if (opts.patch.site) t.site = opts.patch.site; }
     t.lastAt = msg.at; t.lastFrom = msg.from; t.lastText = (msg.text || (msg.files && msg.files.length ? '📎 ' + msg.files.map((f) => f.name).join(', ') : '')).slice(0, 140); t.n = arr.length;
     if (msg.from === 'client') { t.unreadAdmin = (t.unreadAdmin || 0) + 1; t.clientSeenAt = msg.at; t.unreadClient = 0; t.remindersSent = 0; t.lastReminderAt = null; }
     else { t.unreadClient = (t.unreadClient || 0) + 1; t.adminSeenAt = msg.at; t.unreadAdmin = 0; if (msg.from === 'claude') t.lastClaudeAt = msg.at; }
@@ -223,7 +225,7 @@ export async function GET(req) {
         out.clientReminder = (await sendEmail(mc, q('to') || mc.notifyTo, '[SAMPLE · what a client receives] ' + rm.subject, rm.text, rm.html));
         return json(out);
       }
-      const idx = (await getIndex(c)).filter((t) => !t.archived);
+      const idx = (await getIndex(c)).filter((t) => !t.archived && !t.demo);   // demo (sandbox) chats are Angelo's playground — never work
       if (q('t')) {
         const slug = String(q('t'));
         const t = idx.find((x) => x.slug === slug);
@@ -239,7 +241,7 @@ export async function GET(req) {
       const L = [`CHATS — ${waiting.length} conversation(s) waiting for an answer (${idx.length} active)`];
       waiting.sort((a, b) => (b.pin ? 1 : 0) - (a.pin ? 1 : 0) || (a.ord ?? 1e9) - (b.ord ?? 1e9) || String(a.lastAt).localeCompare(String(b.lastAt)));
       const READY_EN = { build: 'READY TO BUILD (pressed «ξεκινήστε»)', changes: 'READY FOR CHANGES (pressed «έστειλα όλες τις αλλαγές»)', live: 'WANTS TO GO LIVE (pressed «πάμε live» — domain in the message)' };
-      const flags = (t) => `${t.pin ? '★ PRIORITY ' : ''}${t.ready && READY_EN[t.ready.kind] ? '✅ ' + READY_EN[t.ready.kind] + ' ' : ''}${t.dat ? '[doctoranytime] ' : ''}${t.form ? '[has contact form] ' : ''}`;
+      const flags = (t) => `${t.pin ? '★ PRIORITY ' : ''}${t.ready && READY_EN[t.ready.kind] ? (t.ready.manual ? '🔧 ' + READY_EN[t.ready.kind] + ' — set from the Board: Angelo is building it himself, do NOT build ' : '✅ ' + READY_EN[t.ready.kind] + ' ') : ''}${t.dat ? '[doctoranytime] ' : ''}${t.form ? '[has contact form] ' : ''}`;
       waiting.forEach((t) => L.push(`  • ${flags(t)}${t.name} (${t.slug}) — stage ${t.stage} — ${t.unreadAdmin || 0} unread — last ${String(t.lastAt).slice(0, 16).replace('T', ' ')}: «${(t.lastText || '').slice(0, 160)}»`));
       const readyQuiet = idx.filter((t) => t.ready && t.lastFrom !== 'client');
       if (readyQuiet.length) { L.push(`STILL FLAGGED — the client pressed a button and we have written since, but the work is not marked done (clearReady / the READY badge in the CRM):`); readyQuiet.forEach((t) => L.push(`  • ${flags(t)}${t.name} (${t.slug}) — stage ${t.stage}`)); }
@@ -383,6 +385,11 @@ export async function POST(req) {
         let s = base, n = 2; while (list.some((x) => x.slug === s)) s = `${base}-${n++}`;
         const now = nowIso();
         created = { slug: s, code: `${s}-${rnd(7)}`, name, email: clean(body.email, 120), phone: clean(body.phone, 40), site: clean(body.site, 200), stage: STAGES.includes(body.stage) ? body.stage : 'yliko', dat: !!body.dat, stageAt: now, createdAt: now, lastAt: now, lastFrom: 'advon', lastText: '', n: 0, unreadAdmin: 0, unreadClient: 0, adminSeenAt: now, clientSeenAt: null, archived: false };
+        if (body.demo) created.demo = true;
+        // created by the Board while the site is already being built: the page shows «we got it, the draft is coming» and
+        // the agent is told not to build it (ready.manual) — Angelo is on it himself
+        if (body.building) created.ready = { kind: 'build', at: now, manual: true };
+        if (typeof body.log === 'string' && body.log.trim()) created.log = [{ at: now, by: 'system', text: clean(body.log, 400) }];
         const files = [];
         const msgs = [];
         const wel = (Array.isArray(body.welcome) ? body.welcome : [body.welcome]).map((w) => clean(w, MAX_TEXT)).filter(Boolean).slice(0, 4);
@@ -442,6 +449,34 @@ export async function POST(req) {
       return json({ ok: true, deleted: !!gone, slug });
     }
 
+    // ---- CRM: restart a DEMO chat at a stage (the sandbox) ----
+    if (who === 'advon' && q('reset') === '1') {
+      if (!slug) return json({ error: 'no thread' }, 400);
+      let body; try { body = await req.json(); } catch { body = {}; }
+      const stage = STAGES.includes(body.stage) ? body.stage : 'yliko';
+      let out = null;
+      await ghCommit(c, `chat: ${slug} demo restarted at ${stage}`, async (ctx) => {
+        const { data: idx } = await ctx.readJson(INDEX_PATH, []);
+        const list = Array.isArray(idx) ? idx : [];
+        const t = list.find((x) => x.slug === slug); if (!t) throw Object.assign(new Error('no thread'), { code: 'no_thread' });
+        if (!t.demo) throw Object.assign(new Error('only a demo chat can be restarted'), { code: 'not_demo' });
+        const now = nowIso();
+        t.stage = stage; t.stageAt = now; t.dat = !!body.dat; delete t.ready; delete t.suggest; t.remindersSent = 0; t.lastReminderAt = null;
+        if (stage === 'yliko') t.site = ''; else if (!t.site) t.site = 'https://allsmiles.gr';
+        const msgs = demoSeed(stage, t, t.dat).map((w, i) => ({ id: msgId() + String(i), from: 'advon', text: w, files: [], at: new Date(Date.parse(now) + i * 1000).toISOString() }));
+        t.lastAt = msgs[msgs.length - 1].at; t.lastFrom = 'advon'; t.lastText = msgs[msgs.length - 1].text.slice(0, 140); t.n = msgs.length;
+        t.unreadAdmin = 0; t.unreadClient = msgs.length; t.adminSeenAt = now; t.clientSeenAt = null; t.angeloNotifiedAt = t.lastAt; t.clientNotifiedAt = t.lastAt;
+        t.log = (t.log || []).concat([{ at: now, by: 'angelo', text: `Demo restarted at «${stage}»` }]).slice(-30);
+        // old attachments of the sandbox go too
+        const files = [];
+        try { for (const f of await ctx.listDir(`${DIR}/${slug}/files`)) if (f.type === 'blob') files.push({ path: `${DIR}/${slug}/files/${f.path}`, content: null }); } catch {}
+        out = t;
+        return [{ path: `${DIR}/${slug}/messages.json`, content: JSON.stringify(msgs, null, 1) }, ...files, { path: INDEX_PATH, content: JSON.stringify(list, null, 1) }];
+      });
+      forgetHead();
+      return json({ ok: true, thread: out });
+    }
+
     // ---- CRM: edit the card ----
     if (who === 'advon' && q('meta') === '1') {
       if (!slug) return json({ error: 'no thread' }, 400);
@@ -458,6 +493,7 @@ export async function POST(req) {
         if ('stage' in body && STAGES.includes(body.stage)) { if (t.stage !== body.stage) { t.stage = body.stage; t.stageAt = nowIso(); t.remindersSent = 0; t.lastReminderAt = null; delete t.ready; } }
         if ('form' in body) t.form = !!body.form;                     // the site already has the contact form — the page stops offering it (50€ add-on)
         if ('dat' in body) t.dat = !!body.dat;                        // «has a doctoranytime profile» — the client page then asks only for photos
+        if ('demo' in body) { if (body.demo) t.demo = true; else delete t.demo; }   // sandbox chat: answers by itself, no alerts, invisible to the agent
         if (body.ready === null) delete t.ready;                       // Angelo ticked the READY badge off (the work is done)
         if (typeof body.log === 'string' && body.log.trim()) { t.log = (t.log || []).concat([{ at: nowIso(), by: 'angelo', text: clean(body.log, 400) }]).slice(-30); }
         if ('archived' in body) t.archived = !!body.archived;
@@ -488,6 +524,21 @@ export async function POST(req) {
     try { ({ thread: t, dup } = await appendMessage(c, slug, msg, files, { clearReady: who !== 'client' && body.clearReady === true })); }
     catch (e) { if (e.code === 'no_thread') return json({ error: 'unknown link' }, 404); throw e; }
     if (dup) return json({ ok: true, message: dup, thread: who === 'client' ? publicThread(t) : t, duplicate: true });
+    // the sandbox answers at once, the way the real flow would days later (lib/chatdemo.js)
+    if (who === 'client' && t && t.demo) {
+      try {
+        let ctxMsgs = [];
+        if (msg.kind === 'ready:changes') { try { const all = await getMessages(c, slug); let i = all.length - 1; while (i >= 0 && all[i].from === 'client') i--; ctxMsgs = all.slice(i + 1).filter((m) => m.from === 'client' && !m.deleted); } catch {} }
+        const replies = demoReply(t, { ...msg, context: ctxMsgs });
+        let k = 1;
+        for (const r of replies) {
+          const at = new Date(Date.now() + (r.delay || 1200 * k++)).toISOString();
+          const res = await appendMessage(c, slug, { id: msgId(), from: 'advon', text: r.text, files: [], at, demo: true }, [], { clearReady: !!r.clearReady, patch: { stage: r.stage, site: r.site } });
+          if (res && res.thread) t = res.thread;
+        }
+      } catch (e) { console.warn('demo reply failed', e.message); }
+      return json({ ok: true, message: msg, thread: publicThread(t) });
+    }
     // e-mail / Telegram go out from netlify/functions/chat-notify.mjs (every 5 min) — nothing to wait for here
     return json({ ok: true, message: msg, thread: who === 'client' ? publicThread(t) : t });
   } catch (e) {
