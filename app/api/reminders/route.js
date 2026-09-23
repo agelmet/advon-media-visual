@@ -1,14 +1,15 @@
 // app/api/reminders/route.js — client reminders for the CRM Home card (23 Sept 2026)
 //
 // The reminders themselves are ⏰ events in the Google Calendar «Advon Media» (see lib/reminders.js).
-//   GET  /api/reminders            (x-crm-auth)  → {ok, today, items:[{uid, day, time, client, what, desc, viber, done, sentOn, when}]}
+//   GET  /api/reminders            (x-crm-auth)  → {ok, today, items:[{uid, day, time, client, what, desc, viber, done, sentOn, when}], asap:[{uid, day, text, hot}]}
+//                                                  (asap = «📌 …» events whose day has come — the CRM adds each to «Do ASAP» once)
 //   POST /api/reminders?done=1     JSON {uid}    → mark done (the client sent what we asked); {uid, undo:true} takes it back
 //   GET  /api/reminders?k=<read key>             → the same list as plain text (for a Claude agent)
 // Done/sent bookkeeping: reminders/state.json in the private data repo (one commit per change, lib/ghdata.js).
 
 import { ghReady, ghConf, commit as ghCommit, readAtHead } from '@/lib/ghdata';
 import { forgetHead } from '@/lib/chatcore';
-import { STATE_PATH, fetchReminders, withState, viberText, todayAthens, dayGreek } from '@/lib/reminders';
+import { STATE_PATH, fetchCalendarText, parseReminders, parseAsap, withState, viberText, todayAthens, dayGreek, inAthens } from '@/lib/reminders';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -43,15 +44,19 @@ export async function GET(req) {
   else if (!(await crmAuthorized(req))) return json({ ok: false, error: 'unauthorized' }, 401);
   const conf = ghConf();
   try {
-    const [list, state] = await Promise.all([fetchReminders(), ghReady(conf) ? readStateSafe(conf) : { done: {}, sent: {} }]);
+    const [ics, state] = await Promise.all([fetchCalendarText(), ghReady(conf) ? readStateSafe(conf) : { done: {}, sent: {} }]);
+    const list = parseReminders(ics);
     const today = todayAthens();
+    // «📌» events whose day has come (last 60 days) — the CRM adds each one to «Do ASAP» once
+    const from60 = inAthens(new Date(Date.now() - 60 * 864e5)).day;
+    const asap = parseAsap(ics).filter((a) => a.day >= from60 && a.day <= today).map(({ status, ...a }) => a);
     const items = withState(list, state).map((r) => ({ ...r, viber: viberText(r) }));
     if (k) {
       const L = [`REMINDERS — ${dayGreek(today)} — ${items.filter((r) => !r.done && r.day <= today).length} due, ${items.filter((r) => !r.done && r.day > today).length} upcoming`];
       items.forEach((r) => L.push(`  ${r.done ? '✅' : r.day < today ? '⚠️ overdue' : r.day === today ? '⏰ today' : '·'} ${r.day}${r.time ? ' ' + r.time : ''} — ${r.client} — ${r.what}${r.sentOn ? ' (sent ' + r.sentOn + ')' : ''}`));
       return new Response(L.join('\n'), { headers: { ...NO_STORE, 'Content-Type': 'text/plain; charset=utf-8' } });
     }
-    return json({ ok: true, today, items });
+    return json({ ok: true, today, items, asap });
   } catch (e) {
     return json({ ok: false, code: e.code || 'error', error: e.message || 'failed' }, e.code === 'no_calendar' ? 503 : 502);
   }

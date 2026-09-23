@@ -2178,7 +2178,7 @@ body.dark .rm-new input{background:var(--surface);}
   <div class="home-hero" id="homeHero"></div>
   <div class="home-grid">
     <section class="home-card wide asap-card">
-      <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft);color:var(--red)" data-ic="flag"></span><h3>Do ASAP</h3><span class="hc-hint">Click a line to edit · 🔥 = super-high priority · drag ⋮⋮ to reorder</span></div>
+      <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft);color:var(--red)" data-ic="flag"></span><h3>Do ASAP</h3><span class="hc-hint">Click a line to edit · 🔥 = super-high priority · drag ⋮⋮ to reorder · from your phone: tell Claude «ASAP: …»</span></div>
       <div class="home-card-body asap-body" id="homeAsap"></div>
     </section>
     <section class="home-card wide meetings-card">
@@ -7743,6 +7743,7 @@ window.DEMO_REMINDERS=function(){ const d=n=>{ const x=new Date(Date.now()+n*864
     {uid:'r4', day:d(9), time:'09:00', client:'Λαμπρίδη', what:'κριτική στο Google', desc:'Μετά το live.', viber:'', done:false, sentOn:null},
     {uid:'r5', day:d(-1), time:'09:00', client:'Ρήγας', what:'ΑΦΜ για το τιμολόγιο', desc:'', viber:'', done:true, sentOn:d(-1)},
   ]; };
+window.DEMO_ASAP=function(){ const d=new Date(); const day=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); return [{uid:'asap-demo-1', day, text:'Κάλεσε τη Λαμπρίδη για το domain', hot:true},{uid:'asap-demo-2', day, text:'Στείλε στον Ρήγα την προσφορά για το Google profile', hot:false}]; };
 window.DEMO_CHATS=(function(){
   const ago=h=>new Date(Date.now()-h*3600e3).toISOString();
   const threads=[
@@ -8314,14 +8315,14 @@ const Reminders={ list:[], today:'', state:'idle', err:'', lastAt:0, busy:false,
   hdr(){ return {'x-crm-auth':SYNC_TOKEN}; },
   async pull(manual){
     if(this.busy) return;
-    if(window.DEMO_REMINDERS){ this.list=window.DEMO_REMINDERS(); this.today=todayIso(); this.state='ok'; this.lastAt=Date.now(); renderHomeReminders(); return; }
+    if(window.DEMO_REMINDERS){ this.list=window.DEMO_REMINDERS(); this.today=todayIso(); this.state='ok'; this.lastAt=Date.now(); if(window.DEMO_ASAP) asapImport(window.DEMO_ASAP()); renderHomeReminders(); return; }
     if(!SYNC_TOKEN){ this.state='off'; renderHomeReminders(); return; }
     this.busy=true; if(manual||this.state==='idle'){ this.state='loading'; renderHomeReminders(); }
     try{
       const r=await fetch('/api/reminders?_='+Date.now(),{headers:this.hdr(), cache:'no-store'});
       let p={}; try{ p=await r.json(); }catch(e){}
       if(!r.ok||!p.ok){ this.state='error'; this.err=(p&&p.error)||('the server answered '+r.status); }
-      else { this.list=Array.isArray(p.items)?p.items:[]; this.today=p.today||todayIso(); this.state='ok'; this.err=''; this.lastAt=Date.now(); }
+      else { this.list=Array.isArray(p.items)?p.items:[]; this.today=p.today||todayIso(); this.state='ok'; this.err=''; this.lastAt=Date.now(); asapImport(p.asap); }
     }catch(e){ this.state='error'; this.err=e.message; }
     this.busy=false; renderHomeReminders();
   },
@@ -8336,6 +8337,17 @@ const Reminders={ list:[], today:'', state:'idle', err:'', lastAt:0, busy:false,
     }catch(e){ r.done=was; renderHomeReminders(); toast(e.message||'Could not save'); }
   },
 };
+/* «📌 …» events in the Google Calendar «Advon Media» → «Do ASAP», once each (remembered in state.meta.asapIn, which syncs).
+   Claude adds them from any chat («ASAP: call Nikos»), Angelo from the Calendar app; 🔥 in the title = super-high priority. */
+function asapImport(list){
+  if(!state || !Array.isArray(list) || !list.length) return;
+  ensureMeta(); ensureAsap(); const seen=state.meta.asapIn||(state.meta.asapIn={}); const added=[];
+  list.slice().sort((x,y)=>(!!x.hot)-(!!y.hot)).forEach(a=>{ if(!a||!a.uid||seen[a.uid]||!String(a.text||'').trim()) return; seen[a.uid]=Date.now();
+    const top=Math.min(0,...state.asap.map(t=>t.sort||0))-1;
+    state.asap.push({id:uid(), text:String(a.text).trim().slice(0,240), hot:!!a.hot, done:false, created:Date.now(), sort:top, from:'calendar'}); added.push(a.text); });
+  const cut=Date.now()-120*864e5; Object.keys(seen).forEach(k=>{ if(seen[k]<cut) delete seen[k]; });
+  if(added.length){ save(); try{ renderAsap(); }catch(e){} toast((added.length===1?'Added to Do ASAP: «'+added[0].slice(0,50)+'»':added.length+' things added to Do ASAP')+' — from your calendar', true); }
+}
 const remDayLabel=day=>{ const [y,m,d]=day.split('-').map(Number); const dt=new Date(y,m-1,d); const t=new Date(); const dd=Math.round((dt-new Date(t.getFullYear(),t.getMonth(),t.getDate()))/864e5); const s=dt.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'}); return dd===0?'Today':dd===1?'Tomorrow':dd===-1?'Yesterday':s; };
 function remViber(r){ return r.viber||('Καλημέρα σας'+(/[Α-Ωα-ω]/.test(r.client)?' κ. '+r.client:'')+'! Ελπίζω να είστε καλά.\n\nΜια μικρή υπενθύμιση για την ιστοσελίδα σας — για να προχωρήσουμε θα χρειαστούμε: '+(r.what||'ό,τι είχαμε πει').replace(/[.\s]+$/,'')+'.\n\nΜπορείτε να μου τα στείλετε εδώ στο Viber ή στο advonmd@gmail.com (αρχεία πάνω από 4 MB μέσω wetransfer.com). Μόλις τα έχω, συνεχίζω αμέσως.\n\nΕυχαριστώ πολύ!'); }
 function remNewUrl(client, what, day){
