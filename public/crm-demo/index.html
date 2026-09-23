@@ -1231,30 +1231,30 @@ body.dark .log-entry .le-edit:hover,body.dark .log-entry .le-x:hover{background:
 body.locked > *:not(.login-screen){filter:blur(7px); pointer-events:none; user-select:none;}
 
 /* ---------- Home / dashboard ---------- */
-.home-hero{background:linear-gradient(120deg,#10141F 15%,#1B3A6B 65%,#2F7FE0 130%); color:#fff; border-radius:var(--radius); padding:24px 28px 22px; margin-bottom:18px; box-shadow:var(--shadow-lg); position:relative; overflow:hidden;}
+.home-hero{background:linear-gradient(120deg,#10141F 15%,#1B3A6B 65%,#2F7FE0 130%); color:#fff; border-radius:var(--radius); padding:12px 18px; margin-bottom:12px; display:flex; align-items:center; gap:14px 22px; flex-wrap:wrap; box-shadow:var(--shadow-lg); position:relative; overflow:hidden;}
 .home-hero::before{content:''; position:absolute; top:-60%; right:-10%; width:55%; height:200%; background:radial-gradient(closest-side,rgba(53,199,233,.20),transparent 70%); pointer-events:none;}
 .home-hero > *{position:relative;}
-.home-hero h2{font-size:24px; font-weight:800; letter-spacing:-.02em; margin-bottom:3px;}
-.home-hero p{font-size:13px; color:rgba(255,255,255,.72); font-weight:500;}
+.home-hero h2{font-size:17px; font-weight:800; letter-spacing:-.02em; margin-bottom:1px; white-space:nowrap;}
+.home-hero p{font-size:11.5px; color:rgba(255,255,255,.7); font-weight:500; white-space:nowrap;}
+.home-hero .hero-who{flex:0 0 auto; min-width:0;}
 /* three calm groups instead of one long row: Calls · Money · Attention */
-.hero-groups{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:18px;}  /* Money lives in the strip above the hero now */
-@media(max-width:1100px){.hero-groups{grid-template-columns:1fr 1fr;} .hero-groups .hg.attention{grid-column:1 / -1;}}
-@media(max-width:640px){.hero-groups{grid-template-columns:1fr;}}
-.hg{background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.11); border-radius:14px; padding:12px 15px 13px; min-width:0; backdrop-filter:blur(4px);}
+.hero-groups{flex:1 1 560px; display:flex; gap:8px; margin:0; min-width:0; flex-wrap:wrap;}
+.hg{flex:1 1 260px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.11); border-radius:12px; padding:7px 12px; min-width:0; display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
 .hg.attention.hot{border-color:rgba(255,179,159,.35); background:rgba(255,107,87,.10);}
-.hg-title{display:flex; align-items:center; gap:6px; font-size:10px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; color:rgba(255,255,255,.62); margin-bottom:10px;}
+.hg-title{display:flex; align-items:center; gap:5px; font-size:9.5px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.62); margin:0; flex:0 0 auto;}
 .hg-title .ic{width:1.15em; height:1.15em; opacity:.9;}
-.hg-title .hg-note{margin-left:auto; font-weight:600; letter-spacing:.02em; text-transform:none; font-size:10.5px; color:rgba(255,255,255,.45);}
-.home-hero .hero-stats{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px 14px;}
-.hg.attention .hero-stats{grid-template-columns:repeat(4,minmax(0,1fr));}
-@media(max-width:1280px){.home-hero .hero-stats,.hg.attention .hero-stats{grid-template-columns:repeat(2,minmax(0,1fr));}}
-@media(max-width:1100px){.hg.attention .hero-stats{grid-template-columns:repeat(4,minmax(0,1fr));}}
-@media(max-width:520px){.hg.attention .hero-stats{grid-template-columns:repeat(2,minmax(0,1fr));}}
-.home-hero .hs{min-width:0; display:flex; flex-direction:column; justify-content:flex-start;}
-.home-hero .hs .k{font-size:9.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.55); line-height:1.3; min-height:25px; display:flex; align-items:flex-end;}
-.home-hero .hs .v{font-family:'Sora'; font-weight:800; font-size:23px; letter-spacing:-.02em; font-variant-numeric:tabular-nums; margin-top:2px; line-height:1.15;}
+.hg-title .hg-note{margin-left:4px; font-weight:600; letter-spacing:.02em; text-transform:none; font-size:10px; color:rgba(255,255,255,.45);}
+.home-hero .hero-stats{display:flex; gap:4px 14px; flex-wrap:wrap; flex:1; min-width:0; margin-left:auto; justify-content:flex-end;}
+.home-hero .hs{min-width:0; display:flex; align-items:baseline; gap:5px; border-radius:8px; padding:2px 4px;}
+.home-hero .hs[data-goto]:hover{background:rgba(255,255,255,.1);}
+.home-hero .hs .k{font-size:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.55); line-height:1.2; order:2; white-space:nowrap;}
+.home-hero .hs .v{font-family:'Sora'; font-weight:800; font-size:16px; letter-spacing:-.02em; font-variant-numeric:tabular-nums; line-height:1.15;}
+@media(max-width:1100px){.home-hero .hero-stats{justify-content:flex-start;}}
+@media(max-width:640px){.home-hero{padding:12px 14px;} .home-hero h2,.home-hero p{white-space:normal;} .hg{flex-basis:100%; display:block; padding:8px 12px;} .hg-title{margin-bottom:6px;} .home-hero .hero-stats{display:grid; grid-template-columns:1fr 1fr; gap:4px 8px; justify-content:start;} .home-hero .hs .k{white-space:normal;}}
 .home-hero .hs .v.g{color:#4BE8A0;} .home-hero .hs .v.c{color:#FFB39F;} .home-hero .hs .v.b{color:#7FD9F5;}
-.home-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.home-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:start;}
+.home-card .home-card-head{flex-wrap:wrap; row-gap:4px;}
+.home-card .home-card-head .hc-hint{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 @media(max-width:1000px){.home-grid{grid-template-columns:1fr;}}
 .home-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
 .home-card.wide{grid-column:1 / -1;}
@@ -2206,20 +2206,20 @@ body.dark .rm-new input{background:var(--surface);}
 <main class="view active" id="view-home">
   <div class="home-hero" id="homeHero"></div>
   <div class="home-grid">
-    <section class="home-card wide asap-card">
+    <section class="home-card asap-card">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--red-soft);color:var(--red)" data-ic="flag"></span><h3>Do ASAP</h3><span class="hc-hint">Click a line to edit · 🔥 = super-high priority · drag ⋮⋮ to reorder · from your phone: tell Claude «ASAP: …»</span></div>
       <div class="home-card-body asap-body" id="homeAsap"></div>
     </section>
-    <section class="home-card wide meetings-card">
+    <section class="home-card meetings-card">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--blue)" data-ic="calendar"></span><h3>Booked meetings</h3><span class="hc-hint" id="homeWeekHint"></span><button class="hc-link" id="bkRefresh" title="Read the booking calendar again now">Check calendar</button><button class="hc-link" data-goto="calendar">Open calendar</button></div>
       <div class="home-card-body" id="homeWeek"></div>
       <div id="bkBody" class="bk-strip"></div>
     </section>
-    <section class="home-card wide rem-card" id="homeRemCard">
+    <section class="home-card rem-card" id="homeRemCard">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--orange-soft);color:var(--orange)" data-ic="clock"></span><h3>Client reminders</h3><span class="hc-hint" id="homeRemHint"></span><button class="hc-link" id="remToday" title="Open today's list again">Today</button><button class="hc-link" id="remNew" title="Add a reminder — it goes into your Google Calendar «Advon Media» as a ⏰ event">+ New</button><button class="hc-link" id="remRefresh" title="Read the calendar again now">Check calendar</button></div>
       <div class="home-card-body" id="homeRem"></div>
     </section>
-    <section class="home-card wide chats-card" id="homeChatsCard">
+    <section class="home-card chats-card" id="homeChatsCard">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--blue-soft);color:var(--brand)" data-ic="message"></span><h3>Client chats</h3><span class="hc-hint" id="homeChatsHint"></span><button class="hc-link" data-goto="chats">Open Chats</button></div>
       <div class="home-card-body" id="homeChats"></div>
     </section>
@@ -2227,7 +2227,7 @@ body.dark .rm-new input{background:var(--surface);}
       <div class="home-card-head"><span class="hc-ico" style="background:var(--coral-soft);color:var(--coral)" data-ic="phone"></span><h3>People to contact</h3><span class="hc-hint" id="homeChaseHint"></span><button class="hc-link" data-goto="remaining">Remaining</button><button class="hc-link" data-goto="renewals">Renewals</button></div>
       <div class="home-card-body" id="homeCollect"></div>
     </section>
-    <section class="home-card wide">
+    <section class="home-card">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--yellow-soft);color:#B8860B" data-ic="clock"></span><h3>Follow up after the meeting</h3><button class="hc-link" data-goto="board">Board</button></div>
       <div class="home-card-body" id="homeThink"></div>
     </section>
@@ -2235,7 +2235,7 @@ body.dark .rm-new input{background:var(--surface);}
       <div class="home-card-head"><span class="hc-ico" style="background:var(--green-soft);color:var(--deep)" data-ic="wallet"></span><h3>Cash forecast</h3><span class="hc-hint">What should come in, from what is already on the Board</span><button class="hc-link" data-goto="remaining">Remaining</button></div>
       <div class="home-card-body" id="homeCash"></div>
     </section>
-    <section class="home-card wide subs-card">
+    <section class="home-card subs-card">
       <div class="home-card-head"><span class="hc-ico" style="background:var(--green-soft);color:var(--deep)" data-ic="calendar"></span><h3>Subscriptions to collect</h3><span class="hc-hint" id="homeSubsHint"></span><button class="hc-link" data-goto="monthly">Monthly</button></div>
       <div class="home-card-body" id="homeSubs"></div>
     </section>
@@ -5683,14 +5683,14 @@ function renderHome(){
          <div class="tgt-bar on-dark" style="max-width:150px; margin-top:6px;"><i class="${tcls}" style="width:${Math.min(100,tpct)}%"></i></div></div>`
     : `<div class="hs"><div class="k">Target ${monthName} · gen.</div><div class="v" style="color:rgba(255,255,255,.5);">—</div><div class="tgt-sub">set it in the month strip</div></div>`;
   $('#homeHero').innerHTML=`
-    <h2>${greet}</h2>
-    <p>${today.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · here's your day at a glance</p>
+    <div class="hero-who"><h2>${greet}</h2>
+    <p>${today.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</p></div>
     <div class="hero-groups">
       <div class="hg calls">
         <div class="hg-title">${IC.phone} Calls <span class="hg-note">${statsPaused() ? statsBtn() : statsSince()>todayI ? 'counting from '+fmtDay(statsSince()) : ''}</span></div>
         <div class="hero-stats">
           <div class="hs"><div class="k">Cold calls today</div><div class="v b">${todayCalls.calls}</div></div>
-          <div class="hs"><div class="k">${monthName} cold calls</div><div class="v b">${mStats.calls}</div></div>
+          <div class="hs"><div class="k">${monthName.slice(0,3)} cold calls</div><div class="v b">${mStats.calls}</div></div>
           <div class="hs"><div class="k">Call → booking</div><div class="v ${callConv>=40?'g':callConv>=20?'':'c'}">${callConv}%</div></div>
           <div class="hs" data-goto="calendar" style="cursor:pointer"><div class="k">Meetings this week</div><div class="v b">${weekMeetings.length}</div></div>
         </div>
