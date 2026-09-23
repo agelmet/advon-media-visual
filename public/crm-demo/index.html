@@ -636,9 +636,9 @@ body.dark .cb-item .w-wait{background:rgba(255,255,255,.08);}
 .rn-banner .k{font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.6);}
 .rn-banner .cell.hot .big{color:#7FD9F5;}
 /* ---------- Renewals — the year, month by month; renewed ones move into their own pot ---------- */
-.rn-banner.rnb{padding:22px 26px; margin-bottom:14px; display:grid; grid-template-columns:repeat(6,1fr); gap:18px 22px; align-items:start;}
+.rn-banner.rnb{padding:16px 22px 14px; margin-bottom:10px; display:grid; grid-template-columns:repeat(6,1fr); gap:18px 22px; align-items:start;}
 .rn-banner.rnb .cell{min-width:0;}
-.rn-banner.rnb .big{font-family:'Sora'; font-weight:800; font-size:28px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1.1; margin-top:5px;}
+.rn-banner.rnb .big{font-family:'Sora'; font-weight:800; font-size:23px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1.1; margin-top:5px;}
 .rn-banner.rnb .k{font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.62); display:flex; align-items:center; gap:6px;}
 .rn-banner.rnb .k.sub{margin-top:5px; text-transform:none; letter-spacing:.03em; font-size:11.5px; color:rgba(255,255,255,.55);}
 .rn-banner.rnb .cell.over .big{color:#FF8A96;} .rn-banner.rnb .cell.over.zero .big{color:rgba(255,255,255,.45);}
@@ -662,13 +662,13 @@ body.dark .cb-item .w-wait{background:rgba(255,255,255,.08);}
 .rn-strip .rs-v{font-size:9.5px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; max-width:100%;}
 .rn-strip .rs-v.zero{color:#C0C6D4;}
 @media(max-width:900px){.rn-strip{grid-template-columns:repeat(6,1fr);} .rn-strip .rs-bar{height:18px;}}
-.rn-months{display:flex; flex-direction:column; gap:12px;}
+.rn-months{display:flex; flex-direction:column; gap:10px;}
 .rn-month,.rn-overdue,.rn-paid{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
 .rn-month.current{box-shadow:0 0 0 2px var(--blue-soft), var(--shadow);}
 .rn-month.empty{box-shadow:none; background:transparent; border-style:dashed;}
-.rn-month.empty .rn-mh{border-bottom:none; padding:10px 18px;}
+.rn-month.empty .rn-mh{border-bottom:none; padding:7px 14px;}
 .rn-month.empty .rn-mh h3{font-size:13px; color:var(--muted); font-weight:700;}
-.rn-mh{display:flex; align-items:center; gap:12px; padding:13px 18px; border-bottom:1px solid var(--line); flex-wrap:wrap;}
+.rn-mh{display:flex; align-items:center; gap:12px; padding:9px 14px; border-bottom:1px solid var(--line); flex-wrap:wrap;}
 .rn-mh .rmh-txt{flex:1; min-width:150px;}
 .rn-mh h3{font-size:15.5px; font-weight:800; letter-spacing:-.01em; display:flex; align-items:center; gap:8px;}
 .rn-mh h3 .now-tag{font-size:9px; font-weight:800; letter-spacing:.1em; background:var(--grad); color:#fff; padding:3px 7px; border-radius:6px;}
@@ -681,13 +681,17 @@ body.dark .cb-item .w-wait{background:rgba(255,255,255,.08);}
 .rn-overdue .rn-mh p{color:rgba(255,255,255,.65);}
 .rn-overdue .rn-mh .rn-msum .k{color:rgba(255,255,255,.55);} .rn-overdue .rn-mh .rn-msum .v{color:#FF8A96;}
 .rn-overdue{margin-bottom:12px; border-color:rgba(255,77,94,.35);}
-.rn-body{padding:9px 12px 11px; display:flex; flex-direction:column; gap:6px;}
-.rn-row{display:grid; grid-template-columns:1fr auto auto auto auto; align-items:center; gap:12px; padding:9px 12px 9px 12px; border-radius:12px; background:var(--bg); border:1px solid var(--line); border-left:5px solid var(--cyan); transition:box-shadow .15s, transform .15s;}
+.rn-body{padding:9px 12px 11px; display:grid; grid-template-columns:repeat(auto-fill,minmax(236px,1fr)); gap:8px;}
+.rn-pgroup .rows,.rn-lost-body{display:grid; grid-template-columns:repeat(auto-fill,minmax(236px,1fr)); gap:8px;}
+.rn-row{display:grid; grid-template-columns:1fr auto; grid-template-areas:"main val" "date days" "acts acts"; align-items:center; gap:6px 8px; padding:9px 11px 8px; border-radius:12px; background:var(--bg); border:1px solid var(--line); border-left:5px solid var(--cyan); transition:box-shadow .15s, transform .15s;}
 .rn-row:hover{box-shadow:var(--shadow); transform:translateY(-1px);}
 .rn-row.soon{border-left-color:var(--yellow); background:var(--yellow-soft);}
 .rn-row.overdue{border-left-color:var(--red); background:var(--red-soft);}
 .rn-row.today{border-left-color:var(--orange); background:var(--orange-soft);}
-.rn-row .rn-main{min-width:0;}
+.rn-row .rn-main{grid-area:main; min-width:0;}
+.rn-row .rn-val{grid-area:val;} .rn-row .rn-date{grid-area:date; justify-self:start;} .rn-row .rn-days{grid-area:days; justify-self:end;}
+.rn-row .rn-acts{grid-area:acts; justify-content:flex-end; margin-top:2px;} .rn-row .rn-acts .rn-done{margin-right:auto;}
+.rn-row .rn-undo{grid-area:acts; justify-self:end;}
 .rn-row .rn-name{font-weight:700; font-size:13.5px; word-break:break-word;}
 .rn-row .rn-sub{font-size:11px; color:var(--muted); font-weight:500; margin-top:2px; display:flex; gap:6px; flex-wrap:wrap; align-items:center;}
 .rn-row .rn-sub .hist{background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:1px 6px; font-weight:600;}
@@ -702,7 +706,7 @@ body.dark .cb-item .w-wait{background:rgba(255,255,255,.08);}
 .rn-row .rn-acts{display:flex; align-items:center; gap:6px;}
 .rn-done{display:inline-flex; align-items:center; gap:5px; background:var(--green); color:#fff; font-size:12px; font-weight:700; border-radius:9px; padding:7px 11px; white-space:nowrap; box-shadow:0 3px 10px rgba(14,198,115,.3); transition:filter .12s, transform .12s;}
 .rn-done:hover{filter:brightness(1.05);} .rn-done:active{transform:scale(.96);}
-.rn-row .item-x{opacity:0; margin-left:0;}
+.rn-row .item-x{opacity:.55; margin-left:0;}
 .rn-row:hover .item-x{opacity:1;}
 .rn-empty-line{font-size:12px; color:#B4BAC8; padding:2px 6px;}
 /* the renewed pot */
@@ -718,8 +722,7 @@ body.dark .cb-item .w-wait{background:rgba(255,255,255,.08);}
 .rn-pgroup h4{font-family:'Sora'; font-size:12px; font-weight:800; margin:4px 4px 7px; display:flex; align-items:center; gap:8px;}
 .rn-pgroup h4 .count{background:var(--green-soft); color:var(--deep); border-radius:99px; padding:2px 9px; font-size:11px;}
 .rn-pgroup h4 .gsum{margin-left:auto; font-size:12px; color:var(--deep); font-variant-numeric:tabular-nums;}
-.rn-pgroup .rows{display:flex; flex-direction:column; gap:6px;}
-.rn-row.paid{border-left-color:var(--green); background:var(--green-soft); grid-template-columns:1fr auto auto auto;}
+.rn-row.paid{border-left-color:var(--green); background:var(--green-soft);}
 .rn-row.paid .rn-val{color:var(--deep);}
 .rn-row.paid .rn-days{background:var(--surface); color:var(--muted); text-transform:none; letter-spacing:0; font-weight:600;}
 .rn-undo{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700; color:var(--muted); background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:5px 9px; opacity:0;}
@@ -758,30 +761,30 @@ body.dark .cb-item .w-wait{background:rgba(255,255,255,.08);}
 body.dark .rn-row .rn-date,body.dark .rn-row .rn-sub .hist,body.dark .rn-undo{background:var(--surface);}
 
 /* ---------- Remaining — money still out there ---------- */
-.rem-banner{background:linear-gradient(120deg,#10141F 10%,#1B2E52 55%,#2F7FE0 140%); color:#fff; border-radius:var(--radius); padding:22px 26px; margin-bottom:14px; display:grid; grid-template-columns:1.5fr repeat(4,1fr); gap:18px 24px; align-items:start; box-shadow:var(--shadow-lg); position:relative; overflow:hidden;}
+.rem-banner{background:linear-gradient(120deg,#10141F 10%,#1B2E52 55%,#2F7FE0 140%); color:#fff; border-radius:var(--radius); padding:16px 22px 14px; margin-bottom:10px; display:grid; grid-template-columns:1.5fr repeat(4,1fr); gap:18px 24px; align-items:start; box-shadow:var(--shadow-lg); position:relative; overflow:hidden;}
 .rem-banner::before{content:''; position:absolute; inset:-40% auto auto -10%; width:60%; height:180%; background:radial-gradient(closest-side,rgba(53,199,233,.22),transparent 70%); pointer-events:none;}
 .rem-banner .cell{min-width:0; position:relative;}
 .rem-banner .k{font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.62); display:flex; align-items:center; gap:6px;}
 .rem-banner .k.sub{margin-top:6px; letter-spacing:.04em; text-transform:none; font-size:11.5px; color:rgba(255,255,255,.55);}
-.rem-banner .big{font-family:'Sora'; font-weight:800; font-size:30px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1.1; margin-top:6px;}
-.rem-banner .cell.hero .big{font-size:40px; color:#FFB39F;}
+.rem-banner .big{font-family:'Sora'; font-weight:800; font-size:24px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1.1; margin-top:4px;}
+.rem-banner .cell.hero .big{font-size:32px; color:#FFB39F;}
 .rem-banner .cell.green .big{color:#4BE8A0;} .rem-banner .cell.orange .big{color:#FFB35C;} .rem-banner .cell.red .big{color:#FF8A96;}
 .rem-banner .cell.trash .big{color:rgba(255,255,255,.55); text-decoration:line-through; text-decoration-thickness:2px; text-decoration-color:rgba(255,77,94,.7);}
 .rem-banner .k .dot{width:9px; height:9px; border-radius:99px; display:inline-block; background:currentColor;}
 .rem-banner .cell.green .k .dot{background:#4BE8A0;} .rem-banner .cell.orange .k .dot{background:#FFB35C;} .rem-banner .cell.red .k .dot{background:#FF8A96;}
 @media(max-width:1180px){.rem-banner{grid-template-columns:repeat(3,1fr);} .rem-banner .cell.hero{grid-column:span 3;}}
 @media(max-width:640px){.rem-banner{grid-template-columns:repeat(2,1fr); gap:14px 16px; padding:18px 16px;} .rem-banner .cell.hero{grid-column:span 2;} .rem-banner .big{font-size:22px;} .rem-banner .cell.hero .big{font-size:32px;}}
-.rem-legend{display:flex; align-items:center; gap:14px 18px; flex-wrap:wrap; padding:2px 6px 16px; font-size:12px; font-weight:600; color:var(--muted);}
+.rem-legend{display:flex; align-items:center; gap:10px 16px; flex-wrap:wrap; padding:0 6px 10px; font-size:12px; font-weight:600; color:var(--muted);}
 .rem-legend .rl-item{display:inline-flex; align-items:center; gap:7px; color:var(--ink);}
 .rem-legend .rl-hint{margin-left:auto; font-weight:500; font-size:11.5px;}
 .rem-legend .rl-hint b{color:var(--ink);}
 @media(max-width:900px){.rem-legend .rl-hint{margin-left:0; width:100%;}}
-.rem-months{display:flex; flex-direction:column; gap:14px;}
+.rem-months{display:flex; flex-direction:column; gap:10px;}
 .rem-month{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
 .rem-month.current{box-shadow:0 0 0 2px var(--blue-soft), var(--shadow);}
-.rem-month-head{display:flex; align-items:center; gap:14px; padding:14px 18px; border-bottom:1px solid var(--line); flex-wrap:wrap;}
+.rem-month-head{display:flex; align-items:center; gap:12px; padding:9px 14px; border-bottom:1px solid var(--line); flex-wrap:wrap;}
 .rem-month-head .rmh-txt{flex:1; min-width:160px;}
-.rem-month-head h3{font-size:16px; font-weight:800; letter-spacing:-.01em;}
+.rem-month-head h3{font-size:14.5px; font-weight:800; letter-spacing:-.01em;}
 .rem-month.current h3::after{content:'NOW'; margin-left:8px; font-size:9px; font-weight:800; letter-spacing:.1em; background:var(--grad); color:#fff; padding:3px 7px; border-radius:6px; vertical-align:2px;}
 .rem-month-head p{font-size:12px; color:var(--muted); font-weight:500; margin-top:2px;}
 .rem-month-head p b.g{color:var(--deep);}
@@ -789,39 +792,40 @@ body.dark .rn-row .rn-date,body.dark .rn-row .rn-sub .hist,body.dark .rn-undo{ba
 .rmh-open:hover{filter:brightness(.96);}
 .rmh-sum{text-align:right; display:flex; flex-direction:column; align-items:flex-end;}
 .rmh-sum .k{font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
-.rmh-sum .v{font-family:'Sora'; font-weight:800; font-size:22px; letter-spacing:-.02em; color:var(--coral); font-variant-numeric:tabular-nums; line-height:1.1;}
-.rem-month-body{padding:10px 12px 12px; display:flex; flex-direction:column; gap:7px;}
-.rem-row{display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:12px; padding:11px 13px 11px 11px; border-radius:13px; background:var(--bg); border:1px solid var(--line); border-left:5px solid var(--sc,var(--line)); transition:box-shadow .15s, transform .15s, background .15s;}
+.rmh-sum .v{font-family:'Sora'; font-weight:800; font-size:18px; letter-spacing:-.02em; color:var(--coral); font-variant-numeric:tabular-nums; line-height:1.1;}
+.rem-month-body{padding:10px 12px 12px; display:grid; grid-template-columns:repeat(auto-fill,minmax(252px,1fr)); gap:8px;}
+.rem-row{display:grid; grid-template-columns:1fr auto; grid-template-areas:"main val" "acts acts"; align-items:start; gap:4px 10px; padding:9px 11px 8px 10px; border-radius:13px; background:var(--bg); border:1px solid var(--line); border-left:5px solid var(--sc,var(--line)); transition:box-shadow .15s, transform .15s, background .15s;}
 .rem-row:hover{box-shadow:var(--shadow); transform:translateY(-1px);}
 .rem-row.f-green{background:var(--green-soft); border-color:rgba(14,198,115,.35); border-left-color:var(--green);}
 .rem-row.f-orange{background:var(--orange-soft); border-color:rgba(255,138,0,.35); border-left-color:var(--orange);}
 .rem-row.f-red{background:var(--red-soft); border-color:rgba(255,77,94,.4); border-left-color:var(--red);}
-.rem-flags{display:flex; flex-direction:column; gap:5px; padding:2px 2px 2px 0;}
-@media(max-width:700px){.rem-flags{flex-direction:row;}}
-.rem-dot{width:16px; height:16px; border-radius:99px; border:2px solid transparent; opacity:.42; transition:transform .12s, opacity .12s; box-shadow:0 0 0 0 transparent; padding:0; display:inline-block;}
+.rem-flags{display:flex; flex-direction:row; gap:4px; padding:0; margin-right:auto; align-self:center;}
+.rem-dot{width:14px; height:14px; border-radius:99px; border:2px solid transparent; opacity:.42; transition:transform .12s, opacity .12s; box-shadow:0 0 0 0 transparent; padding:0; display:inline-block;}
 .rem-dot.green{background:var(--green);} .rem-dot.orange{background:var(--orange);} .rem-dot.red{background:var(--red);}
 .rem-dot:hover{opacity:.85; transform:scale(1.15);}
 .rem-dot.on{opacity:1; border-color:#fff; box-shadow:0 0 0 2px currentColor; transform:scale(1.12);}
 .rem-dot.green.on{color:var(--green);} .rem-dot.orange.on{color:var(--orange);} .rem-dot.red.on{color:var(--red);}
 body.dark .rem-dot.on{border-color:var(--surface);}
 .rem-legend .rem-dot{width:13px; height:13px; transform:none; cursor:default; box-shadow:none; border-width:1.5px;}
-.rem-main{min-width:0; cursor:pointer;}
-.rem-name{font-weight:700; font-size:14px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; word-break:break-word;}
+.rem-main{grid-area:main; min-width:0; cursor:pointer;}
+.rem-name{font-weight:800; font-size:13.5px; line-height:1.25; display:flex; align-items:center; gap:6px; flex-wrap:wrap; word-break:break-word;}
 .rem-flag-lbl{font-size:9.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; padding:3px 7px; border-radius:6px;}
 .rem-flag-lbl.green{background:var(--green); color:#fff;} .rem-flag-lbl.orange{background:var(--orange); color:#fff;} .rem-flag-lbl.red{background:var(--red); color:#fff;}
-.rem-meta{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:5px;}
-.rem-stage{font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:7px; letter-spacing:.02em; white-space:nowrap;}
-.rem-chip,.rem-age{font-size:11px; font-weight:600; color:var(--muted); background:var(--surface); border:1px solid var(--line); border-radius:7px; padding:2px 7px; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; text-decoration:none; font-variant-numeric:tabular-nums;}
+.rem-meta{display:flex; align-items:center; gap:3px 4px; flex-wrap:wrap; margin-top:4px;}
+.rem-stage{font-size:10px; font-weight:800; padding:2px 6px; border-radius:7px; letter-spacing:.02em; white-space:nowrap;}
+.rem-chip,.rem-age{font-size:10.5px; font-weight:600; color:var(--muted); background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:1px 5px; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; text-decoration:none; font-variant-numeric:tabular-nums;}
 .rem-chip.link:hover{color:var(--brand); border-color:#BFD4F2;}
 .rem-chip.xtra{background:var(--violet-soft); color:var(--violet); border-color:transparent; font-weight:700;}
 .rem-age.late{color:var(--red); border-color:rgba(255,77,94,.4); background:var(--red-soft);}
-.rem-note{font-size:11px; color:var(--muted); max-width:340px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:500;}
+.rem-note{font-size:10.5px; color:var(--muted); max-width:100%; flex-basis:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:500;}
 .rem-note.reason{color:var(--coral); font-weight:600; display:inline-flex; align-items:center; gap:4px;}
-.rem-val{font-family:'Sora'; font-weight:800; font-size:18px; letter-spacing:-.02em; color:var(--coral); font-variant-numeric:tabular-nums; white-space:nowrap;}
+.rem-val{grid-area:val; font-family:'Sora'; font-weight:800; font-size:17px; letter-spacing:-.02em; color:var(--coral); font-variant-numeric:tabular-nums; white-space:nowrap; line-height:1.1; text-align:right;}
+.rem-val small{display:block; font-family:'Inter',sans-serif; font-size:10.5px; color:var(--muted); font-weight:600; margin-top:1px;}
 .rem-row.f-green .rem-val{color:var(--deep);}
 .rem-val.lost{color:var(--muted); text-decoration:line-through; text-decoration-color:var(--red); text-decoration-thickness:2px;}
-.rem-actions{display:flex; gap:6px; align-items:center;}
-.rem-btn{display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:700; border-radius:9px; padding:7px 10px; white-space:nowrap; transition:filter .12s, transform .12s;}
+.rem-actions{grid-area:acts; display:flex; gap:5px; align-items:center; justify-content:flex-end; margin-top:3px; padding-top:6px; border-top:1px dashed var(--line);}
+.rem-row.trashed .rem-actions{border-top:none; padding-top:0;}
+.rem-btn{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700; border-radius:9px; padding:6px 9px; white-space:nowrap; transition:filter .12s, transform .12s;}
 .rem-btn:active{transform:scale(.96);}
 .rem-btn.paid{background:var(--green); color:#fff; box-shadow:0 3px 10px rgba(14,198,115,.3);}
 .rem-btn.paid:hover{filter:brightness(1.05);}
@@ -830,11 +834,8 @@ body.dark .rem-dot.on{border-color:var(--surface);}
 .rem-btn.restore{background:var(--blue-soft); color:var(--brand);}
 .rem-btn.restore:hover{filter:brightness(.96);}
 @media(max-width:700px){
-  .rem-row{grid-template-columns:1fr auto; gap:8px 10px;}
-  .rem-flags{grid-column:1 / -1; order:3; padding:0;}
-  .rem-actions{grid-column:1 / -1; order:4; justify-content:flex-end;}
-  .rem-val{font-size:16px;}
-  .rem-note{max-width:100%; white-space:normal; display:block; width:100%;}
+  .rem-month-body{grid-template-columns:1fr;}
+  .rem-val{font-size:17px;}
 }
 .rem-empty{background:var(--surface); border:1px dashed var(--line); border-radius:var(--radius); padding:36px 20px; text-align:center;}
 .rem-empty .ico{width:44px; height:44px; border-radius:14px; display:inline-grid; place-items:center; background:var(--green-soft); color:var(--deep); font-size:20px; margin-bottom:10px;}
@@ -924,6 +925,8 @@ body.dark .rem-dot.on{border-color:var(--surface);}
 .todo-lane-head{padding:14px 15px 12px; color:#fff; display:flex; align-items:center; gap:8px;}
 .todo-lane-head .tl-title{font-family:'Sora'; font-size:14px; font-weight:700; cursor:pointer; word-break:break-word; letter-spacing:-.01em;}
 .todo-lane-head .tl-title:hover{text-decoration:underline; text-underline-offset:3px;}
+.todo-lane-head .tl-sum{margin-left:auto; background:rgba(255,255,255,.92); color:#0B7A47; border-radius:99px; padding:2px 10px; font-size:12px; font-weight:800; font-variant-numeric:tabular-nums; white-space:nowrap;}
+.todo-lane-head .tl-sum + .tl-count{margin-left:0;}
 .todo-lane-head .tl-count{margin-left:auto; background:rgba(255,255,255,.28); border-radius:99px; padding:2px 10px; font-size:12px; font-weight:700; font-variant-numeric:tabular-nums;}
 .todo-lane-head .tl-x{opacity:.75; font-size:12px; padding:2px 6px; border-radius:6px; color:#fff; flex-shrink:0;}
 .todo-lane-head .tl-x:hover{opacity:1; background:rgba(255,255,255,.22);}
@@ -986,6 +989,7 @@ body.dark .prio-pick.on{border-color:var(--surface);}
 .cli-adv{background:var(--green); color:#fff; font-size:10.5px; font-weight:700; border-radius:8px; padding:6px 10px; white-space:nowrap; opacity:0; flex-shrink:0; align-self:center;}
 .task-item.client:hover .cli-adv{opacity:1;}
 @media(max-width:560px){.cli-adv{opacity:1;}}
+.task-item.client .cli-adv.money{opacity:1;}   /* «Paid» on the Pay-now rows is always visible — it is the whole point of the lane */
 body.dark .cli-avatar{background:rgba(255,255,255,.09);}
 
 /* ---------- Ideas board ---------- */
@@ -4739,13 +4743,14 @@ function renderRenewals(){
   const flushEmpty=()=>{ if(!emptyRun.length) return;
     const sec=document.createElement('section'); sec.className='rn-month empty'; sec.id='rnm-'+emptyRun[0];
     const names=emptyRun.map(k=>MONTHS[+k.slice(5,7)-1].slice(0,3)).join(' · ');
-    sec.innerHTML=`<div class="rn-mh"><div class="rmh-txt"><h3>${names} ${yS}</h3></div><span class="rn-empty-line">nothing due</span></div>`;
+    const runPaid=emptyRun.reduce((a,k)=>a+(monthPaid[+k.slice(5,7)-1]||0),0);
+    sec.innerHTML=`<div class="rn-mh"><div class="rmh-txt"><h3>${names} ${yS}</h3>${runPaid?`<p><b class="g">${fmtMoney(runPaid)} renewed</b> in ${emptyRun.length===1?'this month':'these months'}</p>`:''}</div><span class="rn-empty-line">nothing due</span></div>`;
     list.appendChild(sec); emptyRun=[]; };
   for(let m=1;m<=12;m++){ const key=yS+'-'+pad(m);
     const items=withDate.filter(r=>r.date.slice(0,7)===key && r.date>=today);   /* overdue ones sit in the drawer above */
     const pastDue=withDate.filter(r=>r.date.slice(0,7)===key && r.date<today).length;
     const paid=monthPaid[m-1];
-    if(!items.length && !pastDue && !paid && key!==thisM){ emptyRun.push(key); continue; }
+    if(!items.length && !pastDue && key!==thisM && (!paid || key<thisM)){ emptyRun.push(key); continue; }
     flushEmpty();
     const sec=document.createElement('section'); sec.id='rnm-'+key;
     sec.className='rn-month'+(key===thisM?' current':'')+(items.length?'':' empty');
@@ -4963,6 +4968,7 @@ function remRowEl(c){
       <button class="rem-btn paid" data-paid="${c.id}" title="They paid everything — move to Paid">${IC.check} Paid</button>
       <button class="rem-btn trash" data-trash="${c.id}" title="Money is gone — move to the Trash">${IC.trash}</button>
     </div>`;
+  row.querySelector('.rem-actions').prepend(row.querySelector('.rem-flags'));   /* card layout: the colour dots sit on the bottom row, left of the buttons */
   row.querySelectorAll('.rem-dot').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); setRemFlag(c.id,b.dataset.flag); }));
   row.querySelector('.rem-main').addEventListener('click',()=>openModal(c.id));
   row.querySelector('[data-paid]').addEventListener('click',e=>{ e.stopPropagation(); markPaidFromRemaining(c.id); });
@@ -5152,6 +5158,8 @@ const TODO_NAMED={'Changes':'pink','Build':'blue','Pay now':'coral','Contact':'v
 const TODO_CYCLE=['cyan','orange','yellow','violet','pink','blue','coral','green'];
 /* auto-pulled client lanes: which board stage feeds which lane, and its advance target */
 const TODO_HOSTS=[
+  /* «Pay now» = everyone marked GREEN (about to pay) in Remaining — the row shows what they still owe and «Paid» collects it (23 Sept 2026) */
+  {stage:'paynow',   pick:c=>isUnpaid(c) && remFlag(c)==='green' && cowed(c)>0, money:true, next:'paid', nextName:'Paid', btn:IC.check+' Paid'},
   {stage:'changes',  next:'pay',      nextName:'Waiting payment', btn:IC.check+' Done → Pay'},
   {stage:'building', next:'review',   nextName:'Draft · Review',  btn:IC.check+' Built → Review'},
   {stage:'thinking', next:'needinfo', nextName:'Need info',       btn:IC.check+' Said yes → Need info'},
@@ -5169,6 +5177,8 @@ function ensureTodo(){
   }
   if(!state.todoHosts.thinking)
     state.todoHosts.thinking = state.noteCats.includes('Contact')?'Contact':'General';
+  if(!state.todoHosts.paynow)
+    state.todoHosts.paynow = state.noteCats.includes('Pay now')?'Pay now':'General';
   let maxSort=0;
   state.todos.forEach(n=>{
     if(!n.cat || !state.noteCats.includes(n.cat)) n.cat='General';
@@ -5195,10 +5205,11 @@ function renderTodo(){
     /* client work auto-pulled into whichever lane hosts each stage */
     const clients=[];
     TODO_HOSTS.filter(h=>state.todoHosts[h.stage]===cat).forEach(h=>{
-      state.clients.filter(c=>c.stage===h.stage && !isTrashed(c))
+      state.clients.filter(c=>!isTrashed(c) && (h.pick ? h.pick(c) : c.stage===h.stage))
         .sort((a,b)=>(a.month||'').localeCompare(b.month||''))
         .forEach(c=>clients.push({c,h}));
     });
+    const laneMoney=clients.filter(x=>x.h.money).reduce((a,x)=>a+cowed(x.c),0);
     /* one unified list: client + manual rows interleaved purely by priority.
        Stable sort keeps clients (month order) and tasks (sort order) tidy within a band. */
     const taskList=state.todos.filter(n=>n.cat===cat).sort((a,b)=>(a.sort||0)-(b.sort||0));
@@ -5215,7 +5226,7 @@ function renderTodo(){
     head.className='todo-lane-head'+(pal.dark?' dark':'');
     head.style.background=pal.grad;
     const delBtn = cat==='General' ? '' : `<button class="tl-x" title="Delete category">${IC.x}</button>`;
-    head.innerHTML=`<span class="tl-title" title="Rename">${esc(cat)}</span><span class="tl-count">${openCount}</span>${delBtn}`;
+    head.innerHTML=`<span class="tl-title" title="Rename">${esc(cat)}</span>${laneMoney?`<span class="tl-sum" title="What these clients still owe, added up">${fmtMoney2(laneMoney)}</span>`:''}<span class="tl-count">${openCount}</span>${delBtn}`;
     head.querySelector('.tl-title').addEventListener('click',()=>renameTodoCat(cat));
     const dx=head.querySelector('.tl-x'); if(dx) dx.addEventListener('click',()=>deleteTodoCat(cat));
     lane.appendChild(head);
@@ -5270,15 +5281,16 @@ function clientRow(c,h,pal){
   row.addEventListener('dragend',()=>{ dragCliId=null; row.classList.remove('dragging'); document.querySelectorAll('.todo-lane-body.dragover').forEach(b=>b.classList.remove('dragover')); });
   const bits=[];
   if(c.month) bits.push(esc(fmtMonth(c.month)));
+  if(h.money){ bits.push('<b style="color:var(--deep)">'+fmtMoney2(cowed(c))+' to collect</b>'+(hasPart(c)?' · '+fmtMoney2(cpaid(c))+' paid':'')); bits.push(esc(stageById(c.stage).name)); }
   if(c.notes) bits.push(esc(c.notes));
-  if(cval(c)) bits.push(fmtMoney2(cval(c)));
+  if(cval(c) && !h.money) bits.push(fmtMoney2(cval(c)));
   const dot = prioDotsHtml(p);
   row.innerHTML=dot+
     `<span class="cli-avatar" title="Open client">${IC.user}</span>`+
     `<div class="task-body cli-body"><span class="task-text">${esc(c.name)}</span>${bits.length?`<span class="task-note">${bits.join(' · ')}</span>`:''}</div>`+
     prioFlagHtml(p)+
     `<button class="task-edit" title="Edit client note">${IC.edit}</button>`+
-    `<button class="cli-adv" title="Move to ${h.nextName}">${h.btn}</button>`;
+    `<button class="cli-adv${h.money?' money':''}" title="${h.money?'They paid everything — collects '+fmtMoney2(cowed(c))+' and moves the card to Paid':'Move to '+h.nextName}">${h.btn}</button>`;
   wirePrioDots(row, c, renderAll, true);
   row.querySelector('.cli-avatar').addEventListener('click',()=>openModal(c.id));
   row.querySelector('.cli-body').addEventListener('click',()=>openModal(c.id));
@@ -5287,7 +5299,7 @@ function clientRow(c,h,pal){
     const v=prompt('Note for '+c.name+' (shows on the client card too):', c.notes||''); if(v===null) return;
     c.notes=v.trim(); c.updated=Date.now(); save(); renderAll();
   });
-  row.querySelector('.cli-adv').addEventListener('click',e=>{ e.stopPropagation(); c.stage=h.next; save(); renderAll(); toast(c.name+' → '+h.nextName); });
+  row.querySelector('.cli-adv').addEventListener('click',e=>{ e.stopPropagation(); if(h.money){ markPaidFromRemaining(c.id); return; } c.stage=h.next; save(); renderAll(); toast(c.name+' → '+h.nextName); });
   return row;
 }
 function taskRow(n){
@@ -5337,7 +5349,7 @@ function handleTaskDrop(cat, body, y){
 function handleClientDrop(cat){
   const id=dragCliId; dragCliId=null; if(!id) return;
   const c=state.clients.find(x=>x.id===id); if(!c){ renderTodo(); return; }
-  const host=TODO_HOSTS.find(h=>state.todoHosts[h.stage]===cat);
+  const host=TODO_HOSTS.find(h=>state.todoHosts[h.stage]===cat && !h.pick);
   if(host && c.stage!==host.stage){
     c.stage=host.stage; save(); renderAll(); toast(c.name+' → '+stageById(host.stage).name);
   } else renderTodo();
