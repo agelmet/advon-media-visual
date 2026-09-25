@@ -1663,6 +1663,80 @@ body.dark .ld-book .row button,body.dark .ld-book .row input{background:var(--su
 .cf-note{font-size:11px; color:var(--muted); margin-top:10px; font-weight:500;}
 @media(max-width:760px){ .cf-grid{grid-template-columns:1fr;} }
 
+
+/* ---------- Meta (25 Sept 2026) — Instagram + Facebook posts prepared by Claude, approved here, published by the server ---------- */
+#view-meta{max-width:1600px; margin:0 auto; padding:18px 24px 80px;}
+.mt-head{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:14px;}
+.mt-head h2{font-size:22px; font-weight:800; letter-spacing:-.01em;}
+.mt-head .mt-month{font-family:'Sora'; font-weight:700; color:var(--muted); font-size:15px;}
+.mt-conn{display:inline-flex; align-items:center; gap:8px; padding:7px 12px; border-radius:999px; border:1px solid var(--line); background:var(--surface); font-weight:600; font-size:12.5px;}
+.mt-conn i{width:8px; height:8px; border-radius:50%; background:var(--red);}
+.mt-conn.on i{background:var(--green); box-shadow:0 0 0 3px var(--green-soft);}
+.mt-sp{flex:1;}
+.mt-btn{display:inline-flex; align-items:center; gap:7px; padding:9px 14px; border-radius:11px; font-weight:700; font-size:13px; background:var(--surface); border:1px solid var(--line); color:var(--ink); transition:transform .12s, box-shadow .12s;}
+.mt-btn:hover{transform:translateY(-1px); box-shadow:var(--shadow);}
+.mt-btn.pri{background:var(--grad); color:#fff; border:0; box-shadow:0 4px 14px rgba(47,127,224,.3);}
+.mt-btn.ok{background:var(--green); color:#fff; border:0;}
+.mt-btn.warn{background:var(--red-soft); color:var(--red); border-color:transparent;}
+.mt-btn:disabled{opacity:.5; pointer-events:none;}
+.mt-stats{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;}
+.mt-stat{padding:10px 14px; border-radius:14px; background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow); min-width:120px;}
+.mt-stat b{display:block; font-family:'Sora'; font-size:20px; font-variant-numeric:tabular-nums;}
+.mt-stat span{font-size:11.5px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em;}
+.mt-help{padding:14px 16px; border-radius:14px; background:var(--blue-soft); color:var(--ink); font-size:13.5px; line-height:1.55; margin-bottom:16px;}
+.mt-help b{font-weight:700;}
+.mt-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:18px; align-items:start;}
+.mt-card{background:var(--surface); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); overflow:hidden; display:flex; flex-direction:column;}
+.mt-card.is-posted{opacity:.92;}
+.mt-card.is-skip{opacity:.55;}
+.mt-top{display:flex; align-items:center; gap:8px; padding:12px 14px; border-bottom:1px solid var(--line);}
+.mt-date{font-family:'Sora'; font-weight:700; font-size:13.5px; flex:1; min-width:0;}
+.mt-date small{display:block; font-family:'Inter'; font-weight:600; font-size:11.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.mt-type{white-space:nowrap; font-size:11px; font-weight:700; padding:4px 8px; border-radius:7px; background:var(--violet-soft); color:var(--violet); text-transform:uppercase; letter-spacing:.05em;}
+.mt-type.reel{background:var(--pink-soft); color:var(--pink);}
+.mt-pill{ font-size:11.5px; font-weight:700; padding:5px 9px; border-radius:999px; white-space:nowrap;}
+.mt-pill.draft{background:var(--yellow-soft); color:#9a7400;}
+.mt-pill.approved{background:var(--blue-soft); color:var(--brand);}
+.mt-pill.posting{background:var(--cyan-soft); color:#0b8aa6;}
+.mt-pill.posted{background:var(--green-soft); color:var(--deep);}
+.mt-pill.partial,.mt-pill.failed{background:var(--red-soft); color:var(--red);}
+.mt-pill.skipped{background:var(--bg); color:var(--muted);}
+.mt-media{position:relative; background:#0b0e12; aspect-ratio:4/5; overflow:hidden;}
+.mt-track{display:flex; height:100%; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;}
+.mt-track::-webkit-scrollbar{display:none;}
+.mt-track img{flex:0 0 100%; width:100%; height:100%; object-fit:cover; scroll-snap-align:start; display:block;}
+.mt-media video{width:100%; height:100%; object-fit:contain; background:#000; display:block;}
+.mt-nav{position:absolute; top:50%; transform:translateY(-50%); width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,.92); color:#10141F; display:grid; place-items:center; font-weight:800; box-shadow:0 4px 14px rgba(0,0,0,.25);}
+.mt-nav.l{left:8px;} .mt-nav.r{right:8px;}
+.mt-count{position:absolute; top:10px; right:10px; background:rgba(0,0,0,.6); color:#fff; font-size:11.5px; font-weight:700; padding:4px 9px; border-radius:999px; font-variant-numeric:tabular-nums;}
+.mt-body{padding:12px 14px 4px;}
+.mt-title{font-weight:700; font-size:13.5px; margin-bottom:6px;}
+.mt-cap{font-size:13px; line-height:1.55; white-space:pre-line; color:var(--ink); max-height:5.9em; overflow:hidden; position:relative;}
+.mt-cap.open{max-height:none;}
+.mt-cap .tags{display:block; color:var(--brand); margin-top:6px;}
+.mt-more{font-size:12px; font-weight:700; color:var(--muted); padding:4px 0;}
+.mt-edited{font-size:11px; font-weight:700; color:var(--violet); margin-left:6px;}
+.mt-res{padding:0 14px 6px; font-size:12.5px; line-height:1.6;}
+.mt-res a{color:var(--brand); font-weight:700; text-decoration:none;}
+.mt-res .err{color:var(--red); font-weight:600;}
+.mt-acts{display:flex; gap:8px; flex-wrap:wrap; padding:10px 14px 14px; margin-top:auto;}
+.mt-acts .mt-btn{padding:8px 11px; font-size:12.5px;}
+.mt-confirm{display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:10px 14px 14px; background:var(--yellow-soft); font-size:13px; font-weight:600;}
+.mt-edit{padding:10px 14px 14px; display:grid; gap:8px;}
+.mt-edit textarea{width:100%; min-height:190px; border:1px solid var(--line); border-radius:12px; padding:10px; font-size:13px; line-height:1.5; background:var(--bg); resize:vertical;}
+.mt-edit input{border:1px solid var(--line); border-radius:10px; padding:8px 10px; background:var(--bg);}
+.mt-edit .row{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+.mt-edit label{font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;}
+.mt-empty{padding:40px; text-align:center; color:var(--muted); background:var(--surface); border:1px dashed var(--line); border-radius:18px;}
+#mtOverlay .modal{max-width:560px;}
+.mt-modal{padding:22px 22px 18px; display:grid; gap:12px; font-size:13.5px; line-height:1.55; overflow:auto;}
+.mt-modal h3{font-size:18px;}
+.mt-modal ol{padding-left:20px; display:grid; gap:6px;}
+.mt-modal input{width:100%; border:1px solid var(--line); border-radius:11px; padding:10px 12px; background:var(--bg);}
+.mt-modal label{font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;}
+.mt-modal .row{display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;}
+.mt-modal .note{font-size:12px; color:var(--muted);}
+@media (max-width:560px){ #view-meta{padding:12px 12px 90px;} .mt-grid{grid-template-columns:1fr;} .mt-stats{flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px;} .mt-stat{min-width:104px;} }
 </style>
 <style>
 /* ---------- sync status + conflict UI ---------- */
@@ -2160,6 +2234,7 @@ body.dark .rm-new input{background:var(--surface);}
     <nav class="tabs" role="tablist">
       <button class="tab active" data-view="home">Home</button>
       <button class="tab" data-view="chats">Chats<span class="tab-n" id="chatsTabN" hidden>0</span></button>
+      <button class="tab" data-view="meta">Meta</button>
       <button class="tab" data-view="quicklog">Quick Log</button>
       <button class="tab" data-view="leads">Leads</button>
       <button class="tab" data-view="board">Board</button>
@@ -2337,6 +2412,40 @@ body.dark .rm-new input{background:var(--surface);}
     </section>
   </div>
 </main>
+
+
+<!-- META (25 Sept 2026) — Instagram + Facebook posts -->
+<main class="view" id="view-meta">
+  <div class="mt-head">
+    <h2>Meta</h2><span class="mt-month" id="mtMonth"></span>
+    <span class="mt-conn" id="mtConn"><i></i><span>Not connected</span></span>
+    <span class="mt-sp"></span>
+    <button class="mt-btn" id="mtConnectBtn">Connect Instagram &amp; Facebook</button>
+    <button class="mt-btn pri" id="mtApproveAll">Approve all drafts</button>
+    <button class="mt-btn" id="mtRefresh" title="Check again">↻</button>
+  </div>
+  <div class="mt-stats" id="mtStats"></div>
+  <div class="mt-help" id="mtHelp">Claude prepares the month here. <b>Approve</b> a post and it goes out by itself on its day and time, on Instagram and Facebook together. <b>Post now</b> publishes it at once. Nothing is posted without your approval.</div>
+  <div class="mt-grid" id="mtGrid"><div class="mt-empty">Loading the posts…</div></div>
+</main>
+<div class="overlay" id="mtOverlay">
+  <div class="modal">
+    <div class="mt-modal">
+      <h3>Connect Instagram &amp; Facebook</h3>
+      <ol>
+        <li>Open <b>developers.facebook.com/tools/explorer</b> and pick your app (Advon Media Posts).</li>
+        <li>Under «User or Page» choose <b>Get User Access Token</b> and tick: <b>pages_show_list, pages_read_engagement, pages_manage_posts, instagram_basic, instagram_content_publish, business_management</b>.</li>
+        <li>Press <b>Generate Access Token</b>, allow the Advon Media page, copy the token and paste it below.</li>
+        <li>App ID and App Secret are in the app's Settings → Basic. With them the connection never expires.</li>
+      </ol>
+      <label for="mtTok">Access token</label><input id="mtTok" autocomplete="off" spellcheck="false" placeholder="EAAG…">
+      <label for="mtAppId">App ID</label><input id="mtAppId" autocomplete="off" inputmode="numeric">
+      <label for="mtAppSecret">App Secret</label><input id="mtAppSecret" type="password" autocomplete="off">
+      <div class="note">The app secret is used once to make the token permanent and is not kept. The token is stored encrypted.</div>
+      <div class="row"><button class="mt-btn" id="mtDisconnect" hidden>Disconnect</button><span class="mt-sp"></span><button class="mt-btn" id="mtCancel">Cancel</button><button class="mt-btn pri" id="mtDoConnect">Connect</button></div>
+    </div>
+  </div>
+</div>
 
 <!-- BOARD -->
 <main class="view" id="view-board">
@@ -7064,7 +7173,8 @@ function switchView(v){
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
   document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el.id==='view-'+v));
   /* the money strip also sits on Home, Calendar and To Do (the Calendar keeps its own month arrows, so the strip's are hidden there via CSS) */
-  $('#strip').style.display = (v==='year'||v==='renewals'||v==='ideas'||v==='monthly'||v==='remaining'||v==='leads'||v==='chats') ? 'none' : 'flex';
+  $('#strip').style.display = (v==='year'||v==='renewals'||v==='ideas'||v==='monthly'||v==='remaining'||v==='leads'||v==='chats'||v==='meta') ? 'none' : 'flex';
+  if(v==='meta' && Date.now()-Meta.lastAt>20*1000) Meta.pull(false);
   if(v==='chats'){ if(Date.now()-Chats.lastAt>15*1000) Chats.pull(false); if(Chats.cur) Chats.pullThread(false); setTimeout(()=>Chats.seen(),400); }
   if(v==='leads' && Date.now()-Leads.lastAt>10*60*1000) Leads.pull(false);
   if(v==='home' && Date.now()-Reminders.lastAt>5*60*1000) Reminders.pull(false);
@@ -8757,6 +8867,143 @@ function renderHomeChats(){
   $('#bkupClose').addEventListener('click',()=>$('#bkupOverlay').classList.remove('open'));
   setTimeout(()=>{ try{ renderBackupHint(); }catch(e){} },2500);
 })();
+
+/* ---------- Meta tab (25 Sept 2026) — posts come from agelmet/advon-social (plan.json + images/reels on drafts.advonmedia.com),
+   approvals/edits/results live in the data repo (social/state.json) through /api/social. The server publishes:
+   approved posts at their time (every 30 min check), «Post now» at once. ---------- */
+const SOCIAL_URL='/api/social';
+const Meta={ posts:[], meta:{connected:false}, base:'', month:'', lastAt:0, busy:false, open:{}, edit:null, confirm:null, slide:{}, timer:null,
+  async pull(force){
+    if(!SYNC_TOKEN) return;
+    if(this.busy && !force) return; this.busy=true;
+    try{
+      const r=await fetch(SOCIAL_URL+'?t='+Date.now(),{headers:{'x-crm-auth':SYNC_TOKEN},cache:'no-store'});
+      const j=await r.json().catch(()=>({}));
+      if(!r.ok||!j.ok){ $('#mtGrid').innerHTML=`<div class="mt-empty">Could not load the posts — ${esc(j.error||('error '+r.status))}</div>`; return; }
+      this.posts=j.posts||[]; this.meta=j.meta||{connected:false}; this.base=j.base||''; this.month=j.month||''; this.lastAt=Date.now();
+      this.render();
+      clearTimeout(this.timer);
+      if(this.posts.some(p=>p.status==='posting')) this.timer=setTimeout(()=>{ if(curView==='meta') this.pull(true); },8000);
+    }catch(e){ $('#mtGrid').innerHTML='<div class="mt-empty">No connection — try again in a moment.</div>'; }
+    finally{ this.busy=false; }
+  },
+  async act(a,body,okMsg){
+    try{
+      const r=await fetch(SOCIAL_URL+'?a='+a,{method:'POST',headers:{'x-crm-auth':SYNC_TOKEN,'Content-Type':'application/json'},body:JSON.stringify(body||{})});
+      const j=await r.json().catch(()=>({}));
+      if(!r.ok||!j.ok){ toast(j.error||('Could not do that ('+r.status+')')); return null; }
+      if(okMsg) toast(okMsg);
+      await this.pull(true); return j;
+    }catch(e){ toast('No connection — nothing was changed'); return null; }
+  },
+  url(p){ return /^https?:/.test(p)?p:this.base+p; },
+  when(p){ const d=new Date(p.date+'T12:00:00'); return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})+' · '+p.time; },
+  status(p){ return ({draft:'Draft',approved:'Approved ✓',posting:'Posting…',posted:'Posted ✓',partial:'Posted in part',failed:'Not posted',skipped:'Skipped'})[p.status]||p.status; },
+  media(p){
+    if(p.type==='reel') return `<div class="mt-media"><video src="${esc(this.url(p.media[0]))}" poster="${esc(p.cover?this.url(p.cover):'')}" controls playsinline preload="none" muted></video></div>`;
+    const n=p.media.length;
+    return `<div class="mt-media"><div class="mt-track" data-track="${esc(p.id)}">${p.media.map((m,i)=>`<img src="${esc(this.url(m))}" alt="Slide ${i+1}" loading="lazy">`).join('')}</div>
+      ${n>1?`<span class="mt-count" data-count="${esc(p.id)}">1/${n}</span><button class="mt-nav l" data-mv="-1" data-id="${esc(p.id)}" aria-label="Previous">‹</button><button class="mt-nav r" data-mv="1" data-id="${esc(p.id)}" aria-label="Next">›</button>`:''}</div>`;
+  },
+  res(p){
+    const L=[];
+    const one=(k,lab)=>{ const x=p[k]; if(!x) return; if(x.id) L.push(`${lab}: ${x.permalink?`<a href="${esc(x.permalink)}" target="_blank" rel="noopener">open ↗</a>`:'✓'}`); else if(x.error) L.push(`${lab}: <span class="err">${esc(x.error)}</span>`); };
+    one('ig','Instagram'); one('fb','Facebook');
+    return L.length?`<div class="mt-res">${L.join('<br>')}</div>`:'';
+  },
+  card(p){
+    const id=esc(p.id), open=this.open[p.id], ed=this.edit===p.id, cf=this.confirm===p.id;
+    const cls=['mt-card', p.status==='posted'?'is-posted':'', p.status==='skipped'?'is-skip':''].join(' ');
+    const head=`<div class="mt-top"><div class="mt-date">${esc(this.when(p))}<small>${esc(p.title||'')}</small></div><span class="mt-type ${p.type==='reel'?'reel':''}">${p.type==='reel'?'Reel':'Carousel · '+p.media.length}</span><span class="mt-pill ${esc(p.status)}">${esc(this.status(p))}</span></div>`;
+    const body=`<div class="mt-body"><div class="mt-cap ${open?'open':''}">${esc(p.caption||'')}<span class="tags">${esc(p.hashtags||'')}</span></div><button class="mt-more" data-more="${id}">${open?'Show less':'Show the whole caption'}</button>${p.edited?'<span class="mt-edited">edited by you</span>':''}</div>`;
+    let tail='';
+    if(ed){
+      tail=`<div class="mt-edit"><label for="mtCap-${id}">Caption</label><textarea id="mtCap-${id}">${esc(p.caption||'')}</textarea>
+        <label for="mtTags-${id}">Hashtags</label><input id="mtTags-${id}" value="${esc(p.hashtags||'')}">
+        <div class="row"><input type="date" id="mtDay-${id}" value="${esc(p.date)}"><input type="time" id="mtTime-${id}" value="${esc(p.time)}"></div>
+        <div class="row"><button class="mt-btn" data-reset="${id}">Back to Claude's version</button><span class="mt-sp"></span><button class="mt-btn" data-cancel="${id}">Cancel</button><button class="mt-btn pri" data-save="${id}">Save</button></div></div>`;
+    } else if(cf){
+      tail=`<div class="mt-confirm">Post this now on Instagram and Facebook? <span class="mt-sp"></span><button class="mt-btn" data-cancel="${id}">Not now</button><button class="mt-btn ok" data-postyes="${id}">Yes, post it</button></div>`;
+    } else {
+      const done=p.status==='posted', busy=p.status==='posting';
+      const reel=p.type==='reel'?`<button class="mt-btn" data-share="${id}" title="On your phone: opens the share sheet — pick Instagram to add trending music, or Save Video">📱 To my phone</button>`:'';
+      const retry=(p.status==='partial')?`<button class="mt-btn warn" data-retry="${id}">Try the missing one again</button>`:'';
+      tail=`<div class="mt-acts">
+        ${done||busy?'':`<button class="mt-btn ${p.approved?'':'pri'}" data-approve="${id}" data-on="${p.approved?0:1}">${p.approved?'Take back approval':'Approve'}</button>`}
+        ${done||busy?'':`<button class="mt-btn" data-post="${id}">Post now</button>`}
+        ${retry}${reel}
+        ${done||busy?'':`<button class="mt-btn" data-edit="${id}">Edit</button>`}
+        ${done||busy?'':`<button class="mt-btn" data-skip="${id}" data-on="${p.skip?0:1}">${p.skip?'Bring back':'Skip'}</button>`}
+      </div>`;
+    }
+    return `<article class="${cls}" data-card="${id}">${head}${this.media(p)}${body}${this.res(p)}${tail}</article>`;
+  },
+  render(){
+    const c=$('#mtConn'); if(!c) return;
+    c.classList.toggle('on',!!this.meta.connected);
+    c.querySelector('span').textContent=this.meta.connected?('Connected · @'+(this.meta.igUsername||'instagram')+(this.meta.pageName?' + '+this.meta.pageName:'')):'Not connected';
+    $('#mtConnectBtn').textContent=this.meta.connected?'Connection':'Connect Instagram & Facebook';
+    $('#mtMonth').textContent=this.month||'';
+    const P=this.posts, n=k=>P.filter(p=>p.status===k).length;
+    $('#mtStats').innerHTML=[['Planned',P.length],['Drafts',n('draft')],['Approved',n('approved')],['Posted',n('posted')],['Need a look',n('failed')+n('partial')]].map(([k,v])=>`<div class="mt-stat"><b>${v}</b><span>${k}</span></div>`).join('');
+    $('#mtApproveAll').disabled=!n('draft');
+    $('#mtGrid').innerHTML=P.length?P.map(p=>this.card(p)).join(''):'<div class="mt-empty">No posts prepared yet.</div>';
+  },
+  async share(p){
+    const u=this.url(p.media[0]);
+    try{
+      toast('Preparing the video…');
+      const blob=await (await fetch(u,{cache:'no-store'})).blob();
+      const file=new File([blob],(p.id||'reel')+'.mp4',{type:'video/mp4'});
+      const text=[p.caption,p.hashtags].filter(Boolean).join('\n\n');
+      try{ await navigator.clipboard.writeText(text); }catch(e){}
+      if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file]}); toast('Caption copied — paste it in Instagram'); return; }
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=file.name; document.body.appendChild(a); a.click(); a.remove();
+      toast('Video downloaded · caption copied');
+    }catch(e){ if(e && e.name==='AbortError') return; window.open(u,'_blank'); }
+  },
+  openConnect(){
+    $('#mtDisconnect').hidden=!this.meta.connected; $('#mtTok').value=''; $('#mtAppSecret').value='';
+    $('#mtOverlay').classList.add('open'); setTimeout(()=>$('#mtTok').focus(),50);
+  }
+};
+(function(){
+  const grid=$('#mtGrid'); if(!grid) return;
+  grid.addEventListener('click',async e=>{
+    const t=e.target.closest('button'); if(!t) return;
+    const d=t.dataset, P=id=>Meta.posts.find(p=>p.id===id);
+    if(d.mv){ const tr=grid.querySelector(`[data-track="${CSS.escape(d.id)}"]`); if(tr) tr.scrollBy({left:tr.clientWidth*Number(d.mv),behavior:'smooth'}); return; }
+    if(d.more){ Meta.open[d.more]=!Meta.open[d.more]; Meta.render(); return; }
+    if(d.approve){ await Meta.act('approve',{id:d.approve,on:d.on==='1'},d.on==='1'?'Approved — it goes out on its day':'Approval taken back'); return; }
+    if(d.skip){ await Meta.act('skip',{id:d.skip,on:d.on==='1'},d.on==='1'?'Skipped':'Back in the plan'); return; }
+    if(d.post){ if(!Meta.meta.connected){ toast('Connect Instagram & Facebook first'); Meta.openConnect(); return; } Meta.confirm=d.post; Meta.edit=null; Meta.render(); return; }
+    if(d.postyes){ Meta.confirm=null; toast('Posting — this takes a minute or two'); await Meta.act('post',{id:d.postyes}); return; }
+    if(d.retry){ const p=P(d.retry); const miss=[!(p.ig&&p.ig.id)&&'ig',!(p.fb&&p.fb.id)&&'fb'].filter(Boolean); await Meta.act('post',{id:d.retry,targets:miss},'Trying again'); return; }
+    if(d.edit){ Meta.edit=d.edit; Meta.confirm=null; Meta.render(); return; }
+    if(d.cancel){ Meta.edit=null; Meta.confirm=null; Meta.render(); return; }
+    if(d.reset){ Meta.edit=null; await Meta.act('edit',{id:d.reset,reset:true},'Back to Claude\'s version'); return; }
+    if(d.save){ const id=d.save, g=s=>document.getElementById(s+id); Meta.edit=null;
+      await Meta.act('edit',{id,caption:g('mtCap-').value,hashtags:g('mtTags-').value,date:g('mtDay-').value,time:g('mtTime-').value},'Saved'); return; }
+    if(d.share){ Meta.share(P(d.share)); return; }
+  });
+  grid.addEventListener('scroll',e=>{ const tr=e.target; if(!tr.dataset||!tr.dataset.track) return; const c=grid.querySelector(`[data-count="${CSS.escape(tr.dataset.track)}"]`); if(c){ const n=tr.children.length; c.textContent=(Math.min(n,Math.round(tr.scrollLeft/tr.clientWidth)+1))+'/'+n; } },true);
+  $('#mtRefresh').addEventListener('click',()=>Meta.pull(true));
+  $('#mtApproveAll').addEventListener('click',async()=>{ const ids=Meta.posts.filter(p=>p.status==='draft').map(p=>p.id); if(!ids.length) return; await Meta.act('approve',{ids,on:true},ids.length+' posts approved'); });
+  $('#mtConnectBtn').addEventListener('click',()=>Meta.openConnect());
+  $('#mtCancel').addEventListener('click',()=>$('#mtOverlay').classList.remove('open'));
+  $('#mtOverlay').addEventListener('click',e=>{ if(e.target.id==='mtOverlay') e.currentTarget.classList.remove('open'); });
+  $('#mtDoConnect').addEventListener('click',async()=>{
+    const userToken=$('#mtTok').value.trim(); if(!userToken){ toast('Paste the access token first'); return; }
+    $('#mtDoConnect').disabled=true;
+    const j=await Meta.act('connect',{userToken,appId:$('#mtAppId').value.trim(),appSecret:$('#mtAppSecret').value.trim()});
+    $('#mtDoConnect').disabled=false; $('#mtAppSecret').value=''; $('#mtTok').value='';
+    if(j){ $('#mtOverlay').classList.remove('open'); toast('Connected · @'+(j.igUsername||'')+(j.longLived?'':' (add the App ID + Secret so it never expires)')); }
+  });
+  $('#mtDisconnect').addEventListener('click',async()=>{ await Meta.act('disconnect',{},'Disconnected'); $('#mtOverlay').classList.remove('open'); });
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible' && curView==='meta') Meta.pull(false); });
+  if(location.hash==='#meta') setTimeout(()=>switchView('meta'),300);
+})();
+
 </script>
 </body>
 </html>
