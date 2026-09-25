@@ -1859,7 +1859,19 @@ body.dark .ch-pill.on{background:var(--brand);}
 .ch-meta .tag{background:rgba(255,255,255,.22); padding:1px 6px; border-radius:6px; font-size:10px; letter-spacing:.03em;}
 .ch-bub .ch-del{position:absolute; top:2px; right:-30px; width:24px; height:24px; border-radius:8px; display:none; place-items:center; background:var(--surface); color:var(--red); border:1px solid var(--line); font-size:12px; font-weight:800; cursor:pointer;}
 .ch-msg.me .ch-bub .ch-del{right:auto; left:-30px;}
-.ch-bub:hover .ch-del{display:grid;}
+@media (hover:hover){ .ch-bub:hover .ch-del{display:grid;} }
+.ch-bub:not(.gone):not(.pending){cursor:pointer;}
+.ch-ma{position:fixed; inset:0; z-index:400; background:rgba(10,14,22,.45); display:none; align-items:flex-end; justify-content:center;}
+.ch-ma.open{display:flex;}
+.ch-ma-card{background:var(--surface); color:var(--ink); width:100%; max-width:440px; border-radius:20px 20px 0 0; padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px)); box-shadow:0 -10px 40px rgba(0,0,0,.18); animation:chMaUp .22s cubic-bezier(.2,.8,.2,1);}
+@media (min-width:700px){ .ch-ma{align-items:center;} .ch-ma-card{border-radius:20px;} }
+@keyframes chMaUp{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+.ch-ma-card h4{font-size:14px; font-weight:800; margin:0 0 10px;}
+.ch-ma-prev{background:var(--bg); border-radius:12px; padding:10px 12px; font-size:13.5px; line-height:1.45; max-height:120px; overflow:hidden; white-space:pre-wrap; overflow-wrap:anywhere; color:var(--ink);}
+.ch-ma-card button{display:block; width:100%; min-height:44px; border-radius:12px; font-weight:800; font-size:14px; margin-top:8px; border:0; cursor:pointer;}
+.ch-ma-del{background:var(--red); color:#fff; margin-top:12px!important;}
+.ch-ma-copy,.ch-ma-no{background:var(--bg); color:var(--ink);}
+.ch-ma-card small{display:block; text-align:center; color:var(--muted); font-size:12px; margin-top:8px;}
 .ch-bub.gone{background:var(--bg)!important; color:var(--muted)!important; box-shadow:none!important;}
 .ch-bub.pending{opacity:.7;}
 .ch-bub.failed{outline:2px solid var(--red);}
@@ -8197,7 +8209,7 @@ function chRowMenu(slug, anchor, x, y){
   m.innerHTML=(t.archived?'':`<button data-a="pin"><i>${t.pin?'☆':'★'}</i>${t.pin?'Remove from priority':'Make it a priority'}</button>`)
     +(t.pin&&pi>0?'<button data-a="up"><i>↑</i>Move up</button>':'')+(t.pin&&pi>=0&&pi<pins.length-1?'<button data-a="down"><i>↓</i>Move down</button>':'')
     +(t.archived?'':'<button data-a="unread"><i>●</i>Mark as unread</button>')
-    +'<button data-a="edit"><i>✎</i>Edit details</button><button data-a="link"><i>🔗</i>Copy the client link</button><div class="sep"></div>'
+    +'<button data-a="edit"><i>✎</i>Edit details</button><button data-a="link"><i>🔗</i>Link + Viber message</button><div class="sep"></div>'
     +`<button data-a="archive"><i>▣</i>${t.archived?'Bring back from the archive':'Archive (keeps everything)'}</button><button data-a="delete" class="danger"><i>🗑</i>Delete chat…</button>`;
   m.classList.add('open');
   const r=anchor?anchor.getBoundingClientRect():{left:x,bottom:y,right:x}; const w=m.offsetWidth||220, hh=m.offsetHeight||260;
@@ -8205,7 +8217,7 @@ function chRowMenu(slug, anchor, x, y){
   m.style.top=Math.max(8,Math.min(window.innerHeight-hh-8,r.bottom+4))+'px';
   m.onclick=async e=>{ const b=e.target.closest('[data-a]'); if(!b) return; m.classList.remove('open'); const a=b.dataset.a;
     if(a==='pin') Chats.pin(slug,!t.pin); else if(a==='up') chMovePin(slug,-1); else if(a==='down') chMovePin(slug,1); else if(a==='unread') Chats.unread(slug);
-    else if(a==='edit') chOpenModal(t); else if(a==='link') chCopy(chLink(t)); else if(a==='delete') Chats.remove(slug);
+    else if(a==='edit') chOpenModal(t); else if(a==='link') chShowLink(t); else if(a==='delete') Chats.remove(slug);
     else if(a==='archive'){ try{ await Chats.meta(slug,{archived:!t.archived}); toast(t.archived?'Back in the list':'Archived — the client link is paused'); }catch(err){ toast('Could not save'); } } };
 }
 document.addEventListener('click',e=>{ const m=document.getElementById('chMenu'); if(m && m.classList.contains('open') && !e.target.closest('#chMenu') && !e.target.closest('[data-more]')) m.classList.remove('open'); });
@@ -8287,7 +8299,7 @@ function renderChatThread(keep){
   { const r=$('#chReadyDone'); if(r) r.addEventListener('click',async()=>{ try{ await Chats.meta(t.slug,{ready:null}); toast('Flag removed'); }catch(e){ toast('Could not save'); } }); }
   { const lv=$('#chLive'); if(lv) lv.addEventListener('click',()=>chDomainConnected(t)); }
   { const dr=$('#chDemoReset'); if(dr) dr.addEventListener('change',async e=>{ const v=e.target.value; if(!v) return; e.target.value=''; const st=v==='yliko-dat'?'yliko':v; if(!confirm('Restart the test chat at «'+((CH_STAGES.find(s=>s[0]===st)||['',st])[1])+'»? Everything in it is wiped and the stage\'s intro is sent again.')) return; try{ await Chats.reset(t.slug,{stage:st, dat:v==='yliko-dat'}); toast('Test chat restarted — open the client link to play'); }catch(err){ toast(err.message||'Could not restart'); } }); }
-  $('#chCopy').addEventListener('click',()=>chCopy(chLink(t)));
+  $('#chCopy').addEventListener('click',()=>chShowLink(t));
   $('#chEdit').addEventListener('click',()=>chOpenModal(t));
   const nm=$('#chNoMail'); if(nm) nm.addEventListener('click',()=>{ const i=$('#chMailIn'); if(i){ i.focus(); return; } chOpenModal(t); setTimeout(()=>{ const e=$('#chmEmail'); if(e) e.focus(); },80); });
   renderChatSuggest(t);
@@ -8390,17 +8402,21 @@ function chOpenModal(t){
   const dl=$('#chmDelete'); if(dl) dl.addEventListener('click',()=>{ ov.classList.remove('open'); Chats.remove(t.slug); });
   const nl=$('#chmNewLink'); if(nl) nl.addEventListener('click',async()=>{ if(!confirm('Make a new link? The old one stops working and you must send the new one to the client.')) return; try{ const p=await Chats.meta(t.slug,{newLink:true}); ov.classList.remove('open'); chShowLink(p.thread); }catch(e){ toast('Could not save'); } });
 }
+/* Angelo's own words (25 Sept 2026) — shown ONLY to him in the link window, to paste in Viber; never sent to the client */
+const CH_VIBER=l=>`Φτιάξαμε έναν χώρο για τη μεταξύ μας συνομιλία για την ιστοσελίδα σας ώστε να τα βλέπει όλη η ομάδα μας και να εξυπηρετείστε άμεσα:\n\n${l}\n\nΕκεί μπορείτε να μας στέλνετε φωτογραφίες, κείμενα και αλλαγές, και να βλέπετε σε ποιο στάδιο βρίσκεται η σελίδα σας. Τον φτιάξαμε για να είναι όλα συγκεντρωμένα σε ένα σημείο και να μη χάνεται τίποτα ανάμεσα σε μηνύματα και e-mail.\n\nΑν έχετε οποιαδήποτε απορία, είμαι εδώ και σε Viber και στο email μας advonmd@gmail.com.`;
 function chShowLink(t){
   const ov=$('#chatOverlay'), b=$('#chatModalBody'); $('#chatModalTitle').textContent=t.demo?'🧪 Your test chat — open this link on your phone':'Send this link to '+t.name;
-  const viber=`Γεια σας! Για να μιλάμε πιο εύκολα για την ιστοσελίδα σας, σας έφτιαξα μια προσωπική σελίδα συνομιλίας. Από εδώ και πέρα στείλτε μου εκεί φωτογραφίες, κείμενα και αλλαγές — τα βλέπω αμέσως:\n${chLink(t)}`;
-  b.innerHTML=`<p style="font-size:13px;color:var(--muted);line-height:1.5">${t.demo?'Play the client: send photos, press the big buttons — it answers by itself at once. Nothing reaches a real client and no alerts go out. «↺ Restart at…» in the thread head puts it back at any stage.':'Paste it in Viber or SMS. No password — the link itself is the key, so send it only to the client.'}</p>
+  const viber=CH_VIBER(chLink(t));
+  b.innerHTML=`<p style="font-size:13px;color:var(--muted);line-height:1.5">${t.demo?'Play the client: send photos, press the big buttons — it answers by itself at once. Nothing reaches a real client and no alerts go out. «↺ Restart at…» in the thread head puts it back at any stage.':'Copy the message and paste it to '+esc(t.name.split(' ')[0])+' on Viber. <b>Only you see this</b> — nothing here is sent to the client.'}</p>
+    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin:12px 0 5px">Viber message</label>
+    <textarea id="chlMsg" style="width:100%;min-height:210px;border:1px solid var(--line);border-radius:11px;padding:10px 12px;font-size:13.5px;line-height:1.5;resize:vertical;background:var(--surface);color:var(--ink)">${esc(viber)}</textarea>
+    <button class="btn" id="chlCopyMsg" style="width:100%;min-height:46px;margin-top:10px;background:var(--grad);color:#fff;font-size:14.5px">Copy Viber message</button>
+    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin:16px 0 5px">Just the link</label>
     <div class="ch-link"><code>${esc(chLink(t))}</code><button class="ch-ib" id="chlCopy">Copy link</button></div>
-    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin:14px 0 5px">Ready-made Viber message</label>
-    <textarea id="chlMsg" style="width:100%;min-height:120px;border:1px solid var(--line);border-radius:11px;padding:10px 12px;font-size:13.5px;line-height:1.5;resize:vertical">${esc(viber)}</textarea>
-    <div class="btns" style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px"><button class="btn btn-ghost" id="chlCopyMsg">Copy message</button><button class="btn" id="chlDone" style="background:var(--grad);color:#fff">Done</button></div>`;
+    <div class="btns" style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px"><button class="btn btn-ghost" id="chlDone">Done</button></div>`;
   ov.classList.add('open');
   $('#chlCopy').addEventListener('click',()=>chCopy(chLink(t)));
-  $('#chlCopyMsg').addEventListener('click',()=>chCopy($('#chlMsg').value));
+  $('#chlCopyMsg').addEventListener('click',e=>{ chCopy($('#chlMsg').value); const b=e.currentTarget; b.textContent='✓ Copied — paste it in Viber'; setTimeout(()=>{ b.textContent='Copy Viber message'; },2200); });
   $('#chlDone').addEventListener('click',()=>ov.classList.remove('open'));
 }
 /* ---------- Client reminders (23 Sept 2026) ----------
@@ -8578,11 +8594,27 @@ function renderHomeChats(){
   qm.addEventListener('click',e=>{ const b=e.target.closest('[data-q]'); if(!b) return; const t=Chats.list.find(x=>x.slug===Chats.cur); txt.value=chFill(CH_QUICK[+b.dataset.q][1], t); txt.dispatchEvent(new Event('input')); qm.classList.remove('open'); txt.focus(); });
   document.addEventListener('click',()=>qm.classList.remove('open'));
   const feed=$('#chFeed');
+  /* tap a message → Delete for both sides / Copy text (25 Sept 2026 — the hover ✕ could not be reached on the phone) */
+  const ma=document.createElement('div'); ma.className='ch-ma'; ma.id='chMa';
+  ma.innerHTML='<div class="ch-ma-card" role="dialog" aria-label="Message"><h4>Message</h4><div class="ch-ma-prev" id="chMaPrev"></div><button class="ch-ma-del" id="chMaDel">🗑 Delete for both sides</button><button class="ch-ma-copy" id="chMaCopy">Copy text</button><button class="ch-ma-no" id="chMaNo">Cancel</button><small>The client sees «Το μήνυμα διαγράφηκε» in its place.</small></div>';
+  document.body.appendChild(ma);
+  let chMaId=null; const chMaClose=()=>{ ma.classList.remove('open'); chMaId=null; };
+  const chMaOpen=id=>{ const m=Chats.msgs.find(x=>x.id===id); if(!m||m.deleted||m.state) return; chMaId=id;
+    const n=(m.files||[]).length; $('#chMaPrev').textContent=(m.text||'')+(n?(m.text?'\n':'')+'📎 '+n+(n===1?' file':' files'):'');
+    $('#chMaCopy').style.display=m.text?'':'none'; ma.classList.add('open'); };
+  ma.addEventListener('click',e=>{ if(e.target===ma) chMaClose(); });
+  $('#chMaNo').addEventListener('click',chMaClose);
+  $('#chMaDel').addEventListener('click',()=>{ const id=chMaId; chMaClose(); if(id) Chats.del(Chats.cur,id); });
+  $('#chMaCopy').addEventListener('click',()=>{ const m=Chats.msgs.find(x=>x.id===chMaId); chMaClose(); if(m&&m.text) chCopy(m.text); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&ma.classList.contains('open')) chMaClose(); });
   feed.addEventListener('click',async e=>{
-    const dx=e.target.closest('[data-del]'); if(dx){ e.preventDefault(); e.stopPropagation(); if(confirm('Delete this message? It disappears for the client too.')) Chats.del(Chats.cur, dx.dataset.del); return; }
+    const dx=e.target.closest('[data-del]'); if(dx){ e.preventDefault(); e.stopPropagation(); chMaOpen(dx.dataset.del); return; }
     const rt=e.target.closest('[data-retry]'); if(rt){ const pm=Chats.pending.find(x=>x.id===rt.dataset.retry); if(pm) Chats.push(pm); return; }
     const im=e.target.closest('.ch-pics img'); if(im && im.src){ $('#chLbImg').src=im.src; $('#chLb').classList.add('open'); return; }
-    const dl=e.target.closest('[data-dl]'); if(dl){ e.preventDefault(); if(!dl.dataset.dl) return; try{ const u=await Chats.fileUrl(dl.dataset.dl); const a=document.createElement('a'); a.href=u; a.download=dl.dataset.name||'file'; document.body.appendChild(a); a.click(); a.remove(); }catch(err){ toast('Could not fetch that file'); } }
+    const dl=e.target.closest('[data-dl]'); if(dl){ e.preventDefault(); if(!dl.dataset.dl) return; try{ const u=await Chats.fileUrl(dl.dataset.dl); const a=document.createElement('a'); a.href=u; a.download=dl.dataset.name||'file'; document.body.appendChild(a); a.click(); a.remove(); }catch(err){ toast('Could not fetch that file'); } return; }
+    if(e.target.closest('a[href],button,input,textarea,select')) return;
+    if(window.getSelection && String(window.getSelection())) return;   // selecting text to copy is not a tap
+    const bub=e.target.closest('.ch-bub'); if(bub){ const d=bub.querySelector('[data-del]'); if(d) chMaOpen(d.dataset.del); }
   });
   $('#chLbX').addEventListener('click',()=>$('#chLb').classList.remove('open'));
   $('#chLb').addEventListener('click',e=>{ if(e.target.id==='chLb') e.currentTarget.classList.remove('open'); });

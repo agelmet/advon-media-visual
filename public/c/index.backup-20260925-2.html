@@ -189,8 +189,7 @@ a{color:inherit}
 .bub{contain:layout style}
 .bub .del{position:absolute;top:3px;width:28px;height:28px;border-radius:10px;display:none;place-items:center;background:#fff;color:var(--red);box-shadow:0 2px 10px rgba(20,40,80,.22);z-index:2}
 .row.me .bub .del{left:-34px}
-.row.me .bub{cursor:pointer}
-.row.me .bub:active{filter:brightness(.96)}
+.bub.showact .del{display:grid}
 @media (hover:hover){ .row.me .bub:hover .del{display:grid} }
 .bub .del svg{width:15px;height:15px}
 .bub.gone{background:#EEF2F8!important;color:#98A2B8!important;box-shadow:none!important;font-size:14px}
@@ -224,15 +223,6 @@ a{color:inherit}
 .dform input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(47,127,224,.15)}
 .sheet-body .big{width:100%;min-height:50px;border-radius:14px;background:var(--me);color:#fff;font-weight:800;font-size:15px;margin-top:8px;box-shadow:0 6px 18px rgba(47,127,224,.3)}
 .sheet-body .quiet{width:100%;min-height:44px;border-radius:14px;background:#F1F5FB;color:var(--muted);font-weight:700;font-size:14px;margin-top:8px}
-.sheet-body .quiet[hidden]{display:none}
-#msgact .sheet-card{max-width:460px}
-.ma-prev{background:#F5F8FD;border-radius:14px;padding:10px 12px;font-size:14px;line-height:1.45;color:var(--ink);max-height:132px;overflow:hidden;white-space:pre-wrap;overflow-wrap:anywhere;display:flex;gap:10px;align-items:flex-start}
-.ma-prev img{width:64px;height:64px;border-radius:10px;object-fit:cover;flex:none}
-.ma-prev .mt{flex:1;min-width:0;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
-.ma-prev .mf{color:var(--muted);font-weight:700;font-size:13px}
-.sheet-body .ma-del{background:var(--red);box-shadow:0 6px 18px rgba(240,68,82,.28);margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px}
-.ma-del svg{width:18px;height:18px}
-.ma-note{text-align:center;font-size:12px;color:var(--muted);font-weight:600;margin-top:10px}
 @media (max-width:440px){
   .stages{padding:9px 12px 11px}
   .st .lbl{font-size:11px}
@@ -464,10 +454,6 @@ a{color:inherit}
       <li><b>Πώς σας βρίσκω;</b> Εδώ, στη συνομιλία — σας απαντάμε το συντομότερο.</li>
     </ul>
   </div>
-</div></div>
-<div class="sheet" id="msgact"><div class="sheet-card">
-  <div class="sheet-head"><b>Το μήνυμά σας</b><button class="sx" aria-label="Κλείσιμο">✕</button></div>
-  <div class="sheet-body"><div class="ma-prev" id="maPrev"></div><button class="big ma-del" id="maDel">Διαγραφή μηνύματος</button><button class="quiet" id="maView" hidden>Άνοιγμα φωτογραφίας</button><button class="quiet" id="maCopy" hidden>Αντιγραφή κειμένου</button><button class="quiet sx">Άκυρο</button><p class="ma-note">Το μήνυμα διαγράφεται και για εμάς.</p></div>
 </div></div>
 <div class="sheet" id="confirm"><div class="sheet-card">
   <div class="sheet-head"><b id="cfTitle"></b><button class="sx" aria-label="Κλείσιμο">✕</button></div>
@@ -779,7 +765,6 @@ async function push(pm){
     (pm._q||[]).forEach(x=>x.url&&setTimeout(()=>URL.revokeObjectURL(x.url),60000));
     if(!state.msgs.some(m=>m.id===p.message.id)) state.msgs.push(p.message); if(p.thread)state.thread=Object.assign(state.thread||{},p.thread); state.head=null;
     render(false); if(pm.kind) renderHead();
-    if(!pm.kind && !mem.get('delTip')){ mem.set('delTip','1'); setTimeout(()=>toast('Πατήστε ένα μήνυμά σας για να το διαγράψετε'),900); }
   }catch(e){ pm.state='failed'; pm.err=/^(TypeError|Failed to fetch|Load failed|NetworkError)/i.test(e.message||'')?'Χωρίς σύνδεση — ελέγξτε το internet σας και πατήστε ξανά.':(e.message||'Δεν στάλθηκε'); render(true); toast(pm.err); }
 }
 /* the client can take back anything they sent */
@@ -787,6 +772,7 @@ async function delMsg(id){
   const pend=state.pending.find(x=>x.id===id);
   if(pend){ state.pending=state.pending.filter(x=>x.id!==id); render(true); return; }
   const m=state.msgs.find(x=>x.id===id); if(!m||m.deleted)return;
+  if(!confirm('Να διαγραφεί αυτό το μήνυμα;'))return;
   const keep={text:m.text,files:m.files};
   m.deleted=true; m.text=''; m.files=[]; render(true);
   try{
@@ -795,33 +781,14 @@ async function delMsg(id){
     state.head=null; toast('Το μήνυμα διαγράφηκε');
   }catch(e){ m.deleted=false; m.text=keep.text; m.files=keep.files; render(true); toast('Δεν έγινε η διαγραφή — δοκιμάστε ξανά'); }
 }
-/* tap any of your own messages → one sheet: delete (one more tap), open the photo, copy the text (25 Sept 2026) */
-let maId=null;
-function openLb(im){$('#lbimg').src=im.dataset.full;$('#lbdl').href=im.dataset.full;$('#lbdl').download=im.dataset.name||'';$('#lb').classList.add('on');}
-function openMsgAct(id){
-  const m=state.msgs.concat(state.pending).find(x=>x.id===id); if(!m||m.deleted) return;
-  maId=id;
-  const files=m.files||[], pic=files.find(f=>isImg(f.name)), src=pic?(pic.local||fileUrl(pic.path)):'';
-  const fl=files.length?'<div class="mf">📎 '+files.length+(files.length===1?' αρχείο':' αρχεία')+'</div>':'';
-  $('#maPrev').innerHTML=(src?'<img src="'+src+'" alt="">':'')+'<div class="mt">'+(m.text?esc(m.text):'')+fl+'</div>';
-  const v=$('#maView'); v.hidden=!src; v.dataset.full=src; v.dataset.name=pic?pic.name:'';
-  $('#maCopy').hidden=!m.text;
-  openSheet('msgact');
-}
-$('#maDel').insertAdjacentHTML('afterbegin',DELIC);
-$('#maDel').addEventListener('click',()=>{ const id=maId; closeSheets(); if(id) delMsg(id); });
-$('#maView').addEventListener('click',e=>{ const b=e.currentTarget; closeSheets(); openLb(b); });
-$('#maCopy').addEventListener('click',async()=>{ const m=state.msgs.concat(state.pending).find(x=>x.id===maId); closeSheets(); if(!m) return;
-  try{ await navigator.clipboard.writeText(m.text); }catch(e){ const ta=document.createElement('textarea'); ta.value=m.text; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(_){} ta.remove(); }
-  toast('Το κείμενο αντιγράφηκε'); });
 feed.addEventListener('click',e=>{
+  const dl=e.target.closest('[data-del]'); if(dl){ e.stopPropagation(); delMsg(dl.dataset.del); return; }
   const rt=e.target.closest('[data-retry]'); if(rt){const pm=state.pending.find(x=>x.id===rt.dataset.retry);if(pm)push(pm);return;}
+  const im=e.target.closest('.pics img'); if(im){$('#lbimg').src=im.dataset.full;$('#lbdl').href=im.dataset.full;$('#lbdl').download=im.dataset.name||'';$('#lb').classList.add('on');return;}
   const mine=e.target.closest('.row.me .bub');
-  if(mine&&!mine.classList.contains('gone')){
-    if(e.target.closest('a[href]')) return;   // a link inside the message still opens
-    const dl=mine.querySelector('[data-del]'); if(dl){ e.preventDefault(); openMsgAct(dl.dataset.del); } return;
-  }
-  const im=e.target.closest('.pics img'); if(im){ openLb(im); return; }
+  const on=mine&&mine.classList.contains('showact');
+  feed.querySelectorAll('.bub.showact').forEach(x=>x.classList.remove('showact'));
+  if(mine&&!on&&!mine.classList.contains('gone'))mine.classList.add('showact');
 });
 const SHEET={odigos:'guide',extras:'faq',yliko:'yliko',confirm:'confirm',golive:'golive'};
 function closeSheets(){document.querySelectorAll('.sheet.on').forEach(el=>el.classList.remove('on'));}
