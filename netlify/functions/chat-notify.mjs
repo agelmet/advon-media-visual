@@ -16,7 +16,8 @@
 //   &test=telegram → one test ping + diagnosis (bot name, which chats wrote to it) · &test=email → one test e-mail to LEAD_NOTIFY_TO
 
 import { ghConf, ghReady, commit as ghCommit } from '../../lib/ghdata.js';
-import { INDEX_PATH, OUTBOX_PATH, STAGE_EL, currentHead, forgetHead, getIndex, getMessages, readChatJson, mailConf, emailOk, sendEmail, sendTelegram, telegramDiag, newMessageMail, reminderMail, plainClientMail, clientWroteNote, approvalNote, quietNote, reminderSentNote, agentNote, politeHour } from '../../lib/chatcore.js';
+import { ackText, isQuestion } from '../../lib/chatdemo.js';
+import { INDEX_PATH, OUTBOX_PATH, STAGE_EL, normStage, readTemplates, currentHead, forgetHead, getIndex, getMessages, readChatJson, mailConf, emailOk, sendEmail, sendTelegram, telegramDiag, newMessageMail, reminderMail, plainClientMail, clientWroteNote, approvalNote, quietNote, reminderSentNote, agentNote, politeHour } from '../../lib/chatcore.js';
 
 export const config = { schedule: '*/5 * * * *' };
 
@@ -24,6 +25,39 @@ const DAY = 86400000;
 const REMIND_AFTER = 3 * DAY;
 const REMIND_MAX = 2;
 const GRACE = 90 * 1000;              // let Angelo finish a burst of messages before the e-mail goes
+const ACK_AFTER = 10 * 60 * 1000;     // Υλικό: «Λάβαμε … κάτι άλλο;» once the client has been quiet this long (25 Sept 2026)
+const BURST = 15 * 60 * 1000;         // the client e-mail shows only what we wrote in the last burst, never the old conversation
+const newId = () => 'a' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+// 0. The client sent material at Υλικό and did not press «Ξεκινήστε» → one automatic message with two buttons
+//    ([Όχι — ξεκινήστε](#start) / [Ναι, θα στείλω κι άλλα](#more)). Written straight into the thread, like any message from us;
+//    the client e-mail for it goes out at the next run. Questions are left to Angelo / the agent. Text-only material gets it once per chat.
+async function autoAck(conf, t, T) {
+  let sent = null;
+  await ghCommit(conf, `chat: ${t.slug} ← auto «λάβαμε»`, async (ctx) => {
+    const { data: idx } = await ctx.readJson(INDEX_PATH, []);
+    const list = Array.isArray(idx) ? idx : [];
+    const tt = list.find((x) => x.slug === t.slug);
+    if (!tt || tt.lastFrom !== 'client' || tt.lastAt !== t.lastAt || tt.ready || normStage(tt.stage) !== 'yliko') return null;
+    const { data: msgs } = await ctx.readJson(`chats/${t.slug}/messages.json`, []);
+    const arr = Array.isArray(msgs) ? msgs : [];
+    let i = arr.length - 1; while (i >= 0 && (arr[i].from === 'client' || arr[i].deleted)) i--;
+    const tail = arr.slice(i + 1).filter((m) => m.from === 'client' && !m.deleted);
+    const hasFiles = tail.some((m) => (m.files || []).length);
+    const skip = !tail.length || tail.some((m) => m.kind) || (!hasFiles && (tail.some((m) => isQuestion(m.text)) || arr.some((m) => m.auto === 'ack')));
+    tt.ackFor = tt.lastAt;
+    if (skip) return [{ path: INDEX_PATH, content: JSON.stringify(list, null, 1) }];
+    const msg = { id: newId(), from: 'advon', text: ackText(T, tail), files: [], at: new Date().toISOString(), auto: 'ack' };
+    arr.push(msg);
+    tt.lastAt = msg.at; tt.lastFrom = 'advon'; tt.lastText = msg.text.slice(0, 140); tt.n = arr.length;
+    tt.unreadClient = (tt.unreadClient || 0) + 1;
+    tt.log = (tt.log || []).concat([{ at: msg.at, by: 'system', text: 'Αυτόματο «Λάβαμε … κάτι άλλο;» (δεν είχε πατήσει «Ξεκινήστε»)' }]).slice(-30);
+    sent = { msg, thread: { ...tt } };
+    return [{ path: `chats/${t.slug}/messages.json`, content: JSON.stringify(arr, null, 1) }, { path: INDEX_PATH, content: JSON.stringify(list, null, 1) }];
+  });
+  forgetHead();
+  return sent;
+}
 const nowIso = () => new Date().toISOString();
 
 export default async (req) => {
@@ -57,6 +91,7 @@ export default async (req) => {
   await currentHead(conf, true);
   const idx = await getIndex(conf);
   const outbox = await readChatJson(conf, 'outbox.json', []);
+  const T = await readTemplates(conf);
   const patch = new Map();      // slug → fields to merge
   const upd = (t, f) => { Object.assign(t, f); patch.set(t.slug, { ...(patch.get(t.slug) || {}), ...f }); };
   const log = (t, text) => upd(t, { log: (t.log || []).concat([{ at: nowIso(), by: 'system', text }]).slice(-30) });
@@ -89,6 +124,18 @@ export default async (req) => {
       }
     }
 
+    // 0. Υλικό, material in, no «Ξεκινήστε» after ACK_AFTER → «Λάβαμε … Υπάρχει κάτι άλλο;» with the two buttons
+    if (normStage(t.stage) === 'yliko' && !t.ready && !t.suggest && t.lastFrom === 'client' && now - lastAt >= ACK_AFTER && now - lastAt < 2 * DAY && (t.ackFor || '') < (t.lastAt || '')) {
+      if (dry) report.sent.push(`[dry] auto-ack ${t.slug}`);
+      else {
+        try {
+          const r = await autoAck(conf, t, T);
+          if (r) { Object.assign(t, { lastAt: r.thread.lastAt, lastFrom: 'advon', lastText: r.thread.lastText, n: r.thread.n, unreadClient: r.thread.unreadClient, ackFor: r.thread.ackFor, log: r.thread.log }); report.sent.push(`auto-ack ${t.slug}`); }
+          else t.ackFor = t.lastAt;
+        } catch (e) { report.skipped.push(`${t.slug}: auto-ack (${e.message})`); }
+      }
+    }
+
     // 2. Angelo/Claude → client e-mail (if they already opened the page and saw it, there is nothing to send)
     if (t.lastFrom !== 'client' && !(t.unreadClient || 0) && (t.clientNotifiedAt || '') < (t.lastAt || '')) upd(t, { clientNotifiedAt: t.lastAt });
     if (t.lastFrom !== 'client' && (t.unreadClient || 0) > 0 && emailOk(t.email) && (t.clientNotifiedAt || '') < (t.lastAt || '') && now - lastAt > GRACE) {
@@ -97,7 +144,11 @@ export default async (req) => {
       else {
         const msgs = await getMessages(conf, t.slug);
         const since = t.clientNotifiedAt || '';
-        const fresh = msgs.filter((m) => m.from !== 'client' && m.at > since);
+        // only the NEW message(s) — what we wrote in the last burst — never the older conversation (Angelo, 25 Sept 2026)
+        const unseen = msgs.filter((m) => m.from !== 'client' && !m.deleted && m.at > since);
+        const newest = unseen.length ? Date.parse(unseen[unseen.length - 1].at) : 0;
+        const fresh = unseen.filter((m) => newest - Date.parse(m.at) <= BURST);
+        if (!fresh.length) { upd(t, { clientNotifiedAt: t.lastAt }); continue; }
         const text = fresh.map((m) => m.text).filter(Boolean).join('\n\n');
         const files = fresh.flatMap((m) => m.files || []);
         const mail = newMessageMail(t, text, files);

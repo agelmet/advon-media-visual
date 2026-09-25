@@ -1857,10 +1857,35 @@ body.dark .ch-pill.on{background:var(--brand);}
 .ch-msg.me .ch-meta{opacity:.9;}
 .ch-meta svg{width:14px; height:14px;}
 .ch-meta .tag{background:rgba(255,255,255,.22); padding:1px 6px; border-radius:6px; font-size:10px; letter-spacing:.03em;}
-.ch-bub .ch-del{position:absolute; top:2px; right:-30px; width:24px; height:24px; border-radius:8px; display:none; place-items:center; background:var(--surface); color:var(--red); border:1px solid var(--line); font-size:12px; font-weight:800; cursor:pointer;}
-.ch-msg.me .ch-bub .ch-del{right:auto; left:-30px;}
-@media (hover:hover){ .ch-bub:hover .ch-del{display:grid;} }
-.ch-bub:not(.gone):not(.pending){cursor:pointer;}
+.ch-bub .ch-del{position:absolute; bottom:2px; right:-36px; width:30px; height:30px; border-radius:10px; display:grid; place-items:center; background:var(--surface); color:var(--muted); border:1px solid var(--line); cursor:pointer; padding:0; transition:color .15s,border-color .15s,transform .15s;}
+.ch-bub .ch-del svg{width:15px; height:15px;}
+.ch-bub .ch-del:hover{color:var(--red); border-color:var(--red);}
+.ch-bub .ch-del:active{transform:scale(.9);}
+.ch-msg.me .ch-bub .ch-del{right:auto; left:-36px;}
+.ch-msg{padding:0 34px;}
+.ch-mb{display:inline-block; margin:6px 6px 0 0; padding:6px 11px; border-radius:9px; font-weight:800; font-size:12.5px; background:rgba(255,255,255,.22);}
+.ch-msg.them .ch-mb{background:var(--bg);}
+/* message templates editor */
+.tpl-lead{font-size:13px; color:var(--muted); line-height:1.5; margin:0 0 12px;}
+.tpl-list{display:grid; gap:8px; max-height:62vh; overflow:auto; padding-right:2px;}
+.tpl-it{border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:var(--surface);}
+.tpl-it summary{cursor:pointer; font-size:13.5px; list-style:none; display:flex; align-items:center; gap:8px;}
+.tpl-it summary::-webkit-details-marker{display:none;}
+.tpl-it summary::before{content:'▸'; color:var(--muted); font-size:11px;}
+.tpl-it[open] summary::before{content:'▾';}
+.tpl-it small{display:block; color:var(--muted); font-size:12px; margin:8px 0 0; line-height:1.45;}
+.tpl-mine{font-size:10.5px; font-weight:800; color:#0B7A47; background:#DDF6E9; padding:2px 7px; border-radius:999px;}
+.tpl-ta{width:100%; min-height:170px; margin-top:8px; border:1px solid var(--line); border-radius:10px; padding:9px 11px; font:13.5px/1.5 inherit; resize:vertical; background:var(--surface); color:var(--ink);}
+.tpl-b{display:flex; gap:8px; justify-content:flex-end; margin-top:8px; flex-wrap:wrap;}
+.tpl-pick{display:grid; gap:6px; max-height:46vh; overflow:auto; margin:6px 0 10px;}
+.tpl-pick label{display:flex; gap:8px; align-items:flex-start; font-size:13px; padding:8px 10px; border:1px solid var(--line); border-radius:10px; cursor:pointer;}
+.tpl-pick label:has(input:checked){border-color:var(--blue,#2F7FE0); background:rgba(47,127,224,.06);}
+.ch-form .tpl-pick label{display:flex; flex-direction:row; align-items:center; gap:10px; margin:0; font-size:13px; font-weight:600; color:var(--ink);}
+.ch-form .tpl-pick input[type=radio]{width:16px; height:16px; flex:none; margin:0; padding:0; accent-color:#2F7FE0;}
+.ch-form .tpl-pick input#tplNew{width:190px; padding:5px 8px; font-size:13px; border-radius:8px; display:inline-block; margin-left:4px;}
+.ch-form .tpl-it textarea.tpl-ta,.ch-form textarea.tpl-ta{min-height:150px; font-size:13.5px; line-height:1.5;}
+.ch-savetpl{border:0; background:none; color:var(--blue,#2F7FE0); font-weight:800; font-size:12px; cursor:pointer; padding:4px 0; white-space:nowrap;}
+.ch-savetpl[hidden]{display:none;}
 .ch-ma{position:fixed; inset:0; z-index:400; background:rgba(10,14,22,.45); display:none; align-items:flex-end; justify-content:center;}
 .ch-ma.open{display:flex;}
 .ch-ma-card{background:var(--surface); color:var(--ink); width:100%; max-width:440px; border-radius:20px 20px 0 0; padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px)); box-shadow:0 -10px 40px rgba(0,0,0,.18); animation:chMaUp .22s cubic-bezier(.2,.8,.2,1);}
@@ -2277,6 +2302,7 @@ body.dark .rm-new input{background:var(--surface);}
       <div class="ch-list-head">
         <h3>Chats</h3>
         <span class="hc-hint" id="chHint"></span>
+        <button class="ch-ib" id="chTplBtn" title="Message templates — change a standard text once, for every client">✎ Texts</button>
         <button class="ch-ib ch-test" id="chNewTest" title="One tap: a test chat that answers by itself at once (no alerts, the agent ignores it) — open its link on your phone and play the client">🧪 Test</button>
         <button class="ch-ib" id="chNew" title="Create a private chat link for a client"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New</button>
       </div>
@@ -2306,7 +2332,7 @@ body.dark .rm-new input{background:var(--surface);}
           <div class="ch-input"><textarea id="chTxt" rows="1" placeholder="Write a message…"></textarea></div>
           <button class="ch-send" id="chSend" disabled title="Send"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a1 1 0 0 0-1.38 1.13L3.7 11h7.3a1 1 0 1 1 0 2H3.7l-1.68 6.27A1 1 0 0 0 3.4 20.4z"/></svg></button>
         </div>
-        <div class="ch-hint"><span id="chNotify"></span><span>The client sees it on their page; an e-mail with the text goes out within 5 min (if they have an address)</span></div>
+        <div class="ch-hint"><span id="chNotify"></span><button class="ch-savetpl" id="chSaveTpl" hidden title="Keep this text as a template for every client">💾 Save as template</button><span>The client sees it on their page; an e-mail with the text goes out within 5 min (if they have an address)</span></div>
       </div>
     </section>
   </div>
@@ -7875,9 +7901,9 @@ const CH_STAGES=[['yliko','Material'],['draft','First draft'],['changes','Change
 const chStage=t=>t&&t.stage==='payment'?'changes':(t&&t.stage)||'yliko';
 const CH_STAGE_MSG={draft:1, changes:4, live:5};   /* stage → CH_QUICK index offered after a stage change */
 const CH_READY_EN={build:['✅ Ready to build','pressed «Ξεκινήστε την ιστοσελίδα μου» — build the first draft'],changes:['✏️ Ready for changes','pressed «Έστειλα όλες τις αλλαγές» — do every change, then reply'],live:['🚀 Wants to go live','pressed «Όλα καλά — πάμε live» — the domain is in the message: buy + connect it, then «Domain connected»']};
-const CH_WELCOME='Καλώς ήρθατε! 👋\n\nΑυτή είναι η προσωπική σας σελίδα επικοινωνίας με την ομάδα μας για την ιστοσελίδα σας: εδώ μας στέλνετε φωτογραφίες, αλλαγές και ερωτήσεις, κι εδώ σας απαντάμε. Κρατήστε τον σύνδεσμο — είναι δικός σας και δεν αλλάζει.\n\n📊 Πάνω-πάνω βλέπετε πάντα σε ποιο στάδιο βρισκόμαστε και τι χρειαζόμαστε από εσάς σε αυτό το στάδιο. Στόχος μας: να χρειάζεται όσο το δυνατόν λιγότερος χρόνος από τη δική σας πλευρά — εμείς φτιάχνουμε, εσείς ελέγχετε.\n\n👉 Σε κάθε στάδιο υπάρχει ένα κουμπί («Ξεκινήστε την ιστοσελίδα μου», «Έστειλα όλες τις αλλαγές», «Πάμε live»). Πατήστε το όταν τελειώσετε — έτσι ξέρουμε ότι μπορούμε να προχωρήσουμε.';
-const CH_YLIKO_DAT='Στάδιο 1 · Υλικό 📷\n\nΤα στοιχεία σας τα αντλούμε από το προφίλ σας στο doctoranytime — δεν χρειάζεται να γράψετε τίποτα.\n\nΧρειαζόμαστε ιδανικά μόνο τις φωτογραφίες σας σε καλή ανάλυση: εσάς, τον χώρο σας και το λογότυπο ή την κάρτα σας, αν υπάρχει. Στείλτε τα εδώ, στη συνομιλία.\n\nΜόλις τις στείλετε, πατήστε «Ξεκινήστε την ιστοσελίδα μου» — το πρώτο draft έρχεται σε 5–10 ημέρες. ⏱️';
-const CH_YLIKO_PLAIN='Στάδιο 1 · Υλικό 📷\n\nΣτείλτε μας εδώ ό,τι έχετε εύκολα — τίποτα δεν είναι υποχρεωτικό και τα κείμενα τα γράφουμε εμείς:\n\n1. Φωτογραφίες: εσείς, ο χώρος σας, το λογότυπο αν υπάρχει\n2. Δυο λόγια για εσάς (και σε bullet points)\n3. Οι υπηρεσίες σας\n4. Τηλέφωνο, διεύθυνση, ωράριο\n\nΈχετε προφίλ online (doctoranytime, Google, Facebook); Στείλτε μας τον σύνδεσμο.\n\nΜετά πατήστε «Ξεκινήστε την ιστοσελίδα μου» — το πρώτο draft έρχεται σε 5–10 ημέρες. ⏱️';
+let CH_WELCOME='Καλώς ήρθατε! 👋\n\nΑυτή είναι η προσωπική σας σελίδα επικοινωνίας με την ομάδα μας για την ιστοσελίδα σας: εδώ μας στέλνετε φωτογραφίες, αλλαγές και ερωτήσεις, κι εδώ σας απαντάμε. Κρατήστε τον σύνδεσμο — είναι δικός σας και δεν αλλάζει.\n\n📊 Πάνω-πάνω βλέπετε πάντα σε ποιο στάδιο βρισκόμαστε και τι χρειαζόμαστε από εσάς σε αυτό το στάδιο. Στόχος μας: να χρειάζεται όσο το δυνατόν λιγότερος χρόνος από τη δική σας πλευρά — εμείς φτιάχνουμε, εσείς ελέγχετε.\n\n👉 Σε κάθε στάδιο υπάρχει ένα κουμπί («Ξεκινήστε την ιστοσελίδα μου», «Έστειλα όλες τις αλλαγές», «Πάμε live»). Πατήστε το όταν τελειώσετε — έτσι ξέρουμε ότι μπορούμε να προχωρήσουμε.';
+let CH_YLIKO_DAT='Στάδιο 1 · Υλικό 📷\n\nΤα στοιχεία σας τα αντλούμε από το προφίλ σας στο doctoranytime — δεν χρειάζεται να γράψετε τίποτα.\n\nΧρειαζόμαστε ιδανικά μόνο τις φωτογραφίες σας σε καλή ανάλυση: εσάς, τον χώρο σας και το λογότυπο ή την κάρτα σας, αν υπάρχει. Στείλτε τα εδώ, στη συνομιλία.\n\nΜόλις τις στείλετε, πατήστε «Ξεκινήστε την ιστοσελίδα μου» — το πρώτο draft έρχεται σε 5–10 ημέρες. ⏱️';
+let CH_YLIKO_PLAIN='Στάδιο 1 · Υλικό 📷\n\nΣτείλτε μας εδώ ό,τι έχετε εύκολα — τίποτα δεν είναι υποχρεωτικό και τα κείμενα τα γράφουμε εμείς:\n\n1. Φωτογραφίες: εσείς, ο χώρος σας, το λογότυπο αν υπάρχει\n2. Δυο λόγια για εσάς (και σε bullet points)\n3. Οι υπηρεσίες σας\n4. Τηλέφωνο, διεύθυνση, ωράριο\n\nΈχετε προφίλ online (doctoranytime, Google, Facebook); Στείλτε μας τον σύνδεσμο.\n\nΜετά πατήστε «Ξεκινήστε την ιστοσελίδα μου» — το πρώτο draft έρχεται σε 5–10 ημέρες. ⏱️';
 const CH_YLIKO=CH_YLIKO_PLAIN;
 /* the message Angelo sends from the «Domain connected» button (stage → Live); {domain} = the connected domain */
 const CH_DOMAIN_LIVE='Συνδέθηκε και το domain name με την ιστοσελίδα σας, οπότε μπορείτε πλέον να τη βλέπετε εδώ: {domain}\n\nΘα μας βοηθούσε πάρα πολύ αν μπορούσατε να μας αφήσετε μια πολύ σύντομη αξιολόγηση (αν θέλετε και με το επώνυμο-επάγγελμά σας στο τέλος).\n\nΓια την αξιολόγηση μπορείτε να μπείτε εδώ:\n\nhttps://g.co/kgs/wXBAZWP\n\nΚαι αν έχετε άλλους γνωστούς ελεύθερους επαγγελματίες ή ανθρώπους με μικρές επιχειρήσεις που μπορεί να ενδιαφέρονταν με τις ίδιες συνθήκες, μπορείτε να τους στείλετε τα στοιχεία μου.\n\nΕυχαριστούμε πολύ για την άψογη συνεργασία 🙏\nΣτη διάθεσή σας για ό,τι χρειαστείτε';
@@ -7900,11 +7926,14 @@ const CH_QUICK=[
   ['FAQ · how long','Από τη στιγμή που πατάτε «Ξεκινήστε την ιστοσελίδα μου», το πρώτο draft έρχεται σε 5–10 ημέρες. Από εκεί και πέρα κάνουμε όσες αλλαγές χρειαστούν — κάθε γύρος αλλαγών, όταν είναι μαζεμένος, ολοκληρώνεται μέσα σε 24 ώρες.'],
   ['FAQ · domain','Το domain περιλαμβάνεται, χωρίς επιπλέον κόστος. Προτείνουμε κάτι απλό όπως epitheto-epaggelma.gr ή onoma-epitheto.gr — στείλτε μου το όνομα που θέλετε και ελέγχω ότι είναι διαθέσιμο.'],
 ];
+var chDelQ=new Map();   // message id → {tm, slug}: hidden at once, deleted on the server after 5 s unless Undo
+window.addEventListener('pagehide',()=>{ chDelQ.forEach((q,id)=>{ clearTimeout(q.tm); try{ if(!window.DEMO_CHATS) fetch(CHAT_URL+'?t='+encodeURIComponent(q.slug)+'&del='+encodeURIComponent(id),{method:'POST',headers:{'x-crm-auth':SYNC_TOKEN},keepalive:true}); }catch(e){} }); chDelQ.clear(); });
 const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, cache:{}, state:'idle', err:'', busy:false, tbusy:false, timer:null, ttimer:null, urls:{}, notify:null, online:[], filter:'all', q:'', queue:[], pending:[], lastAt:0, seenSent:null,
   hdr(){ return {'x-crm-auth':SYNC_TOKEN}; },
   active(){ return curView==='chats' && document.visibilityState==='visible'; },
   async pull(manual){
     if(this.busy) return;
+    if(window.Tpl && !Tpl.loaded) Tpl.load();
     if(window.DEMO_CHATS){ this.list=window.DEMO_CHATS.threads.slice(); this.state='ok'; this.lastAt=Date.now(); this.notify={email:true,telegram:false}; renderChats(); try{ chSyncBoard(); }catch(e){} return; }
     if(!SYNC_TOKEN){ this.state='off'; renderChats(); return; }
     this.busy=true; if(manual){ this.state='loading'; renderChatList(); }
@@ -8021,14 +8050,20 @@ const Chats={ list:[], head:null, cur:null, msgs:[], thread:null, thead:null, ca
     const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok) throw new Error(p.error||'could not create');
     this.head=null; await this.pull(false); return p;
   },
-  async del(slug, id){
+  delSoon(slug, id){
+    if(chDelQ.has(id)) return;
+    const tm=setTimeout(()=>{ chDelQ.delete(id); this.del(slug,id,true); },5000);
+    chDelQ.set(id,{tm,slug}); renderChats();
+    toastUndo('Message deleted for both sides',()=>{ const q=chDelQ.get(id); if(q){ clearTimeout(q.tm); chDelQ.delete(id); } renderChats(); },5);
+  },
+  async del(slug, id, quiet){
     if(window.DEMO_CHATS){ const m=(window.DEMO_CHATS.messages[slug]||[]).find(x=>x.id===id); if(m){m.deleted=true;m.text='';m.files=[];} this.msgs=this.msgs.map(x=>x.id===id?{...x,deleted:true,text:'',files:[]}:x); renderChats(); return; }
     const m=this.msgs.find(x=>x.id===id); const keep=m?{text:m.text,files:m.files}:null;
     if(m){ m.deleted=true; m.deletedBy='angelo'; m.text=''; m.files=[]; renderChats(); }
     try{
       const r=await fetch(CHAT_URL+'?t='+encodeURIComponent(slug)+'&del='+encodeURIComponent(id),{method:'POST', headers:this.hdr()});
       const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok) throw new Error(p.error||'could not delete');
-      this.head=null; this.thead=null; toast('Message deleted — gone for the client too');
+      this.head=null; this.thead=null; if(!quiet) toast('Message deleted — gone for the client too');
     }catch(e){ if(m&&keep){ m.deleted=false; m.text=keep.text; m.files=keep.files; renderChats(); } toast('Could not delete'); }
   },
   async meta(slug, data){
@@ -8162,6 +8197,7 @@ const chFill=(txt,t)=>String(txt).replace(/\{site\}/g, (t&&t.site)?chSite(t):'�
 function chDomainAsked(msgs){ for(const m of (msgs||[]).slice().reverse()){ if(m.from!=='client'||m.deleted) continue; const x=(m.text||'').match(/(?:^|\n)\s*1\.\s*([a-z0-9][a-z0-9.-]*\.[a-z]{2,})/i)||(m.text||'').match(/Domain[^:\n]*:\s*([a-z0-9][a-z0-9.-]*\.[a-z]{2,})/i); if(x) return x[1].toLowerCase(); } return ''; }
 const chLinkify=t=>{
   const keep=[]; let x=esc(t);
+  x=x.replace(/\[([^\]\n]{1,90})\]\(#(start|more)\)\n?/g,(m,a)=>{keep.push('<span class="ch-mb">'+a+'</span>');return '\u0001'+(keep.length-1)+'\u0001';});
   x=x.replace(/\[([^\]\n]{1,90})\]\(#(odigos|extras|yliko)\)/g,(m,a)=>{keep.push('<b style="background:rgba(255,255,255,.22);padding:1px 7px;border-radius:8px">'+a+'</b>');return '\u0001'+(keep.length-1)+'\u0001';});
   x=x.replace(/\[([^\]\n]{1,90})\]\((https?:\/\/[^\s)]+)\)/g,(m,a,u)=>{keep.push('<a href="'+u+'" target="_blank" rel="noopener">'+a+'</a>');return '\u0001'+(keep.length-1)+'\u0001';});
   x=x.replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)»"'])/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
@@ -8317,6 +8353,7 @@ function renderChatThread(keep){
   }
   else if(!all.length) out.push(`<div class="ch-empty"><b>Nothing sent yet</b>Send the link on Viber — ${esc(chLink(t))} — and write the first message here so they find it waiting.</div>`);
   all.forEach((m,i)=>{
+    if(m.deleted || chDelQ.has(m.id)) return;
     const d=new Date(m.at); const dk=d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
     if(dk!==lastDay){ out.push(`<div class="ch-day"><span>${chDayLabel(m.at)}</span></div>`); lastDay=dk; prev=null; }
     const me=m.from!=='client'; const files=m.files||[]; const pics=files.filter(f=>chIsImg(f.name)), docs=files.filter(f=>!chIsImg(f.name));
@@ -8324,10 +8361,9 @@ function renderChatThread(keep){
     if(pics.length) inner+=`<div class="ch-pics${pics.length===1?' one':''}">${pics.map((f,k)=>(!f.path&&!f.local)?`<div class="ch-ph">${esc(f.name)}</div>`:`<img alt="${esc(f.name)}" data-path="${esc(f.path||'')}" data-name="${esc(f.name)}" ${f.local?`src="${f.local}"`:''}>`).join('')}</div>`;
     docs.forEach(f=>{ inner+=`<a class="ch-file" data-dl="${esc(f.path||'')}" data-name="${esc(f.name)}"><span class="ic ${chKind(f.name)}">${esc((f.name.split('.').pop()||'').slice(0,4).toUpperCase())}</span><span><span class="n">${esc(f.name)}</span><small>${chKb(f.bytes||0)}</small></span></a>`; });
     if(m.text) inner+=(m.kind&&!m.deleted?'<span class="tag" style="background:var(--green-soft);color:var(--deep);margin:0 0 4px;display:inline-block">button</span><br>':'')+chLinkify(m.text);
-    inner+=`<div class="ch-meta">${m.from==='claude'?'<span class="tag">Claude</span>':''}${m.state==='pending'?'sending…':chTime(m.at)}${me?' '+chTick(m,t):''}</div>`;
+    inner+=`<div class="ch-meta">${m.from==='claude'?'<span class="tag">Claude</span>':''}${m.auto?'<span class="tag" title="Sent by itself">auto</span>':''}${m.state==='pending'?'sending…':chTime(m.at)}${me?' '+chTick(m,t):''}</div>`;
     if(m.state==='failed') inner+=`<span class="fail" data-retry="${esc(m.id)}">Not sent — click to retry</span>`;
-    if(m.deleted) inner=`<span style="opacity:.7;font-style:italic">Deleted${m.deletedBy==='client'?' by the client':''}</span><div class="ch-meta">${chTime(m.at)}</div>`;
-    else if(!m.state) inner+=`<button class="ch-del" data-del="${esc(m.id)}" title="Delete this message for both sides">\u2715</button>`;
+    if(!m.state) inner+=`<button class="ch-del" data-del="${esc(m.id)}" title="Delete for both sides — Undo for 5 seconds" aria-label="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg></button>`;
     out.push(`<div class="ch-msg ${me?'me':'them'}${m.from==='claude'?' claude':''}${prev&&prev.from!==m.from?' gap':''}"><div class="ch-bub${m.state?' '+m.state:''}${m.deleted?' gone':''}">${inner}</div></div>`);
     prev=m;
   });
@@ -8352,7 +8388,7 @@ function renderChatSuggest(t){
     ${s.draft?`<p class="sg-plan"><b>Check it:</b> <a href="${esc(s.draft)}" target="_blank" rel="noopener">${esc(String(s.draft).replace(/^https?:\/\//,''))} ↗</a></p>`:''}
     <div class="sg-t">${chLinkify(s.text)}</div>
     <div class="sg-b"><button class="go" id="sgSend">Send it${stName&&s.stage!==chStage(t)?' · stage → '+esc(stName):''}</button><button id="sgEdit">Edit first</button><button class="no" id="sgNo">Dismiss</button></div>`;
-  $('#sgEdit').addEventListener('click',()=>{ const tx=$('#chTxt'); tx.value=s.text; tx.dispatchEvent(new Event('input')); tx.focus(); box.hidden=true; });
+  $('#sgEdit').addEventListener('click',()=>{ chLastTpl=null; const tx=$('#chTxt'); tx.value=s.text; tx.dispatchEvent(new Event('input')); tx.focus(); box.hidden=true; });
   $('#sgSend').addEventListener('click',async()=>{ const tx=$('#chTxt'); if(tx.value.trim() && !confirm('There is text in the box already. Replace it with Claude\'s reply and send?')) return; $('#sgSend').disabled=true; tx.value=s.text; const slug=t.slug, stage=s.stage, done=!!s.done; await Chats.send(); if(stage && stage!==chStage(t)){ try{ await Chats.meta(slug,{stage}); }catch(e){} } else if(done && t.ready){ try{ await Chats.meta(slug,{ready:null}); }catch(e){} } });
   $('#sgNo').addEventListener('click',async()=>{ box.hidden=true; try{ await Chats.meta(t.slug,{suggest:null}); toast('Suggestion dismissed'); }catch(e){ toast('Could not dismiss'); } });
 }
@@ -8381,13 +8417,14 @@ function chOpenModal(t){
     <label>Stage</label><select id="chmStage">${CH_STAGES.map(s=>`<option value="${s[0]}"${(t?chStage(t):'yliko')===s[0]?' selected':''}>${s[1]}</option>`).join('')}</select>
     <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="chmDat"${t&&t.dat?' checked':''} style="width:16px;height:16px"> Has a doctoranytime profile — we start from it, the client only sends photos</label>
     <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="chmDemo"${t&&t.demo?' checked':''} style="width:16px;height:16px"> 🧪 Test chat (sandbox) — answers by itself at once, sends no alerts, the agent ignores it; «Restart at…» appears in the thread</label>
-    ${t?'':`<label>First message (sent from you, waiting when they open the link)</label><textarea id="chmWelcome" style="min-height:150px">${esc(welcome)}</textarea>
-    <label>Second message — what we need at this stage (leave empty to skip)</label><textarea id="chmWelcome2" style="min-height:150px">${esc(CH_YLIKO_PLAIN)}</textarea>`}
+    ${t?'':`<label>First message (sent from you, waiting when they open the link)</label><textarea id="chmWelcome" style="min-height:150px">${esc(welcome)}</textarea><button class="ch-savetpl" data-savetpl="welcome" type="button">💾 Save as the text for every new chat</button>
+    <label>Second message — what we need at this stage (leave empty to skip)</label><textarea id="chmWelcome2" style="min-height:150px">${esc(CH_YLIKO_PLAIN)}</textarea><button class="ch-savetpl" data-savetpl="yliko" type="button">💾 Save as the text for every new chat</button>`}
     ${t?`<div class="ch-link"><code>${esc(chLink(t))}</code><button class="ch-ib" id="chmCopy">Copy</button></div>`:''}
     <div class="btns" style="flex-wrap:wrap">${t?`<button class="btn btn-ghost btn-danger" id="chmDelete" title="Removes the chat, its messages and files for good">Delete</button><button class="btn btn-ghost" id="chmArchive">${t.archived?'Restore':'Archive'}</button><button class="btn btn-ghost" id="chmNewLink" title="Old link stops working">New link</button>`:''}<button class="btn btn-ghost" id="chmCancel">Cancel</button><button class="btn" id="chmSave" style="background:var(--grad);color:#fff">${t?'Save':'Create link'}</button></div>`;
   ov.classList.add('open'); setTimeout(()=>$('#chmName').focus(),50);
   const data=()=>({name:$('#chmName').value.trim(), phone:$('#chmPhone').value.trim(), email:$('#chmEmail').value.trim(), site:$('#chmSite').value.trim(), stage:$('#chmStage').value, dat:$('#chmDat').checked, demo:$('#chmDemo').checked});
   $('#chmCancel').addEventListener('click',()=>ov.classList.remove('open'));
+  b.querySelectorAll('[data-savetpl]').forEach(x=>x.addEventListener('click',async()=>{ const w=x.dataset.savetpl==='welcome'; const key=w?'welcome':($('#chmDat').checked?'yliko_dat':'yliko_plain'); const v=(w?$('#chmWelcome'):$('#chmWelcome2')).value; try{ await Tpl.save({key,text:v}); toast('Saved — every new chat starts with this text'); }catch(e){ toast(e.message||'Could not save'); } }));
   if(!t){ $('#chmDat').addEventListener('change',e=>{ const w2=$('#chmWelcome2'); if(w2 && (w2.value.trim()===CH_YLIKO_PLAIN.trim() || w2.value.trim()===CH_YLIKO_DAT.trim() || !w2.value.trim())) w2.value=e.target.checked?CH_YLIKO_DAT:CH_YLIKO_PLAIN; }); }
   const cp=$('#chmCopy'); if(cp) cp.addEventListener('click',()=>chCopy(chLink(t)));
   $('#chmSave').addEventListener('click',async()=>{
@@ -8403,7 +8440,105 @@ function chOpenModal(t){
   const nl=$('#chmNewLink'); if(nl) nl.addEventListener('click',async()=>{ if(!confirm('Make a new link? The old one stops working and you must send the new one to the client.')) return; try{ const p=await Chats.meta(t.slug,{newLink:true}); ov.classList.remove('open'); chShowLink(p.thread); }catch(e){ toast('Could not save'); } });
 }
 /* Angelo's own words (25 Sept 2026) — shown ONLY to him in the link window, to paste in Viber; never sent to the client */
-const CH_VIBER=l=>`Φτιάξαμε έναν χώρο για τη μεταξύ μας συνομιλία για την ιστοσελίδα σας ώστε να τα βλέπει όλη η ομάδα μας και να εξυπηρετείστε άμεσα:\n\n${l}\n\nΕκεί μπορείτε να μας στέλνετε φωτογραφίες, κείμενα και αλλαγές, και να βλέπετε σε ποιο στάδιο βρίσκεται η σελίδα σας. Τον φτιάξαμε για να είναι όλα συγκεντρωμένα σε ένα σημείο και να μη χάνεται τίποτα ανάμεσα σε μηνύματα και e-mail.\n\nΑν έχετε οποιαδήποτε απορία, είμαι εδώ και σε Viber και στο email μας advonmd@gmail.com.`;
+var CH_VIBER_T=`Φτιάξαμε έναν χώρο για τη μεταξύ μας συνομιλία για την ιστοσελίδα σας ώστε να τα βλέπει όλη η ομάδα μας και να εξυπηρετείστε άμεσα:\n\n{link}\n\nΕκεί μπορείτε να μας στέλνετε φωτογραφίες, κείμενα και αλλαγές, και να βλέπετε σε ποιο στάδιο βρίσκεται η σελίδα σας. Τον φτιάξαμε για να είναι όλα συγκεντρωμένα σε ένα σημείο και να μη χάνεται τίποτα ανάμεσα σε μηνύματα και e-mail.\n\nΑν έχετε οποιαδήποτε απορία, είμαι εδώ και σε Viber και στο email μας advonmd@gmail.com.`;
+const CH_VIBER=l=>CH_VIBER_T.replace(/\{link\}/g,l);
+/* ---------- Message templates (25 Sept 2026) ----------
+   Angelo changes a standard text ONCE — the Viber message, the welcome, the Υλικό texts, the automatic «Λάβαμε … κάτι άλλο;»,
+   any quick reply — and every client gets his version from then on. The defaults stay in this file; his versions live in
+   chats/templates.json of the data repo (GET/POST /api/chat?templates=1 → {t:{key:text}, extra:[[title,text]]}); the server's
+   automatic messages, the test chat and .advon/chat.py read the same file. Placeholders: {name} {link} {site} {domain} {what}. */
+const TPL_ACK='Λάβαμε {what} σας, ευχαριστούμε!\n\nΥπάρχει κάτι άλλο που θα θέλατε να μας στείλετε;\n\n[Όχι — ξεκινήστε την ιστοσελίδα μου](#start)\n[Ναι, θα στείλω κι άλλα](#more)';
+const TPL_DOMAIN_FREE='Τέλεια, χαίρομαι πολύ που σας αρέσει! 🎉\n\nΤο {domain} είναι διαθέσιμο — το αγοράζουμε, το συνδέουμε με την ιστοσελίδα σας και σας γράφουμε εδώ μόλις είναι online (1–2 ημέρες).';
+var Tpl={ saved:{t:{},extra:[]}, loaded:false,
+  def:{ viber:CH_VIBER_T, welcome:CH_WELCOME, yliko_plain:CH_YLIKO_PLAIN, yliko_dat:CH_YLIKO_DAT, quick:CH_QUICK.map(q=>[q[0],q[1]]) },
+  /* [key, name, what it is / placeholders, default] */
+  list(){ return [
+    ['viber','Viber message with the chat link','Only you see it — you paste it to the client on Viber. {link} = their chat link.',this.def.viber],
+    ['welcome','Welcome — the first message of every new chat','Sent when a chat is created (New, Test, the Υλικό buttons).',this.def.welcome],
+    ['yliko_plain','Υλικό — what we need','The second message of a new chat.',this.def.yliko_plain],
+    ['yliko_dat','Υλικό — doctoranytime clients','The second message when the client has a doctoranytime profile.',this.def.yliko_dat],
+    ['ack_more','Automatic — «Λάβαμε … κάτι άλλο;»','Goes out by itself about 10 minutes after a client sends photos or material without pressing «Ξεκινήστε». {what} becomes τη φωτογραφία / τις φωτογραφίες / το αρχείο / το μήνυμα. The two last lines are the two buttons.',TPL_ACK],
+    ['domain_free','Test chat — «the domain is free»','What the test chat answers after «Πάμε live». {domain}',TPL_DOMAIN_FREE],
+    ...this.def.quick.map(q=>['q:'+q[0],'Quick reply · '+q[0],'{name} = first name · {site} = their website · {domain}',q[1]]),
+  ]; },
+  get(key){ const v=this.saved.t&&this.saved.t[key]; if(typeof v==='string'&&v.trim()) return v; const r=this.list().find(x=>x[0]===key); return r?r[3]:''; },
+  apply(){
+    CH_VIBER_T=this.get('viber'); CH_WELCOME=this.get('welcome'); CH_YLIKO_PLAIN=this.get('yliko_plain'); CH_YLIKO_DAT=this.get('yliko_dat');
+    CH_QUICK.length=0; this.def.quick.forEach(q=>CH_QUICK.push([q[0],this.get('q:'+q[0])])); (this.saved.extra||[]).forEach(x=>CH_QUICK.push([x[0],x[1],'mine']));
+  },
+  async load(force){
+    if((this.loaded||this.busy)&&!force) return;
+    if(window.DEMO_CHATS){ try{ this.saved=JSON.parse(localStorage.getItem('advon_tpl_demo')||'null')||{t:{},extra:[]}; }catch(e){} this.loaded=true; this.apply(); return; }
+    if(!SYNC_TOKEN) return;
+    this.busy=true;
+    try{ const r=await fetch(CHAT_URL+'?templates=1&t_='+Date.now(),{headers:{'x-crm-auth':SYNC_TOKEN},cache:'no-store'}); const p=await r.json(); if(r.ok&&p.ok){ this.saved=p.templates||{t:{},extra:[]}; this.loaded=true; this.apply(); } }catch(e){}
+    this.busy=false;
+  },
+  async save(body){
+    if(window.DEMO_CHATS){ this.saved.t=this.saved.t||{}; if(body.key){ if(body.text==null||body.text==='') delete this.saved.t[body.key]; else this.saved.t[body.key]=body.text; } if(body.extra) this.saved.extra=body.extra; try{ localStorage.setItem('advon_tpl_demo',JSON.stringify(this.saved)); }catch(e){} this.apply(); return; }
+    const r=await fetch(CHAT_URL+'?templates=1',{method:'POST',headers:{'x-crm-auth':SYNC_TOKEN,'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok) throw new Error(p.error||'could not save');
+    this.saved=p.templates||this.saved; this.loaded=true; this.apply();
+  },
+};
+/* a text filled in for one client → back to a template: their link → {link}, website → {site}, first name → {name} */
+function chUnfill(txt,t){
+  let s=String(txt||''); if(!t) return s;
+  const l=chLink(t); if(l) s=s.split(l).join('{link}');
+  if(t.site){ const st=chSite(t); if(st&&st.length>8) s=s.split(st).join('{site}'); }
+  const fn=String(t.name||'').trim().split(/\s+/)[0]||'';
+  if(fn.length>=3){ const rx=fn.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); s=s.replace(new RegExp('(^|[^\\p{L}])'+rx+'(?![\\p{L}])','gu'),'$1{name}'); }
+  return s;
+}
+/* the editor: every template in one list — change, «Save for all clients», or «Back to the original» */
+function chTplEditor(focusKey){
+  const ov=$('#chatOverlay'), b=$('#chatModalBody'); $('#chatModalTitle').textContent='Message templates';
+  const draw=()=>{
+    const rows=Tpl.list(), mine=Tpl.saved.extra||[];
+    b.innerHTML=`<p class="tpl-lead">Change a text once and <b>every client gets it from now on</b>. Keep the words in {curly brackets} — they are filled in for each client.</p>
+      <div class="tpl-list">${rows.map(([k,label,help])=>`<details class="tpl-it" data-k="${esc(k)}"${k===focusKey?' open':''}><summary><b>${esc(label)}</b>${Tpl.saved.t&&Tpl.saved.t[k]?'<span class="tpl-mine">your version</span>':''}</summary>${help?`<small>${esc(help)}</small>`:''}<textarea class="tpl-ta">${esc(Tpl.get(k))}</textarea><div class="tpl-b">${Tpl.saved.t&&Tpl.saved.t[k]?'<button class="btn btn-ghost" data-tr="1">Back to the original</button>':''}<button class="btn" data-ts="1" style="background:var(--grad);color:#fff">Save for all clients</button></div></details>`).join('')}
+      ${mine.map((x,i)=>`<details class="tpl-it" data-x="${i}"><summary><b>My quick reply · ${esc(x[0])}</b><span class="tpl-mine">yours</span></summary><textarea class="tpl-ta">${esc(x[1])}</textarea><div class="tpl-b"><button class="btn btn-ghost btn-danger" data-td="1">Delete</button><button class="btn" data-ts="1" style="background:var(--grad);color:#fff">Save</button></div></details>`).join('')}</div>`;
+    const f=focusKey&&b.querySelector(`.tpl-it[data-k="${CSS.escape(focusKey)}"]`); if(f) setTimeout(()=>f.scrollIntoView({block:'center'}),60);
+  };
+  draw(); ov.classList.add('open');
+  if(!Tpl.loaded) Tpl.load().then(draw);
+  b.onclick=async e=>{
+    const it=e.target.closest('.tpl-it'); if(!it) return; const bt=e.target.closest('button'); if(!bt) return;
+    const val=it.querySelector('.tpl-ta').value;
+    try{
+      if(it.dataset.k){ const k=it.dataset.k;
+        if(bt.dataset.ts){ const def=(Tpl.list().find(x=>x[0]===k)||[])[3]; await Tpl.save({key:k, text: val.trim()===String(def||'').trim()?null:val}); toast('Saved — every client gets this text from now on'); focusKey=k; draw(); }
+        if(bt.dataset.tr){ await Tpl.save({key:k, text:null}); toast('Back to the original text'); focusKey=k; draw(); } }
+      else if(it.dataset.x){ const i=+it.dataset.x, ex=(Tpl.saved.extra||[]).map(x=>x.slice());
+        if(bt.dataset.ts){ ex[i][1]=val; await Tpl.save({extra:ex}); toast('Saved'); }
+        if(bt.dataset.td){ if(!confirm('Delete this quick reply?')) return; ex.splice(i,1); await Tpl.save({extra:ex}); toast('Deleted'); draw(); } }
+    }catch(err){ toast(err.message||'Could not save'); }
+  };
+}
+/* «Save as template» from the message box: which text should this become for everyone? */
+let chLastTpl=null;   // the template the box was filled from (quick reply), so it is pre-selected
+function chSaveAsTpl(text,t){
+  const ov=$('#chatOverlay'), b=$('#chatModalBody'); $('#chatModalTitle').textContent='Save as a template for all clients';
+  const tx=chUnfill(text,t), rows=Tpl.list().filter(r=>r[0]!=='viber'), mine=Tpl.saved.extra||[];
+  const sel=chLastTpl||'new';
+  b.innerHTML=`<p class="tpl-lead">Pick the text this replaces. The client's name, link and website become {name}, {link}, {site} so it fits every client.</p>
+    <textarea class="tpl-ta" id="tplTx" style="min-height:140px">${esc(tx)}</textarea>
+    <div class="tpl-pick">${rows.map(r=>`<label><input type="radio" name="tplk" value="${esc(r[0])}"${sel===r[0]?' checked':''}><span>${esc(r[1])}</span></label>`).join('')}${mine.map((x,i)=>`<label><input type="radio" name="tplk" value="x:${i}"${sel==='x:'+i?' checked':''}><span>My quick reply · ${esc(x[0])}</span></label>`).join('')}
+      <label><input type="radio" name="tplk" value="new"${sel==='new'?' checked':''}><span>A new quick reply, called <input id="tplNew" placeholder="e.g. Photos received" style="border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:13px;width:190px"></span></label></div>
+    <div class="tpl-b"><button class="btn btn-ghost" id="tplCancel">Cancel</button><button class="btn" id="tplGo" style="background:var(--grad);color:#fff">Save for all clients</button></div>`;
+  ov.classList.add('open');
+  const chk=b.querySelector('input[name=tplk]:checked'); if(chk) setTimeout(()=>chk.closest('label').scrollIntoView({block:'nearest'}),50);
+  $('#tplCancel').onclick=()=>ov.classList.remove('open');
+  $('#tplGo').onclick=async()=>{
+    const k=(b.querySelector('input[name=tplk]:checked')||{}).value, v=$('#tplTx').value; if(!k||!v.trim()) return;
+    try{
+      if(k==='new'){ const nm=$('#tplNew').value.trim(); if(!nm){ toast('Give the quick reply a name'); $('#tplNew').focus(); return; } await Tpl.save({extra:(Tpl.saved.extra||[]).concat([[nm,v]])}); }
+      else if(k.startsWith('x:')){ const ex=(Tpl.saved.extra||[]).map(x=>x.slice()); ex[+k.slice(2)][1]=v; await Tpl.save({extra:ex}); }
+      else await Tpl.save({key:k,text:v});
+      ov.classList.remove('open'); toast('Saved — every client gets this text from now on');
+    }catch(err){ toast(err.message||'Could not save'); }
+  };
+}
 function chShowLink(t){
   const ov=$('#chatOverlay'), b=$('#chatModalBody'); $('#chatModalTitle').textContent=t.demo?'🧪 Your test chat — open this link on your phone':'Send this link to '+t.name;
   const viber=CH_VIBER(chLink(t));
@@ -8411,6 +8546,7 @@ function chShowLink(t){
     <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin:12px 0 5px">Viber message</label>
     <textarea id="chlMsg" style="width:100%;min-height:210px;border:1px solid var(--line);border-radius:11px;padding:10px 12px;font-size:13.5px;line-height:1.5;resize:vertical;background:var(--surface);color:var(--ink)">${esc(viber)}</textarea>
     <button class="btn" id="chlCopyMsg" style="width:100%;min-height:46px;margin-top:10px;background:var(--grad);color:#fff;font-size:14.5px">Copy Viber message</button>
+    <div style="display:flex;justify-content:space-between;gap:10px;margin-top:6px"><button class="ch-savetpl" id="chlSaveTpl" title="Changed the text above? Keep it for every client from now on">💾 Save this text for all clients</button><button class="ch-savetpl" id="chlAllTpl">✎ All message templates</button></div>
     <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin:16px 0 5px">Just the link</label>
     <div class="ch-link"><code>${esc(chLink(t))}</code><button class="ch-ib" id="chlCopy">Copy link</button></div>
     <div class="btns" style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px"><button class="btn btn-ghost" id="chlDone">Done</button></div>`;
@@ -8418,6 +8554,8 @@ function chShowLink(t){
   $('#chlCopy').addEventListener('click',()=>chCopy(chLink(t)));
   $('#chlCopyMsg').addEventListener('click',e=>{ chCopy($('#chlMsg').value); const b=e.currentTarget; b.textContent='✓ Copied — paste it in Viber'; setTimeout(()=>{ b.textContent='Copy Viber message'; },2200); });
   $('#chlDone').addEventListener('click',()=>ov.classList.remove('open'));
+  $('#chlSaveTpl').addEventListener('click',async()=>{ try{ await Tpl.save({key:'viber', text:chUnfill($('#chlMsg').value,t)}); toast('Saved — every new client gets this Viber text'); }catch(e){ toast(e.message||'Could not save'); } });
+  $('#chlAllTpl').addEventListener('click',()=>chTplEditor('viber'));
 }
 /* ---------- Client reminders (23 Sept 2026) ----------
    The reminders are ⏰ events in the Google Calendar «Advon Media» (title «⏰ CLIENT — what we need»); Claude adds them from any
@@ -8577,6 +8715,7 @@ function renderHomeChats(){
 (function chatsWire(){
   $('#chNew').addEventListener('click',()=>chOpenModal(null));
   $('#chNewTest').addEventListener('click',chNewTest);
+  $('#chTplBtn').addEventListener('click',()=>chTplEditor());
   $('#chSearch').addEventListener('input',e=>{ Chats.q=e.target.value; renderChatList(); });
   $('#chFilters').addEventListener('click',e=>{ const b=e.target.closest('[data-f]'); if(!b) return; Chats.filter=b.dataset.f; $('#chFilters').querySelectorAll('.ch-pill').forEach(x=>x.classList.toggle('on',x===b)); renderChatList(); });
   const txt=$('#chTxt');
@@ -8589,32 +8728,19 @@ function renderHomeChats(){
   $('#chAttach').addEventListener('click',()=>$('#chFile').click());
   $('#chFile').addEventListener('change',e=>{ chAddFiles([...e.target.files]); e.target.value=''; });
   $('#chTray').addEventListener('click',e=>{ const b=e.target.closest('[data-rm]'); if(!b) return; Chats.queue.splice(+b.dataset.rm,1); renderChatTray(); });
+  { const stb=$('#chSaveTpl'), bx=$('#chTxt'); const stSync=()=>{ stb.hidden=!bx.value.trim(); };
+    bx.addEventListener('input',stSync); setInterval(stSync,800);
+    stb.addEventListener('click',()=>{ const t=Chats.list.find(x=>x.slug===Chats.cur); chSaveAsTpl(bx.value,t); }); }
   const qm=$('#chQuickMenu');
-  $('#chQuickBtn').addEventListener('click',e=>{ e.stopPropagation(); const t=Chats.list.find(x=>x.slug===Chats.cur); qm.innerHTML=CH_QUICK.map((q,i)=>`<button data-q="${i}"${q[0].startsWith('FAQ')?' class="faq"':''}><b>${esc(q[0])}</b>${esc(chFill(q[1], t).slice(0,110))}${q[1].length>110?'…':''}</button>`).join(''); qm.classList.toggle('open'); });
-  qm.addEventListener('click',e=>{ const b=e.target.closest('[data-q]'); if(!b) return; const t=Chats.list.find(x=>x.slug===Chats.cur); txt.value=chFill(CH_QUICK[+b.dataset.q][1], t); txt.dispatchEvent(new Event('input')); qm.classList.remove('open'); txt.focus(); });
+  $('#chQuickBtn').addEventListener('click',e=>{ e.stopPropagation(); const t=Chats.list.find(x=>x.slug===Chats.cur); if(!Tpl.loaded) Tpl.load(); qm.innerHTML=CH_QUICK.map((q,i)=>`<button data-q="${i}"${q[0].startsWith('FAQ')?' class="faq"':''}><b>${esc(q[0])}</b>${esc(chFill(q[1], t).slice(0,110))}${q[1].length>110?'…':''}</button>`).join('')+'<button data-tpledit="1" class="faq"><b>✎ Edit the templates…</b>Change any of these texts once, for every client</button>'; qm.classList.toggle('open'); });
+  qm.addEventListener('click',e=>{ if(e.target.closest('[data-tpledit]')){ qm.classList.remove('open'); chTplEditor(); return; } const b=e.target.closest('[data-q]'); if(!b) return; { const q=CH_QUICK[+b.dataset.q]; chLastTpl=q&&q[2]==='mine'?'x:'+((Tpl.saved.extra||[]).findIndex(x=>x[0]===q[0])):(q?'q:'+q[0]:null); } const t=Chats.list.find(x=>x.slug===Chats.cur); txt.value=chFill(CH_QUICK[+b.dataset.q][1], t); txt.dispatchEvent(new Event('input')); qm.classList.remove('open'); txt.focus(); });
   document.addEventListener('click',()=>qm.classList.remove('open'));
   const feed=$('#chFeed');
-  /* tap a message → Delete for both sides / Copy text (25 Sept 2026 — the hover ✕ could not be reached on the phone) */
-  const ma=document.createElement('div'); ma.className='ch-ma'; ma.id='chMa';
-  ma.innerHTML='<div class="ch-ma-card" role="dialog" aria-label="Message"><h4>Message</h4><div class="ch-ma-prev" id="chMaPrev"></div><button class="ch-ma-del" id="chMaDel">🗑 Delete for both sides</button><button class="ch-ma-copy" id="chMaCopy">Copy text</button><button class="ch-ma-no" id="chMaNo">Cancel</button><small>The client sees «Το μήνυμα διαγράφηκε» in its place.</small></div>';
-  document.body.appendChild(ma);
-  let chMaId=null; const chMaClose=()=>{ ma.classList.remove('open'); chMaId=null; };
-  const chMaOpen=id=>{ const m=Chats.msgs.find(x=>x.id===id); if(!m||m.deleted||m.state) return; chMaId=id;
-    const n=(m.files||[]).length; $('#chMaPrev').textContent=(m.text||'')+(n?(m.text?'\n':'')+'📎 '+n+(n===1?' file':' files'):'');
-    $('#chMaCopy').style.display=m.text?'':'none'; ma.classList.add('open'); };
-  ma.addEventListener('click',e=>{ if(e.target===ma) chMaClose(); });
-  $('#chMaNo').addEventListener('click',chMaClose);
-  $('#chMaDel').addEventListener('click',()=>{ const id=chMaId; chMaClose(); if(id) Chats.del(Chats.cur,id); });
-  $('#chMaCopy').addEventListener('click',()=>{ const m=Chats.msgs.find(x=>x.id===chMaId); chMaClose(); if(m&&m.text) chCopy(m.text); });
-  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&ma.classList.contains('open')) chMaClose(); });
   feed.addEventListener('click',async e=>{
-    const dx=e.target.closest('[data-del]'); if(dx){ e.preventDefault(); e.stopPropagation(); chMaOpen(dx.dataset.del); return; }
+    const dx=e.target.closest('[data-del]'); if(dx){ e.preventDefault(); e.stopPropagation(); Chats.delSoon(Chats.cur, dx.dataset.del); return; }
     const rt=e.target.closest('[data-retry]'); if(rt){ const pm=Chats.pending.find(x=>x.id===rt.dataset.retry); if(pm) Chats.push(pm); return; }
     const im=e.target.closest('.ch-pics img'); if(im && im.src){ $('#chLbImg').src=im.src; $('#chLb').classList.add('open'); return; }
     const dl=e.target.closest('[data-dl]'); if(dl){ e.preventDefault(); if(!dl.dataset.dl) return; try{ const u=await Chats.fileUrl(dl.dataset.dl); const a=document.createElement('a'); a.href=u; a.download=dl.dataset.name||'file'; document.body.appendChild(a); a.click(); a.remove(); }catch(err){ toast('Could not fetch that file'); } return; }
-    if(e.target.closest('a[href],button,input,textarea,select')) return;
-    if(window.getSelection && String(window.getSelection())) return;   // selecting text to copy is not a tap
-    const bub=e.target.closest('.ch-bub'); if(bub){ const d=bub.querySelector('[data-del]'); if(d) chMaOpen(d.dataset.del); }
   });
   $('#chLbX').addEventListener('click',()=>$('#chLb').classList.remove('open'));
   $('#chLb').addEventListener('click',e=>{ if(e.target.id==='chLb') e.currentTarget.classList.remove('open'); });

@@ -40,6 +40,7 @@
 
 import { ghReady, ghConf, commit as ghCommit, createBlob } from '@/lib/ghdata';
 import { demoSeed, demoReply } from '@/lib/chatdemo';
+import { readTemplates, readTemplatesAll } from '@/lib/chatcore';
 import { DIR, INDEX_PATH, SITE_URL, STAGES, normStage, currentHead, forgetHead, getIndex as coreIndex, getMessages as coreMessages, readChatBuffer, headNow, mailConf, sendTelegram, telegramDiag, sendEmail, clientWroteNote, approvalNote, agentNote, newMessageMail, reminderMail } from '@/lib/chatcore';
 
 export const runtime = 'nodejs';
@@ -257,6 +258,9 @@ export async function GET(req) {
       if (!path.startsWith(`${DIR}/`) || path.includes('..') || !/^[\w./\-\u0370-\u03FF\u1F00-\u1FFF]+$/.test(path)) return json({ error: 'bad path' }, 400);
       return fileResponse(c, path);
     }
+    if (q('templates')) {
+      return json({ ok: true, templates: await readTemplatesAll(c) });
+    }
     if (q('t')) {
       const slug = String(q('t'));
       if (!SLUG_RE.test(slug)) return json({ error: 'bad slug' }, 400);
@@ -352,6 +356,8 @@ export async function POST(req) {
         const m = arr.find((x) => x.id === id);
         if (!m || m.deleted) return null;
         if (who === 'client' && m.from !== 'client') return null;
+        let have = new Set(); try { have = new Set((await ctx.listDir(`${DIR}/${slug}/files`)).filter((f) => f.type === 'blob').map((f) => `${DIR}/${slug}/files/${f.path}`)); } catch {}
+        const goneFiles = (m.files || []).map((f) => f.path).filter((fp) => fp && have.has(fp));
         m.deleted = true; m.deletedAt = nowIso(); m.deletedBy = who; m.text = ''; m.files = [];
         const live = arr.filter((x) => !x.deleted);
         const last = live[live.length - 1];
@@ -366,10 +372,31 @@ export async function POST(req) {
         return [
           { path: `${DIR}/${slug}/messages.json`, content: JSON.stringify(arr, null, 1) },
           { path: INDEX_PATH, content: JSON.stringify(list, null, 1) },
+          ...goneFiles.map((fp) => ({ path: fp, content: null })),
         ];
       });
       if (done) forgetHead();
       return json({ ok: true, deleted: done });
+    }
+
+    // ---- CRM: save a message template for every client (25 Sept 2026) — {key, text|null} and/or {extra:[[title,text]]} ----
+    if (who === 'advon' && q('templates') === '1') {
+      let body; try { body = await req.json(); } catch { return json({ error: 'bad json' }, 400); }
+      let out = null;
+      await ghCommit(c, 'chat: templates saved', async (ctx) => {
+        const { data } = await ctx.readJson(`${DIR}/templates.json`, {});
+        const d = data && typeof data === 'object' && !Array.isArray(data) ? data : {};
+        d.t = d.t && typeof d.t === 'object' ? d.t : {}; d.extra = Array.isArray(d.extra) ? d.extra : [];
+        if (typeof body.key === 'string' && clean(body.key, 120)) {
+          const k = clean(body.key, 120);
+          if (body.text === null || body.text === '') delete d.t[k]; else d.t[k] = String(body.text).replace(/\r\n/g, '\n').slice(0, 8000);
+        }
+        if (Array.isArray(body.extra)) d.extra = body.extra.filter((x) => Array.isArray(x) && clean(x[0], 80) && String(x[1] || '').trim()).slice(0, 60).map((x) => [clean(x[0], 80), String(x[1]).replace(/\r\n/g, '\n').slice(0, 8000)]);
+        d.at = nowIso(); out = d;
+        return [{ path: `${DIR}/templates.json`, content: JSON.stringify(d, null, 1) }];
+      });
+      forgetHead();
+      return json({ ok: true, templates: { t: out.t, extra: out.extra } });
     }
 
     // ---- CRM: create a thread ----
@@ -463,7 +490,8 @@ export async function POST(req) {
         const now = nowIso();
         t.stage = stage; t.stageAt = now; t.dat = !!body.dat; delete t.ready; delete t.suggest; t.remindersSent = 0; t.lastReminderAt = null;
         if (stage === 'yliko') t.site = ''; else if (!t.site) t.site = 'https://allsmiles.gr';
-        const msgs = demoSeed(stage, t, t.dat).map((w, i) => ({ id: msgId() + String(i), from: 'advon', text: w, files: [], at: new Date(Date.parse(now) + i * 1000).toISOString() }));
+        const T = await readTemplates(c);
+        const msgs = demoSeed(stage, t, t.dat, T).map((w, i) => ({ id: msgId() + String(i), from: 'advon', text: w, files: [], at: new Date(Date.parse(now) + i * 1000).toISOString() }));
         t.lastAt = msgs[msgs.length - 1].at; t.lastFrom = 'advon'; t.lastText = msgs[msgs.length - 1].text.slice(0, 140); t.n = msgs.length;
         t.unreadAdmin = 0; t.unreadClient = msgs.length; t.adminSeenAt = now; t.clientSeenAt = null; t.angeloNotifiedAt = t.lastAt; t.clientNotifiedAt = t.lastAt;
         t.log = (t.log || []).concat([{ at: now, by: 'angelo', text: `Demo restarted at «${stage}»` }]).slice(-30);
@@ -546,7 +574,7 @@ export async function POST(req) {
       try {
         let ctxMsgs = [];
         if (msg.kind === 'ready:changes') { try { const all = await getMessages(c, slug); let i = all.length - 1; while (i >= 0 && all[i].from === 'client') i--; ctxMsgs = all.slice(i + 1).filter((m) => m.from === 'client' && !m.deleted); } catch {} }
-        const replies = demoReply(t, { ...msg, context: ctxMsgs });
+        const replies = demoReply(t, { ...msg, context: ctxMsgs }, await readTemplates(c));
         let k = 1;
         for (const r of replies) {
           const at = new Date(Date.now() + (r.delay || 1200 * k++)).toISOString();

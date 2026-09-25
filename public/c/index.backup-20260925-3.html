@@ -122,8 +122,6 @@ a{color:inherit}
 .bar{display:flex;align-items:flex-end;gap:8px}
 .ibtn{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:var(--brand);background:#F1F5FB;flex:none;transition:background .15s,transform .15s}
 .ibtn:hover{background:#E4EEFB}.ibtn:active{transform:scale(.94)}
-.ibtn.pulse{animation:ipulse 1s ease-in-out 3}
-@keyframes ipulse{0%,100%{box-shadow:0 0 0 0 rgba(47,127,224,0)}50%{box-shadow:0 0 0 7px rgba(47,127,224,.25)}}
 .ibtn svg{width:22px;height:22px}
 .input{flex:1;min-width:0;background:#F1F5FB;border-radius:16px;display:flex;align-items:flex-end;padding:4px 6px 4px 14px;transition:box-shadow .15s}
 .input:focus-within{box-shadow:0 0 0 3px rgba(47,127,224,.18)}
@@ -189,21 +187,12 @@ a{color:inherit}
 @keyframes spin{to{transform:rotate(360deg)}}
 /* delete own message */
 .bub{contain:layout style}
-.bub .del{position:absolute;bottom:2px;left:-40px;width:32px;height:32px;border-radius:11px;display:grid;place-items:center;background:#fff;color:#A3ACBD;border:1px solid var(--line);box-shadow:0 1px 3px rgba(20,40,80,.08);z-index:2;transition:color .15s,border-color .15s,transform .15s}
-.bub .del:hover,.bub .del:active{color:var(--red);border-color:#F8C3C8}
-.bub .del:active{transform:scale(.92)}
-.bub .del svg{width:16px;height:16px}
-.bub.pending .del{opacity:.6}
-/* the client's undo bar (5 s after a delete) */
-.undo{position:fixed;left:50%;bottom:calc(96px + var(--safe-b));transform:translateX(-50%) translateY(16px);display:flex;align-items:center;gap:14px;background:var(--ink);color:#fff;padding:9px 10px 9px 16px;border-radius:14px;font-weight:700;font-size:13.5px;opacity:0;pointer-events:none;transition:all .22s;z-index:60;box-shadow:0 10px 30px rgba(10,14,22,.3);white-space:nowrap}
-.undo.on{opacity:1;transform:translateX(-50%);pointer-events:auto}
-.undo button{background:#fff;color:var(--ink);font-weight:800;font-size:13px;padding:7px 12px;border-radius:10px}
-/* buttons inside a message: [Όχι — ξεκινήστε](#start) · [Ναι, θα στείλω κι άλλα](#more) */
-.mbtns{display:grid;gap:7px;margin:10px 0 2px}
-.mbtn{display:block;width:100%;text-align:center;min-height:42px;padding:10px 12px;border-radius:12px;font-weight:800;font-size:14px;line-height:1.25;white-space:normal}
-.mbtn.go{background:var(--me);color:#fff;box-shadow:0 5px 14px rgba(47,127,224,.28)}
-.mbtn.more{background:#F1F5FB;color:var(--brand)}
-body.st-built .mbtn.go,body.st-built .mbtn.more{opacity:.45;box-shadow:none}
+.bub .del{position:absolute;top:3px;width:28px;height:28px;border-radius:10px;display:none;place-items:center;background:#fff;color:var(--red);box-shadow:0 2px 10px rgba(20,40,80,.22);z-index:2}
+.row.me .bub .del{left:-34px}
+.row.me .bub{cursor:pointer}
+.row.me .bub:active{filter:brightness(.96)}
+@media (hover:hover){ .row.me .bub:hover .del{display:grid} }
+.bub .del svg{width:15px;height:15px}
 .bub.gone{background:#EEF2F8!important;color:#98A2B8!important;box-shadow:none!important;font-size:14px}
 .row.me .bub.gone{background:#E3EAF5!important}
 .bub.gone::after{display:none!important}
@@ -236,6 +225,14 @@ body.st-built .mbtn.go,body.st-built .mbtn.more{opacity:.45;box-shadow:none}
 .sheet-body .big{width:100%;min-height:50px;border-radius:14px;background:var(--me);color:#fff;font-weight:800;font-size:15px;margin-top:8px;box-shadow:0 6px 18px rgba(47,127,224,.3)}
 .sheet-body .quiet{width:100%;min-height:44px;border-radius:14px;background:#F1F5FB;color:var(--muted);font-weight:700;font-size:14px;margin-top:8px}
 .sheet-body .quiet[hidden]{display:none}
+#msgact .sheet-card{max-width:460px}
+.ma-prev{background:#F5F8FD;border-radius:14px;padding:10px 12px;font-size:14px;line-height:1.45;color:var(--ink);max-height:132px;overflow:hidden;white-space:pre-wrap;overflow-wrap:anywhere;display:flex;gap:10px;align-items:flex-start}
+.ma-prev img{width:64px;height:64px;border-radius:10px;object-fit:cover;flex:none}
+.ma-prev .mt{flex:1;min-width:0;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.ma-prev .mf{color:var(--muted);font-weight:700;font-size:13px}
+.sheet-body .ma-del{background:var(--red);box-shadow:0 6px 18px rgba(240,68,82,.28);margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.ma-del svg{width:18px;height:18px}
+.ma-note{text-align:center;font-size:12px;color:var(--muted);font-weight:600;margin-top:10px}
 @media (max-width:440px){
   .stages{padding:9px 12px 11px}
   .st .lbl{font-size:11px}
@@ -468,6 +465,10 @@ body.st-built .mbtn.go,body.st-built .mbtn.more{opacity:.45;box-shadow:none}
     </ul>
   </div>
 </div></div>
+<div class="sheet" id="msgact"><div class="sheet-card">
+  <div class="sheet-head"><b>Το μήνυμά σας</b><button class="sx" aria-label="Κλείσιμο">✕</button></div>
+  <div class="sheet-body"><div class="ma-prev" id="maPrev"></div><button class="big ma-del" id="maDel">Διαγραφή μηνύματος</button><button class="quiet" id="maView" hidden>Άνοιγμα φωτογραφίας</button><button class="quiet" id="maCopy" hidden>Αντιγραφή κειμένου</button><button class="quiet sx">Άκυρο</button><p class="ma-note">Το μήνυμα διαγράφεται και για εμάς.</p></div>
+</div></div>
 <div class="sheet" id="confirm"><div class="sheet-card">
   <div class="sheet-head"><b id="cfTitle"></b><button class="sx" aria-label="Κλείσιμο">✕</button></div>
   <div class="sheet-body"><p class="lead" id="cfText"></p><button class="big" id="cfYes"></button><button class="quiet sx">Όχι ακόμη</button></div>
@@ -486,7 +487,6 @@ body.st-built .mbtn.go,body.st-built .mbtn.more{opacity:.45;box-shadow:none}
 <div class="drop" id="drop"><div>Αφήστε τα αρχεία εδώ</div></div>
 <div class="lb" id="lb"><a class="dl" id="lbdl" download title="Λήψη"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></a><button class="x" id="lbx" aria-label="Κλείσιμο"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><img id="lbimg" alt=""></div>
 <div class="toast" id="toast"></div>
-<div class="undo" id="undo" role="status"><span id="undoTx">Το μήνυμα διαγράφηκε</span><button id="undoBtn">Αναίρεση</button></div>
 
 <script>
 (function(){
@@ -535,7 +535,6 @@ const isImg=n=>/\.(jpe?g|png|webp|gif|bmp)$/i.test(n||'');
 const fileKind=n=>{const e=(n.split('.').pop()||'').toLowerCase();return e==='pdf'?'pdf':/^docx?$|^rtf$|^txt$/.test(e)?'doc':/^xlsx?$|^csv$/.test(e)?'xls':/^zip$/.test(e)?'zip':'';};
 function linkify(t){
   const keep=[]; let s=esc(t);
-  s=s.replace(/(?:\[([^\]\n]{1,90})\]\(#(start|more)\)\s*)+/g,m=>{ const b=[...m.matchAll(/\[([^\]\n]{1,90})\]\(#(start|more)\)/g)].map(x=>'<button class="mbtn '+(x[2]==='start'?'go':'more')+'" data-act="'+x[2]+'">'+x[1]+'</button>').join(''); keep.push('<span class="mbtns">'+b+'</span>'); return '\u0001'+(keep.length-1)+'\u0001'; });
   s=s.replace(/\[([^\]\n]{1,90})\]\(#(odigos|extras|yliko)\)/g,(m,x,id)=>{keep.push('<a href="#" class="ilink" data-sheet="'+id+'">'+x+'</a>');return '\u0001'+(keep.length-1)+'\u0001';});
   s=s.replace(/\[([^\]\n]{1,90})\]\((https?:\/\/[^\s)]+)\)/g,(m,x,u)=>{keep.push('<a href="'+u+'" target="_blank" rel="noopener">'+x+'</a>');return '\u0001'+(keep.length-1)+'\u0001';});
   s=s.replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)»"'])/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
@@ -571,12 +570,11 @@ function bubble(m,me){
 }
 function seenKey(m){return (state.thread&&state.thread.adminSeenAt&&state.thread.adminSeenAt>=m.at)?'s':'';}
 function items(){
-  const all=state.msgs.concat(state.pending).filter(m=>!m.deleted&&!delQ.has(m.id)).sort((a,b)=>a.at<b.at?-1:1);
+  const all=state.msgs.concat(state.pending).sort((a,b)=>a.at<b.at?-1:1);
   const out=[]; let lastDay='',prev=null;
   all.forEach((m,i)=>{
     const dk=dayKey(m.at);
     if(dk!==lastDay){ out.push({key:'d'+dk,html:'<div class="day"><span>'+dayLabel(m.at)+'</span></div>'}); lastDay=dk; prev=null; }
-    if(m.deleted||delQ.has(m.id)) return;
     const me=m.from==='client', next=all[i+1];
     const sameNext=next&&next.from===m.from&&dayKey(next.at)===dk&&(new Date(next.at)-new Date(m.at))<6*60000;
     const gap=prev&&prev.from!==m.from;
@@ -644,9 +642,8 @@ function renderHead(){
 function renderReady(t){
   const el=$('#ready'); if(!el) return;
   const stg=curStage(t), r=t.ready&&t.ready.kind;
-  if(stg==='live'){ el.hidden=true; el.innerHTML=''; document.body.classList.add('st-built'); return; }
+  if(stg==='live'){ el.hidden=true; el.innerHTML=''; return; }
   el.hidden=false; el.classList.toggle('done',!!r);
-  document.body.classList.toggle('st-built', stg!=='yliko' || r==='build');
   if(r==='build') el.innerHTML='<p>✅ Το λάβαμε! Ετοιμάζουμε το πρώτο draft της ιστοσελίδας σας — θα το βρείτε εδώ σε 3–10 ημέρες. Θυμηθήκατε κάτι; Γράψτε το μας.</p>';
   else if(r==='changes') el.innerHTML='<p>✏️ Τις λάβαμε! Κάνουμε τις αλλαγές σας — έτοιμες συνήθως μέσα σε 24 ώρες. Θα σας γράψουμε εδώ μόλις είναι.</p>';
   else if(r==='live') el.innerHTML='<p>🚀 Τέλεια! Ελέγχουμε το domain, το αγοράζουμε και σας ενημερώνουμε εδώ μόλις η ιστοσελίδα σας είναι online (1–2 ημέρες).</p>';
@@ -669,7 +666,6 @@ async function load(first){
     state.pending=state.pending.filter(pm=>!state.msgs.some(m=>m.id===pm.id));
     const fresh=state.msgs.filter(m=>!before.has(m.id)&&m.from!=='client');
     renderHead(); render(!first);
-    if(first&&location.hash==='#start'){ history.replaceState(null,'',location.pathname+location.search); setTimeout(()=>msgAction('start'),600); }
     if(first){dock.hidden=false; stickBottom(1500); if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>stickBottom(500));}
     if(fresh.length&&!first){if(document.visibilityState==='visible'&&state.sound)blip();}
     if(state.msgs.some(m=>m.from!=='client')){ if(document.visibilityState==='visible')markSeen(); else {state.unread=(before.size?fresh.length:0);title();} }
@@ -783,43 +779,48 @@ async function push(pm){
     (pm._q||[]).forEach(x=>x.url&&setTimeout(()=>URL.revokeObjectURL(x.url),60000));
     if(!state.msgs.some(m=>m.id===p.message.id)) state.msgs.push(p.message); if(p.thread)state.thread=Object.assign(state.thread||{},p.thread); state.head=null;
     render(false); if(pm.kind) renderHead();
+    if(!pm.kind && !mem.get('delTip')){ mem.set('delTip','1'); setTimeout(()=>toast('Πατήστε ένα μήνυμά σας για να το διαγράψετε'),900); }
   }catch(e){ pm.state='failed'; pm.err=/^(TypeError|Failed to fetch|Load failed|NetworkError)/i.test(e.message||'')?'Χωρίς σύνδεση — ελέγξτε το internet σας και πατήστε ξανά.':(e.message||'Δεν στάλθηκε'); render(true); toast(pm.err); }
 }
 /* the client can take back anything they sent */
-const delQ=new Map();   // id → timer: deletes wait 5 s so «Αναίρεση» can bring the message back
-let undoT;
-function undoBar(on,id){ const u=$('#undo'); clearTimeout(undoT); if(!on){u.classList.remove('on');return;} u.dataset.id=id; u.classList.add('on'); undoT=setTimeout(()=>u.classList.remove('on'),5000); }
-async function delNow(id){
-  const m=state.msgs.find(x=>x.id===id); if(!m){ delQ.delete(id); return; }
-  try{
-    const r=await fetch(API+'?c='+encodeURIComponent(code)+'&del='+encodeURIComponent(id),{method:'POST',keepalive:true});
-    const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok)throw new Error(p.error||'x');
-    m.deleted=true; m.text=''; m.files=[]; state.head=null; delQ.delete(id);
-  }catch(e){ delQ.delete(id); render(true); toast('Δεν έγινε η διαγραφή — δοκιμάστε ξανά'); }
-}
-function delMsg(id){
+async function delMsg(id){
   const pend=state.pending.find(x=>x.id===id);
   if(pend){ state.pending=state.pending.filter(x=>x.id!==id); render(true); return; }
-  const m=state.msgs.find(x=>x.id===id); if(!m||m.deleted||delQ.has(id))return;
-  delQ.set(id,setTimeout(()=>delNow(id),5000)); render(true); undoBar(true,id);
+  const m=state.msgs.find(x=>x.id===id); if(!m||m.deleted)return;
+  const keep={text:m.text,files:m.files};
+  m.deleted=true; m.text=''; m.files=[]; render(true);
+  try{
+    const r=await fetch(API+'?c='+encodeURIComponent(code)+'&del='+encodeURIComponent(id),{method:'POST'});
+    const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok)throw new Error(p.error||'x');
+    state.head=null; toast('Το μήνυμα διαγράφηκε');
+  }catch(e){ m.deleted=false; m.text=keep.text; m.files=keep.files; render(true); toast('Δεν έγινε η διαγραφή — δοκιμάστε ξανά'); }
 }
-$('#undoBtn').addEventListener('click',()=>{ const id=$('#undo').dataset.id; const tm=delQ.get(id); if(tm){ clearTimeout(tm); delQ.delete(id); } render(true); undoBar(false); });
-/* leaving the page inside the 5 s still deletes what was asked */
-window.addEventListener('pagehide',()=>{ delQ.forEach((tm,id)=>{ clearTimeout(tm); try{ navigator.sendBeacon(API+'?c='+encodeURIComponent(code)+'&del='+encodeURIComponent(id)); }catch(e){} }); delQ.clear(); });
+/* tap any of your own messages → one sheet: delete (one more tap), open the photo, copy the text (25 Sept 2026) */
+let maId=null;
 function openLb(im){$('#lbimg').src=im.dataset.full;$('#lbdl').href=im.dataset.full;$('#lbdl').download=im.dataset.name||'';$('#lb').classList.add('on');}
-/* the two buttons inside «Λάβαμε … Υπάρχει κάτι άλλο;» */
-function msgAction(act){
-  const t=state.thread||{};
-  if(act==='start'){
-    if(curStage(t)!=='yliko'||(t.ready&&t.ready.kind==='build')){ toast('Το έχουμε ήδη — ετοιμάζουμε το πρώτο draft σας'); return; }
-    pressReady('build', READY_TXT.build); return;
-  }
-  if(act==='more'){ toast('Τέλεια! Στείλτε τα εδώ και μετά πατήστε «Ξεκινήστε την ιστοσελίδα μου»'); const a=$('#attach'); a.classList.remove('pulse'); void a.offsetWidth; a.classList.add('pulse'); }
+function openMsgAct(id){
+  const m=state.msgs.concat(state.pending).find(x=>x.id===id); if(!m||m.deleted) return;
+  maId=id;
+  const files=m.files||[], pic=files.find(f=>isImg(f.name)), src=pic?(pic.local||fileUrl(pic.path)):'';
+  const fl=files.length?'<div class="mf">📎 '+files.length+(files.length===1?' αρχείο':' αρχεία')+'</div>':'';
+  $('#maPrev').innerHTML=(src?'<img src="'+src+'" alt="">':'')+'<div class="mt">'+(m.text?esc(m.text):'')+fl+'</div>';
+  const v=$('#maView'); v.hidden=!src; v.dataset.full=src; v.dataset.name=pic?pic.name:'';
+  $('#maCopy').hidden=!m.text;
+  openSheet('msgact');
 }
+$('#maDel').insertAdjacentHTML('afterbegin',DELIC);
+$('#maDel').addEventListener('click',()=>{ const id=maId; closeSheets(); if(id) delMsg(id); });
+$('#maView').addEventListener('click',e=>{ const b=e.currentTarget; closeSheets(); openLb(b); });
+$('#maCopy').addEventListener('click',async()=>{ const m=state.msgs.concat(state.pending).find(x=>x.id===maId); closeSheets(); if(!m) return;
+  try{ await navigator.clipboard.writeText(m.text); }catch(e){ const ta=document.createElement('textarea'); ta.value=m.text; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(_){} ta.remove(); }
+  toast('Το κείμενο αντιγράφηκε'); });
 feed.addEventListener('click',e=>{
-  const dl=e.target.closest('[data-del]'); if(dl){ e.preventDefault(); e.stopPropagation(); delMsg(dl.dataset.del); return; }
-  const ma=e.target.closest('[data-act]'); if(ma){ e.preventDefault(); msgAction(ma.dataset.act); return; }
   const rt=e.target.closest('[data-retry]'); if(rt){const pm=state.pending.find(x=>x.id===rt.dataset.retry);if(pm)push(pm);return;}
+  const mine=e.target.closest('.row.me .bub');
+  if(mine&&!mine.classList.contains('gone')){
+    if(e.target.closest('a[href]')) return;   // a link inside the message still opens
+    const dl=mine.querySelector('[data-del]'); if(dl){ e.preventDefault(); openMsgAct(dl.dataset.del); } return;
+  }
   const im=e.target.closest('.pics img'); if(im){ openLb(im); return; }
 });
 const SHEET={odigos:'guide',extras:'faq',yliko:'yliko',confirm:'confirm',golive:'golive'};
