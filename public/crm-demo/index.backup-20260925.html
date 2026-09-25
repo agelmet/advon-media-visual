@@ -1843,8 +1843,6 @@ body.dark .ch-pill.on{background:var(--brand);}
 .ch-head .acts{display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:flex-end; max-width:min(640px,62%);}
 .ch-head select{font-size:12.5px; font-weight:700; border:1px solid var(--line); border-radius:10px; padding:7px 10px; background:var(--surface); color:var(--ink);}
 .ch-ib{height:34px; padding:0 11px; border-radius:10px; font-size:12.5px; font-weight:700; color:var(--ink); background:var(--bg); display:inline-flex; align-items:center; gap:6px; transition:background .12s;}
-.ch-ib.ch-test{background:#FFF4D6; color:#7A5A00; margin-right:4px;}
-.ch-ib.ch-test:hover{background:#FCEAB8;}
 .ch-ib:hover{background:var(--blue-soft); color:var(--brand);}
 .ch-ib svg{width:15px; height:15px;}
 .ch-back{display:none; width:36px; height:36px; border-radius:10px; place-items:center; background:var(--bg);}
@@ -2263,7 +2261,6 @@ body.dark .rm-new input{background:var(--surface);}
       <div class="ch-list-head">
         <h3>Chats</h3>
         <span class="hc-hint" id="chHint"></span>
-        <button class="ch-ib ch-test" id="chNewTest" title="One tap: a test chat that answers by itself at once (no alerts, the agent ignores it) — open its link on your phone and play the client">🧪 Test</button>
         <button class="ch-ib" id="chNew" title="Create a private chat link for a client"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New</button>
       </div>
       <div class="ch-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input id="chSearch" placeholder="Search clients…" autocomplete="off"></div>
@@ -8365,18 +8362,6 @@ function renderChatTray(){ const tr=$('#chTray'); if(!tr) return; tr.innerHTML=C
 function chUpdateSend(){ const s=$('#chSend'); if(s) s.disabled=!($('#chTxt').value.trim() || Chats.queue.length); }
 function chAddFiles(list){ for(const f of list){ if(Chats.queue.length>=12){ toast('Up to 12 files at a time'); break; } Chats.queue.push({file:f, url:/^image\//.test(f.type)?URL.createObjectURL(f):''}); } renderChatTray(); }
 async function chCopy(s){ try{ await navigator.clipboard.writeText(s); toast('Link copied — paste it in Viber'); }catch(e){ prompt('Copy the link:', s); } }
-/* one tap → a fresh sandbox chat («Δοκιμή 25/09 12:40») at Υλικό with the real welcome + Υλικό messages; the server answers
-   every button and every photo at once, like the real flow would days later. Restart it at any stage from the thread head. */
-async function chNewTest(){
-  const b=$('#chNewTest'); if(b.disabled) return; b.disabled=true;
-  const d=new Date(), two=n=>String(n).padStart(2,'0');
-  const name='Δοκιμή '+two(d.getDate())+'/'+two(d.getMonth()+1)+' '+two(d.getHours())+':'+two(d.getMinutes());
-  try{
-    const p=await Chats.create({name, phone:'', email:'', site:'', stage:'yliko', dat:false, demo:true, welcome:[CH_WELCOME, CH_YLIKO_PLAIN]});
-    await Chats.open(p.thread.slug); chShowLink(p.thread); toast('Test chat ready — open the link on your phone and play the client');
-  }catch(e){ toast(e.message||'Could not create the test chat'); }
-  b.disabled=false;
-}
 function chOpenModal(t){
   const ov=$('#chatOverlay'), b=$('#chatModalBody'); $('#chatModalTitle').textContent=t?'Edit chat':'New chat';
   const welcome=CH_WELCOME;
@@ -8408,9 +8393,9 @@ function chOpenModal(t){
   const nl=$('#chmNewLink'); if(nl) nl.addEventListener('click',async()=>{ if(!confirm('Make a new link? The old one stops working and you must send the new one to the client.')) return; try{ const p=await Chats.meta(t.slug,{newLink:true}); ov.classList.remove('open'); chShowLink(p.thread); }catch(e){ toast('Could not save'); } });
 }
 function chShowLink(t){
-  const ov=$('#chatOverlay'), b=$('#chatModalBody'); $('#chatModalTitle').textContent=t.demo?'🧪 Your test chat — open this link on your phone':'Send this link to '+t.name;
+  const ov=$('#chatOverlay'), b=$('#chatModalBody'); $('#chatModalTitle').textContent='Send this link to '+t.name;
   const viber=`Γεια σας! Για να μιλάμε πιο εύκολα για την ιστοσελίδα σας, σας έφτιαξα μια προσωπική σελίδα συνομιλίας. Από εδώ και πέρα στείλτε μου εκεί φωτογραφίες, κείμενα και αλλαγές — τα βλέπω αμέσως:\n${chLink(t)}`;
-  b.innerHTML=`<p style="font-size:13px;color:var(--muted);line-height:1.5">${t.demo?'Play the client: send photos, press the big buttons — it answers by itself at once. Nothing reaches a real client and no alerts go out. «↺ Restart at…» in the thread head puts it back at any stage.':'Paste it in Viber or SMS. No password — the link itself is the key, so send it only to the client.'}</p>
+  b.innerHTML=`<p style="font-size:13px;color:var(--muted);line-height:1.5">Paste it in Viber or SMS. No password — the link itself is the key, so send it only to the client.</p>
     <div class="ch-link"><code>${esc(chLink(t))}</code><button class="ch-ib" id="chlCopy">Copy link</button></div>
     <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin:14px 0 5px">Ready-made Viber message</label>
     <textarea id="chlMsg" style="width:100%;min-height:120px;border:1px solid var(--line);border-radius:11px;padding:10px 12px;font-size:13.5px;line-height:1.5;resize:vertical">${esc(viber)}</textarea>
@@ -8577,7 +8562,6 @@ function renderHomeChats(){
 }
 (function chatsWire(){
   $('#chNew').addEventListener('click',()=>chOpenModal(null));
-  $('#chNewTest').addEventListener('click',chNewTest);
   $('#chSearch').addEventListener('input',e=>{ Chats.q=e.target.value; renderChatList(); });
   $('#chFilters').addEventListener('click',e=>{ const b=e.target.closest('[data-f]'); if(!b) return; Chats.filter=b.dataset.f; $('#chFilters').querySelectorAll('.ch-pill').forEach(x=>x.classList.toggle('on',x===b)); renderChatList(); });
   const txt=$('#chTxt');
