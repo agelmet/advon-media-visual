@@ -1,6 +1,7 @@
 // app/api/social/route.js — the CRM «Meta» tab (25 Sept 2026)
 //   GET  /api/social                       (x-crm-auth) → {ok, base, posts:[merged plan+state], meta:{connected, pageName, igUsername, source}}
 //   POST /api/social?a=approve   {id, on}  approve (on:true) or take back (on:false) one post; {ids:[…], on} for several
+//   POST /api/social?a=settings  {auto}    auto-post ON: every post goes out on its date unless skipped (default ON)
 //   POST /api/social?a=skip      {id, on}  leave a post out of the month (or bring it back)
 //   POST /api/social?a=edit      {id, caption?, hashtags?, date?, time?, reset?}   change what goes out (reset → back to Claude's version)
 //   POST /api/social?a=post      {id, targets?:['ig','fb']}   publish now (runs in the background function, result in ~1–3 min)
@@ -8,7 +9,8 @@
 //   POST /api/social?a=disconnect
 //   POST /api/social?a=check     → re-read the page and Instagram names with the stored token
 import { ghReady, ghConf, commit as ghCommit } from '@/lib/ghdata';
-import { SOCIAL_BASE, CREDS_PATH, fetchPlan, merged, sealCreds, connectMeta, checkMeta } from '@/lib/social';
+import { SOCIAL_BASE, CREDS_PATH, STATE_PATH, fetchPlan, merged, autoOn, sealCreds, connectMeta, checkMeta } from '@/lib/social';
+import { mutateJson } from '@/lib/ghdata';
 import { readState, readCreds, patchPost, kick } from '@/lib/socialrun';
 
 export const runtime = 'nodejs';
@@ -26,7 +28,7 @@ export async function GET(req) {
   const conf = ghConf();
   try {
     const [plan, state, creds] = await Promise.all([fetchPlan(), ghReady(conf) ? readState(conf) : { posts: {} }, ghReady(conf) ? readCreds(conf) : null]);
-    return json({ ok: true, base: SOCIAL_BASE, month: plan.month || null, posts: merged(plan, state),
+    return json({ ok: true, base: SOCIAL_BASE, month: plan.month || null, auto: autoOn(state), posts: merged(plan, state),
       meta: creds ? { connected: true, pageName: creds.pageName || '', igUsername: creds.igUsername || '', source: creds.source || 'crm', connectedAt: creds.connectedAt || null } : { connected: false } });
   } catch (e) { return json({ ok: false, code: e.code || 'error', error: e.message || 'failed' }, 502); }
 }
@@ -40,10 +42,14 @@ export async function POST(req) {
   try {
     if (a === 'approve') {
       const ids = Array.isArray(b.ids) ? b.ids.map(String).slice(0, 60) : [id];
-      for (const x of ids) await patchPost(conf, x, (s) => (s.status === 'posted' || s.status === 'posting') ? undefined : ({ ...s, approved: !!b.on, approvedAt: b.on ? new Date().toISOString() : null, status: b.on ? 'approved' : undefined, skip: b.on ? false : s.skip }), `social: ${b.on ? 'approve' : 'unapprove'} ${x}`);
+      for (const x of ids) await patchPost(conf, x, (s) => (s.status === 'posted' || s.status === 'posting') ? undefined : ({ ...s, approved: b.on ? true : false, approvedAt: b.on ? new Date().toISOString() : null, status: b.on ? 'approved' : undefined, skip: b.on ? false : s.skip }), `social: ${b.on ? 'approve' : 'unapprove'} ${x}`);
       return json({ ok: true });
     }
-    if (a === 'skip') { await patchPost(conf, id, (s) => ({ ...s, skip: !!b.on, approved: b.on ? false : s.approved, status: undefined })); return json({ ok: true }); }
+    if (a === 'settings') {
+      await mutateJson(conf, STATE_PATH, (st) => { const n = st && st.posts ? st : { posts: {} }; n.settings = { ...(n.settings || {}), auto: !!b.auto }; n.updated = new Date().toISOString(); return n; }, `social: auto-post ${b.auto ? 'on' : 'off'}`, { posts: {} });
+      return json({ ok: true, auto: !!b.auto });
+    }
+    if (a === 'skip') { await patchPost(conf, id, (s) => (s.status === 'posted' || s.status === 'posting') ? undefined : ({ ...s, skip: !!b.on, status: undefined })); return json({ ok: true }); }
     if (a === 'edit') {
       await patchPost(conf, id, (s) => {
         const n = { ...s };

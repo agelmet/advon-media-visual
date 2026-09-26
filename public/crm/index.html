@@ -1664,6 +1664,13 @@ body.dark .ld-book .row button,body.dark .ld-book .row input{background:var(--su
 @media(max-width:760px){ .cf-grid{grid-template-columns:1fr;} }
 
 
+
+/* Meta tab — after Year, set apart with a separator and the Instagram gradient (26 Sept 2026) */
+.tab-sep{flex:0 0 1px; align-self:stretch; margin:5px 4px; background:var(--line);}
+.tab.tab-meta{display:inline-flex; align-items:center; gap:6px; color:#C13584; background:linear-gradient(135deg,rgba(254,218,117,.18),rgba(214,41,118,.12) 55%,rgba(79,91,213,.12)); border:1px solid rgba(214,41,118,.28);}
+.tab.tab-meta:hover:not(.active){color:#a02a6e; background:linear-gradient(135deg,rgba(254,218,117,.3),rgba(214,41,118,.2) 55%,rgba(79,91,213,.2));}
+.tab.tab-meta.active{color:#fff; border-color:transparent; background:linear-gradient(135deg,#F58529 0%,#DD2A7B 45%,#8134AF 75%,#515BD4 100%); box-shadow:0 3px 12px rgba(221,42,123,.35);}
+body.dark .tab.tab-meta:not(.active){color:#ff7ab8;}
 /* ---------- Meta (25 Sept 2026) — Instagram + Facebook posts prepared by Claude, approved here, published by the server ---------- */
 #view-meta{max-width:1600px; margin:0 auto; padding:18px 24px 80px;}
 .mt-head{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:14px;}
@@ -1697,6 +1704,7 @@ body.dark .ld-book .row button,body.dark .ld-book .row input{background:var(--su
 .mt-pill{ font-size:11.5px; font-weight:700; padding:5px 9px; border-radius:999px; white-space:nowrap;}
 .mt-pill.draft{background:var(--yellow-soft); color:#9a7400;}
 .mt-pill.approved{background:var(--blue-soft); color:var(--brand);}
+.mt-pill.scheduled{background:linear-gradient(135deg,rgba(245,133,41,.14),rgba(221,42,123,.14)); color:#B8246C;}
 .mt-pill.posting{background:var(--cyan-soft); color:#0b8aa6;}
 .mt-pill.posted{background:var(--green-soft); color:var(--deep);}
 .mt-pill.partial,.mt-pill.failed{background:var(--red-soft); color:var(--red);}
@@ -1728,6 +1736,17 @@ body.dark .ld-book .row button,body.dark .ld-book .row input{background:var(--su
 .mt-edit .row{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
 .mt-edit label{font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;}
 .mt-empty{padding:40px; text-align:center; color:var(--muted); background:var(--surface); border:1px dashed var(--line); border-radius:18px;}
+.mt-auto{display:inline-flex; align-items:center; gap:9px; padding:7px 13px 7px 8px; border-radius:999px; border:1px solid var(--line); background:var(--surface); font-weight:700; font-size:12.5px; color:var(--muted);}
+.mt-auto i{position:relative; width:34px; height:20px; border-radius:999px; background:var(--line); transition:background .15s;}
+.mt-auto i::after{content:''; position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.25); transition:transform .15s;}
+.mt-auto.on{color:var(--ink); border-color:rgba(221,42,123,.35);}
+.mt-auto.on i{background:linear-gradient(135deg,#F58529,#DD2A7B 55%,#8134AF);}
+.mt-auto.on i::after{transform:translateX(14px);}
+.mt-months{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;}
+.mt-months button{padding:7px 13px; border-radius:999px; border:1px solid var(--line); background:var(--surface); font-weight:700; font-size:12.5px; color:var(--muted);}
+.mt-months button small{font-weight:600; margin-left:5px; opacity:.75; font-variant-numeric:tabular-nums;}
+.mt-months button.on{background:var(--ink); color:var(--surface); border-color:var(--ink);}
+.mt-next{font-weight:700;}
 #mtOverlay .modal{max-width:560px;}
 .mt-modal{padding:22px 22px 18px; display:grid; gap:12px; font-size:13.5px; line-height:1.55; overflow:auto;}
 .mt-modal h3{font-size:18px;}
@@ -2234,7 +2253,6 @@ body.dark .rm-new input{background:var(--surface);}
     <nav class="tabs" role="tablist">
       <button class="tab active" data-view="home">Home</button>
       <button class="tab" data-view="chats">Chats<span class="tab-n" id="chatsTabN" hidden>0</span></button>
-      <button class="tab" data-view="meta">Meta</button>
       <button class="tab" data-view="quicklog">Quick Log</button>
       <button class="tab" data-view="leads">Leads</button>
       <button class="tab" data-view="board">Board</button>
@@ -2246,6 +2264,8 @@ body.dark .rm-new input{background:var(--surface);}
       <button class="tab" data-view="renewals">Renewals</button>
       <button class="tab" data-view="remaining">Remaining</button>
       <button class="tab" data-view="year">Year</button>
+      <span class="tab-sep" aria-hidden="true"></span>
+      <button class="tab tab-meta" data-view="meta"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg>Meta</button>
     </nav>
     <div class="topbar-right">
       <div class="search-wrap">
@@ -2420,12 +2440,14 @@ body.dark .rm-new input{background:var(--surface);}
     <h2>Meta</h2><span class="mt-month" id="mtMonth"></span>
     <span class="mt-conn" id="mtConn"><i></i><span>Not connected</span></span>
     <span class="mt-sp"></span>
+    <button class="mt-auto" id="mtAuto" role="switch" aria-checked="true" title="Auto-post: every post goes out on its own date and time"><i></i><span>Auto-post</span></button>
     <button class="mt-btn" id="mtConnectBtn">Connect Instagram &amp; Facebook</button>
-    <button class="mt-btn pri" id="mtApproveAll">Approve all drafts</button>
+    <button class="mt-btn pri" id="mtApproveAll" style="display:none">Approve all drafts</button>
     <button class="mt-btn" id="mtRefresh" title="Check again">↻</button>
   </div>
+  <div class="mt-months" id="mtMonths" role="tablist"></div>
   <div class="mt-stats" id="mtStats"></div>
-  <div class="mt-help" id="mtHelp">Claude prepares the month here. <b>Approve</b> a post and it goes out by itself on its day and time, on Instagram and Facebook together. <b>Post now</b> publishes it at once. Nothing is posted without your approval.</div>
+  <div class="mt-help" id="mtHelp"></div>
   <div class="mt-grid" id="mtGrid"><div class="mt-empty">Loading the posts…</div></div>
 </main>
 <div class="overlay" id="mtOverlay">
@@ -8870,9 +8892,10 @@ function renderHomeChats(){
 
 /* ---------- Meta tab (25 Sept 2026) — posts come from agelmet/advon-social (plan.json + images/reels on drafts.advonmedia.com),
    approvals/edits/results live in the data repo (social/state.json) through /api/social. The server publishes:
-   approved posts at their time (every 30 min check), «Post now» at once. ---------- */
+   approved posts at their time (every 30 min check), «Post now» at once.
+   26 Sept 2026: Auto-post (default on) — every post counts as approved unless held/skipped; month filter; tab after Year. ---------- */
 const SOCIAL_URL='/api/social';
-const Meta={ posts:[], meta:{connected:false}, base:'', month:'', lastAt:0, busy:false, open:{}, edit:null, confirm:null, slide:{}, timer:null,
+const Meta={ posts:[], all:[], auto:true, mf:null, meta:{connected:false}, base:'', month:'', lastAt:0, busy:false, open:{}, edit:null, confirm:null, slide:{}, timer:null,
   async pull(force){
     if(!SYNC_TOKEN) return;
     if(this.busy && !force) return; this.busy=true;
@@ -8880,10 +8903,10 @@ const Meta={ posts:[], meta:{connected:false}, base:'', month:'', lastAt:0, busy
       const r=await fetch(SOCIAL_URL+'?t='+Date.now(),{headers:{'x-crm-auth':SYNC_TOKEN},cache:'no-store'});
       const j=await r.json().catch(()=>({}));
       if(!r.ok||!j.ok){ $('#mtGrid').innerHTML=`<div class="mt-empty">Could not load the posts — ${esc(j.error||('error '+r.status))}</div>`; return; }
-      this.posts=j.posts||[]; this.meta=j.meta||{connected:false}; this.base=j.base||''; this.month=j.month||''; this.lastAt=Date.now();
+      this.all=j.posts||[]; this.auto=j.auto!==false; this.meta=j.meta||{connected:false}; this.base=j.base||''; this.month=j.month||''; this.lastAt=Date.now();
       this.render();
       clearTimeout(this.timer);
-      if(this.posts.some(p=>p.status==='posting')) this.timer=setTimeout(()=>{ if(curView==='meta') this.pull(true); },8000);
+      if(this.all.some(p=>p.status==='posting')) this.timer=setTimeout(()=>{ if(curView==='meta') this.pull(true); },8000);
     }catch(e){ $('#mtGrid').innerHTML='<div class="mt-empty">No connection — try again in a moment.</div>'; }
     finally{ this.busy=false; }
   },
@@ -8898,9 +8921,9 @@ const Meta={ posts:[], meta:{connected:false}, base:'', month:'', lastAt:0, busy
   },
   url(p){ return /^https?:/.test(p)?p:this.base+p; },
   when(p){ const d=new Date(p.date+'T12:00:00'); return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})+' · '+p.time; },
-  status(p){ return ({draft:'Draft',approved:'Approved ✓',posting:'Posting…',posted:'Posted ✓',partial:'Posted in part',failed:'Not posted',skipped:'Skipped'})[p.status]||p.status; },
+  status(p){ if(p.status==='approved' && this.auto) return 'Scheduled ✓'; if(p.status==='draft' && this.auto) return 'On hold'; return ({draft:'Draft',approved:'Approved ✓',posting:'Posting…',posted:'Posted ✓',partial:'Posted in part',failed:'Not posted',skipped:'Skipped'})[p.status]||p.status; },
   media(p){
-    if(p.type==='reel') return `<div class="mt-media"><video src="${esc(this.url(p.media[0]))}" poster="${esc(p.cover?this.url(p.cover):'')}" controls playsinline preload="none" muted></video></div>`;
+    if(p.type==='reel') return `<div class="mt-media"><video src="${esc(this.url(p.media[0]))}" poster="${esc(p.cover?this.url(p.cover):'')}" controls playsinline preload="none"></video></div>`;
     const n=p.media.length;
     return `<div class="mt-media"><div class="mt-track" data-track="${esc(p.id)}">${p.media.map((m,i)=>`<img src="${esc(this.url(m))}" alt="Slide ${i+1}" loading="lazy">`).join('')}</div>
       ${n>1?`<span class="mt-count" data-count="${esc(p.id)}">1/${n}</span><button class="mt-nav l" data-mv="-1" data-id="${esc(p.id)}" aria-label="Previous">‹</button><button class="mt-nav r" data-mv="1" data-id="${esc(p.id)}" aria-label="Next">›</button>`:''}</div>`;
@@ -8914,7 +8937,7 @@ const Meta={ posts:[], meta:{connected:false}, base:'', month:'', lastAt:0, busy
   card(p){
     const id=esc(p.id), open=this.open[p.id], ed=this.edit===p.id, cf=this.confirm===p.id;
     const cls=['mt-card', p.status==='posted'?'is-posted':'', p.status==='skipped'?'is-skip':''].join(' ');
-    const head=`<div class="mt-top"><div class="mt-date">${esc(this.when(p))}<small>${esc(p.title||'')}</small></div><span class="mt-type ${p.type==='reel'?'reel':''}">${p.type==='reel'?'Reel':'Carousel · '+p.media.length}</span><span class="mt-pill ${esc(p.status)}">${esc(this.status(p))}</span></div>`;
+    const head=`<div class="mt-top"><div class="mt-date">${esc(this.when(p))}<small>${esc(p.title||'')}</small></div><span class="mt-type ${p.type==='reel'?'reel':''}">${p.type==='reel'?'Reel':'Carousel · '+p.media.length}</span><span class="mt-pill ${esc(p.status==='approved'&&this.auto?'scheduled':p.status)}">${esc(this.status(p))}</span></div>`;
     const body=`<div class="mt-body"><div class="mt-cap ${open?'open':''}">${esc(p.caption||'')}<span class="tags">${esc(p.hashtags||'')}</span></div><button class="mt-more" data-more="${id}">${open?'Show less':'Show the whole caption'}</button>${p.edited?'<span class="mt-edited">edited by you</span>':''}</div>`;
     let tail='';
     if(ed){
@@ -8929,7 +8952,7 @@ const Meta={ posts:[], meta:{connected:false}, base:'', month:'', lastAt:0, busy
       const reel=p.type==='reel'?`<button class="mt-btn" data-share="${id}" title="On your phone: opens the share sheet — pick Instagram to add trending music, or Save Video">📱 To my phone</button>`:'';
       const retry=(p.status==='partial')?`<button class="mt-btn warn" data-retry="${id}">Try the missing one again</button>`:'';
       tail=`<div class="mt-acts">
-        ${done||busy?'':`<button class="mt-btn ${p.approved?'':'pri'}" data-approve="${id}" data-on="${p.approved?0:1}">${p.approved?'Take back approval':'Approve'}</button>`}
+        ${done||busy||p.skip?'':this.auto?`<button class="mt-btn ${p.approved?'':'pri'}" data-approve="${id}" data-on="${p.approved?0:1}">${p.approved?'Hold':'Schedule again'}</button>`:`<button class="mt-btn ${p.approved?'':'pri'}" data-approve="${id}" data-on="${p.approved?0:1}">${p.approved?'Take back approval':'Approve'}</button>`}
         ${done||busy?'':`<button class="mt-btn" data-post="${id}">Post now</button>`}
         ${retry}${reel}
         ${done||busy?'':`<button class="mt-btn" data-edit="${id}">Edit</button>`}
@@ -8943,10 +8966,22 @@ const Meta={ posts:[], meta:{connected:false}, base:'', month:'', lastAt:0, busy
     c.classList.toggle('on',!!this.meta.connected);
     c.querySelector('span').textContent=this.meta.connected?('Connected · @'+(this.meta.igUsername||'instagram')+(this.meta.pageName?' + '+this.meta.pageName:'')):'Not connected';
     $('#mtConnectBtn').textContent=this.meta.connected?'Connection':'Connect Instagram & Facebook';
-    $('#mtMonth').textContent=this.month||'';
-    const P=this.posts, n=k=>P.filter(p=>p.status===k).length;
-    $('#mtStats').innerHTML=[['Planned',P.length],['Drafts',n('draft')],['Approved',n('approved')],['Posted',n('posted')],['Need a look',n('failed')+n('partial')]].map(([k,v])=>`<div class="mt-stat"><b>${v}</b><span>${k}</span></div>`).join('');
-    $('#mtApproveAll').disabled=!n('draft');
+    const MN=m=>new Date(m+'-15T12:00:00').toLocaleDateString('en-GB',{month:'long'});
+    const months=[...new Set(this.all.map(p=>p.month||String(p.date).slice(0,7)))].sort();
+    const now=new Date().toISOString().slice(0,7);
+    if(!this.mf || (this.mf!=='all' && !months.includes(this.mf))) this.mf=months.find(m=>m>=now)||months[months.length-1]||'all';
+    $('#mtMonth').textContent=months.length>1?(MN(months[0])+' – '+MN(months[months.length-1])+' '+months[months.length-1].slice(0,4)):(this.month||'');
+    $('#mtMonths').innerHTML=months.length>1?[...months.map(m=>[m,MN(m),this.all.filter(p=>(p.month||String(p.date).slice(0,7))===m).length]),['all','All',this.all.length]].map(([k,l,c])=>`<button data-mf="${k}" class="${this.mf===k?'on':''}">${esc(l)}<small>${c}</small></button>`).join(''):'';
+    const P=this.posts=this.mf==='all'?this.all:this.all.filter(p=>(p.month||String(p.date).slice(0,7))===this.mf), n=k=>P.filter(p=>p.status===k).length;
+    const au=$('#mtAuto'); au.classList.toggle('on',this.auto); au.setAttribute('aria-checked',String(this.auto)); au.querySelector('span').textContent='Auto-post '+(this.auto?'on':'off');
+    const nx=this.all.filter(p=>p.status==='approved').sort((x,y)=>(x.date+x.time).localeCompare(y.date+y.time))[0];
+    $('#mtHelp').innerHTML=(this.auto
+      ?'<b>Auto-post is on.</b> Every post goes out by itself on its day and time, on Instagram and Facebook together. <b>Hold</b> or <b>Skip</b> any post you don\'t want; <b>Post now</b> publishes at once.'
+      :'<b>Auto-post is off.</b> Only posts you <b>Approve</b> go out on their day and time. <b>Post now</b> publishes at once.')
+      +(this.meta.connected?'':' <b>Nothing can go out until Instagram &amp; Facebook are connected</b> — scheduled posts simply wait.')
+      +(nx?` <span class="mt-next">Next: ${esc(this.when(nx))} — ${esc(nx.title||'')}</span>`:'');
+    $('#mtStats').innerHTML=[['Planned',P.length],[this.auto?'Scheduled':'Approved',n('approved')],[this.auto?'On hold':'Drafts',n('draft')],['Posted',n('posted')],['Skipped',n('skipped')],['Need a look',n('failed')+n('partial')]].map(([k,v])=>`<div class="mt-stat"><b>${v}</b><span>${k}</span></div>`).join('');
+    $('#mtApproveAll').style.display=this.auto?'none':''; $('#mtApproveAll').disabled=!n('draft');
     $('#mtGrid').innerHTML=P.length?P.map(p=>this.card(p)).join(''):'<div class="mt-empty">No posts prepared yet.</div>';
   },
   async share(p){
@@ -8974,7 +9009,7 @@ const Meta={ posts:[], meta:{connected:false}, base:'', month:'', lastAt:0, busy
     const d=t.dataset, P=id=>Meta.posts.find(p=>p.id===id);
     if(d.mv){ const tr=grid.querySelector(`[data-track="${CSS.escape(d.id)}"]`); if(tr) tr.scrollBy({left:tr.clientWidth*Number(d.mv),behavior:'smooth'}); return; }
     if(d.more){ Meta.open[d.more]=!Meta.open[d.more]; Meta.render(); return; }
-    if(d.approve){ await Meta.act('approve',{id:d.approve,on:d.on==='1'},d.on==='1'?'Approved — it goes out on its day':'Approval taken back'); return; }
+    if(d.approve){ await Meta.act('approve',{id:d.approve,on:d.on==='1'},d.on==='1'?(Meta.auto?'Scheduled again':'Approved — it goes out on its day'):(Meta.auto?'On hold — it won\'t go out':'Approval taken back')); return; }
     if(d.skip){ await Meta.act('skip',{id:d.skip,on:d.on==='1'},d.on==='1'?'Skipped':'Back in the plan'); return; }
     if(d.post){ if(!Meta.meta.connected){ toast('Connect Instagram & Facebook first'); Meta.openConnect(); return; } Meta.confirm=d.post; Meta.edit=null; Meta.render(); return; }
     if(d.postyes){ Meta.confirm=null; toast('Posting — this takes a minute or two'); await Meta.act('post',{id:d.postyes}); return; }
@@ -8988,6 +9023,8 @@ const Meta={ posts:[], meta:{connected:false}, base:'', month:'', lastAt:0, busy
   });
   grid.addEventListener('scroll',e=>{ const tr=e.target; if(!tr.dataset||!tr.dataset.track) return; const c=grid.querySelector(`[data-count="${CSS.escape(tr.dataset.track)}"]`); if(c){ const n=tr.children.length; c.textContent=(Math.min(n,Math.round(tr.scrollLeft/tr.clientWidth)+1))+'/'+n; } },true);
   $('#mtRefresh').addEventListener('click',()=>Meta.pull(true));
+  $('#mtMonths').addEventListener('click',e=>{ const b=e.target.closest('[data-mf]'); if(!b) return; Meta.mf=b.dataset.mf; Meta.render(); });
+  $('#mtAuto').addEventListener('click',async()=>{ const on=!Meta.auto; await Meta.act('settings',{auto:on},on?'Auto-post on — every post goes out on its date':'Auto-post off — only approved posts go out'); });
   $('#mtApproveAll').addEventListener('click',async()=>{ const ids=Meta.posts.filter(p=>p.status==='draft').map(p=>p.id); if(!ids.length) return; await Meta.act('approve',{ids,on:true},ids.length+' posts approved'); });
   $('#mtConnectBtn').addEventListener('click',()=>Meta.openConnect());
   $('#mtCancel').addEventListener('click',()=>$('#mtOverlay').classList.remove('open'));
