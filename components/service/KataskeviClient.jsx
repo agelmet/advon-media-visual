@@ -211,9 +211,11 @@ export default function KataskeviClient() {
               </p>
             </div>
           </ScrollReveal>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          {/* 4 / 6 / 12 track grid, every card spans 2 tracks → 2 / 3 / 6 cards a row.
+              An unfinished last row is centred by giving its first card a start track. */}
+          <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3">
             {portfolioData.map((item, index) => (
-              <PortfolioCard key={index} item={item} lang={lang} />
+              <PortfolioCard key={index} item={item} lang={lang} cls={lastRowStart(index, portfolioData.length)} />
             ))}
           </div>
         </div>
@@ -225,14 +227,30 @@ export default function KataskeviClient() {
   );
 }
 
+/* Centre an unfinished last row: the class for the first card of that row at each breakpoint. */
+const START = {
+  base: { 1: 'col-start-2' },
+  md: { 1: 'md:col-start-3', 2: 'md:col-start-2' },
+  lg: { 1: 'lg:col-start-6', 2: 'lg:col-start-5', 3: 'lg:col-start-4', 4: 'lg:col-start-3', 5: 'lg:col-start-2' },
+};
+function lastRowStart(i, n) {
+  const at = (cols) => { const r = n % cols; return r && i === n - r ? r : 0; };
+  const b = at(2), m = at(3), l = at(6);
+  const out = [];
+  if (b) out.push(START.base[b]);
+  if (m) out.push(START.md[m]); else if (b) out.push('md:col-start-auto');
+  if (l) out.push(START.lg[l]); else if (b || m) out.push('lg:col-start-auto');
+  return out.join(' ');
+}
+
 /* ─── Portfolio card (kept from previous version) ─── */
-function PortfolioCard({ item, lang }) {
+function PortfolioCard({ item, lang, cls = '' }) {
   return (
     <a
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group img-shine relative overflow-hidden rounded-2xl border border-white/8 block bg-[#050a0e] glow-border-hover shadow-lg transition-transform duration-500 hover:-translate-y-1.5"
+      className={`col-span-2 ${cls} group img-shine relative overflow-hidden rounded-2xl border border-white/8 block bg-[#050a0e] glow-border-hover shadow-lg transition-transform duration-500 hover:-translate-y-1.5`}
       style={{ aspectRatio: '4/3' }}
     >
       <Image
