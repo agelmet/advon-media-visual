@@ -7634,17 +7634,17 @@ function demoSeed(){
   const phone=()=>'69'+ri(10000000,99999999);
   const times=['09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','16:00','17:00','17:30','18:00','18:30','19:00'];
 
-  const biz=['Ψυχολόγος','Ψυχοθεραπεύτρια','Οδοντίατρος','Παιδίατρος','Λογιστής','Δικηγόρος','Φυσικοθεραπευτής','Διαιτολόγος','Οφθαλμίατρος','Καρδιολόγος','Λογοθεραπεύτρια','Γυναικολόγος','Δερματολόγος','Παθολόγος','Ορθοδοντικός','Σύμβουλος ψυχικής υγείας','Κομμωτήριο','Γυμναστήριο','Ξενοδοχείο','Εστιατόριο'];
+  const biz=['Κομμωτήριο','Ζαχαροπλαστείο','Ταβέρνα','Συνεργείο','Φαρμακείο','Δικηγορικό γραφείο','Λογιστικό γραφείο','Γυμναστήριο','Κρεοπωλείο','Ανθοπωλείο','Φούρνος','Καφετέρια','Οδοντιατρείο','Κτηνιατρείο','Φυσικοθεραπευτήριο','Ξενοδοχείο','Ενοικιαζόμενα','Οπτικά','Ηλεκτρολόγος','Υδραυλικός','Σχολή οδηγών','Studio γιόγκα','Βιβλιοπωλείο','Καθαριστήριο','Ψητοπωλείο','Κάβα','Κοσμηματοπωλείο','Παιδικός σταθμός','Ασφαλιστικό γραφείο','Μεσιτικό γραφείο'];
   const first=['Γιώργος','Μαρία','Νίκος','Ελένη','Δημήτρης','Κατερίνα','Κώστας','Σοφία','Θανάσης','Αναστασία','Παναγιώτης','Χριστίνα','Βασίλης','Ιωάννα','Αντώνης','Δέσποινα','Στέλιος','Ευαγγελία','Μιχάλης','Αγγελική'];
   const last=['Παπαδόπουλος','Γεωργίου','Νικολάου','Οικονόμου','Παππάς','Βασιλείου','Αντωνίου','Δημητρίου','Καραγιάννης','Μακρής','Αθανασίου','Ιωαννίδης','Κωνσταντίνου','Πετρίδης','Αλεξίου','Χατζής','Σαμαράς','Λάμπρου'];
   const brand=['Aura','Nostos','Kyma','Elia','Thalassa','Ilios','Petra','Vita','Fresh','Lumen','Nova','Orizontas','Mikro','Zest','Avra','Nefeli','Argo','Kalos'];
   const cities=['Αθήνα','Θεσσαλονίκη','Πάτρα','Ηράκλειο','Λάρισα','Βόλος','Χανιά','Ιωάννινα','Καλαμάτα','Ρόδος'];
   const used=new Set();
-  const bizName=()=>{ for(let i=0;i<50;i++){ const n= chance(.85) ? pick(first)+' '+pick(last)+' · '+pick(biz) : pick(biz)+' '+pick(brand); if(!used.has(n)){ used.add(n); return n; } } return pick(biz)+' '+ri(1,99); };
+  const bizName=()=>{ for(let i=0;i<50;i++){ const n= chance(.55) ? pick(biz)+' '+pick(brand) : pick(biz)+' '+pick(last); if(!used.has(n)){ used.add(n); return n; } } return pick(biz)+' '+ri(1,99); };
   const personName=()=>pick(first)+' '+pick(last);
   const notes=['Θέλει δίγλωσση σελίδα','Να βάλουμε Google Maps','Στέλνει φωτογραφίες Δευτέρα','Viber μόνο απόγευμα','Χρειάζεται λογότυπο','Θέλει φόρμα κράτησης','Να προσθέσουμε menu PDF','Περιμένει κείμενα από τη σύζυγο','Domain από Papaki — έτοιμο','Θέλει να δει 2 χρώματα'];
   const lostReasons=['Βρήκε φθηνότερη προσφορά','Άλλαξε γνώμη','Δεν είχε μπάτζετ','Σταμάτησε να απαντάει','Το ανέβαλε για του χρόνου'];
-  const extrasPool=[['Φόρμα επικοινωνίας',50],['Ενότητα άρθρων',70],['Πίνακας διαχείρισης',180],['Google Business Profile',90],['NFC review stand',40]];
+  const extrasPool=[['NFC review stand',40],['Google Business Profile',60],['Λογότυπο',80],['Επιπλέον σελίδα',50],['Email setup',30]];
 
   const S={clients:[],logs:[],warm:[],sched:[],renewals:[],todos:[],subs:[],ideas:[],asap:[],targets:{yearly:{},monthly:{},spread:true},workdays:{},
     expenses:{perWebsite:9.3,claudeSept2026:true,recurring:[{id:uid(),name:'Claude',amount:18,months:{[Y+'-09']:88}},{id:uid(),name:'Hosting & tools',amount:35,months:{}},{id:uid(),name:'Ασφάλιση / Insurance',amount:160,months:{}}]},
@@ -7655,14 +7655,14 @@ function demoSeed(){
   const monthKeys=[]; for(let i=-8;i<=1;i++) monthKeys.push(keyOf(Y,M+i));
   monthKeys.forEach((key,idx)=>{
     const ago=(monthKeys.length-1)-idx;          /* 9 = oldest … 1 = this month … 0 = next month */
-    const n= ago===0 ? ri(18,30) : ago===1 ? ri(45,70) : ri(52,98);   /* 50–100 clients a month, like the real thing */
+    const n= ago===0 ? ri(3,4) : ago===1 ? ri(6,8) : ri(5,8);
     for(let i=0;i<n;i++){
-      const value= chance(.84) ? 130 : chance(.55) ? 180 : pick([200,310,475]);   /* hosting 130€ · + form 180 · + articles 200 · + admin 310 · Growth 475 */
+      const value=ri(35,65)*10;
       let day=dayIn(key,1); if(ago===1) day= chance(.65) ? dayIn(key,1,Math.max(1,today.getDate())) : dayIn(key,today.getDate(),today.getDate()+9);
       const c={id:uid(), name:bizName(), value, day, time:pick(times), month:key, notes: chance(.5)?pick(notes):'', phone: chance(.8)?phone():'', viber:'', email: chance(.35)?('info@'+pick(brand).toLowerCase()+ri(1,99)+'.gr'):'', created:tsOf(day)-ri(1,5)*864e5, updated:tsOf(day)};
-      if(chance(.18)){ const e=pick(extrasPool); c.extras=[{id:uid(),name:e[0],value:e[1]}]; }
+      if(chance(.28)){ const e=pick(extrasPool); c.extras=[{id:uid(),name:e[0],value:e[1]}]; }
       if(ago===0){ c.stage='booked'; }
-      else if(ago===1){ const age=(Date.parse(T)-Date.parse(day))/864e5; c.stage= day>T ? 'booked' : age>=10 ? pick(['paid','paid','paid','paid','paid','pay','changes','lost']) : age>=5 ? pick(['paid','paid','pay','review','changes','thinking']) : pick(['needinfo','building','building','review','thinking']); }   /* hosting is paid at the first draft (4–10 days), so older clients of the month are mostly paid */
+      else if(ago===1){ c.stage= day>T ? 'booked' : pick(['needinfo','building','review','changes','pay','paid','paid','thinking']); }
       else if(ago===2){ c.stage=pick(['paid','paid','paid','pay','changes','review','paid']); }
       else { const r=rnd(); c.stage= r<.78 ? 'paid' : r<.9 ? 'pay' : r<.95 ? 'changes' : 'lost'; }
       if(c.stage==='lost'){ c.lostReason=pick(lostReasons); c.lostAt=tsOf(day)+3*864e5; }
@@ -7674,16 +7674,16 @@ function demoSeed(){
     }
   });
   /* this week's meetings + one client still deciding after the meeting */
-  for(let i=0;i<12;i++){ const d=new Date(today); d.setDate(d.getDate()+ri(0,5)); const day=isoDate(d);
-    S.clients.push({id:uid(), name:bizName(), value:130, day, time:pick(times), month:day.slice(0,7), notes: chance(.5)?pick(notes):'', phone:phone(), viber:'', email:'', stage:'booked', created:Date.now()-ri(1,4)*864e5, updated:Date.now()}); }
+  for(let i=0;i<3;i++){ const d=new Date(today); d.setDate(d.getDate()+ri(0,5)); const day=isoDate(d);
+    S.clients.push({id:uid(), name:bizName(), value:ri(38,58)*10, day, time:pick(times), month:day.slice(0,7), notes: chance(.5)?pick(notes):'', phone:phone(), viber:'', email:'', stage:'booked', created:Date.now()-ri(1,4)*864e5, updated:Date.now()}); }
   { const d=new Date(today); d.setDate(d.getDate()-9); const day=isoDate(d);
-    S.clients.push({id:uid(), name:bizName(), value:130, day, time:pick(times), month:day.slice(0,7), notes:'Θα το συζητήσει με τον συνέταιρο', phone:phone(), viber:'', email:'', stage:'thinking', thinkAt:tsOf(day), created:tsOf(day), updated:tsOf(day)}); }
+    S.clients.push({id:uid(), name:bizName(), value:ri(40,55)*10, day, time:pick(times), month:day.slice(0,7), notes:'Θα το συζητήσει με τον συνέταιρο', phone:phone(), viber:'', email:'', stage:'thinking', thinkAt:tsOf(day), created:tsOf(day), updated:tsOf(day)}); }
   /* colour the older unpaid ones so the Remaining tab shows all three flags */
   { const flags=['green','orange','red','green','orange']; let k=0;
     S.clients.filter(c=>isUnpaid(c) && c.month<keyOf(Y,M-1)).forEach(c=>{ c.remFlag=flags[k++%flags.length]; }); }
   /* two written-off clients in the Trash */
   [monthKeys[1],monthKeys[3]].forEach(key=>{ const day=dayIn(key,3,20);
-    S.clients.push({id:uid(), name:bizName(), value:130, day, time:pick(times), month:key, notes:'', phone:phone(), stage:'pay', trashed:true, trashedAt:tsOf(day)+40*864e5, trashReason:pick(['Έκλεισε η επιχείρηση','Δεν απαντά 2 μήνες','Αρνείται να πληρώσει']), trashStage:'pay', created:tsOf(day), updated:tsOf(day)}); });
+    S.clients.push({id:uid(), name:bizName(), value:ri(38,52)*10, day, time:pick(times), month:key, notes:'', phone:phone(), stage:'pay', trashed:true, trashedAt:tsOf(day)+40*864e5, trashReason:pick(['Έκλεισε η επιχείρηση','Δεν απαντά 2 μήνες','Αρνείται να πληρώσει']), trashStage:'pay', created:tsOf(day), updated:tsOf(day)}); });
 
   /* ---- cold-call log: every working day of this year until today ---- */
   const noNotes=['Δεν ενδιαφέρεται','Έχει ήδη σελίδα','Το βρήκε ακριβό','Θα το σκεφτεί','Δεν έχει χρόνο τώρα','Ρώτα ξανά του χρόνου'];
@@ -7692,38 +7692,38 @@ function demoSeed(){
   for(let d=new Date(Y,0,1); d<=today; d.setDate(d.getDate()+1)){
     const wd=d.getDay(); if(wd===0||wd===6) continue;
     if(chance(.12)) continue;                       /* the odd day off */
-    const iso=isoDate(d); const calls=ri(28,48);
+    const iso=isoDate(d); const calls=ri(12,28);
     for(let i=0;i<calls;i++){
-      const r=rnd(); const type= r<.11 ? 'g' : r<.34 ? 'y' : 'r';
-      S.logs.push({id:uid(), type, name:contact(), value: type==='g'?130:0, source: chance(.9)?'cold':pick(['referral','form','other']), note: type==='r'?(chance(.4)?pick(noNotes):''):type==='y'?(chance(.5)?pick(smsNotes):''):'', date:iso, created:tsOf(iso)+i*600000, updated:tsOf(iso)+i*600000});
+      const r=rnd(); const type= r<.08 ? 'g' : r<.32 ? 'y' : 'r';
+      S.logs.push({id:uid(), type, name:contact(), value: type==='g'?ri(35,60)*10:0, source: chance(.9)?'cold':pick(['referral','form','other']), note: type==='r'?(chance(.4)?pick(noNotes):''):type==='y'?(chance(.5)?pick(smsNotes):''):'', date:iso, created:tsOf(iso)+i*600000, updated:tsOf(iso)+i*600000});
     }
-    if(chance(.6)) S.logs.push({id:uid(), type:'g', name:contact(), value:130, source:pick(['referral','form']), note:'', date:iso, created:tsOf(iso)+40000000, updated:tsOf(iso)+40000000});
+    if(chance(.25)) S.logs.push({id:uid(), type:'g', name:contact(), value:ri(35,60)*10, source:pick(['referral','form']), note:'', date:iso, created:tsOf(iso)+40000000, updated:tsOf(iso)+40000000});
   }
 
   /* ---- renewals: a year of them, a few overdue, some already renewed this year ---- */
-  for(let i=0;i<150;i++){
+  for(let i=0;i<30;i++){
     const off=ri(-40,340); const d=new Date(today); d.setDate(d.getDate()+off); const date=isoDate(d);
-    const r={id:uid(), name:bizName(), value:pick([130,130,130,130,120,100]), date, history:[], created:Date.now()-400*864e5};
+    const r={id:uid(), name:bizName(), value:pick([60,60,80,90,100,120,150]), date, history:[], created:Date.now()-400*864e5};
     if(chance(.6)){ const prev=new Date(d); prev.setFullYear(prev.getFullYear()-1); const paid=new Date(prev); paid.setDate(paid.getDate()-ri(0,6));
       r.history.push({id:uid(), at:isoDate(paid), value:r.value, due:isoDate(prev)}); r.lastRenewed=isoDate(paid); }
     S.renewals.push(r);
   }
   /* renewed earlier THIS year: they now sit ~a year ahead */
-  for(let i=0;i<60;i++){
+  for(let i=0;i<9;i++){
     const off=ri(-240,-8); const d=new Date(today); d.setDate(d.getDate()+off); const due=isoDate(d);
     if(!due.startsWith(String(Y))) continue;
     const paid=new Date(d); paid.setDate(paid.getDate()-ri(0,5));
     const next=new Date(d); next.setFullYear(next.getFullYear()+1);
-    const r={id:uid(), name:bizName(), value:pick([130,130,120,100]), date:isoDate(next), history:[{id:uid(), at:isoDate(paid), value:0, due}], lastRenewed:isoDate(paid), created:Date.now()-500*864e5};
+    const r={id:uid(), name:bizName(), value:pick([60,80,100,120]), date:isoDate(next), history:[{id:uid(), at:isoDate(paid), value:0, due}], lastRenewed:isoDate(paid), created:Date.now()-500*864e5};
     r.history[0].value=r.value; S.renewals.push(r);
   }
   /* lost — two clients who will not renew (fixed, so the rest of the seed stays the same) */
-  [['Studio Lumen',130,26,12],['Kafe Anemos',100,58,30]].forEach(([n,v,ahead,ago])=>{ const d=new Date(today); d.setDate(d.getDate()+ahead); const l=new Date(today); l.setDate(l.getDate()-ago);
+  [['Studio Lumen',80,26,12],['Kafe Anemos',60,58,30]].forEach(([n,v,ahead,ago])=>{ const d=new Date(today); d.setDate(d.getDate()+ahead); const l=new Date(today); l.setDate(l.getDate()-ago);
     S.renewals.push({id:uid(), name:n, value:v, date:isoDate(d), note:'domain will not be renewed', history:[], created:Date.now()-420*864e5, lost:true, lostAt:isoDate(l)}); });
 
   /* ---- monthly subscriptions ---- */
-  for(let i=0;i<28;i++){
-    const s={id:uid(), name:bizName(), value:pick([15,15,15,15,15,49]), renewDay:ri(1,28), paid:{}, created:Date.now()-300*864e5};
+  for(let i=0;i<7;i++){
+    const s={id:uid(), name:bizName(), value:pick([11.5,11.5,15,20,25]), renewDay:ri(1,28), paid:{}, created:Date.now()-300*864e5};
     for(let m=1;m<=M;m++){ const key=Y+'-'+pad(m); if(m<M || s.renewDay<=today.getDate() || chance(.5)) { if(!(m===M && chance(.3))) s.paid[key]=true; } }
     S.subs.push(s);
   }
@@ -7753,7 +7753,7 @@ function demoSeed(){
   [-1,0,0,1,2,2,4].forEach((k,i)=>S.sched.push({id:uid(), name:bizName(), phone:phone(), month:keyOf(Y,M+k), note:pick(['«Πάρε με μετά τις διακοπές»','Ανοίγει νέο κατάστημα','Θα έχει μπάτζετ τότε','']), done:false, created:Date.now()-ri(10,60)*864e5}));
   S.sched.push({id:uid(), name:bizName(), phone:phone(), month:keyOf(Y,M), note:'Είπε ναι — κλείσαμε ραντεβού', done:true, doneAt:Date.now()-2*864e5, created:Date.now()-30*864e5});
   [['Πάρε τον '+pick(first)+' για την πληρωμή',true],['Στείλε το draft στο ζαχαροπλαστείο',false],['Ανανέωσε τα domains που λήγουν αυτόν τον μήνα',false],['Γράψε 3 posts για Instagram',false]].forEach(([text,hot],i)=>S.asap.push({id:uid(), text, hot, done:false, created:Date.now(), sort:i}));
-  for(let m=1;m<=12;m++) S.targets.monthly[Y+'-'+pad(m)]= m<=M ? pick([8000,9000,10000,10000,12000]) : 10000;
+  for(let m=1;m<=12;m++) S.targets.monthly[Y+'-'+pad(m)]= m<=M ? pick([3000,3200,3500,3500,4000]) : 3500;
   /* Leads — the cold-calling list (demo: 48 professionals from doctoranytime-style data) */
   S.leads=[];
   (function(){

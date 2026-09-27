@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useLangStore } from '@/store/langStore';
 import ScrollReveal from '@/components/ScrollReveal';
+import { SOCIALS, SocialIcon } from '@/components/Socials';
 
 // Zoho Bookings inline embed.
 //
@@ -18,9 +19,13 @@ const ZOHO_BOOKING_URL =
 const ZOHO_SCRIPT_ID = 'zoho-bookings-embed';
 const ZOHO_PARENT_ID = 'zoho-booking-inline';
 
+const inputCls =
+  'w-full bg-[#050a0e]/60 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-electric-cyan focus:shadow-[0_0_0_3px_rgba(71,200,245,0.15),0_0_24px_rgba(71,200,245,0.18)] transition-all duration-300';
+
 export default function Contact() {
   const { lang } = useLangStore();
   const [status, setStatus] = useState('');
+  const [sent, setSent] = useState(false);
 
   // Calendar injection.
   //
@@ -87,15 +92,28 @@ export default function Contact() {
     try {
       const response = await fetch(form.action, { method: form.method, body: new FormData(form), headers: { 'Accept': 'application/json' }});
       if (response.ok) {
-        setStatus(lang === 'el' ? 'Ευχαριστούμε! Το μήνυμά σας εστάλη επιτυχώς.' : 'Thank you! Your message has been sent successfully.');
+        setStatus(lang === 'el' ? 'Ευχαριστούμε! Το μήνυμά σας εστάλη επιτυχώς — θα επικοινωνήσουμε μαζί σας εντός της ημέρας.' : 'Thank you! Your message has been sent — we will contact you within the day.');
+        setSent(true);
         form.reset();
       } else {
-        setStatus(lang === 'el' ? 'Ωχ! Υπήρξε ένα πρόβλημα.' : 'Oops! There was a problem.');
+        setStatus(lang === 'el' ? 'Ωχ! Υπήρξε ένα πρόβλημα. Στείλτε μας email στο angelos@advonmedia.com.' : 'Oops! There was a problem. Email us at angelos@advonmedia.com.');
       }
     } catch (err) {
-      setStatus(lang === 'el' ? 'Ωχ! Υπήρξε ένα πρόβλημα.' : 'Oops! There was a problem.');
+      setStatus(lang === 'el' ? 'Ωχ! Υπήρξε ένα πρόβλημα. Στείλτε μας email στο angelos@advonmedia.com.' : 'Oops! There was a problem. Email us at angelos@advonmedia.com.');
     }
   };
+
+  const tiles = [
+    {
+      key: 'email',
+      href: 'mailto:angelos@advonmedia.com',
+      title: 'Email',
+      sub: 'angelos@advonmedia.com',
+      icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7"><rect width="20" height="16" x="2" y="4" rx="2" ry="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>,
+      external: false,
+    },
+    ...SOCIALS.map((s) => ({ key: s.key, href: s.href, title: s.title, sub: s.handle, icon: <SocialIcon name={s.key} className="w-7 h-7" />, external: true })),
+  ];
 
   return (
     <section id="contact" className="py-32 relative border-t border-electric-cyan/10 bg-gradient-to-b from-[#050a0e] to-[#0a1418] z-20 overflow-hidden">
@@ -109,6 +127,8 @@ export default function Contact() {
           className="absolute rounded-full aurora"
           style={{ bottom: '-20%', right: '-12%', width: 'min(62vw, 640px)', height: 'min(62vw, 640px)', background: 'radial-gradient(circle, rgba(107,63,160,0.11) 0%, rgba(107,63,160,0.05) 32%, rgba(107,63,160,0.015) 55%, transparent 70%)', animation: 'auroraFloat2 30s ease-in-out infinite' }}
         />
+        {/* Slow rotating halo behind the two panels */}
+        <div className="absolute left-1/2 top-[46%] -translate-x-1/2 -translate-y-1/2 contact-halo" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
@@ -116,64 +136,86 @@ export default function Contact() {
         <span className="text-electric-cyan text-xs font-black tracking-[0.4em] uppercase mb-4 block drop-shadow-[0_0_15px_rgba(71,200,245,0.6)]">
           {lang === 'el' ? 'ΕΠΙΚΟΙΝΩΝΙΑ' : 'CONTACT'}
         </span>
-        <h2 className="text-4xl md:text-6xl font-black font-display mb-16 text-white">
+        <h2 className="text-4xl md:text-6xl font-black font-display mb-5 text-white">
           {lang === 'el' ? 'Ας Συνεργαστούμε' : "Let's Collaborate"}
         </h2>
+        <p className="text-gray-400 max-w-2xl mx-auto mb-14 leading-relaxed">
+          {lang === 'el'
+            ? 'Στείλτε μας δύο λόγια ή κλείστε απευθείας μια δωρεάν 15λεπτη κλήση — ό,τι σας βολεύει. Απαντάμε την ίδια μέρα.'
+            : 'Send us a few words or book a free 15-minute call directly — whichever suits you. We reply the same day.'}
+        </p>
         </ScrollReveal>
 
-        {/* The booking widget needs its own full-width row.
-            Zoho's embed switches from "calendar, then times underneath" to
-            "calendar | times side by side" somewhere between 760px and 900px of iframe
-            width — measured, not guessed. In the old two-up grid this panel was only
-            ~600px, so visitors had to pick a date and then scroll down to discover the
-            times, which is where people were dropping out. Full width gives it ~1150px
-            inside the padding on desktop, comfortably past the breakpoint. Below md it
-            stacks anyway, which is the correct mobile layout regardless. */}
-        <div className="grid gap-8 mb-16">
+        {/* Form | Booking — two equal panels side by side on desktop, stacked on phones.
+            Both cards stretch to the same height; the booking box fills whatever is left
+            under its intro so the two bottoms always line up. */}
+        <div className="grid gap-8 lg:grid-cols-2 items-stretch mb-16">
           {/* Form */}
-          <ScrollReveal direction="left" className="h-full w-full max-w-3xl mx-auto">
-          <div className="glass-panel p-8 md:p-10 rounded-3xl text-left h-full flex flex-col">
-            <h3 className="text-2xl md:text-3xl font-black mb-6 text-white font-display">{lang === 'el' ? 'Εκδήλωση Ενδιαφέροντος' : 'Express Interest'}</h3>
-            <p className="text-gray-400 mb-8">{lang === 'el' ? 'Συμπληρώστε τη φόρμα και ένας εκπρόσωπός μας θα επικοινωνήσει μαζί σας μέσω email ή τηλεφώνου εντός της ίδιας ημέρας.' : 'Fill out the form and a representative will contact you via email or phone within the same day.'}</p>
-            <form action="https://formspree.io/f/xkopgoaj" method="POST" onSubmit={handleSubmit} className="space-y-6 flex-grow flex flex-col">
-              <div>
-                <label htmlFor="cf-name" className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Όνομα / Επωνυμία' : 'Name / Company'}</label>
-                <input id="cf-name" type="text" name="name" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors" />
+          <ScrollReveal direction="left" className="h-full w-full">
+          <div className="glass-panel contact-card p-8 md:p-10 rounded-3xl text-left h-full flex flex-col">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-10 h-10 rounded-xl bg-electric-cyan/10 border border-electric-cyan/20 text-electric-cyan flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </span>
+              <h3 className="text-2xl md:text-3xl font-black text-white font-display">{lang === 'el' ? 'Εκδήλωση Ενδιαφέροντος' : 'Express Interest'}</h3>
+            </div>
+            <p className="text-gray-400 mb-8">{lang === 'el' ? 'Συμπληρώστε τη φόρμα και θα επικοινωνήσουμε μαζί σας μέσω email ή τηλεφώνου εντός της ίδιας ημέρας.' : 'Fill out the form and we will contact you via email or phone within the same day.'}</p>
+            <form action="https://formspree.io/f/xkopgoaj" method="POST" onSubmit={handleSubmit} className="space-y-5 flex-grow flex flex-col">
+              <div className="grid sm:grid-cols-2 gap-5">
+                <div>
+                  <label htmlFor="cf-name" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Όνομα / Επωνυμία' : 'Name / Company'}</label>
+                  <input id="cf-name" type="text" name="name" required autoComplete="name" className={inputCls} />
+                </div>
+                <div>
+                  <label htmlFor="cf-phone" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Τηλέφωνο' : 'Phone Number'}</label>
+                  <input id="cf-phone" type="tel" name="phone" required autoComplete="tel" className={inputCls} />
+                </div>
               </div>
               <div>
-                <label htmlFor="cf-email" className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">Email</label>
-                <input id="cf-email" type="email" name="email" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors" />
+                <label htmlFor="cf-email" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">Email</label>
+                <input id="cf-email" type="email" name="email" required autoComplete="email" className={inputCls} />
               </div>
-              <div>
-                <label htmlFor="cf-phone" className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Τηλέφωνο' : 'Phone Number'}</label>
-                <input id="cf-phone" type="tel" name="phone" required className="w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors" />
+              <div className="flex-grow flex flex-col">
+                <label htmlFor="cf-message" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Μήνυμα / Υπηρεσία που σας ενδιαφέρει' : 'Message / Service of Interest'}</label>
+                <textarea id="cf-message" name="message" rows="5" required className={`${inputCls} flex-grow min-h-[150px] resize-none`}></textarea>
               </div>
-              <div className="flex-grow">
-                <label htmlFor="cf-message" className="block text-sm font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Μήνυμα / Υπηρεσία που σας ενδιαφέρει' : 'Message / Service of Interest'}</label>
-                <textarea id="cf-message" name="message" rows="4" required className="w-full h-full min-h-[120px] bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-electric-cyan transition-colors resize-none"></textarea>
-              </div>
-              <div className="mt-auto">
-                <button type="submit" className="w-full py-4 bg-electric-cyan text-[#050a0e] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-[0_0_20px_rgba(71,200,245,0.3)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)]">
-                  {lang === 'el' ? 'Αποστολή' : 'Send'}
+              <input type="text" name="_gotcha" tabIndex="-1" autoComplete="off" className="hidden" aria-hidden="true" />
+              <div className="mt-auto pt-1">
+                <button
+                  type="submit"
+                  disabled={sent}
+                  className="btn-premium w-full py-4 bg-electric-cyan text-[#050a0e] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-[0_0_24px_rgba(71,200,245,0.35)] hover:shadow-[0_0_44px_rgba(255,255,255,0.5)] disabled:opacity-70 disabled:cursor-default"
+                >
+                  {sent ? (lang === 'el' ? 'Εστάλη ✓' : 'Sent ✓') : (lang === 'el' ? 'Αποστολή' : 'Send')}
                 </button>
-                {status && <p className="mt-4 text-center text-electric-cyan font-bold">{status}</p>}
+                {status && <p className="mt-4 text-center text-electric-cyan font-bold text-sm">{status}</p>}
+                <p className="mt-4 text-center text-[11px] text-gray-500 leading-relaxed">
+                  {lang === 'el'
+                    ? 'Τα στοιχεία σας χρησιμοποιούνται μόνο για να σας απαντήσουμε.'
+                    : 'Your details are used only to reply to you.'}
+                </p>
               </div>
             </form>
           </div>
           </ScrollReveal>
 
           {/* Zoho Bookings Calendar */}
-          <ScrollReveal direction="right" delay={100} className="h-full">
-          <div className="glass-panel p-8 md:p-10 rounded-3xl text-left flex flex-col h-full overflow-hidden">
-             <h3 className="text-2xl md:text-3xl font-black mb-6 text-white font-display">{lang === 'el' ? 'Κλείστε Ραντεβού' : 'Book Appointment'}</h3>
-             <p className="text-gray-400 mb-8">{lang === 'el' ? 'Επιλέξτε την ημέρα και ώρα που σας εξυπηρετεί για μια δωρεάν συμβουλευτική κλήση.' : 'Choose the day and time that suits you for a free consultation call.'}</p>
-             {/* Same reasoning as the old Trafft box: keep a FIXED height rather than
+          <ScrollReveal direction="right" delay={100} className="h-full w-full">
+          <div className="glass-panel contact-card p-8 md:p-10 rounded-3xl text-left flex flex-col h-full overflow-hidden">
+             <div className="flex items-center gap-3 mb-4">
+               <span className="w-10 h-10 rounded-xl bg-electric-cyan/10 border border-electric-cyan/20 text-electric-cyan flex items-center justify-center shrink-0">
+                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+               </span>
+               <h3 className="text-2xl md:text-3xl font-black text-white font-display">{lang === 'el' ? 'Κλείστε Ραντεβού' : 'Book a Call'}</h3>
+             </div>
+             <p className="text-gray-400 mb-8">{lang === 'el' ? 'Επιλέξτε την ημέρα και ώρα που σας εξυπηρετεί για μια δωρεάν 15λεπτη συμβουλευτική κλήση.' : 'Choose the day and time that suits you for a free 15-minute consultation call.'}</p>
+             {/* Same reasoning as the old Trafft box: keep a FIXED minimum height rather than
                  letting the widget grow to its full content height. Inside this clipped
                  panel a tall iframe leaves nothing scrollable, so wheel/touch over the
                  calendar does nothing. At a fixed height the iframe scrolls its own
                  content natively. Zoho sets inline width/height on the iframe it injects,
                  so the [&_iframe] rules force it to fill the box on every breakpoint. */}
-             <div className="w-full flex-grow rounded-xl bg-white relative min-h-[620px] lg:min-h-[760px] overflow-hidden">
+             <div className="w-full flex-grow rounded-xl bg-white relative min-h-[600px] overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
                 <div
                   id={ZOHO_PARENT_ID}
                   className="absolute inset-0 w-full h-full [&_iframe]:!w-full [&_iframe]:!h-full [&_iframe]:!border-0"
@@ -184,26 +226,24 @@ export default function Contact() {
           </ScrollReveal>
         </div>
 
-        {/* Contact Tiles */}
-        <div className="grid md:grid-cols-2 gap-8">
-          <ScrollReveal direction="up" className="h-full">
-          <a href="mailto:angelos@advonmedia.com" className="group glass-panel card-sweep p-8 rounded-3xl h-full block transition-all duration-300 hover:bg-electric-cyan/5">
-            <div className="w-16 h-16 bg-electric-cyan/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-electric-cyan group-hover:bg-electric-cyan group-hover:text-[#050a0e] transition-all">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8"><rect width="24" height="16" x="0" y="4" rx="2" ry="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-            </div>
-            <h3 className="text-xl font-black mb-2 text-white">Email</h3>
-            <p className="text-electric-cyan font-bold tracking-wide">angelos@advonmedia.com</p>
-          </a>
-          </ScrollReveal>
-          <ScrollReveal direction="up" delay={120} className="h-full">
-          <a href="https://www.instagram.com/advon_media" target="_blank" rel="noopener noreferrer" className="group glass-panel card-sweep p-8 rounded-3xl h-full block transition-all duration-300 hover:bg-electric-cyan/5">
-            <div className="w-16 h-16 bg-electric-cyan/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-electric-cyan group-hover:bg-electric-cyan group-hover:text-[#050a0e] transition-all">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-            </div>
-            <h3 className="text-xl font-black mb-2 text-white">Instagram</h3>
-            <p className="text-electric-cyan font-bold tracking-wide">@advon_media</p>
-          </a>
-          </ScrollReveal>
+        {/* Contact tiles — Email + the three social profiles, one symmetric row */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+          {tiles.map((t, i) => (
+            <ScrollReveal key={t.key} direction="up" delay={i * 90} className="h-full">
+              <a
+                href={t.href}
+                target={t.external ? '_blank' : undefined}
+                rel={t.external ? 'noopener noreferrer' : undefined}
+                className="group glass-panel card-sweep p-6 md:p-8 rounded-3xl h-full block transition-all duration-300 hover:bg-electric-cyan/5"
+              >
+                <div className="w-14 h-14 md:w-16 md:h-16 bg-electric-cyan/10 rounded-2xl flex items-center justify-center mx-auto mb-5 text-electric-cyan group-hover:bg-electric-cyan group-hover:text-[#050a0e] group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  {t.icon}
+                </div>
+                <h3 className="text-lg md:text-xl font-black mb-1.5 text-white">{t.title}</h3>
+                <p className="text-electric-cyan font-bold tracking-wide text-sm break-all">{t.sub}</p>
+              </a>
+            </ScrollReveal>
+          ))}
         </div>
       </div>
     </section>

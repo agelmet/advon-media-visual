@@ -112,7 +112,7 @@ export default function IntakeForm() {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>
         </div>
         <h2 className="font-display text-white text-3xl md:text-4xl mb-3">Το λάβαμε. Ευχαριστούμε!</h2>
-        <p className="text-white/70 text-lg max-w-[34rem] mx-auto">Ξεκινάμε τη σελίδα σας. Θα λάβετε το πρώτο δείγμα μέσα σε 2–3 εργάσιμες ημέρες, με link για να το δείτε από το κινητό σας.{uploaded ? ` Ανέβηκαν ${uploaded} αρχεία.` : ''}</p>
+        <p className="text-white/70 text-lg max-w-[34rem] mx-auto">Ξεκινάμε τη σελίδα σας. Θα λάβετε το πρώτο δείγμα μέσα σε 4–10 ημέρες ημέρες, με link για να το δείτε από το κινητό σας.{uploaded ? ` Ανέβηκαν ${uploaded} αρχεία.` : ''}</p>
         <p className="text-white/40 text-sm mt-6">Θυμηθήκατε κάτι ακόμη; Ανοίξτε ξανά αυτή τη σελίδα και στείλτε το — ή στείλτε το στο Viber / email που μιλήσαμε.</p>
       </div>
     );

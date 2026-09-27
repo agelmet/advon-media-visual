@@ -705,3 +705,125 @@
   .why-in { animation: none; opacity: 1; }
   .why-bar { animation: none; transform: scaleX(var(--w, 1)); }
 }
+
+/* ─── 27 Sept 2026 — polish layer: stats tiles, contact halo, socials, hero orbit · transform/opacity only ─── */
+
+/* Stats: glass tiles that flip up from the floor one after another, with a line that draws under the number */
+.stat-tile {
+  opacity: 0;
+  transform: perspective(900px) rotateX(22deg) translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.5s ease, background-color 0.5s ease, box-shadow 0.5s ease;
+  transform-origin: 50% 100%;
+}
+.stat-tile.stat-tile-in { opacity: 1; transform: perspective(900px) rotateX(0) translateY(0); }
+.stat-tile.glass-panel:hover { transform: translateY(-5px); }
+.stat-line { width: 0; transition: width 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.35s; }
+.stat-tile-in .stat-line { width: 3.5rem; }
+.stat-tile:hover .stat-line { width: 5.5rem; }
+.stat-google { transform: translateY(-2px); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.stat-tile:hover .stat-google { transform: translateY(-2px) rotate(-8deg) scale(1.08); }
+.stats-dots {
+  background-image: radial-gradient(rgba(71, 200, 245, 0.16) 1px, transparent 1.5px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, black 10%, transparent 70%);
+  mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, black 10%, transparent 70%);
+  animation: dotsDrift 40s linear infinite;
+  opacity: 0.7;
+}
+@keyframes dotsDrift { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(26px, 26px, 0); } }
+
+/* Contact: a slow conic halo behind the two panels + a hairline that lights up along the top of each card */
+.contact-halo {
+  width: min(120vw, 1400px);
+  height: min(120vw, 1400px);
+  border-radius: 9999px;
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(71,200,245,0.10) 70deg, transparent 140deg, rgba(107,63,160,0.10) 220deg, transparent 300deg);
+  -webkit-mask-image: radial-gradient(circle, transparent 38%, black 52%, transparent 66%);
+  mask-image: radial-gradient(circle, transparent 38%, black 52%, transparent 66%);
+  animation: haloSpin 48s linear infinite;
+  opacity: 0.9;
+}
+@keyframes haloSpin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+.contact-halo { transform: translate(-50%, -50%) rotate(0deg); }
+.contact-card { position: relative; }
+.contact-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 12%; right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(71,200,245,0.85), transparent);
+  opacity: 0.55;
+  transform: scaleX(0.6);
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+  pointer-events: none;
+}
+.contact-card:hover::before { transform: scaleX(1); opacity: 1; }
+
+/* Socials */
+.social-btn { will-change: transform; }
+.footer-link { position: relative; }
+.footer-link::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.footer-link:hover::after { transform: scaleX(1); }
+
+/* Hero: two dashed orbit rings with slow-moving dots behind the headline (pure CSS, GPU transforms) */
+.hero-orbit {
+  position: absolute;
+  left: 50%; top: 50%;
+  border-radius: 9999px;
+  border: 1px dashed rgba(71, 200, 245, 0.16);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.hero-orbit::before, .hero-orbit::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 100%; height: 100%;
+  transform: translate(-50%, -50%);
+  border-radius: inherit;
+}
+.hero-orbit-a { width: min(78vw, 760px); height: min(78vw, 760px); animation: orbitSpin 70s linear infinite; }
+.hero-orbit-b { width: min(112vw, 1120px); height: min(112vw, 1120px); border-color: rgba(107, 63, 160, 0.16); animation: orbitSpin 110s linear infinite reverse; }
+.hero-orbit-dot {
+  position: absolute;
+  top: -5px; left: calc(50% - 5px);
+  width: 10px; height: 10px;
+  border-radius: 9999px;
+  background: #47c8f5;
+  box-shadow: 0 0 14px 3px rgba(71,200,245,0.55);
+}
+.hero-orbit-b .hero-orbit-dot { background: #b58cf0; box-shadow: 0 0 14px 3px rgba(181,140,240,0.5); width: 8px; height: 8px; top: -4px; left: calc(50% - 4px); }
+.hero-orbit-dot.d2 { top: auto; bottom: -5px; opacity: 0.7; }
+@keyframes orbitSpin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+/* Services «Ακόμη» tiles + service card top bar (overrides the old ::before overlay) */
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: auto;
+  opacity: 1;
+  top: 0; left: 10%; right: 10%;
+  height: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent, #47c8f5, transparent);
+  transform: scaleX(0);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.service-card:hover::before { transform: scaleX(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-tile { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .stat-line { width: 3.5rem !important; transition: none !important; }
+  .stats-dots, .contact-halo, .hero-orbit-a, .hero-orbit-b { animation: none !important; }
+  .hero-orbit { display: none; }
+}

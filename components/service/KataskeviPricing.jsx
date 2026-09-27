@@ -286,7 +286,7 @@ export default function KataskeviPricing() {
                 bodyEn: 'Secured with a continuously renewed, enterprise-grade SSL certificate. Every connection is served over HTTPS — all data between server and browser stays strictly private and encrypted.',
               },
               {
-                icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>,
+                icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M12 2L2 7l10 5 10-4-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>,
                 titleEl: 'Ενεργή Προστασία από DDoS',
                 titleEn: 'Active DDoS Mitigation',
                 bodyEl: 'Το υποκείμενο δίκτυο διαθέτει ενσωματωμένη προστασία DDoS σε Layer 3, 4 και 7, που απορροφά και εξουδετερώνει αυτόματα την κακόβουλη κίνηση από bots ή τις επιθέσεις υπερφόρτωσης, πριν προλάβουν να επηρεάσουν την απόδοση της ιστοσελίδας.',

@@ -25,8 +25,8 @@ export default function FAQ() {
     {
       qEl: 'Γιατί η κατασκευή ιστοσελίδας είναι δωρεάν; Ποιο είναι το catch;',
       qEn: "Why is the website creation free? What's the catch?",
-      aEl: 'Δεν υπάρχει catch. Πιστεύουμε ότι κάθε επαγγελματίας αξίζει να έχει αξιόπιστη online παρουσία — ανεξάρτητα από προϋπολογισμό.<br><br>Χτίζουμε την ιστοσελίδα χωρίς κόστος κατασκευής και χωρίς προκαταβολή. Το μόνο που πληρώνετε είναι η φιλοξενία — και αυτή, μόνο όταν παραδοθεί το πρώτο δείγμα της σελίδας σας. Δεν υπάρχουν κρυφές χρεώσεις.',
-      aEn: 'There is no catch. We believe every professional deserves a reliable online presence — regardless of budget.<br><br>We build the website with no construction fee and no deposit. The only thing you pay is the hosting — and only once the first draft of your website is delivered. There are no hidden fees.'
+      aEl: 'Δεν υπάρχει catch. Πιστεύουμε ότι κάθε επαγγελματίας αξίζει να έχει αξιόπιστη online παρουσία — ανεξάρτητα από προϋπολογισμό.<br><br>Χτίζουμε την ιστοσελίδα χωρίς κόστος κατασκευής και χωρίς προκαταβολή. Το μόνο που πληρώνετε είναι η φιλοξενία — και αυτή, μόνο όταν παραδοθεί το πρώτο δείγμα της σελίδας σας. Το domain name είναι δώρο, και μέχρι τη δημοσίευση κάνουμε όσες αλλαγές θέλετε, ώστε να γίνει ακριβώς όπως την ονειρεύεστε. Δεν υπάρχουν κρυφές χρεώσεις.',
+      aEn: 'There is no catch. We believe every professional deserves a reliable online presence — regardless of budget.<br><br>We build the website with no construction fee and no deposit. The only thing you pay is the hosting — and only once the first draft of your website is delivered. The domain name is a gift, and until publication we make as many changes as you want, so it becomes exactly what you dreamed of. There are no hidden fees.'
     },
     {
       qEl: 'Τι σημαίνει «φιλοξενία» (hosting);',
@@ -37,8 +37,8 @@ export default function FAQ() {
     {
       qEl: 'Πόσο διαρκεί η παράδοση μιας ιστοσελίδας;',
       qEn: 'How long does website delivery take?',
-      aEl: 'Από τη στιγμή που έχουμε λάβει όλο το υλικό — φωτογραφίες, κείμενα, λογότυπο, και ό,τι άλλο χρειαστεί — παραδίδουμε το πρώτο δείγμα σε <strong>5–10 ημέρες</strong>. Από εκεί, κάνουμε όσες αλλαγές χρειαστούν μέχρι να είναι ακριβώς όπως τη θέλετε.',
-      aEn: 'Once we have received all the material — photos, texts, logo, and anything else needed — we deliver the first draft within <strong>5–10 days</strong>. From there, we make as many changes as needed until it\'s exactly how you want it.'
+      aEl: 'Από τη στιγμή που έχουμε λάβει όλο το υλικό — φωτογραφίες, κείμενα, λογότυπο, και ό,τι άλλο χρειαστεί — παραδίδουμε το πρώτο δείγμα σε <strong>4–10 ημέρες</strong>. Από εκεί, κάνουμε όσες αλλαγές χρειαστούν μέχρι να είναι ακριβώς όπως τη θέλετε.',
+      aEn: 'Once we have received all the material — photos, texts, logo, and anything else needed — we deliver the first draft within <strong>4–10 days</strong>. From there, we make as many changes as needed until it\'s exactly how you want it.'
     },
     {
       qEl: 'Πώς μπορώ να επικοινωνήσω μαζί σας;',

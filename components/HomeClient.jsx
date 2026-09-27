@@ -92,6 +92,10 @@ export default function HomeClient() {
             }}
           />
 
+          {/* Orbit rings — two dashed circles turning very slowly behind the headline, one dot each */}
+          <div className="hero-orbit hero-orbit-a" aria-hidden="true"><span className="hero-orbit-dot" /><span className="hero-orbit-dot d2" /></div>
+          <div className="hero-orbit hero-orbit-b" aria-hidden="true"><span className="hero-orbit-dot" /></div>
+
           {/* Laser beams — skewed outer wrapper keeps angle fixed; inner div sweeps via laserSweep */}
           {[
             { top: '17%', skew: -8,  dur: '5s',    delay: '0s',   w: 2, cyan: true,  op: 0.65 },
@@ -196,13 +200,13 @@ export default function HomeClient() {
             style={{ fontSize: 'clamp(1rem, 2.2vw, 1.25rem)' }}
           >
             {lang === 'el'
-              ? 'Χωρίς προκαταβολή. Τη βλέπετε πρώτα έτοιμη — και μετά αποφασίζετε. Πληρώνετε μόνο τη φιλοξενία.'
-              : 'No deposit. You see it finished first — then you decide. You pay only for the hosting.'}
+              ? 'Τη βλέπετε πρώτα έτοιμη — και μετά κάνουμε όσες αλλαγές θέλετε, ώστε να γίνει όπως την ονειρεύεστε. Πληρώνετε μόνο τη φιλοξενία — δώρο το domain name.'
+              : 'You see it finished first — then we make as many changes as you want, until it is exactly how you dreamed it. You pay only for the hosting — the domain name is a gift.'}
           </p>
 
           {/* Proof line — the reviews half is a tappable jump down to the reviews section */}
           <p className="reveal-item delay-5 text-electric-cyan/90 text-sm md:text-base font-bold tracking-wide mb-12 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
-            <span>{lang === 'el' ? '200+ ιστοσελίδες' : '200+ websites'}</span>
+            <span>{lang === 'el' ? '220+ ιστοσελίδες' : '220+ websites'}</span>
             <span className="text-electric-cyan/40 hidden sm:inline" aria-hidden="true">·</span>
             <Link
               href="/#reviews"
