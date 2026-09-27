@@ -647,7 +647,7 @@ function renderReady(t){
   if(stg==='live'){ el.hidden=true; el.innerHTML=''; document.body.classList.add('st-built'); return; }
   el.hidden=false; el.classList.toggle('done',!!r);
   document.body.classList.toggle('st-built', stg!=='yliko' || r==='build');
-  if(r==='build') el.innerHTML='<p>✅ Το λάβαμε! Ετοιμάζουμε το πρώτο draft της ιστοσελίδας σας — θα το βρείτε εδώ σε 3–10 ημέρες. Θυμηθήκατε κάτι; Γράψτε το μας.</p>';
+  if(r==='build') el.innerHTML='<p>✅ Το λάβαμε! Ετοιμάζουμε το πρώτο draft της ιστοσελίδας σας — θα το βρείτε εδώ σε 4–10 ημέρες. Θυμηθήκατε κάτι; Γράψτε το μας.</p>';
   else if(r==='changes') el.innerHTML='<p>✏️ Τις λάβαμε! Κάνουμε τις αλλαγές σας — έτοιμες συνήθως μέσα σε 24 ώρες. Θα σας γράψουμε εδώ μόλις είναι.</p>';
   else if(r==='live') el.innerHTML='<p>🚀 Τέλεια! Ελέγχουμε το domain, το αγοράζουμε και σας ενημερώνουμε εδώ μόλις η ιστοσελίδα σας είναι online (1–2 ημέρες).</p>';
   else if(stg==='yliko') el.innerHTML='<p>'+(t.dat?'Στείλατε τις φωτογραφίες σας; Πατήστε εδώ. Δεν έχετε ακόμη; Πατήστε το έτσι κι αλλιώς — βάζουμε προσωρινές.':'Στείλατε ό,τι έχετε, έστω λίγα; Πατήστε εδώ — ό,τι λείπει το προσθέτουμε μετά.')+'</p><div class="rb"><button class="go" data-ready="build">✅ Ξεκινήστε την ιστοσελίδα μου</button></div>';

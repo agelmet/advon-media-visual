@@ -21,7 +21,7 @@ const GET_LIST = [
   { el: 'Πρώτα για κινητό', en: 'Mobile first', subEl: 'Γρήγορη σε κάθε συσκευή', subEn: 'Fast on every device' },
   { el: 'Έτοιμη για το Google', en: 'Ready for Google', subEl: 'SEO από την πρώτη μέρα', subEn: 'SEO from day one' },
   { el: 'Ελληνικά & Αγγλικά', en: 'Greek & English', subEl: 'Δίγλωσση από την αρχή', subEn: 'Bilingual from the start' },
-  { el: 'Δείγμα σε 5–\u206010\u00A0ημέρες', en: 'Draft in 5–\u206010\u00A0days', subEl: 'Χωρίς προκαταβολή', subEn: 'No deposit' },
+  { el: 'Δείγμα σε 4–\u206010\u00A0ημέρες', en: 'Draft in 4–\u206010\u00A0days', subEl: 'Χωρίς προκαταβολή', subEn: 'No deposit' },
 ];
 
 const HOSTING_LIST = [
