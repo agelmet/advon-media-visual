@@ -4,7 +4,8 @@
 //   1. a client wrote and Angelo has not been told           → Telegram (+ e-mail to LEAD_NOTIFY_TO)
 //   2. Angelo/Claude wrote and the client has not seen it    → e-mail to the client with the text + their link
 //   3. we wrote last and the client has been silent 3+ days  → a gentle stage-aware reminder e-mail (max 2, 3 days apart)
-//   4. chats/outbox.json                                     → pings queued by the chat agent (it can only reach GitHub)
+//   4. chats/outbox.json                                     → pings queued by the chat agent (it can only reach GitHub);
+//      an entry with notBefore waits for its time (kind 'tiktok' = the daily «post today's TikTok» nudge)
 //   5. Claude left a reply waiting for approval (t.suggest)  → «APPROVAL NEEDED — <client>» to Angelo: what the client asked,
 //      what was done / is intended, the exact reply — Telegram + e-mail, once per suggestion (suggestNotifiedAt)
 // Every message to Angelo starts with the CLIENT'S NAME and is built in lib/chatcore.js (clientWroteNote, approvalNote,
@@ -17,7 +18,7 @@
 
 import { ghConf, ghReady, commit as ghCommit } from '../../lib/ghdata.js';
 import { ackText, isQuestion } from '../../lib/chatdemo.js';
-import { INDEX_PATH, OUTBOX_PATH, STAGE_EL, normStage, readTemplates, currentHead, forgetHead, getIndex, getMessages, readChatJson, mailConf, emailOk, sendEmail, sendTelegram, telegramDiag, newMessageMail, reminderMail, plainClientMail, clientWroteNote, approvalNote, quietNote, reminderSentNote, agentNote, politeHour } from '../../lib/chatcore.js';
+import { INDEX_PATH, OUTBOX_PATH, STAGE_EL, normStage, readTemplates, currentHead, forgetHead, getIndex, getMessages, readChatJson, mailConf, emailOk, sendEmail, sendTelegram, telegramDiag, newMessageMail, reminderMail, plainClientMail, clientWroteNote, approvalNote, quietNote, reminderSentNote, agentNote, politeHour, tgEsc } from '../../lib/chatcore.js';
 
 export const config = { schedule: '*/5 * * * *' };
 
@@ -59,6 +60,14 @@ async function autoAck(conf, t, T) {
   return sent;
 }
 const nowIso = () => new Date().toISOString();
+
+// TikTok of the day (29 Sept 2026): Angelo posts from his phone with a trending sound. The phone page
+// drafts.advonmedia.com/tiktok/ has the video + caption; this is the Telegram nudge at posting time (queued by
+// .advon/social/tiktok/phone.py with notBefore). Telegram only — no e-mail.
+const tiktokNote = (o) => ({
+  tg: `🎬 <b>TIKTOK — time to post</b>\n${tgEsc(o.title || '')}${o.what && !String(o.title || '').startsWith(o.what) ? `\n<i>${tgEsc(o.what)}</i>` : ''}\n\nOpen the page → <b>Copy caption</b> → <b>Open in TikTok</b> → add a trending sound (original sound to 0) → paste → Post.`,
+  buttons: [{ text: '📱 Open today\'s TikTok', url: o.url || 'https://drafts.advonmedia.com/tiktok/' }],
+});
 
 export default async (req) => {
   const url = new URL(req.url);
@@ -212,9 +221,16 @@ export default async (req) => {
   const box = Array.isArray(outbox) ? outbox : [];
   for (const o of box) {
     if (o.sentAt) continue;
+    // «send at»: an entry with notBefore waits for its time; one found more than 3 h late is dropped, never sent stale (29 Sept 2026)
+    if (o.notBefore) {
+      const nb = Date.parse(o.notBefore) || 0;
+      if (now < nb) continue;
+      if (now - nb > 3 * 3600 * 1000) { o.sentAt = nowIso(); o.skipped = 'late'; outChanged = true; report.skipped.push(`outbox ${o.kind}: too late`); continue; }
+    }
     if (dry) { report.sent.push(`[dry] outbox ${o.kind}`); continue; }
     let ok = false;
     if (o.kind === 'angelo') { ok = (await toAngelo(agentNote(o, idx))).ok; }
+    else if (o.kind === 'tiktok') { ok = (await toAngelo(tiktokNote(o), false)).ok; }
     else if (o.kind === 'client' && o.slug) { const t = idx.find((x) => x.slug === o.slug); if (t && emailOk(t.email) && canMail) { const m = plainClientMail(t, o.subject, o.text || ''); const r = await sendEmail(mc, t.email, m.subject, m.text, m.html); ok = r.ok; } }
     if (ok) { o.sentAt = nowIso(); outChanged = true; report.sent.push(`outbox ${o.kind}${o.slug ? ' ' + o.slug : ''}`); }
     else if (!canTg && !canMail) { report.skipped.push(`outbox ${o.kind}: nothing configured`); break; }
