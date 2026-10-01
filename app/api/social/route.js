@@ -28,7 +28,7 @@ export async function GET(req) {
   const conf = ghConf();
   try {
     const [plan, state, creds] = await Promise.all([fetchPlan(), ghReady(conf) ? readState(conf) : { posts: {} }, ghReady(conf) ? readCreds(conf) : null]);
-    return json({ ok: true, base: SOCIAL_BASE, month: plan.month || null, auto: autoOn(state), posts: merged(plan, state),
+    return json({ ok: true, base: SOCIAL_BASE, month: plan.month || null, auto: autoOn(state), posts: merged(plan, state), salesScript: plan.salesScript || null,
       meta: creds ? { connected: true, pageName: creds.pageName || '', igUsername: creds.igUsername || '', source: creds.source || 'crm', connectedAt: creds.connectedAt || null } : { connected: false } });
   } catch (e) { return json({ ok: false, code: e.code || 'error', error: e.message || 'failed' }, 502); }
 }
@@ -48,6 +48,10 @@ export async function POST(req) {
     if (a === 'settings') {
       await mutateJson(conf, STATE_PATH, (st) => { const n = st && st.posts ? st : { posts: {} }; n.settings = { ...(n.settings || {}), auto: !!b.auto }; n.updated = new Date().toISOString(); return n; }, `social: auto-post ${b.auto ? 'on' : 'off'}`, { posts: {} });
       return json({ ok: true, auto: !!b.auto });
+    }
+    if (a === 'tiktok') {   // SALES: «I posted it on TikTok» — remembered for every device
+      await patchPost(conf, id, (s) => ({ ...s, tiktokDone: b.on ? new Date().toISOString() : null }), `social: tiktok ${b.on ? 'posted' : 'undo'} ${id}`);
+      return json({ ok: true });
     }
     if (a === 'skip') { await patchPost(conf, id, (s) => (s.status === 'posted' || s.status === 'posting') ? undefined : ({ ...s, skip: !!b.on, status: undefined })); return json({ ok: true }); }
     if (a === 'edit') {

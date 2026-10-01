@@ -1747,43 +1747,6 @@ body.dark .tab.tab-meta:not(.active){color:#ff7ab8;}
 .mt-months button small{font-weight:600; margin-left:5px; opacity:.75; font-variant-numeric:tabular-nums;}
 .mt-months button.on{background:var(--ink); color:var(--surface); border-color:var(--ink);}
 .mt-next{font-weight:700;}
-/* SALES (1 Oct 2026) */
-.mt-msep{width:1px; align-self:stretch; background:var(--line); margin:3px 4px;}
-.mt-months button.sales{color:#0f6b4f; border-color:rgba(16,140,100,.35); background:linear-gradient(135deg,rgba(16,185,129,.10),rgba(245,158,11,.10)); letter-spacing:.06em;}
-.mt-months button.sales.on{color:#fff; border-color:transparent; background:linear-gradient(135deg,#059669,#10b981 55%,#f59e0b); box-shadow:0 3px 12px rgba(5,150,105,.3);}
-.sl-lab{font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.07em; margin-bottom:5px;}
-.sl-acts{padding-top:8px;}
-.sl-done{display:inline-flex; align-items:center; font-weight:700; font-size:12.5px; color:var(--deep); background:var(--green-soft); padding:8px 11px; border-radius:11px;}
-.sl-tt{margin:0 14px 14px; padding:12px; border-radius:14px; background:#0f1115; color:#f2f4f7;}
-.sl-tth{display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:13px;}
-.sl-tiktok{width:22px; height:22px; border-radius:7px; display:grid; place-items:center; background:#000; color:#fff; font-weight:800; box-shadow:-2px -1px 0 #25F4EE, 2px 1px 0 #FE2C55;}
-.sl-ttok{margin-left:auto; font-size:11.5px; font-weight:700; color:#5ef0b0;}
-.sl-ttcap{font-size:12.5px; line-height:1.5; white-space:pre-line; color:#d6dbe3; background:rgba(255,255,255,.06); border-radius:10px; padding:9px 10px; margin-bottom:10px;}
-.sl-ttbtns{display:flex; gap:7px; flex-wrap:wrap;}
-.sl-tt .mt-btn{background:rgba(255,255,255,.08); color:#fff; border-color:rgba(255,255,255,.14); padding:8px 11px; font-size:12.5px; text-decoration:none;}
-.sl-tt .mt-btn.tt{background:linear-gradient(135deg,#FE2C55,#ff5b7a); border:0;}
-.sl-tt .mt-btn.ghost{background:transparent;}
-.sc-panel{grid-column:1/-1; background:var(--surface); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); padding:22px; margin-top:6px;}
-.sc-head{margin-bottom:16px;}
-.sc-eye{font-size:11.5px; font-weight:800; color:var(--brand); text-transform:uppercase; letter-spacing:.08em;}
-.sc-head h3{font-size:22px; font-weight:800; letter-spacing:-.01em; margin:4px 0 6px;}
-.sc-head p{color:var(--muted); font-size:13.5px; line-height:1.55; max-width:720px;}
-.sc-studio{display:grid; grid-template-columns:minmax(260px,340px) 1fr; gap:22px; align-items:start;}
-.sc-tabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;}
-.sc-tabs button{padding:7px 12px; border-radius:999px; border:1px solid var(--line); background:var(--surface); font-weight:700; font-size:12.5px; color:var(--muted);}
-.sc-tabs button[aria-selected="true"]{background:var(--ink); color:var(--surface); border-color:var(--ink);}
-.sc-frame{border-radius:22px; overflow:hidden; background:#000; aspect-ratio:9/16; box-shadow:0 18px 40px -18px rgba(0,0,0,.45);}
-.sc-frame video{width:100%; height:100%; object-fit:contain; display:block;}
-.sc-cap{font-size:12px; color:var(--muted); margin-top:8px; line-height:1.5;}
-.sc-script{display:grid; gap:6px;}
-.sc-row{display:grid; grid-template-columns:52px 1fr; gap:10px; padding:10px 12px; border-radius:12px; border:1px solid transparent; transition:background .2s, border-color .2s;}
-.sc-row.hook{background:var(--blue-soft);}
-.sc-row.live{background:linear-gradient(135deg,rgba(16,185,129,.14),rgba(245,158,11,.12)); border-color:rgba(16,140,100,.35);}
-.sc-t{font-family:'Sora'; font-weight:700; font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums; padding-top:2px;}
-.sc-say{font-size:15px; line-height:1.5; font-weight:600;}
-.sc-scr{font-size:12.5px; color:var(--muted); margin-top:3px; line-height:1.45;}
-.sc-foot{display:flex; align-items:center; gap:10px; justify-content:space-between; padding:10px 12px 0; font-size:12.5px; color:var(--muted); flex-wrap:wrap;}
-@media (max-width:760px){ .sc-studio{grid-template-columns:1fr;} .sc-phone{max-width:340px; margin:0 auto; width:100%;} .sc-panel{padding:16px;} }
 #mtOverlay .modal{max-width:560px;}
 .mt-modal{padding:22px 22px 18px; display:grid; gap:12px; font-size:13.5px; line-height:1.55; overflow:auto;}
 .mt-modal h3{font-size:18px;}
@@ -9449,7 +9412,7 @@ const Meta={ posts:[], all:[], auto:true, mf:null, meta:{connected:false}, base:
       const r=await fetch(SOCIAL_URL+'?t='+Date.now(),{headers:{'x-crm-auth':SYNC_TOKEN},cache:'no-store'});
       const j=await r.json().catch(()=>({}));
       if(!r.ok||!j.ok){ $('#mtGrid').innerHTML=`<div class="mt-empty">Could not load the posts — ${esc(j.error||('error '+r.status))}</div>`; return; }
-      this.all=j.posts||[]; this.script=j.salesScript||null; this.auto=j.auto!==false; this.meta=j.meta||{connected:false}; this.base=j.base||''; this.month=j.month||''; this.lastAt=Date.now();
+      this.all=j.posts||[]; this.auto=j.auto!==false; this.meta=j.meta||{connected:false}; this.base=j.base||''; this.month=j.month||''; this.lastAt=Date.now();
       this.render();
       clearTimeout(this.timer);
       if(this.all.some(p=>p.status==='posting')) this.timer=setTimeout(()=>{ if(curView==='meta') this.pull(true); },8000);
@@ -9513,16 +9476,14 @@ const Meta={ posts:[], all:[], auto:true, mf:null, meta:{connected:false}, base:
     c.querySelector('span').textContent=this.meta.connected?('Connected · @'+(this.meta.igUsername||'instagram')+(this.meta.pageName?' + '+this.meta.pageName:'')):'Not connected';
     $('#mtConnectBtn').textContent=this.meta.connected?'Connection':'Connect Instagram & Facebook';
     const MN=m=>new Date(m+'-15T12:00:00').toLocaleDateString('en-GB',{month:'long'});
-    const ALL=this.all.filter(p=>!p.sales); this.sales=this.all.filter(p=>p.sales);
-    const months=[...new Set(ALL.map(p=>p.month||String(p.date).slice(0,7)))].sort();
+    const months=[...new Set(this.all.map(p=>p.month||String(p.date).slice(0,7)))].sort();
     const now=new Date().toISOString().slice(0,7);
-    if(!this.mf || (this.mf!=='all' && this.mf!=='sales' && !months.includes(this.mf))) this.mf=months.find(m=>m>=now)||months[months.length-1]||'all';
+    if(!this.mf || (this.mf!=='all' && !months.includes(this.mf))) this.mf=months.find(m=>m>=now)||months[months.length-1]||'all';
     $('#mtMonth').textContent=months.length>1?(MN(months[0])+' – '+MN(months[months.length-1])+' '+months[months.length-1].slice(0,4)):(this.month||'');
-    $('#mtMonths').innerHTML=(months.length>1||this.sales.length)?[...months.map(m=>[m,MN(m),ALL.filter(p=>(p.month||String(p.date).slice(0,7))===m).length]),['all','All',ALL.length],...(this.sales.length?[['sales','SALES',this.sales.length]]:[])].map(([k,l,c])=>`${k==='sales'?'<span class="mt-msep" aria-hidden="true"></span>':''}<button data-mf="${k}" class="${this.mf===k?'on':''}${k==='sales'?' sales':''}">${esc(l)}<small>${c}</small></button>`).join(''):'';
-    const P=this.posts=this.mf==='all'?ALL:ALL.filter(p=>(p.month||String(p.date).slice(0,7))===this.mf), n=k=>P.filter(p=>p.status===k).length;
+    $('#mtMonths').innerHTML=months.length>1?[...months.map(m=>[m,MN(m),this.all.filter(p=>(p.month||String(p.date).slice(0,7))===m).length]),['all','All',this.all.length]].map(([k,l,c])=>`<button data-mf="${k}" class="${this.mf===k?'on':''}">${esc(l)}<small>${c}</small></button>`).join(''):'';
+    const P=this.posts=this.mf==='all'?this.all:this.all.filter(p=>(p.month||String(p.date).slice(0,7))===this.mf), n=k=>P.filter(p=>p.status===k).length;
     const au=$('#mtAuto'); au.classList.toggle('on',this.auto); au.setAttribute('aria-checked',String(this.auto)); au.querySelector('span').textContent='Auto-post '+(this.auto?'on':'off');
-    if(this.mf==='sales'){ this.posts=this.sales; $('#mtApproveAll').style.display='none'; this.renderSales(); return; }
-    const nx=ALL.filter(p=>p.status==='approved').sort((x,y)=>(x.date+x.time).localeCompare(y.date+y.time))[0];
+    const nx=this.all.filter(p=>p.status==='approved').sort((x,y)=>(x.date+x.time).localeCompare(y.date+y.time))[0];
     $('#mtHelp').innerHTML=(this.auto
       ?'<b>Auto-post is on.</b> Every post goes out by itself on its day and time, on Instagram and Facebook together. <b>Hold</b> or <b>Skip</b> any post you don\'t want; <b>Post now</b> publishes at once.'
       :'<b>Auto-post is off.</b> Only posts you <b>Approve</b> go out on their day and time. <b>Post now</b> publishes at once.')
@@ -9544,74 +9505,6 @@ const Meta={ posts:[], all:[], auto:true, mf:null, meta:{connected:false}, base:
       const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=file.name; document.body.appendChild(a); a.click(); a.remove();
       toast('Video downloaded · caption copied');
     }catch(e){ if(e && e.name==='AbortError') return; window.open(u,'_blank'); }
-  },
-  /* ---------- SALES (Angelo, 1 Oct 2026): ready-made selling videos — one tap to Instagram + Facebook, one tap to TikTok
-     (description copied + share sheet → TikTok on the phone; download + TikTok Studio on the computer) — and the ad script
-     «Watch and read» with its A/B/C videos. Content: advon-social/sales.json (0 Netlify credits to change). ---------- */
-  sales:[], script:null, hk:null, blobs:{},
-  salesStatus(p){ return ({ready:'Ready to post',draft:'Ready to post',posting:'Posting…',posted:'Posted ✓',partial:'Posted in part',failed:'Not posted'})[p.status]||'Ready to post'; },
-  salesCard(p){
-    const id=esc(p.id), open=this.open[p.id], cf=this.confirm===p.id, done=p.status==='posted', busy=p.status==='posting';
-    const head=`<div class="mt-top"><div class="mt-date">${esc(p.title||'')}<small>${esc(p.kind||'Sales video')}</small></div><span class="mt-type reel">Reel</span><span class="mt-pill ${esc(p.status==='ready'?'draft':p.status)}">${esc(this.salesStatus(p))}</span></div>`;
-    const body=`<div class="mt-body"><div class="sl-lab">Instagram + Facebook</div><div class="mt-cap ${open?'open':''}">${esc(p.caption||'')}<span class="tags">${esc(p.hashtags||'')}</span></div><button class="mt-more" data-more="${id}">${open?'Show less':'Show the whole caption'}</button></div>`;
-    let meta;
-    if(cf) meta=`<div class="mt-confirm">Post this now on Instagram and Facebook? <span class="mt-sp"></span><button class="mt-btn" data-cancel="${id}">Not now</button><button class="mt-btn ok" data-postyes="${id}">Yes, post it</button></div>`;
-    else meta=`<div class="mt-acts sl-acts">${done?`<span class="sl-done">✓ On Instagram + Facebook</span>`:busy?`<span class="sl-done">Posting…</span>`:`<button class="mt-btn pri" data-post="${id}">Post on Instagram + Facebook</button>`}${p.status==='partial'?`<button class="mt-btn warn" data-retry="${id}">Try the missing one again</button>`:''}<button class="mt-btn" data-copycap="${id}">Copy caption</button></div>`;
-    const tt=`<div class="sl-tt"><div class="sl-tth"><span class="sl-tiktok" aria-hidden="true">♪</span><b>TikTok</b>${p.tiktokDone?`<span class="sl-ttok">Posted ✓</span>`:''}</div>
-      <div class="sl-ttcap">${esc(p.tiktok||p.caption||'')}</div>
-      <div class="sl-ttbtns"><button class="mt-btn" data-ttcopy="${id}">Copy description</button><button class="mt-btn tt" data-ttshare="${id}">Post on TikTok</button><a class="mt-btn" href="${esc(this.url(p.media[0]))}" download="${id}.mp4" target="_blank" rel="noopener">Download</a>
-      <button class="mt-btn ghost" data-ttdone="${id}" data-on="${p.tiktokDone?0:1}">${p.tiktokDone?'Undo «posted»':'I posted it ✓'}</button></div></div>`;
-    return `<article class="mt-card sl-card ${done?'is-posted':''}" data-card="${id}">${head}${this.media(p)}${body}${this.res(p)}${meta}${tt}</article>`;
-  },
-  scriptPanel(){
-    const S=this.script; if(!S||!S.hooks||!S.hooks.length) return '';
-    const h=S.hooks.find(x=>x.k===this.hk)||S.hooks[0]; this.hk=h.k;
-    const rows=(S.lines||[]).map((r,i)=>`<div class="sc-row ${i===0?'hook':''}" data-s="${r.s}" data-e="${r.e}"><div class="sc-t">${esc(r.t||'')}</div><div><div class="sc-say">${esc(i===0?h.say:r.say)}</div><div class="sc-scr">${i===0?(h.screen||''):(r.screen||'')}</div></div></div>`).join('');
-    return `<section class="sc-panel"><div class="sc-head"><span class="sc-eye">${esc(S.eyebrow||'1 · Watch and read')}</span><h3>${esc(S.title||'The script, line by line')}</h3><p>${esc(S.lede||'')}</p></div>
-      <div class="sc-studio"><div class="sc-phone"><div class="sc-tabs" role="tablist">${S.hooks.map(x=>`<button role="tab" data-hk="${esc(x.k)}" aria-selected="${x.k===h.k}">${esc(x.label)}</button>`).join('')}</div>
-        <div class="sc-frame"><video id="scVid" controls playsinline preload="metadata" poster="${esc(h.poster?this.url(h.poster):'')}" src="${esc(this.url(h.src))}"></video></div>
-        <p class="sc-cap">${esc(h.note||S.note||'')}</p></div>
-      <div class="sc-script">${rows}<div class="sc-foot"><span>${esc(S.foot||'')}</span><button class="mt-btn" data-copyscript="1">Copy the script</button></div></div></div></section>`;
-  },
-  renderSales(){
-    const S=this.sales, n=k=>S.filter(p=>p.status===k).length;
-    $('#mtStats').innerHTML=[['Sales videos',S.length],['On Instagram + Facebook',n('posted')],['On TikTok',S.filter(p=>p.tiktokDone).length]].map(([k,v])=>`<div class="mt-stat"><b>${v}</b><span>${k}</span></div>`).join('');
-    $('#mtHelp').innerHTML='<b>SALES</b> — your selling videos, ready whenever you want them. Nothing here goes out by itself. <b>Post on Instagram + Facebook</b> publishes at once. For TikTok: <b>Post on TikTok</b> copies the description and, on your phone, opens the share menu — pick TikTok, add a trending sound, paste the description. On the computer it downloads the video and opens TikTok Studio.';
-    $('#mtGrid').innerHTML=(S.length?S.map(p=>this.salesCard(p)).join(''):'<div class="mt-empty">No sales videos yet.</div>')+this.scriptPanel();
-    this.wireScript();
-  },
-  wireScript(){
-    const v=document.getElementById('scVid'); if(!v) return;
-    const rows=[...document.querySelectorAll('.sc-row')];
-    const mark=t=>rows.forEach(r=>r.classList.toggle('live',!v.paused&&t>=+r.dataset.s&&t<+r.dataset.e));
-    v.addEventListener('timeupdate',()=>mark(v.currentTime)); v.addEventListener('pause',()=>mark(-1)); v.addEventListener('play',()=>mark(v.currentTime));
-  },
-  copyText(text,msg){
-    const ok=()=>toast(msg||'Copied');
-    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(ok,()=>{ this.copyLegacy(text)?ok():toast('Could not copy — select the text and copy it'); }); return; }
-    this.copyLegacy(text)?ok():toast('Could not copy — select the text and copy it');
-  },
-  copyLegacy(text){ try{ const t=document.createElement('textarea'); t.value=text; t.setAttribute('readonly',''); t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select(); const r=document.execCommand('copy'); t.remove(); return r; }catch(e){ return false; } },
-  async ttShare(p){
-    const text=p.tiktok||[p.caption,p.hashtags].filter(Boolean).join('\n\n');
-    this.copyText(text,'Description copied');          // first, while the tap still counts (iPhone)
-    const u=this.url(p.media[0]);
-    const mobile=/iPhone|iPad|Android/i.test(navigator.userAgent);
-    if(!mobile || !(navigator.share&&navigator.canShare)){
-      const a=document.createElement('a'); a.href=u; a.download=p.id+'.mp4'; a.target='_blank'; a.rel='noopener'; document.body.appendChild(a); a.click(); a.remove();
-      window.open('https://www.tiktok.com/tiktokstudio/upload','_blank','noopener');
-      toast('Description copied · video downloading · TikTok Studio opened'); return;
-    }
-    try{
-      let file=this.blobs[p.id];
-      if(!file){ toast('Preparing the video…'); const blob=await (await fetch(u,{cache:'force-cache'})).blob(); file=this.blobs[p.id]=new File([blob],p.id+'.mp4',{type:'video/mp4'}); }
-      if(!navigator.canShare({files:[file]})){ window.open(u,'_blank'); return; }
-      await navigator.share({files:[file]}); toast('Pick TikTok · the description is copied — paste it there');
-    }catch(e){
-      if(e&&e.name==='AbortError') return;
-      if(e&&e.name==='NotAllowedError'){ toast('Video ready — tap «Post on TikTok» once more'); return; }
-      window.open(u,'_blank');
-    }
   },
   openConnect(){
     $('#mtDisconnect').hidden=!this.meta.connected; $('#mtTok').value=''; $('#mtAppSecret').value='';
@@ -9636,12 +9529,6 @@ const Meta={ posts:[], all:[], auto:true, mf:null, meta:{connected:false}, base:
     if(d.save){ const id=d.save, g=s=>document.getElementById(s+id); Meta.edit=null;
       await Meta.act('edit',{id,caption:g('mtCap-').value,hashtags:g('mtTags-').value,date:g('mtDay-').value,time:g('mtTime-').value},'Saved'); return; }
     if(d.share){ Meta.share(P(d.share)); return; }
-    if(d.ttshare){ Meta.ttShare(P(d.ttshare)); return; }
-    if(d.ttcopy){ const p=P(d.ttcopy); Meta.copyText(p.tiktok||p.caption||'','Description copied — paste it in TikTok'); return; }
-    if(d.copycap){ const p=P(d.copycap); Meta.copyText([p.caption,p.hashtags].filter(Boolean).join('\n\n'),'Caption copied'); return; }
-    if(d.ttdone){ await Meta.act('tiktok',{id:d.ttdone,on:d.on==='1'},d.on==='1'?'Marked as posted on TikTok':'Undone'); return; }
-    if(d.hk){ Meta.hk=d.hk; Meta.render(); const v=document.getElementById('scVid'); if(v) v.play().catch(()=>{}); return; }
-    if(d.copyscript){ const S=Meta.script||{}; const h=(S.hooks||[]).find(x=>x.k===Meta.hk)||(S.hooks||[])[0]||{}; Meta.copyText((S.lines||[]).map((r,i)=>(r.t||'')+'  '+(i===0?h.say:r.say)).join('\n'),'Script copied'); return; }
   });
   grid.addEventListener('scroll',e=>{ const tr=e.target; if(!tr.dataset||!tr.dataset.track) return; const c=grid.querySelector(`[data-count="${CSS.escape(tr.dataset.track)}"]`); if(c){ const n=tr.children.length; c.textContent=(Math.min(n,Math.round(tr.scrollLeft/tr.clientWidth)+1))+'/'+n; } },true);
   $('#mtRefresh').addEventListener('click',()=>Meta.pull(true));
