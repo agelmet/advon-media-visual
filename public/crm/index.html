@@ -4577,7 +4577,7 @@ function renderYearFinance(yGenerated, yExp, yNet, rTotal, pots){
           <div class="v">${fmtMoney2(Math.round(yNet))}</div>
           <div class="sub">generated − expenses${pots.rPaid?` · includes ${fmtMoney2(Math.round(pots.rPaid))} from renewals`:''}</div>
         </div>
-        ${(()=>{ const x=null /* 3 Oct 2026: «Total profit» box removed (Angelo) */; if(!x) return ''; const g=Math.round(x.gained); return `<div class="fin-wealth" id="finWealth" title="Click to change the starting amount">
+        ${(()=>{ const x=wealthNow(); if(!x) return ''; const g=Math.round(x.gained); return `<div class="fin-wealth" id="finWealth" title="Click to change the starting amount">
           <div class="k">${IC.wallet} Total profit</div>
           <div class="v">${fmtMoney2(Math.round(x.total))}</div>
           <div class="sub">started at ${fmtMoney2(x.w.base)} on ${fmtDate(x.w.since)} · <b class="${g<0?'neg':''}">${g<0?'−':'+'}${fmtMoney2(Math.abs(g))}</b> since then · only money actually received, minus expenses</div>
