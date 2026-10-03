@@ -4328,7 +4328,7 @@ function renderYearFinance(yGenerated, yExp, yNet, rTotal, pots){
           <div class="v">${fmtMoney2(Math.round(yNet))}</div>
           <div class="sub">generated − expenses${pots.rPaid?` · includes ${fmtMoney2(Math.round(pots.rPaid))} from renewals`:''}</div>
         </div>
-        ${(()=>{ const x=wealthNow(); if(!x) return ''; const g=Math.round(x.gained); return `<div class="fin-wealth" id="finWealth" title="Click to change the starting amount">
+        ${(()=>{ const x=null /* 3 Oct 2026: «Total profit» box removed (Angelo) */; if(!x) return ''; const g=Math.round(x.gained); return `<div class="fin-wealth" id="finWealth" title="Click to change the starting amount">
           <div class="k">${IC.wallet} Total profit</div>
           <div class="v">${fmtMoney2(Math.round(x.total))}</div>
           <div class="sub">started at ${fmtMoney2(x.w.base)} on ${fmtDate(x.w.since)} · <b class="${g<0?'neg':''}">${g<0?'−':'+'}${fmtMoney2(Math.abs(g))}</b> since then · only money actually received, minus expenses</div>
@@ -7135,7 +7135,7 @@ var GM_BULB='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-w
 var GM_LINES=[
   'The first call is the hardest one. After three, it is just the game.',
   'A «No» takes 30 seconds. It is not about you — it just brings the next yes closer.',
-  'You are not asking for a favour. You are offering a free website, backed by 120+ five-star Google reviews.',
+  'You are not asking for a favour. You are offering a free website, backed by 125+ five-star Google reviews.',
   'They do not know you yet. Fifteen minutes from now, they will.',
   '220+ websites live. You have done this many times — today you just do it again.',
   'Nobody books on call one. The yeses hide somewhere between call 5 and call 15.',
