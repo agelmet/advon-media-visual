@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useLangStore } from '@/store/langStore';
 import ScrollReveal from '@/components/ScrollReveal';
 import { SOCIALS, SocialIcon } from '@/components/Socials';
+import { metaTrack } from '@/components/Analytics';
 
 // Zoho Bookings inline embed.
 //
@@ -94,6 +95,7 @@ export default function Contact() {
       if (response.ok) {
         setStatus(lang === 'el' ? 'Ευχαριστούμε! Το μήνυμά σας εστάλη επιτυχώς — θα επικοινωνήσουμε μαζί σας εντός της ημέρας.' : 'Thank you! Your message has been sent — we will contact you within the day.');
         setSent(true);
+        metaTrack('Lead', { content_name: 'contact-form' });
         form.reset();
       } else {
         setStatus(lang === 'el' ? 'Ωχ! Υπήρξε ένα πρόβλημα. Στείλτε μας email στο angelos@advonmedia.com.' : 'Oops! There was a problem. Email us at angelos@advonmedia.com.');
