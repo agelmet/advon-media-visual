@@ -13,6 +13,13 @@ import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
 export const GA_ID = 'G-2JJP554SVE';
+// Meta Pixel (Events Manager → «Advon Media's pixel», business ad account 1212936993186625).
+export const META_PIXEL_ID = '1294424308606812';
+
+// Safe wrapper: no-op until the pixel has loaded. Used by the contact form (Lead).
+export function metaTrack(ev, data) {
+  try { if (window.fbq) window.fbq('track', ev, data || {}); } catch {}
+}
 const ME_KEY = 'advon_me';
 const PRIVATE = ['/crm', '/crm-demo', '/leads', '/api'];
 
@@ -52,6 +59,16 @@ export default function Analytics() {
       gtag('config', GA_ID, { send_page_view: false, anonymize_ip: true });
       gtag('event', 'page_view', { page_path: window.location.pathname + window.location.search });
 
+      // Meta Pixel — same moment, same self-exclusion, same private-path rule.
+      if (META_PIXEL_ID && !window.fbq) {
+        const f = window; const n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+        if (!f._fbq) f._fbq = n; n.push = n; n.loaded = true; n.version = '2.0'; n.queue = [];
+        const p = document.createElement('script'); p.id = 'meta-pixel-script'; p.async = true; p.src = 'https://connect.facebook.net/en_US/fbevents.js';
+        document.head.appendChild(p);
+        window.fbq('init', META_PIXEL_ID);
+        window.fbq('track', 'PageView');
+      }
+
       const s = document.createElement('script');
       s.id = 'ga4-script';
       s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
@@ -68,8 +85,9 @@ export default function Analytics() {
 
   // Page view on every in-app navigation after the first.
   useEffect(() => {
-    if (!window.gtag || !pathname || isPrivate(pathname)) return;
-    window.gtag('event', 'page_view', { page_path: pathname + window.location.search });
+    if (!pathname || isPrivate(pathname)) return;
+    if (window.gtag) window.gtag('event', 'page_view', { page_path: pathname + window.location.search });
+    if (window.fbq) window.fbq('track', 'PageView');
   }, [pathname]);
 
   return null;
