@@ -1763,6 +1763,14 @@ body.dark .tab.tab-meta:not(.active){color:#ff7ab8;}
 .sl-tt .mt-btn{background:rgba(255,255,255,.08); color:#fff; border-color:rgba(255,255,255,.14); padding:8px 11px; font-size:12.5px; text-decoration:none;}
 .sl-tt .mt-btn.tt{background:linear-gradient(135deg,#FE2C55,#ff5b7a); border:0;}
 .sl-tt .mt-btn.ghost{background:transparent;}
+.sl-group{grid-column:1/-1; margin:14px 0 -4px; padding:14px 18px; border-radius:16px; background:var(--surface); border:1px solid var(--line);}
+.sl-group:first-child{margin-top:0;}
+.sl-group h3{margin:0; font-size:17px; display:flex; align-items:center; gap:8px;}
+.sl-group h3 span{font-size:12px; font-weight:800; padding:2px 9px; border-radius:999px; background:rgba(100,116,139,.14); color:var(--muted);}
+.sl-group p{margin:4px 0 0; font-size:13px; color:var(--muted); line-height:1.45;}
+.sl-group.is-ads{background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(245,158,11,.10)); border-color:rgba(16,140,100,.35);}
+.sl-group.is-ads h3{color:#0f6b4f;}
+.sl-group.is-old{opacity:.75;}
 .sc-panel{grid-column:1/-1; background:var(--surface); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); padding:22px; margin-top:6px;}
 .sc-head{margin-bottom:16px;}
 .sc-eye{font-size:11.5px; font-weight:800; color:var(--brand); text-transform:uppercase; letter-spacing:.08em;}
@@ -9449,7 +9457,7 @@ const Meta={ posts:[], all:[], auto:true, mf:null, meta:{connected:false}, base:
       const r=await fetch(SOCIAL_URL+'?t='+Date.now(),{headers:{'x-crm-auth':SYNC_TOKEN},cache:'no-store'});
       const j=await r.json().catch(()=>({}));
       if(!r.ok||!j.ok){ $('#mtGrid').innerHTML=`<div class="mt-empty">Could not load the posts — ${esc(j.error||('error '+r.status))}</div>`; return; }
-      this.all=j.posts||[]; this.script=j.salesScript||null; this.auto=j.auto!==false; this.meta=j.meta||{connected:false}; this.base=j.base||''; this.month=j.month||''; this.lastAt=Date.now();
+      this.all=j.posts||[]; this.script=j.salesScript||null; this.sgroups=j.salesGroups||null; this.auto=j.auto!==false; this.meta=j.meta||{connected:false}; this.base=j.base||''; this.month=j.month||''; this.lastAt=Date.now();
       this.render();
       clearTimeout(this.timer);
       if(this.all.some(p=>p.status==='posting')) this.timer=setTimeout(()=>{ if(curView==='meta') this.pull(true); },8000);
@@ -9559,7 +9567,7 @@ const Meta={ posts:[], all:[], auto:true, mf:null, meta:{connected:false}, base:
     else meta=`<div class="mt-acts sl-acts">${done?`<span class="sl-done">✓ On Instagram + Facebook</span>`:busy?`<span class="sl-done">Posting…</span>`:`<button class="mt-btn pri" data-post="${id}">Post on Instagram + Facebook</button>`}${p.status==='partial'?`<button class="mt-btn warn" data-retry="${id}">Try the missing one again</button>`:''}<button class="mt-btn" data-copycap="${id}">Copy caption</button></div>`;
     const tt=`<div class="sl-tt"><div class="sl-tth"><span class="sl-tiktok" aria-hidden="true">♪</span><b>TikTok</b>${p.tiktokDone?`<span class="sl-ttok">Posted ✓</span>`:''}</div>
       <div class="sl-ttcap">${esc(p.tiktok||p.caption||'')}</div>
-      <div class="sl-ttbtns"><button class="mt-btn" data-ttcopy="${id}">Copy description</button><button class="mt-btn tt" data-ttshare="${id}">Post on TikTok</button><a class="mt-btn" href="${esc(this.url(p.media[0]))}" download="${id}.mp4" target="_blank" rel="noopener">Download</a>
+      <div class="sl-ttbtns"><button class="mt-btn" data-ttcopy="${id}">Copy description</button><button class="mt-btn tt" data-ttshare="${id}">Post on TikTok</button><a class="mt-btn" href="${esc(this.url(p.media[0]))}" download="${id}.mp4" target="_blank" rel="noopener">${p.media45&&p.media45[0]?'Download 9:16':'Download'}</a>${p.media45&&p.media45[0]?`<a class="mt-btn" href="${esc(this.url(p.media45[0]))}" download="${id}-4x5.mp4" target="_blank" rel="noopener" title="For the Facebook / Instagram feed">Download 4:5</a>`:''}
       <button class="mt-btn ghost" data-ttdone="${id}" data-on="${p.tiktokDone?0:1}">${p.tiktokDone?'Undo «posted»':'I posted it ✓'}</button></div></div>`;
     return `<article class="mt-card sl-card ${done?'is-posted':''}" data-card="${id}">${head}${this.media(p)}${body}${this.res(p)}${meta}${tt}</article>`;
   },
@@ -9573,11 +9581,19 @@ const Meta={ posts:[], all:[], auto:true, mf:null, meta:{connected:false}, base:
         <p class="sc-cap">${esc(h.note||S.note||'')}</p></div>
       <div class="sc-script">${rows}<div class="sc-foot"><span>${esc(S.foot||'')}</span><button class="mt-btn" data-copyscript="1">Copy the script</button></div></div></div></section>`;
   },
+  /* 4 Oct 2026 — SALES in groups (sales.json «groups» + each post's «group»): Ads · Pin · Organic · Old versions */
+  salesGrouped(S){
+    const G=Array.isArray(this.sgroups)&&this.sgroups.length?this.sgroups:null;
+    if(!G) return S.map(p=>this.salesCard(p)).join('');
+    const known=new Set(G.map(g=>g.k)), rest=S.filter(p=>!known.has(p.group));
+    const block=(g,list)=>list.length?`<div class="sl-group ${g.k==='ads'?'is-ads':''} ${g.k==='old'?'is-old':''}"><h3>${esc(g.t)} <span>${list.length}</span></h3>${g.d?`<p>${esc(g.d)}</p>`:''}</div>`+list.map(p=>this.salesCard(p)).join(''):'';
+    return G.map(g=>block(g,S.filter(p=>p.group===g.k))).join('')+block({k:'other',t:'Other'},rest);
+  },
   renderSales(){
     const S=this.sales, n=k=>S.filter(p=>p.status===k).length;
     $('#mtStats').innerHTML=[['Sales videos',S.length],['On Instagram + Facebook',n('posted')],['On TikTok',S.filter(p=>p.tiktokDone).length]].map(([k,v])=>`<div class="mt-stat"><b>${v}</b><span>${k}</span></div>`).join('');
     $('#mtHelp').innerHTML='<b>SALES</b> — your selling videos, ready whenever you want them. Nothing here goes out by itself. <b>Post on Instagram + Facebook</b> publishes at once. For TikTok: <b>Post on TikTok</b> copies the description and, on your phone, opens the share menu — pick TikTok, add a trending sound, paste the description. On the computer it downloads the video and opens TikTok Studio.';
-    $('#mtGrid').innerHTML=(S.length?S.map(p=>this.salesCard(p)).join(''):'<div class="mt-empty">No sales videos yet.</div>')+this.scriptPanel();
+    $('#mtGrid').innerHTML=(S.length?this.salesGrouped(S):'<div class="mt-empty">No sales videos yet.</div>')+this.scriptPanel();
     this.wireScript();
   },
   wireScript(){

@@ -28,7 +28,7 @@ export async function GET(req) {
   const conf = ghConf();
   try {
     const [plan, state, creds] = await Promise.all([fetchPlan(), ghReady(conf) ? readState(conf) : { posts: {} }, ghReady(conf) ? readCreds(conf) : null]);
-    return json({ ok: true, base: SOCIAL_BASE, month: plan.month || null, auto: autoOn(state), posts: merged(plan, state), salesScript: plan.salesScript || null,
+    return json({ ok: true, base: SOCIAL_BASE, month: plan.month || null, auto: autoOn(state), posts: merged(plan, state), salesScript: plan.salesScript || null, salesGroups: plan.salesGroups || null,
       meta: creds ? { connected: true, pageName: creds.pageName || '', igUsername: creds.igUsername || '', source: creds.source || 'crm', connectedAt: creds.connectedAt || null } : { connected: false } });
   } catch (e) { return json({ ok: false, code: e.code || 'error', error: e.message || 'failed' }, 502); }
 }
