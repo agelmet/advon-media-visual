@@ -47,7 +47,18 @@ export default function Terms() {
 
               <h2 className="text-xl font-bold text-electric-cyan pt-4">Πνευματικά Δικαιώματα Έργων</h2>
               <p>Ο πελάτης αποκτά δικαίωμα χρήσης του σχεδιασμού για την ιστοσελίδα του. Ο κώδικας, οι τεχνικές, τα εργαλεία και τα επαναχρησιμοποιούμενα στοιχεία σχεδιασμού παραμένουν της Advon Media, η οποία μπορεί να τα χρησιμοποιεί και σε άλλα έργα. Γραμματοσειρές, εικονίδια και άλλα στοιχεία τρίτων χρησιμοποιούνται σύμφωνα με τις άδειες των δημιουργών τους.</p>
-              <p>Η Advon Media δικαιούται να παρουσιάζει τις ιστοσελίδες που έχει κατασκευάσει (όνομα, εικόνες, σύνδεσμο) στο portfolio και στην προβολή της, εκτός αν ο πελάτης ζητήσει γραπτώς να μην το κάνει.</p>
+              <p>Η Advon Media δικαιούται να παρουσιάζει τις ιστοσελίδες που έχει κατασκευάσει, όπως περιγράφεται στην ενότητα «Προβολή του έργου μας» παρακάτω.</p>
+
+              <h2 className="text-xl font-bold text-electric-cyan pt-4">Προβολή του έργου μας (portfolio, social media, διαφημίσεις)</h2>
+              <p>Με την έναρξη της συνεργασίας (την παραγγελία, την έγκριση του πρώτου draft ή την πρώτη πληρωμή), ο πελάτης συμφωνεί και δίνει τη συγκατάθεσή του ώστε η Advon Media να χρησιμοποιεί την ιστοσελίδα που κατασκευάσαμε για εκείνον για την προβολή της δουλειάς μας, και συγκεκριμένα:</p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>στο portfolio και στις σελίδες της ιστοσελίδας μας (advonmedia.com),</li>
+                <li>σε αναρτήσεις, βίντεο και reels στα social media μας (Instagram, Facebook, TikTok κ.ά.),</li>
+                <li>σε διαφημίσεις μας (π.χ. Meta Ads, Google Ads) και σε παρουσιάσεις σε υποψήφιους πελάτες.</li>
+              </ul>
+              <p>Η προβολή περιλαμβάνει εικόνες (screenshots) και βίντεο της ιστοσελίδας σε υπολογιστή και κινητό, όπως εμφανίζεται δημόσια, μαζί με ό,τι φαίνεται σε αυτήν (όνομα, επάγγελμα, λογότυπο, φωτογραφίες, κείμενα), τη διεύθυνσή της (domain) και σύνδεσμο προς αυτήν. Μπορεί επίσης να περιλαμβάνει την κριτική που ο πελάτης έχει αφήσει δημόσια για την Advon Media στο Google.</p>
+              <p>Δεν δημοσιεύουμε ποτέ μηνύματα, αρχεία ή στοιχεία που μας έστειλε ιδιωτικά ο πελάτης, δεδομένα των επισκεπτών της ιστοσελίδας του, ούτε υλικό που δεν έχει δημοσιευτεί. Δείχνουμε μόνο ιστοσελίδες που είναι ήδη online.</p>
+              <p>Ο πελάτης μπορεί οποιαδήποτε στιγμή να ζητήσει να σταματήσει η προβολή, με ένα email στο <a href="mailto:angelos@advonmedia.com" className="text-electric-cyan hover:underline">angelos@advonmedia.com</a>. Τότε δεν χρησιμοποιούμε πλέον την ιστοσελίδα του σε νέο υλικό και την αφαιρούμε από την ιστοσελίδα, το portfolio και τις δικές μας αναρτήσεις μέσα σε 10 εργάσιμες ημέρες. Διαφημίσεις που έχουν ήδη προβληθεί δεν μπορούν να ανακληθούν.</p>
 
               <h2 className="text-xl font-bold text-electric-cyan pt-4">Κωδικοί & Πρόσβαση</h2>
               <p>Ο πελάτης είναι υπεύθυνος να φυλάσσει με ασφάλεια κάθε κωδικό ή πρόσβαση που του δίνουμε (π.χ. διαχειριστικό περιβάλλον, λογαριασμούς). Δεν ευθυνόμαστε για αλλαγές, απώλειες ή ζημίες που προκαλούνται από τον πελάτη ή από τρίτους που χρησιμοποίησαν την πρόσβαση αυτή.</p>
@@ -67,7 +78,7 @@ export default function Terms() {
 
               <h2 className="text-xl font-bold text-electric-cyan pt-4">Τροποποιήσεις</h2>
               <p>Μπορούμε να ενημερώνουμε τους παρόντες όρους. Η ισχύουσα μορφή είναι πάντα αυτή που δημοσιεύεται στη σελίδα αυτή. Αν κάποιος όρος κριθεί άκυρος, οι υπόλοιποι εξακολουθούν να ισχύουν.</p>
-              <p>Τελευταία ενημέρωση: 21 Σεπτεμβρίου 2026.</p>
+              <p>Τελευταία ενημέρωση: 4 Οκτωβρίου 2026.</p>
 
               <h2 className="text-xl font-bold text-electric-cyan pt-4">Επικοινωνία</h2>
               <p>Για οποιαδήποτε απορία σχετικά με τους Όρους Χρήσης, μπορείτε να επικοινωνήσετε μαζί μας: Email: <a href="mailto:angelos@advonmedia.com" className="text-electric-cyan hover:underline">angelos@advonmedia.com</a></p>
@@ -103,7 +114,18 @@ export default function Terms() {
 
               <h2 className="text-xl font-bold text-electric-cyan pt-4">Intellectual Property in Our Work</h2>
               <p>The client receives the right to use the design for their website. The code, techniques, tools and reusable design elements remain the property of Advon Media, which may also use them in other projects. Fonts, icons and other third-party elements are used under their creators’ licences.</p>
-              <p>Advon Media may show the websites it has built (name, images, link) in its portfolio and promotion, unless the client asks in writing that we do not.</p>
+              <p>Advon Media may show the websites it has built, as described in the section «Showing our work» below.</p>
+
+              <h2 className="text-xl font-bold text-electric-cyan pt-4">Showing our work (portfolio, social media, advertising)</h2>
+              <p>By starting a cooperation with us (placing the order, approving the first draft or making the first payment), the client agrees and gives consent that Advon Media may use the website we built for them to promote our work, specifically:</p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>in the portfolio and on the pages of our website (advonmedia.com),</li>
+                <li>in posts, videos and reels on our social media (Instagram, Facebook, TikTok and others),</li>
+                <li>in our advertising (e.g. Meta Ads, Google Ads) and in presentations to prospective clients.</li>
+              </ul>
+              <p>This includes images (screenshots) and videos of the website on desktop and mobile, as it appears publicly, together with what is shown on it (name, profession, logo, photos, texts), its address (domain) and a link to it. It may also include the review the client has left publicly for Advon Media on Google.</p>
+              <p>We never publish messages, files or details the client sent us privately, data of the visitors of their website, or material that has not been published. We only show websites that are already online.</p>
+              <p>The client may ask at any time for this to stop, by email to <a href="mailto:angelos@advonmedia.com" className="text-electric-cyan hover:underline">angelos@advonmedia.com</a>. We then stop using their website in new material and remove it from our website, portfolio and our own posts within 10 working days. Advertisements that have already been shown cannot be recalled.</p>
 
               <h2 className="text-xl font-bold text-electric-cyan pt-4">Passwords & Access</h2>
               <p>The client is responsible for keeping safe any password or access we give them (e.g. an admin panel or accounts). We are not responsible for changes, losses or damage caused by the client or by third parties who used that access.</p>
@@ -123,7 +145,7 @@ export default function Terms() {
 
               <h2 className="text-xl font-bold text-electric-cyan pt-4">Changes</h2>
               <p>We may update these terms. The version in force is always the one published on this page. If any term is found to be invalid, the rest remain in force.</p>
-              <p>Last updated: 21 September 2026.</p>
+              <p>Last updated: 4 October 2026.</p>
 
               <h2 className="text-xl font-bold text-electric-cyan pt-4">Contact</h2>
               <p>For any questions regarding the Terms of Use, you can contact us: Email: <a href="mailto:angelos@advonmedia.com" className="text-electric-cyan hover:underline">angelos@advonmedia.com</a></p>
