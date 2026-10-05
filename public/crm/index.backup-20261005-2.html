@@ -1643,51 +1643,6 @@ body.dark .day-row button{background:var(--surface);}
 .ld-item .w-bad s{opacity:.8;}
 .ld-item .w-out.np{background:var(--yellow-soft); color:#8A6400;}
 .ld-np .panel-body{max-height:55vh; overflow:auto;}
-.ld-item{flex-wrap:wrap; row-gap:6px;} .ld-item .w-main{flex:1 1 220px;} .ld-acts .a-np .lb{display:none;} .ld-acts .a-np{padding:6px 8px;} .ld-acts{flex-wrap:wrap; justify-content:flex-end; margin-left:auto;}
-/* 5 Oct 2026: notes, call-backs, «almost booked», drag to reorder */
-.ld-item.hot{background:var(--green-soft); border-color:rgba(14,198,115,.55); box-shadow:inset 4px 0 0 var(--green);}
-.ld-item .w-hot{background:var(--green); color:#fff; border-radius:99px; padding:1px 8px; font-size:10.5px; font-weight:800; white-space:nowrap;}
-.ld-item .w-cb{display:inline-flex; align-items:center; gap:4px; background:var(--blue-soft); color:var(--brand); border-radius:99px; padding:1px 8px; font-size:11px; font-weight:800; white-space:nowrap;}
-.ld-item .w-cb.due{background:var(--red); color:#fff;}
-.ld-item .w-cb .ic,.ld-item .w-memo .ic{width:1em; height:1em; flex-shrink:0;}
-.ld-item .w-memo{display:flex; gap:6px; align-items:flex-start; margin-top:5px; font-size:12.5px; font-weight:600; color:var(--ink); background:rgba(255,196,0,.14); border-radius:8px; padding:5px 9px; white-space:pre-wrap; cursor:pointer;}
-.ld-item .w-memo .ic{margin-top:2px; color:#8A6400;}
-.ld-acts .a-cb,.ld-acts .a-hot,.ld-acts .a-memo{padding:6px 8px; color:var(--muted);}
-.ld-acts .a-cb .ic,.ld-acts .a-hot .ic,.ld-acts .a-memo .ic{width:13px; height:13px;}
-.ld-acts .a-cb.on{color:var(--brand); border-color:#BFD4F2; background:var(--blue-soft);}
-.ld-acts .a-hot.on{background:var(--green); border-color:var(--green); color:#fff;}
-.ld-acts .a-memo.on{color:#8A6400; background:var(--yellow-soft); border-color:transparent;}
-.ld-grip{flex-shrink:0; align-self:stretch; display:flex; align-items:center; margin:-9px 0 -9px -8px; padding:0 4px 0 6px; color:var(--muted); cursor:grab; touch-action:none; border-radius:10px 0 0 10px;}
-.ld-grip .ic{width:16px; height:16px;}
-.ld-grip:hover{color:var(--ink); background:rgba(0,0,0,.04);}
-.ld-item.dragging{box-shadow:var(--shadow-lg); cursor:grabbing; opacity:.97;}
-.ld-ph{border:2px dashed #BFD4F2; background:var(--blue-soft); border-radius:12px; margin-bottom:6px;}
-body.ld-dragging{user-select:none; -webkit-user-select:none; cursor:grabbing;}
-.ld-edit{flex-basis:100%; background:var(--blue-soft); border:1px solid #BFD4F2; border-radius:12px; padding:10px 12px; margin-top:4px;}
-.ld-edit.memo{background:var(--yellow-soft); border-color:rgba(255,196,0,.45);}
-.ld-edit .lbl{font-size:11px; font-weight:800; color:var(--brand); text-transform:uppercase; letter-spacing:.08em; display:flex; align-items:center; gap:5px;}
-.ld-edit .lbl .ic{width:13px; height:13px;}
-.ld-edit.memo .lbl{color:#8A6400;}
-.ld-edit .row{display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin-top:6px;}
-.ld-edit .row button{font-size:12px; font-weight:700; padding:6px 10px; border-radius:8px; background:#fff; border:1px solid var(--line); color:var(--ink); display:inline-flex; align-items:center; gap:4px;}
-.ld-edit .row button .ic{width:13px; height:13px;}
-.ld-edit .row button.on{background:var(--brand); color:#fff; border-color:var(--brand);}
-.ld-edit .row input{width:auto; border:1px solid var(--line); border-radius:8px; padding:6px 8px; background:#fff; font:inherit;}
-.ld-edit textarea{width:100%; min-height:54px; border:1px solid var(--line); border-radius:9px; padding:7px 9px; font:inherit; font-size:13px; background:#fff; resize:vertical; margin-top:6px; box-sizing:border-box;}
-.ld-edit .row button.go{background:var(--brand); color:#fff; border-color:var(--brand); font-weight:800;}
-.ld-edit.memo .row button.go{background:#8A6400; border-color:#8A6400;}
-.ld-edit .row button.x{background:transparent; border-color:transparent; color:var(--muted);}
-.ld-focus.hot{background:linear-gradient(180deg,var(--green-soft),#fff 70%); border-color:rgba(14,198,115,.55);}
-.ld-focus .f-memo{margin-top:10px; font-size:14px; font-weight:600; background:rgba(255,196,0,.14); border-radius:10px; padding:8px 12px; white-space:pre-wrap; display:flex; gap:8px; align-items:flex-start; cursor:pointer;}
-.ld-focus .f-memo .ic{width:15px; height:15px; margin-top:2px; color:#8A6400; flex-shrink:0;}
-.ld-focus .f-foot{flex-wrap:wrap;}
-.ld-focus .f-foot .cbk{color:var(--brand); background:var(--blue-soft); display:inline-flex; align-items:center; gap:5px;}
-.ld-focus .f-foot .hotb{color:var(--deep); background:var(--green-soft); display:inline-flex; align-items:center; gap:5px;}
-.ld-focus .f-foot .hotb.on{background:var(--green); color:#fff;}
-.ld-focus .f-foot .memob{color:#8A6400; background:var(--yellow-soft); display:inline-flex; align-items:center; gap:5px;}
-.ld-focus .f-foot .ic{width:13px; height:13px;}
-#ldFocusEdit .ld-edit{margin-top:12px;}
-.day-row .tm.due{color:var(--red);}
 .ld-focus .f-foot .np{color:#8A6400; background:var(--yellow-soft); display:inline-flex; align-items:center; gap:5px;}
 .ld-focus .f-foot .np .ic{width:13px; height:13px;}
 .ld-group-h{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); display:flex; align-items:center; gap:6px; margin:10px 2px 6px; cursor:pointer;}
@@ -1700,7 +1655,7 @@ body.dark .ld-book .row button,body.dark .ld-book .row input{background:var(--su
 @media(max-width:900px){ .ld-banner{grid-template-columns:repeat(3,1fr);} .ld-grid{grid-template-columns:1fr;} }
 @media(max-width:760px){
   body.ld-call .ld-banner, body.ld-call .ld-tools select, body.ld-call .ld-tools input, body.ld-call .ld-import{display:none;}
-  .ld-item{flex-wrap:wrap; row-gap:6px;} .ld-acts{flex-basis:100%;} .ld-acts button{flex:1; justify-content:center; padding:9px 6px; font-size:12px;} .ld-acts .a-np .lb{display:none;} .ld-grip{margin-left:-8px;}
+  .ld-item{flex-wrap:wrap; row-gap:6px;} .ld-acts{flex-basis:100%;} .ld-acts button{flex:1; justify-content:center; padding:9px 6px; font-size:12px;} .ld-acts .a-np .lb{display:none;}
   .ld-focus{padding:18px 16px 18px 20px;} .ld-focus .f-name{font-size:22px;} .ld-focus .f-phone{font-size:26px;}
   .ld-focus .f-acts{grid-template-columns:1fr 1fr;} .ld-focus .f-acts button{padding:14px 8px; font-size:15px;}
   .ld-focus .f-foot .keys{display:none;}
@@ -3451,7 +3406,6 @@ function toastUndo(msg, undo, secs){
 /* ---------- inline SVG icons (professional, no emojis) ---------- */
 const SVG=(p,sw)=>`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw||2}" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
 const IC={
-  grip:SVG('<circle cx="9" cy="6" r="1.3"/><circle cx="15" cy="6" r="1.3"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/><circle cx="9" cy="18" r="1.3"/><circle cx="15" cy="18" r="1.3"/>'),
   phoneOff:SVG('<path d="M10.7 13.3a16 16 0 0 0 3.4 2.6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.4 19.4 0 0 1-3.7-3.1"/><path d="M5.2 13.6a19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 3h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 10.8"/><path d="M22 2 2 22"/>'),
   search:SVG('<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>'),
   moon:SVG('<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>'),
@@ -3557,7 +3511,7 @@ function ldTouched(l, ld){
   if(!l) return true;
   if(l.status && l.status!=='new') return true;
   if(Array.isArray(l.tries) && l.tries.length) return true;
-  if(l.updated || l.doneAt || l.clientId || l.logId || l.note2 || l.memo || l.cb || l.hot || l.pr!=null) return true;
+  if(l.updated || l.doneAt || l.clientId || l.logId || l.note2) return true;
   if(ld && ((ld.skip&&ld.skip[l.id]) || ld.focus===l.id)) return true;
   return !ldFromServer(l);
 }
@@ -4900,15 +4854,11 @@ function logEntryEl(l){
 }
 function linkClientForLog(l, time, mday){
   if(l.clientId && state.clients.find(c=>c.id===l.clientId)) return;
-  /* already on the Board from Zoho / Google Calendar → use that card, never a second one (5 Oct 2026) */
-  try{ const tw=bkTwinForName(l.name, l.phone); if(tw){ l.clientId=tw.id; tw.fromLog=l.id; if(!tw.value && +l.value) tw.value=+l.value;
-    if(bkWords(l.name).length>bkWords(tw.name).length){ tw.notes=[tw.notes,'Όνομα στην online κράτηση: '+tw.name].filter(Boolean).join('\n'); tw.name=l.name; }
-    tw.updated=Date.now(); return; } }catch(e){}
   const date=l.date||todayIso();
   const month=date.slice(0,7);
   /* a meeting day (or just a time) puts the meeting on the Calendar — the day you picked, else the logged day */
   const day= mday || (time?date:'');
-  const c={id:uid(), name:l.name, value:+l.value||0, day, time:time||'', stage:'booked', month, notes:'', created:Date.now(), updated:Date.now(), fromLog:l.id};
+  const c={id:uid(), name:l.name, value:+l.value||0, day, time:time||'', stage:'booked', month, notes:'', created:Date.now(), updated:Date.now()};
   state.clients.push(c); l.clientId=c.id;
 }
 /* Quick Log → Booked: one tap for the meeting day and time; the client lands on the Calendar at that slot */
@@ -6420,24 +6370,6 @@ function bkSamePerson(a,b){
   const [sh,lo]=A.length<=B.length?[A,B]:[B,A];
   return sh.every(w=>lo.includes(w)) && sh.some(w=>w.length>=4);
 }
-/* Zoho gives only what the client typed — usually the surname in Latin («Folla», «Makedou») and no phone,
-   while the card made from the Leads tab carries the Greek name («Φόλλα Κατερίνα») and the doctoranytime number.
-   bkSoundKeys turns both into the same rough sound-key so they can be recognised as one person. */
-const GR_LAT={α:'a',β:'v',γ:'g',δ:'d',ε:'e',ζ:'z',η:'i',θ:'t',ι:'i',κ:'k',λ:'l',μ:'m',ν:'n',ξ:'ks',ο:'o',π:'p',ρ:'r',σ:'s',τ:'t',υ:'i',φ:'f',χ:'h',ψ:'ps',ω:'o'};
-function bkSoundKeys(w){
-  let s=bkFold(w);
-  s=s.replace(/ου/g,'u').replace(/μπ/g,'b').replace(/ντ/g,'d').replace(/γκ|γγ/g,'g').replace(/αι/g,'e').replace(/ει|οι|υι/g,'i').replace(/αυ/g,'av').replace(/ευ/g,'ev').replace(/[α-ω]/g,c=>GR_LAT[c]||c);
-  s=s.replace(/ou/g,'u').replace(/mp/g,'b').replace(/nt/g,'d').replace(/gk|gg|ng/g,'g').replace(/ph/g,'f').replace(/th/g,'t').replace(/ch|kh/g,'h').replace(/ai/g,'e').replace(/ei|oi|ee|y/g,'i').replace(/w/g,'o').replace(/c/g,'k').replace(/b/g,'v').replace(/[^a-z]/g,'');
-  const out=s.includes('x')? [s.replace(/x/g,'ks'), s.replace(/x/g,'h')] : [s];
-  return out.map(k=>k.replace(/(.)\1+/g,'$1'));
-}
-function bkSoundSame(a,b){
-  const W=s=>bkWords(s).filter(w=>w.length>=3).map(bkSoundKeys);
-  const A=W(a), B=W(b); if(!A.length||!B.length) return false;
-  const [sh,lo]=A.length<=B.length?[A,B]:[B,A];
-  const hit=k=>lo.some(L=>L.some(x=>k.includes(x)));
-  return sh.every(hit) && sh.some(k=>k[0].length>=4 && hit(k));
-}
 const bkTel=s=>{ const d=String(s||'').replace(/\D/g,''); return d.length>=9? d.slice(-9) : ''; };
 /* The same person already on the Board? Same email, same phone, or the same
    name — in any word order. The day only has to agree for a booking still to
@@ -6446,26 +6378,13 @@ const bkTel=s=>{ const d=String(s||'').replace(/\D/g,''); return d.length>=9? d.
 function bkMatchClient(b){
   const n=bkName(b.name), e=String(b.email||'').toLowerCase(), tel=bkTel(b.phone);
   const past=!b.day || b.day<todayIso();
-  const hit=state.clients.find(c=>{
+  return state.clients.find(c=>{
     if(isTrashed(c)) return false;
     if(c.fromBooking===b.uid) return true;
     if(e && String(c.email||'').toLowerCase()===e) return true;
     if(tel && bkTel(c.phone)===tel) return true;
     return n && bkSamePerson(c.name, b.name) && (past || !c.day || c.day===b.day);
-  });
-  if(hit) return hit;
-  /* 5 Oct 2026 — a card he booked himself (Leads / Quick Log) that is still waiting for its online booking:
-     same person even when Zoho has the name in Latin, another day or no phone. Only when exactly ONE card fits. */
-  const since=Date.now()-45*864e5;
-  const wait=state.clients.filter(c=>!isTrashed(c) && c.stage==='booked' && !c.fromBooking && (c.created||0)>=since && n && bkSoundSame(c.name, b.name));
-  return wait.length===1? wait[0] : null;
-}
-/* the other way round: he presses Booked in the CRM for someone the calendar already put on the Board */
-function bkTwinForName(name, phone){
-  const since=Date.now()-45*864e5, tel=bkTel(phone);
-  const list=state.clients.filter(c=>!isTrashed(c) && c.stage==='booked' && c.fromBooking && !c.fromLead && !c.fromLog && (c.created||0)>=since &&
-    ((tel && bkTel(c.phone)===tel) || bkSamePerson(c.name, name) || bkSoundSame(c.name, name)));
-  return list.length===1? list[0] : null;
+  })||null;
 }
 function bkNew(){ const s=ensureBk().seen; return BK_LIST.filter(b=>b.uid && !s[b.uid]); }
 function bkLabel(b){
@@ -6481,9 +6400,6 @@ function bkPut(b, quiet){
   if(hit){
     let changed=false;
     if(b.day && !hit.day){ hit.day=b.day; hit.time=b.time||hit.time; changed=true; }
-    /* a meeting he booked himself: the online booking is the real slot */
-    else if(b.day && hit.stage==='booked' && !hit.fromBooking && (hit.day!==b.day || (b.time && hit.time!==b.time))){ hit.day=b.day; hit.time=b.time||hit.time; hit.month=b.day.slice(0,7); changed=true; }
-    if(b.meet && !String(hit.notes||'').includes(b.meet)){ hit.notes=[hit.notes, b.service?('Κράτηση: '+b.service):'', b.meet].filter(Boolean).join('\n'); changed=true; }
     if(b.phone && !hit.phone){ hit.phone=b.phone; changed=true; }
     if(b.email && !hit.email){ hit.email=b.email; changed=true; }
     if(!hit.fromBooking){ hit.fromBooking=b.uid; changed=true; }
@@ -7096,16 +7012,6 @@ const LD_SHARED_PHONES={'2155050005':"doctoranytime's central line"};
 const ldBadPhone=l=>!!LD_SHARED_PHONES[String(l.phone||'')];
 const ldNoPh=l=>l.status==='np' || ((l.status==='new'||l.status==='na') && ldBadPhone(l));
 const ldOpen=l=>(l.status==='new'||l.status==='na') && !ldBadPhone(l);
-/* ---- 5 Oct 2026: call-backs («she said call me tomorrow at 14:00»), notes, «almost booked», manual order ---- */
-const LD_CB_TIMES=['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
-const ldNowHM=()=>{ const n=new Date(); return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); };
-const ldCbAt=l=>(l.cb&&l.cb.day)? l.cb.day+'T'+(l.cb.time||'00:00') : '';
-function ldCbDue(l){ if(!l.cb||!l.cb.day) return false; const t=todayIso(); if(l.cb.day!==t) return l.cb.day<t; return !l.cb.time || l.cb.time<=ldNowHM(); }
-function ldDayWord(d){ if(!d) return ''; const t=todayIso(); if(d===t) return 'today'; if(d===isoDate(new Date(Date.now()+864e5))) return 'tomorrow'; if(d===isoDate(new Date(Date.now()-864e5))) return 'yesterday'; const x=new Date(d+'T00:00'); return DOW[(x.getDay()+6)%7]+' '+fmtDay(d); }
-const ldCbLabel=l=>'Call back '+ldDayWord(l.cb.day)+(l.cb.time?' · '+l.cb.time:'');
-const ldPr=l=>l.pr!=null? +l.pr : 1e9;
-const ldNaCmp=(a,b)=>(ldPr(a)-ldPr(b))||ldLastTry(a).localeCompare(ldLastTry(b));
-let ldCbFor=null, ldCbPick={day:'',time:'',memo:''}, ldMemoFor=null;
 /* merge a batch of pool/CSV leads — only keys we have never seen */
 /* a state that just came from the server: put back the untouched leads that
    were left out of the blob, so nothing appears to vanish before the next pull */
@@ -7204,10 +7110,7 @@ function ldFiltered(){
 function ldQueue(){
   const t=todayIso(); const f=ldFiltered();
   const skip=(state.meta.ld&&state.meta.ld.skip)||{};
-  const due=f.filter(l=>ldOpen(l) && l.cb && ldCbDue(l)).sort((a,b)=>ldCbAt(a).localeCompare(ldCbAt(b)));
-  const q=due.concat(f.filter(l=>l.status==='new' && ldOpen(l) && !l.cb), f.filter(l=>l.status==='na' && ldOpen(l) && !l.cb && ldLastTry(l)!==t).sort(ldNaCmp));
-  /* skipped ones go to the back, oldest skip first (stable sort keeps everything else in place) */
-  return q.map((l,i)=>[l,i]).sort((a,b)=>((skip[a[0].id]||0)-(skip[b[0].id]||0))||(a[1]-b[1])).map(x=>x[0]);
+  return f.filter(l=>l.status==='new' && ldOpen(l)).concat(f.filter(l=>l.status==='na' && ldOpen(l) && ldLastTry(l)!==t).sort((a,b)=>((skip[a.id]||0)-(skip[b.id]||0))||ldLastTry(a).localeCompare(ldLastTry(b))));
 }
 function ldFillSelects(){
   const specs={}, cities={};
@@ -7220,7 +7123,6 @@ function ldLogNote(l){ return [ldSpecShort(l), l.city].filter(Boolean).join(' ·
 function ldOutcome(l, type){
   ensureLeads();
   const date=todayIso();
-  if(type!=='g'){ delete l.cb; if(ldCbFor===l.id) ldCbFor=null; }
   if(type==='n'){
     l.tries.push(date); l.status='na'; l.updated=Date.now();
     save(); ldAfter(l); toast(l.name+' → no answer · parked for another day ('+l.tries.length+(l.tries.length===1?' try)':' tries)')); return;
@@ -7237,13 +7139,12 @@ function ldBookConfirm(l){
   const log={id:uid(), type:'g', name:l.name, value:+value||0, source:'cold', note:ldLogNote(l), date, created:Date.now(), updated:Date.now(), leadId:l.id};
   state.logs.push(log); linkClientForLog(log, time, day);
   const c=state.clients.find(x=>x.id===log.clientId);
-  if(c){ if(!c.phone) c.phone=l.phone; const add=[ldLogNote(l), l.addr, l.url, l.memo?('Σημείωση: '+l.memo):''].filter(Boolean).join('\n'); c.notes=c.notes? (c.notes+'\n'+add) : add; c.fromLead=l.id; }
-  l.status='g'; l.logId=log.id; l.clientId=log.clientId; l.doneAt=Date.now(); delete l.cb;
+  if(c){ if(!c.phone) c.phone=l.phone; c.notes=[ldLogNote(l), l.addr, l.url].filter(Boolean).join('\n'); c.fromLead=l.id; }
+  l.status='g'; l.logId=log.id; l.clientId=log.clientId; l.doneAt=Date.now();
   if(date.slice(0,7)!==curMonth) curMonth=date.slice(0,7);
   ldBookingFor=null; ldBookPick={day:'',time:'',value:''};
   save(); ldAfter(l);
-  if(c && c.fromBooking) toast(l.name+' → Booked · already on the Board from the online booking'+(c.day?' ('+fmtDay(c.day)+(c.time?' '+c.time:'')+')':'')+' — no second card');
-  else toast(l.name+' → Booked'+((day||time)?' · meeting '+(day?fmtDay(day):'today')+(time?' '+time:'')+' on the Calendar':' · on the Board'));
+  toast(l.name+' → Booked'+((day||time)?' · meeting '+(day?fmtDay(day):'today')+(time?' '+time:'')+' on the Calendar':' · on the Board'));
 }
 function ldOpenBooking(l){ ldBookingFor=l.id; ldBookPick={day:'',time:'',value:''}; renderLeads(); const el=document.querySelector('.ld-book.on input'); if(el) el.focus(); }
 function ldUndo(l){
@@ -7262,88 +7163,6 @@ function ldSkip(l){
   renderLeads(); save();
   toast('Skipped '+l.name+(next?' → next: '+next.name:''));
 }
-function ldSetCb(l, day, time, memo){
-  ensureLeads(); if(!day){ toast('Pick the day to call back'); return; }
-  l.cb={day, time:time||''}; if(memo!=null){ const m=String(memo).trim(); if(m) l.memo=m; }
-  if(l.status==='new'||l.status==='np') l.status='na';
-  l.updated=Date.now(); delete state.meta.ld.skip[l.id];
-  if(state.meta.ld.focus===l.id){ const nx=ldQueue().find(x=>x.id!==l.id); if(nx) state.meta.ld.focus=nx.id; else delete state.meta.ld.focus; }
-  ldCbFor=null; ldCbPick={day:'',time:'',memo:''};
-  renderLeads(); save(); toast(l.name+' → '+ldCbLabel(l)+' · at the top of «No answer»');
-}
-function ldClearCb(l){ delete l.cb; l.updated=Date.now(); ldCbFor=null; renderLeads(); save(); toast('Call-back removed — '+l.name); }
-function ldSaveMemo(l, text){ const m=String(text||'').trim(); if(m) l.memo=m; else delete l.memo; l.updated=Date.now(); ldMemoFor=null; renderLeads(); save(); toast(m?'Note saved — '+l.name:'Note removed'); }
-function ldToggleHot(l){
-  ensureLeads(); l.hot=!l.hot; if(!l.hot) delete l.hot;
-  if(l.hot){ const prs=state.leads.filter(x=>x!==l && x.pr!=null).map(x=>+x.pr); l.pr=(prs.length?Math.min.apply(null,prs):0)-1; }
-  l.updated=Date.now(); renderLeads(); save();
-  toast(l.hot? l.name+' → Almost booked · green and at the top of «No answer»' : l.name+' → no longer marked');
-}
-/* drag a lead up or down in «No answer» — mouse and finger (pointer events), the order is saved as l.pr */
-function ldDragWire(g, items){
-  g.querySelectorAll(':scope > .ld-item > .ld-grip').forEach(grip=>grip.addEventListener('pointerdown',e=>{
-    if(e.pointerType==='mouse' && e.button!==0) return;
-    e.preventDefault();
-    const row=grip.parentElement; const r0=row.getBoundingClientRect(); const dy=e.clientY-r0.top;
-    const ph=document.createElement('div'); ph.className='ld-ph'; ph.style.height=r0.height+'px';
-    row.after(ph);
-    Object.assign(row.style,{position:'fixed', left:r0.left+'px', top:r0.top+'px', width:r0.width+'px', zIndex:60, pointerEvents:'none', margin:0});
-    row.classList.add('dragging'); document.body.classList.add('ld-dragging');
-    let lastY=e.clientY, raf=0;
-    const place=()=>{
-      row.style.top=(lastY-dy)+'px';
-      const sibs=[...g.querySelectorAll(':scope > .ld-item')].filter(x=>x!==row);
-      let before=null; for(const x of sibs){ const b=x.getBoundingClientRect(); if(lastY < b.top+b.height/2){ before=x; break; } }
-      if(before){ if(ph.nextElementSibling!==before) g.insertBefore(ph, before); }
-      else { const last=sibs[sibs.length-1]; if(last && ph.previousElementSibling!==last) last.after(ph); }
-      if(lastY<70) window.scrollBy(0,-14); else if(lastY>innerHeight-70) window.scrollBy(0,14);
-    };
-    const tick=()=>{ place(); raf=(lastY<70||lastY>innerHeight-70)? requestAnimationFrame(tick) : 0; };
-    const move=ev=>{ lastY=ev.clientY; if(!raf) raf=requestAnimationFrame(tick); };
-    const up=()=>{
-      document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up);
-      cancelAnimationFrame(raf); ph.replaceWith(row); row.removeAttribute('style'); row.classList.remove('dragging'); document.body.classList.remove('ld-dragging');
-      const shown=[...g.querySelectorAll(':scope > .ld-item')].map(x=>x.dataset.id);
-      const order=shown.concat(items.map(x=>x.id).filter(id=>!shown.includes(id)));
-      let moved=false; order.forEach((id,i)=>{ const l=items.find(x=>x.id===id); if(l && l.pr!==i){ l.pr=i; l.updated=Date.now(); moved=true; } });
-      if(moved){ renderLeads(); save(); }
-    };
-    document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
-  }));
-}
-function ldCbEl(l){
-  const box=document.createElement('div'); box.className='ld-edit';
-  const days=qcQuickDays(); const P=ldCbPick;
-  box.innerHTML=`<div class="lbl">${IC.clock} Call back ${esc(l.name)} — when?</div>
-    <div class="row" data-days>${days.map(o=>`<button type="button" data-day="${o.k}" class="${P.day===o.k?'on':''}" title="${fmtDate(o.k)}">${o.t}</button>`).join('')}<input type="date" data-dayinput value="${P.day}" title="Another day"></div>
-    <div class="row" data-times>${LD_CB_TIMES.map(t=>`<button type="button" data-time="${t}" class="${P.time===t?'on':''}">${t}</button>`).join('')}<input type="time" data-timeinput value="${P.time}" title="Another time"></div>
-    <textarea data-memo placeholder="What did you say? e.g. very interested — wants to talk more and book">${esc(P.memo)}</textarea>
-    <div class="row"><button type="button" class="go" data-go>${IC.check} Save call-back</button>${l.cb?'<button type="button" data-clear>Remove call-back</button>':''}<button type="button" class="x" data-cancel>Cancel</button></div>`;
-  const keep=()=>{ P.memo=box.querySelector('[data-memo]').value; };
-  box.querySelectorAll('[data-day]').forEach(b=>b.addEventListener('click',()=>{ keep(); P.day= P.day===b.dataset.day?'':b.dataset.day; renderLeads(); }));
-  box.querySelectorAll('[data-time]').forEach(b=>b.addEventListener('click',()=>{ keep(); P.time= P.time===b.dataset.time?'':b.dataset.time; renderLeads(); }));
-  box.querySelector('[data-dayinput]').addEventListener('change',e=>{ keep(); P.day=e.target.value; renderLeads(); });
-  box.querySelector('[data-timeinput]').addEventListener('change',e=>{ keep(); P.time=e.target.value; renderLeads(); });
-  box.querySelector('[data-memo]').addEventListener('input',e=>{ P.memo=e.target.value; });
-  box.querySelector('[data-go]').addEventListener('click',()=>{ keep(); ldSetCb(l, P.day, P.time, P.memo); });
-  const c=box.querySelector('[data-clear]'); if(c) c.addEventListener('click',()=>ldClearCb(l));
-  box.querySelector('[data-cancel]').addEventListener('click',()=>{ ldCbFor=null; renderLeads(); });
-  return box;
-}
-function ldOpenCb(l){ ldMemoFor=null; ldBookingFor=null; ldCbFor= ldCbFor===l.id? null : l.id; ldCbPick={day:(l.cb&&l.cb.day)||'', time:(l.cb&&l.cb.time)||'', memo:l.memo||''}; renderLeads(); }
-function ldMemoEl(l){
-  const box=document.createElement('div'); box.className='ld-edit memo';
-  box.innerHTML=`<div class="lbl">${IC.edit} Note for ${esc(l.name)}</div><textarea data-memo placeholder="Anything to remember — e.g. call after 14:00, the secretary answers, has a site but wants a new one…">${esc(l.memo||'')}</textarea>
-    <div class="row"><button type="button" class="go" data-go>${IC.check} Save note</button>${l.memo?'<button type="button" data-del>Delete note</button>':''}<button type="button" class="x" data-cancel>Cancel</button></div>`;
-  const ta=box.querySelector('textarea');
-  ta.addEventListener('keydown',e=>{ if(e.key==='Enter' && (e.metaKey||e.ctrlKey)){ e.preventDefault(); ldSaveMemo(l, ta.value); } if(e.key==='Escape'){ ldMemoFor=null; renderLeads(); } });
-  box.querySelector('[data-go]').addEventListener('click',()=>ldSaveMemo(l, ta.value));
-  const d=box.querySelector('[data-del]'); if(d) d.addEventListener('click',()=>ldSaveMemo(l,''));
-  box.querySelector('[data-cancel]').addEventListener('click',()=>{ ldMemoFor=null; renderLeads(); });
-  setTimeout(()=>{ ta.focus({preventScroll:true}); ta.setSelectionRange(ta.value.length, ta.value.length); },0);
-  return box;
-}
-function ldOpenMemo(l){ ldCbFor=null; ldBookingFor=null; ldMemoFor= ldMemoFor===l.id? null : l.id; renderLeads(); }
 /* No phone found: no personal number (only doctoranytime's central line, or nothing on Google/Maps).
    Out of the call queue, into the «No phone found» list at the bottom of Leads. Typing a number sends it back. */
 function ldNoPhone(l){
@@ -7410,7 +7229,7 @@ function ldActs(l){
   const a=document.createElement('div'); a.className='ld-acts';
   const open=ldOpen(l);
   if(open){
-    a.innerHTML=`<button class="a-g" title="Booked a meeting (1)">${IC.check} Booked</button><button class="a-y" title="Sent SMS / info (2)">${IC.message} SMS</button><button class="a-r" title="Not interested (3)">${IC.x} No</button><button class="a-n" title="Didn't pick up (4)">${IC.hourglass} No answer</button>${l.tries.length>=3?`<button class="a-undo" title="Stop trying">${IC.ban} Drop</button>`:''}<button class="a-cb${l.cb?' on':''}" title="Call back at a set day + time (with a note)">${IC.clock}</button><button class="a-hot${l.hot?' on':''}" title="Almost booked — card turns green and goes to the top of «No answer»">${IC.fire}</button><button class="a-memo${l.memo?' on':''}" title="Write a note">${IC.edit}</button><button class="a-np" title="No phone found — no personal number. Moves to the «No phone found» list at the bottom (key P)">${IC.phoneOff}<span class="lb">No phone</span></button><button class="a-t" title="Trash — has a website already / not a lead. Gone for good (Restore is in the Called panel)">${IC.trash}</button>${ldCallMode?'':`<button class="a-focus" title="Open in call mode">${IC.arrowRight}</button>`}`;
+    a.innerHTML=`<button class="a-g" title="Booked a meeting (1)">${IC.check} Booked</button><button class="a-y" title="Sent SMS / info (2)">${IC.message} SMS</button><button class="a-r" title="Not interested (3)">${IC.x} No</button><button class="a-n" title="Didn't pick up (4)">${IC.hourglass} No answer</button>${l.tries.length>=3?`<button class="a-undo" title="Stop trying">${IC.ban} Drop</button>`:''}<button class="a-np" title="No phone found — no personal number. Moves to the «No phone found» list at the bottom (key P)">${IC.phoneOff}<span class="lb">No phone</span></button><button class="a-t" title="Trash — has a website already / not a lead. Gone for good (Restore is in the Called panel)">${IC.trash}</button>${ldCallMode?'':`<button class="a-focus" title="Open in call mode">${IC.arrowRight}</button>`}`;
     a.querySelector('.a-g').addEventListener('click',()=>ldOutcome(l,'g'));
     a.querySelector('.a-y').addEventListener('click',()=>ldOutcome(l,'y'));
     a.querySelector('.a-r').addEventListener('click',()=>ldOutcome(l,'r'));
@@ -7418,9 +7237,6 @@ function ldActs(l){
     const d=a.querySelector('.a-undo'); if(d) d.addEventListener('click',()=>ldOutcome(l,'x'));
     a.querySelector('.a-t').addEventListener('click',()=>ldTrash(l));
     a.querySelector('.a-np').addEventListener('click',()=>ldNoPhone(l));
-    a.querySelector('.a-cb').addEventListener('click',()=>ldOpenCb(l));
-    a.querySelector('.a-hot').addEventListener('click',()=>ldToggleHot(l));
-    a.querySelector('.a-memo').addEventListener('click',()=>ldOpenMemo(l));
     const f=a.querySelector('.a-focus'); if(f) f.addEventListener('click',()=>{ ldCallMode=true; ensureLeads(); state.meta.ld.focus=l.id; renderLeads(); window.scrollTo({top:0,behavior:'smooth'}); });
   } else if(ldNoPh(l)){
     a.innerHTML=(l.status==='np'?`<button class="a-undo" title="Put back in «To call»">${IC.undo} Back to list</button>`:'')+`<button class="a-t" title="Trash — not a lead. Gone for good (Restore is in the Called panel)">${IC.trash}</button>`;
@@ -7432,8 +7248,8 @@ function ldActs(l){
   }
   return a;
 }
-function ldItemEl(l, drag){
-  const row=document.createElement('div'); row.className='ld-item'+(l.status==='na'?' na':'')+(ldOpen(l)||ldNoPh(l)?'':' done')+(l.hot && (ldOpen(l)||ldNoPh(l))?' hot':''); row.dataset.id=l.id;
+function ldItemEl(l){
+  const row=document.createElement('div'); row.className='ld-item'+(l.status==='na'?' na':'')+(ldOpen(l)||ldNoPh(l)?'':' done');
   const meta=[];
   if(l.spec) meta.push(`<span>${esc(ldSpecShort(l))}</span>`);
   if(l.city) meta.push(`<span>${esc(l.city)}</span>`);
@@ -7446,25 +7262,18 @@ function ldItemEl(l, drag){
   if(!ldFilter.list && ldListOf(l)!=='new' && ldOpen(l)) meta.push(`<span class="w-list">${esc(ldListInfo(ldListOf(l)).t||'')}</span>`);
   if(l.list==='ads' && l.at){ const m=Math.max(0,Math.round((Date.now()-Date.parse(l.at))/60000)); meta.push(`<span class="w-try${m<=15?' hot':''}" title="Filled in the ads form">🔥 ads form · ${m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'} ago${m<=5?' · CALL NOW':''}</span>`); }
   if(l.note) meta.push(`<span class="w-note">${esc(l.note)}</span>`);
-  if(l.hot && ldOpen(l)) meta.unshift(`<span class="w-hot">Almost booked</span>`);
-  if(l.cb && ldOpen(l)) meta.unshift(`<span class="w-cb${ldCbDue(l)?' due':''}">${IC.clock}${esc(ldCbLabel(l))}${ldCbDue(l)?' · now':''}</span>`);
-  if(l.status==='na' && l.tries.length){ const n=l.tries.length; meta.push(`<span class="w-try${n>=3?' hot':''}">${IC.hourglass} called ${l.tries.map(fmtDay).join(', ')} · ${n} ${n===1?'try':'tries'}</span>`); }
+  if(l.status==='na'){ const n=l.tries.length; meta.push(`<span class="w-try${n>=3?' hot':''}">${IC.hourglass} called ${l.tries.map(fmtDay).join(', ')} · ${n} ${n===1?'try':'tries'}</span>`); }
   if(ldNoPh(l)) meta.push(`<span class="w-out np">No phone found${l.npAt?' · '+fmtDay(isoDate(new Date(l.npAt))):''}</span>`);
   else if(!ldOpen(l)){ const t={g:'Booked',y:'SMS sent',r:'No',x:'Dropped'}[l.status]; meta.push(`<span class="w-out ${l.status==='x'?'':l.status}">${t}${l.doneAt?' · '+fmtDay(isoDate(new Date(l.doneAt))):''}</span>`); }
-  row.innerHTML=(drag?`<span class="ld-grip" title="Drag up or down to change the order">${IC.grip}</span>`:'')+`<div class="w-main"><div class="w-name">${esc(l.name)}</div><div class="w-meta">${meta.join('')}</div>${l.memo?`<div class="w-memo" data-memo title="Click to edit">${IC.edit}<span>${esc(l.memo)}</span></div>`:''}</div>`;
-  const wm=row.querySelector('[data-memo]'); if(wm) wm.addEventListener('click',()=>ldOpenMemo(l));
+  row.innerHTML=`<div class="w-main"><div class="w-name">${esc(l.name)}</div><div class="w-meta">${meta.join('')}</div></div>`;
   const ap=row.querySelector('[data-addphone]'); if(ap) ap.addEventListener('click',()=>{ ap.replaceWith(ldPhoneInput(l,'w-nophone')); });
   row.appendChild(ldActs(l));
   if(ldBookingFor===l.id && !ldCallMode){ const wrap=document.createElement('div'); wrap.style.flexBasis='100%'; wrap.appendChild(ldBookEl(l)); row.appendChild(wrap); }
-  const focusId=ldCallMode && state.meta.ld ? state.meta.ld.focus : null;
-  if(ldCbFor===l.id && focusId!==l.id){ row.style.flexWrap='wrap'; row.appendChild(ldCbEl(l)); }
-  if(ldMemoFor===l.id && focusId!==l.id){ row.style.flexWrap='wrap'; row.appendChild(ldMemoEl(l)); }
   return row;
 }
 function ldCounts(){
   ensureLeads(); const t=todayIso();
-  const c={new:0, na:0, g:0, y:0, r:0, x:0, np:0, cb:0, cbDue:0, today:0, total:state.leads.length};
-  state.leads.forEach(l=>{ if(l.cb && ldOpen(l)){ c.cb++; if(ldCbDue(l)) c.cbDue++; } });
+  const c={new:0, na:0, g:0, y:0, r:0, x:0, np:0, today:0, total:state.leads.length};
   state.leads.forEach(l=>{ const st=ldNoPh(l)?'np':l.status; c[st]=(c[st]||0)+1; if((l.doneAt && isoDate(new Date(l.doneAt))===t) || ldLastTry(l)===t) c.today++; });
   return c;
 }
@@ -7478,7 +7287,7 @@ function renderLdBanner(){
     <div class="cell ok"><div class="k">${IC.check} Booked</div><div class="big">${n.g}</div><div class="sub">meetings from this list</div></div>
     <div class="cell sms"><div class="k">${IC.message} SMS-e-mail sent</div><div class="big">${n.y}</div><div class="sub">info sent, follow up</div></div>
     <div class="cell no"><div class="k">${IC.x} No</div><div class="big">${n.r}</div><div class="sub">${n.x?n.x+' dropped':'not interested'}</div></div>
-    <div class="cell na"><div class="k">${IC.hourglass} No answer</div><div class="big">${n.na}</div><div class="sub">${n.cbDue?`<b style="color:var(--red)">${n.cbDue} call-back${n.cbDue===1?'':'s'} due now</b>`:(n.cb?n.cb+' call-back'+(n.cb===1?'':'s')+' set':'call another day')}</div></div>
+    <div class="cell na"><div class="k">${IC.hourglass} No answer</div><div class="big">${n.na}</div><div class="sub">call another day</div></div>
     <div class="cell"><div class="k">${IC.fire} Today</div><div class="big">${n.today}</div><div class="sub">${n.total} leads${n.np?' · '+n.np+' no phone':''} · harvest ${pulled}</div></div>`;
 }
 function renderLdFocus(){
@@ -7491,18 +7300,16 @@ function renderLdFocus(){
   ensureLeads(); state.meta.ld.focus=l.id;
   const idx=q.indexOf(l);
   const script=LD_SCRIPT.replace('{reviews}', l.reviews? l.reviews : 'πολύ καλές').replace('{spec}','επαγγελματίες υγείας');
-  el.classList.toggle('hot', !!l.hot);
   el.innerHTML=gmCallStrip()+`<div class="f-top"><div>
       <div class="f-name">${esc(l.name)}</div>
       <div class="f-spec">${esc(l.spec||'')}${l.city?' · '+esc(l.city):''}${l.addr?' · '+esc(l.addr):''}</div>
       ${l.phone?`<a class="f-phone" href="tel:+30${esc(l.phone)}">${IC.phone}${esc(ldFmtPhone(l.phone))}</a>`:`<div class="f-nophone" id="ldFocusPhone">${IC.phone} No phone yet — look it up, then type it: <input type="tel" placeholder="69… / 21…" autocomplete="off"><button type="button">Save</button></div>`}
-      <div class="f-meta">${l.reviews?`<span class="chip">★ ${l.reviews} reviews${l.score?' · '+l.score+'/10':''}</span>`:''}${l.url?`<a class="chip" href="${esc(l.url)}" target="_blank" rel="noopener">doctoranytime profile ↗</a>`:''}${true?`<a class="chip" href="${esc(ldLookup(l))}" target="_blank" rel="noopener">${IC.search} Google ↗</a><a class="chip" href="${esc(ldMaps(l))}" target="_blank" rel="noopener">Maps ↗</a>`:''}<span class="chip">${esc(ldListInfo(ldListOf(l)).t||'')}</span>${l.note?`<span class="chip">${esc(l.note)}</span>`:''}${l.status==='na'&&l.tries.length?`<span class="chip" style="background:var(--yellow-soft);color:#8A6400;">no answer on ${l.tries.map(fmtDay).join(', ')}</span>`:''}${l.cb?`<span class="chip" style="background:${ldCbDue(l)?'var(--red)':'var(--blue-soft)'};color:${ldCbDue(l)?'#fff':'var(--brand)'};font-weight:800;">${esc(ldCbLabel(l))}</span>`:''}${l.hot?'<span class="chip" style="background:var(--green);color:#fff;font-weight:800;">Almost booked</span>':''}</div>
-      ${l.memo?`<div class="f-memo" data-fmemo title="Click to edit">${IC.edit}<span>${esc(l.memo)}</span></div>`:''}
+      <div class="f-meta">${l.reviews?`<span class="chip">★ ${l.reviews} reviews${l.score?' · '+l.score+'/10':''}</span>`:''}${l.url?`<a class="chip" href="${esc(l.url)}" target="_blank" rel="noopener">doctoranytime profile ↗</a>`:''}${true?`<a class="chip" href="${esc(ldLookup(l))}" target="_blank" rel="noopener">${IC.search} Google ↗</a><a class="chip" href="${esc(ldMaps(l))}" target="_blank" rel="noopener">Maps ↗</a>`:''}<span class="chip">${esc(ldListInfo(ldListOf(l)).t||'')}</span>${l.note?`<span class="chip">${esc(l.note)}</span>`:''}${l.status==='na'?`<span class="chip" style="background:var(--yellow-soft);color:#8A6400;">no answer on ${l.tries.map(fmtDay).join(', ')}</span>`:''}</div>
     </div><div class="f-right">next in line<b>${q.length-idx-1}</b>logging on ${fmtDay(todayIso())}</div></div>
     <div class="f-script">${script}</div>
     <div class="f-acts"><button class="g">${IC.check} Booked<small>1 · meeting set</small></button><button class="y">${IC.message} SMS sent<small>2 · wants info</small></button><button class="r">${IC.x} No<small>3 · not interested</small></button><button class="n">${IC.hourglass} No answer<small>4 · try another day</small></button></div>
-    <div class="ld-book" id="ldFocusBook"></div><div id="ldFocusEdit"></div>
-    <div class="f-foot"><button data-skip>Skip for now</button><button class="cbk" data-cbk title="She/he said: call me back at… (key C)">${IC.clock} Call back at…</button><button class="hotb${l.hot?' on':''}" data-hot title="Almost booked — green card, top of «No answer» (key H)">${IC.fire} Almost booked</button><button class="memob" data-memob title="Write a note (key N)">${IC.edit} Note</button><button class="np" data-np title="No personal number — move to the «No phone found» list at the bottom">${IC.phoneOff} No phone found</button><button class="t" data-trash title="Has a website / not a lead — remove for good">${IC.trash} Trash</button>${l.url?`<a href="${esc(l.url)}" target="_blank" rel="noopener" style="font-weight:700;color:var(--brand);">Open profile</a>`:''}<span class="keys">keys <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> · <kbd>S</kbd> skip · <kbd>C</kbd> call back · <kbd>N</kbd> note · <kbd>P</kbd> no phone · <kbd>T</kbd> trash</span></div>`;
+    <div class="ld-book" id="ldFocusBook"></div>
+    <div class="f-foot"><button data-skip>Skip for now</button><button class="np" data-np title="No personal number — move to the «No phone found» list at the bottom">${IC.phoneOff} No phone found</button><button class="t" data-trash title="Has a website / not a lead — remove for good">${IC.trash} Trash</button>${l.url?`<a href="${esc(l.url)}" target="_blank" rel="noopener" style="font-weight:700;color:var(--brand);">Open profile</a>`:''}<span class="keys">keys <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> · <kbd>S</kbd> skip · <kbd>P</kbd> no phone · <kbd>T</kbd> trash</span></div>`;
   el.querySelector('.f-acts .g').addEventListener('click',()=>ldOutcome(l,'g'));
   el.querySelector('.f-acts .y').addEventListener('click',()=>ldOutcome(l,'y'));
   el.querySelector('.f-acts .r').addEventListener('click',()=>ldOutcome(l,'r'));
@@ -7510,11 +7317,6 @@ function renderLdFocus(){
   el.querySelector('[data-skip]').addEventListener('click',()=>{ ldSkip(l); });
   el.querySelector('[data-trash]').addEventListener('click',()=>{ ldTrash(l); });
   el.querySelector('[data-np]').addEventListener('click',()=>{ ldNoPhone(l); });
-  el.querySelector('[data-cbk]').addEventListener('click',()=>ldOpenCb(l));
-  el.querySelector('[data-hot]').addEventListener('click',()=>ldToggleHot(l));
-  el.querySelector('[data-memob]').addEventListener('click',()=>ldOpenMemo(l));
-  const fm=el.querySelector('[data-fmemo]'); if(fm) fm.addEventListener('click',()=>ldOpenMemo(l));
-  const fe=el.querySelector('#ldFocusEdit'); if(fe){ if(ldCbFor===l.id) fe.appendChild(ldCbEl(l)); else if(ldMemoFor===l.id) fe.appendChild(ldMemoEl(l)); }
   const fp=el.querySelector('#ldFocusPhone'); if(fp){ const inp=fp.querySelector('input'); fp.querySelector('button').addEventListener('click',()=>ldSetPhone(l, inp.value)); inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); ldSetPhone(l, inp.value); } }); }
   if(ldBookingFor===l.id){ const b=$('#ldFocusBook'); b.replaceWith(ldBookEl(l)); }
 }
@@ -7525,8 +7327,7 @@ function ldGroup(title, icon, items, key, opts){
   g.querySelector('.ld-group-h').addEventListener('click',()=>{ state.meta.ld['open_'+key]=!open; save(); renderLeads(); });
   if(open){
     const lim=opts.page? (ldShownBy[key]||LD_PAGE) : items.length;
-    items.slice(0,lim).forEach(l=>g.appendChild(ldItemEl(l, opts.drag)));
-    if(opts.drag) ldDragWire(g, items);
+    items.slice(0,lim).forEach(l=>g.appendChild(ldItemEl(l)));
     if(items.length>lim){ const m=document.createElement('button'); m.className='ld-more'; m.textContent='Show '+Math.min(LD_PAGE,items.length-lim)+' more · '+(items.length-lim)+' left'; m.addEventListener('click',()=>{ ldShownBy[key]=lim+LD_PAGE; renderLeads(); }); g.appendChild(m); }
   }
   return g;
@@ -7562,7 +7363,7 @@ function renderLeadsInner(){
   if(ldFilter.list && !state.leads.some(l=>ldListOf(l)===ldFilter.list && ldOpen(l)) && !ldLists()[ldFilter.list]) ldFilter.list='';
   ldFillSelects(); renderLdLists(); renderLdBanner(); renderLdFocus();
   const f=ldFiltered();
-  const fresh=f.filter(l=>l.status==='new' && ldOpen(l) && !l.cb), na=f.filter(l=>(l.status==='na' && ldOpen(l)) || (l.cb && ldOpen(l))).sort(ldNaCmp), done=f.filter(l=>!ldOpen(l) && !ldNoPh(l)).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
+  const fresh=f.filter(l=>l.status==='new' && ldOpen(l)), na=f.filter(l=>l.status==='na' && ldOpen(l)).sort((a,b)=>ldLastTry(a).localeCompare(ldLastTry(b))), done=f.filter(l=>!ldOpen(l) && !ldNoPh(l)).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
   const np=f.filter(ldNoPh);
   const el=$('#ldList'); el.innerHTML='';
   $('#ldHeadN').innerHTML=`<b>${fresh.length}</b><small>to call</small>`;
@@ -7575,11 +7376,9 @@ function renderLeadsInner(){
   const na_el=$('#ldNaList'); na_el.innerHTML='';
   $('#ldNaHeadN').innerHTML=`<b>${na.length}</b><small>waiting</small>`;
   if(!na.length) na_el.innerHTML='<div class="empty-note">Nobody parked. When someone doesn\'t pick up, tap «No answer» and they land here with the date.</div>';
-  else { const t=todayIso(); const cbs=na.filter(l=>l.cb).sort((a,b)=>ldCbAt(a).localeCompare(ldCbAt(b))), rest=na.filter(l=>!l.cb);
-    const again=rest.filter(l=>ldLastTry(l)!==t), todayNa=rest.filter(l=>ldLastTry(l)===t);
-    if(cbs.length) na_el.appendChild(ldGroup('Call back at a set time', IC.clock, cbs, 'cbk', {sub:'earliest first · red = now'}));
-    if(again.length) na_el.appendChild(ldGroup('Try again', IC.phone, again, 'again', {drag:true, sub:'drag ⋮⋮ to reorder · green = almost booked'}));
-    if(todayNa.length) na_el.appendChild(ldGroup('Called today · no answer', IC.hourglass, todayNa, 'today', {drag:true})); }
+  else { const t=todayIso(); const again=na.filter(l=>ldLastTry(l)!==t), todayNa=na.filter(l=>ldLastTry(l)===t);
+    if(again.length) na_el.appendChild(ldGroup('Try again', IC.phone, again, 'again'));
+    if(todayNa.length) na_el.appendChild(ldGroup('Called today · no answer', IC.hourglass, todayNa, 'today')); }
   const d_el=$('#ldDoneList'); d_el.innerHTML='';
   $('#ldDoneHeadN').innerHTML=`<b>${done.length}</b><small>done</small>`;
   if(!done.length) d_el.innerHTML='<div class="empty-note">Outcomes show up here (and in Quick Log).</div>';
@@ -7598,14 +7397,6 @@ function renderLeadsInner(){
   const trashed=(state.meta.ld.trashed||[]).filter(t=>!ldFilter.list || ldListOf(t)===ldFilter.list);
   if(trashed.length){ if(!done.length) d_el.innerHTML=''; d_el.appendChild(ldTrashGroup(trashed)); }
 }
-/* every 30 s: a call-back whose time has come pops up once («Call back Μαλλιά now — 14:00») */
-const ldCbPinged=new Set();
-setInterval(()=>{ try{
-  if(!state || !Array.isArray(state.leads)) return; const t=todayIso(); let any=false;
-  state.leads.forEach(l=>{ if(!l.cb || l.cb.day!==t || !l.cb.time || !ldOpen(l)) return; const k=l.id+'@'+l.cb.day+l.cb.time;
-    if(ldCbDue(l) && !ldCbPinged.has(k)){ ldCbPinged.add(k); any=true; toast('Call back '+l.name+' now — '+l.cb.time+(l.phone?' · '+ldFmtPhone(l.phone):'')); } });
-  if(any && curView==='leads') renderLeads();
-}catch(e){} }, 30000);
 $('#ldCallMode').addEventListener('click',()=>{ ldCallMode=!ldCallMode; ldBookingFor=null; if(ldCallMode) syncToday(); renderLeads(); });
 /* every call logged in call mode is written on the real day it happened */
 function syncToday(){ const t=todayIso(); dayWatch=t; const qd=$('#qlDate'); if(qd) qd.value=t; }
@@ -7625,9 +7416,6 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='s'||e.key==='S'){ e.preventDefault(); ldSkip(l); }
   else if(e.key==='t'||e.key==='T'){ e.preventDefault(); ldTrash(l); }
   else if(e.key==='p'||e.key==='P'){ e.preventDefault(); ldNoPhone(l); }
-  else if(e.key==='c'||e.key==='C'){ e.preventDefault(); ldOpenCb(l); }
-  else if(e.key==='n'||e.key==='N'){ e.preventDefault(); ldOpenMemo(l); }
-  else if(e.key==='h'||e.key==='H'){ e.preventDefault(); ldToggleHot(l); }
   else if(e.key==='Enter' && ldBookingFor===l.id){ e.preventDefault(); ldBookConfirm(l); }
 });
 
@@ -7692,7 +7480,7 @@ const Brief={ lastAt:0, lastHash:'', busy:false,
     const schedDue=(state.sched||[]).filter(s=>!s.done && s.month && s.month<=t.slice(0,7)).map(s=>({name:s.name, phone:s.phone||'', month:s.month, note:s.note||''}));
     const warm=(state.warm||[]).filter(w=>!w.done).map(w=>({name:w.name, phone:w.phone||'', note:w.note||'', days:this.daysSince(w.created)}));
     ensureLeads(); const lc=ldCounts();
-    const naRetry=state.leads.filter(l=>l.status==='na' && ldOpen(l) && !l.cb && ldLastTry(l)!==t).length;
+    const naRetry=state.leads.filter(l=>l.status==='na' && ldOpen(l) && ldLastTry(l)!==t).length;
     const ydLeads={booked:0,sms:0,no:0,noanswer:0}; state.leads.forEach(l=>{ if(l.doneAt && isoDate(new Date(l.doneAt))===yd){ if(l.status==='g') ydLeads.booked++; else if(l.status==='y') ydLeads.sms++; else if(l.status==='r') ydLeads.no++; } if(l.tries.includes(yd)) ydLeads.noanswer++; });
     const ydStats=dayStats(yd,true); const mStats=monthLogStats(curMonth);
     const earned=earnedForMonth(curMonth); const target=monthTarget(curMonth).value;
@@ -9569,17 +9357,15 @@ function dayItems(){
   const rem=(Reminders.list||[]).filter(r=>!r.done && r.day<=today).sort((a,b)=>a.day.localeCompare(b.day));
   const meet=(state&&state.clients||[]).filter(c=>c.day===today && !isTrashed(c) && c.stage!=='lost').sort((a,b)=>String(a.time||'').localeCompare(String(b.time||'')));
   ensureAsap(); const asap=state.asap.filter(t=>!t.done).sort((a,b)=>(b.hot-a.hot)||((a.sort||0)-(b.sort||0)));
-  let cbs=[]; try{ cbs=(state.leads||[]).filter(l=>l.cb && l.cb.day && l.cb.day<=today && ldOpen(l)).sort((a,b)=>ldCbAt(a).localeCompare(ldCbAt(b))); }catch(e){}
-  return {rem, meet, asap, cbs, n:rem.length+meet.length+asap.length+cbs.length};
+  return {rem, meet, asap, n:rem.length+meet.length+asap.length};
 }
 function openDay(){
-  if(!state) return; const {rem, meet, asap, cbs, n}=dayItems(); const today=todayIso();
+  if(!state) return; const {rem, meet, asap, n}=dayItems(); const today=todayIso();
   const d=new Date(); $('#dayTitle').textContent=(d.getHours()<12?'Good morning':d.getHours()<18?'Good afternoon':'Good evening')+' — here is today';
   $('#daySub').textContent=d.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'})+' · '+(n?n+' thing'+(n===1?'':'s'):'nothing waiting');
   let h='';
   if(rem.length) h+=`<div class="day-h rem">⏰ Remind today · ${rem.length}</div>`+rem.map(r=>`<div class="day-row${r.day<today?' over':''}" data-r="${esc(r.uid)}"><div class="tx"><b>${esc(r.client)}</b>${r.what?' — '+esc(r.what):''}${r.day<today?`<small>still open since ${esc(remDayLabel(r.day))}</small>`:''}</div><button data-rcopy="${esc(r.uid)}">Copy Viber text</button><button class="go" data-rdone="${esc(r.uid)}">✓ Done</button></div>`).join('');
   if(meet.length) h+=`<div class="day-h meet">📅 Meetings today · ${meet.length}</div>`+meet.map(c=>`<div class="day-row"><span class="tm">${esc(c.time||'—')}</span><div class="tx"><b>${esc(c.name)}</b>${c.phone?`<small>${esc(c.phone)}</small>`:''}</div>${c.phone?`<button onclick="location.href='tel:${esc(String(c.phone).replace(/\s+/g,''))}'">Call</button>`:''}<button data-open="${esc(c.id)}">Open</button></div>`).join('');
-  if(cbs.length) h+=`<div class="day-h meet">📞 Call back today · ${cbs.length}</div>`+cbs.map(l=>`<div class="day-row"><span class="tm${l.cb.day<today?' due':''}">${esc(l.cb.day<today?fmtDay(l.cb.day):(l.cb.time||'—'))}</span><div class="tx"><b>${esc(l.name)}</b>${l.hot?' · <span style="color:var(--green);font-weight:800">almost booked</span>':''}${l.memo?`<small>${esc(l.memo)}</small>`:''}</div>${l.phone?`<button onclick="location.href='tel:+30${esc(l.phone)}'">Call</button>`:''}<button class="go" data-lcb="${esc(l.id)}">Open</button></div>`).join('');
   if(asap.length) h+=`<div class="day-h asap">🚩 Do ASAP · ${asap.length}</div>`+asap.map((t,i)=>`<div class="day-row${t.hot?' hot':''}" data-a="${esc(t.id)}"><div class="tx">${t.hot?'🔥 ':''}${esc(t.text)}</div><button class="go" data-adone="${esc(t.id)}">✓ Done</button></div>`).join('');
   if(!n) h='<div class="home-empty">Nothing to remind, no meetings, nothing in Do ASAP. Enjoy the day.</div>';
   try{ if(gmWorkday()) h=gmDayBlock()+h; }catch(e){}
@@ -9588,7 +9374,6 @@ function openDay(){
   body.querySelectorAll('[data-rdone]').forEach(b=>b.addEventListener('click',()=>{ Reminders.done(b.dataset.rdone,false); b.closest('.day-row').classList.add('done'); b.remove(); }));
   body.querySelectorAll('[data-adone]').forEach(b=>b.addEventListener('click',()=>{ const t=state.asap.find(x=>x.id===b.dataset.adone); if(!t) return; t.done=true; save(); try{ renderAsap(); }catch(e){} b.closest('.day-row').classList.add('done'); b.remove(); toastUndo('Done: '+t.text.slice(0,40), ()=>{ t.done=false; save(); try{ renderAsap(); }catch(e){} openDay(); }); }));
   body.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>{ closeDay(); openModal(b.dataset.open); }));
-  body.querySelectorAll('[data-lcb]').forEach(b=>b.addEventListener('click',()=>{ closeDay(); ensureLeads(); state.meta.ld.focus=b.dataset.lcb; ldFilter.list=''; ldCallMode=true; switchView('leads'); renderLeads(); window.scrollTo({top:0}); }));
   $('#dayOverlay').classList.add('open'); setTimeout(()=>{ const ok=$('#dayOk'); if(ok) ok.focus(); },60);
 }
 function closeDay(){ const ov=$('#dayOverlay'); if(!ov||!ov.classList.contains('open')) return; ov.classList.remove('open'); ensureMeta(); if(state.meta.daySeen!==todayIso()){ state.meta.daySeen=todayIso(); save(); } }
