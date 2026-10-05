@@ -1,3 +1,4 @@
+import { crmCors, crmPreflight } from '@/lib/crmcors';
 // app/api/crm/route.js
 //
 // Sync endpoint for the Advon CRM (public/crm/index.html).
@@ -217,7 +218,7 @@ class Conflict extends Error { constructor(remote) { super('conflict'); this.rem
 // ---------- Handlers ----------
 
 // GET /api/crm  → latest encrypted blob. Always fresh, never cached.
-export async function GET(req) {
+async function __GET(req) {
   const conf = cfg();
   if (conf.missing.length) {
     return json(
@@ -257,7 +258,7 @@ export async function GET(req) {
 // Body: { data: {iv, ct}, updatedAt: ISO string, deviceId, baseSha }
 // If baseSha does not match what is stored, responds 409 with the remote copy
 // instead of overwriting it.
-export async function PUT(req) {
+async function __PUT(req) {
   const conf = cfg();
   if (conf.missing.length) {
     return json(
@@ -333,9 +334,14 @@ export async function PUT(req) {
   }
 }
 
-export async function OPTIONS() {
+async function __OPTIONS() {
   return new Response(null, {
     status: 204,
     headers: { ...NO_STORE, Allow: 'GET,PUT,OPTIONS' },
   });
 }
+
+/* CORS for the CRM on crm.advonmedia.com (5 Oct 2026) — see lib/crmcors.js */
+export const GET = crmCors(__GET);
+export const PUT = crmCors(__PUT);
+export const OPTIONS = crmPreflight(__OPTIONS);

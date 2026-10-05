@@ -1,3 +1,4 @@
+import { crmCors, crmPreflight } from '@/lib/crmcors';
 // app/api/pool/route.js
 //
 // Lead pool for the CRM's Leads tab (13 Sept 2026).
@@ -62,7 +63,7 @@ async function readLists(c) {
     return await r.json();
   } catch { return null; }
 }
-export async function GET(req) {
+async function __GET(req) {
   const c = cfg();
   if (!c.token || !c.repo) return json({ error: 'storage not configured' }, 503);
   if (!(await authorized(req, c))) return json({ error: 'unauthorized' }, 401);
@@ -100,9 +101,9 @@ function cors(req) {
   if (ALLOWED_ORIGINS.includes(o)) { h['Access-Control-Allow-Origin'] = o; h.Vary = 'Origin'; }
   return h;
 }
-export async function OPTIONS(req) { return new Response(null, { status: 204, headers: cors(req) }); }
+async function __OPTIONS(req) { return new Response(null, { status: 204, headers: cors(req) }); }
 const clean = (v, max) => String(v ?? '').replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, max);
-export async function POST(req) {
+async function __POST(req) {
   const c = cfg();
   const h = cors(req);
   if (!c.token || !c.repo) return new Response(JSON.stringify({ error: 'storage not configured' }), { status: 503, headers: { ...NO_STORE, ...h } });
@@ -130,3 +131,8 @@ export async function POST(req) {
   }
   return new Response(JSON.stringify({ added, total }), { status: 200, headers: { ...NO_STORE, ...h } });
 }
+
+/* CORS for the CRM on crm.advonmedia.com (5 Oct 2026) — see lib/crmcors.js */
+export const GET = crmCors(__GET);
+export const POST = crmCors(__POST);
+export const OPTIONS = crmPreflight(__OPTIONS);

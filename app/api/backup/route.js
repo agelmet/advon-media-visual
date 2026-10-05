@@ -1,3 +1,4 @@
+import { crmCors, crmPreflight } from '@/lib/crmcors';
 // app/api/backup/route.js — the server half of the CRM's «Backup everything» / «Restore from a backup» (20 Sept 2026)
 //
 // Everything outside the CRM's own state lives in the PRIVATE data repo (CRM_GH_REPO): chats with their attachments,
@@ -43,7 +44,7 @@ async function authorized(req) {
   return safeEqual(await sha256Hex(t), want);
 }
 
-export async function GET(req) {
+async function __GET(req) {
   const c = ghConf();
   if (!ghReady(c)) return json({ error: 'storage not configured' }, 503);
   if (!(await authorized(req))) return json({ error: 'unauthorized' }, 401);
@@ -61,7 +62,7 @@ export async function GET(req) {
   } catch (e) { return json({ error: e.message || 'read failed' }, e.status === 404 ? 404 : 502); }
 }
 
-export async function POST(req) {
+async function __POST(req) {
   const c = ghConf();
   if (!ghReady(c)) return json({ error: 'storage not configured' }, 503);
   const url = new URL(req.url);
@@ -92,3 +93,8 @@ export async function POST(req) {
     return json({ error: 'unknown action' }, 400);
   } catch (e) { return json({ error: e.message || 'write failed' }, 502); }
 }
+
+/* CORS for the CRM on crm.advonmedia.com (5 Oct 2026) — see lib/crmcors.js */
+export const GET = crmCors(__GET);
+export const POST = crmCors(__POST);
+export const OPTIONS = crmPreflight();

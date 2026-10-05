@@ -1,3 +1,4 @@
+import { crmCors, crmPreflight } from '@/lib/crmcors';
 // app/api/reminders/route.js — client reminders for the CRM Home card (23 Sept 2026)
 //
 // The reminders themselves are ⏰ events in the Google Calendar «Advon Media» (see lib/reminders.js).
@@ -37,7 +38,7 @@ async function readStateSafe(conf) {
   catch { return { done: {}, sent: {} }; }
 }
 
-export async function GET(req) {
+async function __GET(req) {
   const url = new URL(req.url);
   const k = url.searchParams.get('k');
   if (k) { if ((await sha256Hex(k)) !== READ_KEY_SHA256) return new Response('forbidden', { status: 403 }); }
@@ -65,7 +66,7 @@ export async function GET(req) {
   }
 }
 
-export async function POST(req) {
+async function __POST(req) {
   if (!(await crmAuthorized(req))) return json({ ok: false, error: 'unauthorized' }, 401);
   const conf = ghConf();
   if (!ghReady(conf)) return json({ ok: false, error: 'storage not configured' }, 503);
@@ -92,3 +93,8 @@ export async function POST(req) {
     return json({ ok: true, done: !body.undo, uid, state: out });
   } catch (e) { return json({ ok: false, error: e.message || 'write failed' }, 502); }
 }
+
+/* CORS for the CRM on crm.advonmedia.com (5 Oct 2026) — see lib/crmcors.js */
+export const GET = crmCors(__GET);
+export const POST = crmCors(__POST);
+export const OPTIONS = crmPreflight();

@@ -1,3 +1,4 @@
+import { crmCors, crmPreflight } from '@/lib/crmcors';
 // app/api/bookings/route.js
 //
 // Meetings booked online -> the Advon CRM.
@@ -192,7 +193,7 @@ function readBooking(ev) {
   };
 }
 
-export async function GET(req) {
+async function __GET(req) {
   const icsUrl = process.env.GCAL_ICS_URL;
   const authHash = process.env.CRM_AUTH_HASH;
 
@@ -245,3 +246,7 @@ export async function GET(req) {
     bookings: list,
   });
 }
+
+/* CORS for the CRM on crm.advonmedia.com (5 Oct 2026) — see lib/crmcors.js */
+export const GET = crmCors(__GET);
+export const OPTIONS = crmPreflight();

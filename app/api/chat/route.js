@@ -1,3 +1,4 @@
+import { crmCors, crmPreflight } from '@/lib/crmcors';
 // app/api/chat/route.js — Advon Chats (16 Sept 2026)
 //
 // One private conversation per client, lived in the PRIVATE data repo (CRM_GH_REPO):
@@ -173,7 +174,7 @@ async function fileResponse(c, path) {
 }
 
 // =====================================================================
-export async function GET(req) {
+async function __GET(req) {
   const c = cfg();
   if (!ghReady(c)) return json({ error: 'storage not configured' }, 503);
   const url = new URL(req.url);
@@ -280,7 +281,7 @@ export async function GET(req) {
 }
 
 // =====================================================================
-export async function POST(req) {
+async function __POST(req) {
   const c = cfg();
   if (!ghReady(c)) return json({ error: 'storage not configured' }, 503);
   const url = new URL(req.url);
@@ -590,3 +591,8 @@ export async function POST(req) {
     return json({ error: e.message || 'write failed' }, 502);
   }
 }
+
+/* CORS for the CRM on crm.advonmedia.com (5 Oct 2026) — see lib/crmcors.js */
+export const GET = crmCors(__GET);
+export const POST = crmCors(__POST);
+export const OPTIONS = crmPreflight();

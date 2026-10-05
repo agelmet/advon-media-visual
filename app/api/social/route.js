@@ -1,3 +1,4 @@
+import { crmCors, crmPreflight } from '@/lib/crmcors';
 // app/api/social/route.js — the CRM «Meta» tab (25 Sept 2026)
 //   GET  /api/social                       (x-crm-auth) → {ok, base, posts:[merged plan+state], meta:{connected, pageName, igUsername, source}}
 //   POST /api/social?a=approve   {id, on}  approve (on:true) or take back (on:false) one post; {ids:[…], on} for several
@@ -23,7 +24,7 @@ function safeEqual(a, b) { if (typeof a !== 'string' || typeof b !== 'string' ||
 async function crmAuthorized(req) { const t = req.headers.get('x-crm-auth') || '', h = process.env.CRM_AUTH_HASH; if (!t || !h) return false; return safeEqual(await sha256Hex(t), String(h).trim().toLowerCase()); }
 const DAY = /^\d{4}-\d{2}-\d{2}$/, TIME = /^\d{2}:\d{2}$/;
 
-export async function GET(req) {
+async function __GET(req) {
   if (!(await crmAuthorized(req))) return json({ ok: false, error: 'unauthorized' }, 401);
   const conf = ghConf();
   try {
@@ -33,7 +34,7 @@ export async function GET(req) {
   } catch (e) { return json({ ok: false, code: e.code || 'error', error: e.message || 'failed' }, 502); }
 }
 
-export async function POST(req) {
+async function __POST(req) {
   if (!(await crmAuthorized(req))) return json({ ok: false, error: 'unauthorized' }, 401);
   const conf = ghConf(); if (!ghReady(conf)) return json({ ok: false, error: 'storage not configured' }, 503);
   const a = new URL(req.url).searchParams.get('a');
@@ -84,3 +85,8 @@ export async function POST(req) {
     return json({ ok: false, error: 'unknown action' }, 400);
   } catch (e) { return json({ ok: false, code: e.code || 'error', error: e.message || 'failed', meta: e.meta || null }, e.code === 'meta' || e.code === 'bad_input' || e.code === 'no_pages' || e.code === 'no_ig' ? 400 : 502); }
 }
+
+/* CORS for the CRM on crm.advonmedia.com (5 Oct 2026) — see lib/crmcors.js */
+export const GET = crmCors(__GET);
+export const POST = crmCors(__POST);
+export const OPTIONS = crmPreflight();

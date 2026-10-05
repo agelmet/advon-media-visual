@@ -1,3 +1,4 @@
+import { crmCors, crmPreflight } from '@/lib/crmcors';
 // app/api/brief/route.js
 //
 // Morning-brief mailbox for the Advon CRM (13 Sept 2026).
@@ -133,7 +134,7 @@ function renderBrief(b) {
   return L.join('\n');
 }
 
-export async function GET(req) {
+async function __GET(req) {
   const c = cfg();
   if (!c.token || !c.repo) return json({ error: 'storage not configured' }, 503);
   const url = new URL(req.url);
@@ -157,7 +158,7 @@ export async function GET(req) {
   }
 }
 
-export async function POST(req) {
+async function __POST(req) {
   const c = cfg();
   if (!c.token || !c.repo) return json({ error: 'storage not configured' }, 503);
   if (!(await authorized(req, c))) return json({ error: 'unauthorized' }, 401);
@@ -178,3 +179,8 @@ export async function POST(req) {
     return json({ error: e.message || 'write failed' }, 502);
   }
 }
+
+/* CORS for the CRM on crm.advonmedia.com (5 Oct 2026) — see lib/crmcors.js */
+export const GET = crmCors(__GET);
+export const POST = crmCors(__POST);
+export const OPTIONS = crmPreflight();

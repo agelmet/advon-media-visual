@@ -3619,7 +3619,10 @@ function syncState(){
      - a remote copy newer than what this device loaded is never
        overwritten silently — you are asked
    ================================================================== */
-const SYNC_URL='/api/crm';
+/* The CRM has its own address since 5 Oct 2026: https://crm.advonmedia.com (GitHub Pages — changing the CRM
+   costs no Netlify deploys). The server endpoints stay on advonmedia.com, so from anywhere else they are called there. */
+const API_BASE=(location.hostname==='advonmedia.com'||location.hostname==='www.advonmedia.com')? '' : 'https://advonmedia.com';
+const SYNC_URL=API_BASE+'/api/crm';
 const META_KEY='advon_crm_sync_meta';
 const PEND_KEY='advon_crm_pending';
 let LOCAL_UPDATED_AT=null;
@@ -6426,7 +6429,7 @@ function renderHome(){
    be undone, and matching an existing client fills in its day and phone
    instead of making a second card.
    =================================================================== */
-const BOOKINGS_URL='/api/bookings';
+const BOOKINGS_URL=API_BASE+'/api/bookings';
 let BK_LIST=[];     /* what the calendar says right now */
 let BK_DONE=[];     /* added/matched in this session, newest first — for Undo */
 function ensureBk(){
@@ -6625,7 +6628,7 @@ function renderBookings(){
    intake/queue.json via /api/intake?list=1) and opens the files right here — images as thumbnails,
    everything else as a download — so nothing has to be looked up on GitHub. «Done» marks it handled
    (written back to the queue, so the phone shows the same). */
-const INTAKE_URL='/api/intake';
+const INTAKE_URL=API_BASE+'/api/intake';
 const Intake={ list:[], state:'idle', err:'', lastAt:0, busy:false, timer:null, urls:{},
   async pull(manual){
     if(this.busy) return;
@@ -7069,7 +7072,7 @@ $('#nextY').addEventListener('click',()=>{curYear++; renderYear();});
    'na' = no answer (parked with the dates called), 'x' = dropped after repeated no-answers.
    Every Booked / SMS / No writes a Quick Log entry for today, so the statistics stay honest.
    New leads arrive from leads/pool.json in the data repo (/api/pool) — the weekly harvest appends there. */
-const POOL_URL='/api/pool';
+const POOL_URL=API_BASE+'/api/pool';
 const LD_PAGE=60;
 const LD_SCRIPT='<b>Καλησπέρα σας, ο Άγγελος από την Advon Media.</b> Σας βρήκα στο doctoranytime — βλέπω ότι έχετε <b>{reviews} εξαιρετικές αξιολογήσεις</b> αλλά δεν έχετε δική σας ιστοσελίδα. Φτιάχνουμε ιστοσελίδες για {spec} <b>χωρίς κόστος κατασκευής</b>: πληρώνετε μόνο τη φιλοξενία (130€/χρόνο) όταν δείτε το πρώτο δείγμα και σας αρέσει. Έχετε 2 λεπτά να σας πω πώς δουλεύει;';
 let ldFilter={q:'', spec:'', city:'', sort:'reviews', list:null};
@@ -7737,7 +7740,7 @@ function renderCashForecast(){
    (names, stages, amounts due) written to brief/today.json in the private data repo
    through /api/brief, so the 08:30 morning-brief agent can read it and message Angelo.
    Sent after a successful sync at most every 5 minutes, and only when something changed. */
-const BRIEF_URL='/api/brief';
+const BRIEF_URL=API_BASE+'/api/brief';
 const Brief={ lastAt:0, lastHash:'', busy:false,
   daysSince(ts){ return ts? Math.max(0, Math.floor((Date.now()-ts)/864e5)) : 0; },
   build(){
@@ -8519,7 +8522,7 @@ function exportYearReport(){
 /* ==================================================================
    BACKUP EVERYTHING  ·  RESTORE
    ================================================================== */
-const BACKUP_URL='/api/backup';
+const BACKUP_URL=API_BASE+'/api/backup';
 /* a tiny ZIP writer/reader — no library, works offline; text is deflated when the browser can, photos are stored as they are */
 const Zip={
   _t:null,
@@ -8587,7 +8590,7 @@ WHAT IS INSIDE
   manifest.json       what was counted when the backup was made — used to check a restore
 
 HOW TO PUT IT BACK — the easy way
-  1. Open advonmedia.com/crm and sign in.
+  1. Open crm.advonmedia.com and sign in.
   2. Export (top right) → «Restore from a backup…» → choose this file.
   3. The CRM shows what is inside and asks what to put back:
        • the CRM itself (clients, money, renewals, calls…)
@@ -8937,7 +8940,7 @@ function closeSyncSetup(){
    Every client gets one private link (advonmedia.com/c/<code>). What they write there — with photos and files —
    lands in chats/ of the private data repo through /api/chat and shows up here. Replies go back the same way
    (and by e-mail when the client has one). Messages tagged «Claude» were written by the chat agent. */
-const CHAT_URL='/api/chat';
+const CHAT_URL=API_BASE+'/api/chat';
 const CH_STAGES=[['yliko','Material'],['draft','First draft'],['changes','Changes'],['live','Live']];
 const chStage=t=>t&&t.stage==='payment'?'changes':(t&&t.stage)||'yliko';
 const CH_STAGE_MSG={draft:1, changes:4, live:5};   /* stage → CH_QUICK index offered after a stage change */
@@ -9610,7 +9613,7 @@ const Reminders={ list:[], today:'', state:'idle', err:'', lastAt:0, busy:false,
     if(!SYNC_TOKEN){ this.state='off'; renderHomeReminders(); return; }
     this.busy=true; if(manual||this.state==='idle'){ this.state='loading'; renderHomeReminders(); }
     try{
-      const r=await fetch('/api/reminders?_='+Date.now(),{headers:this.hdr(), cache:'no-store'});
+      const r=await fetch(API_BASE+'/api/reminders?_='+Date.now(),{headers:this.hdr(), cache:'no-store'});
       let p={}; try{ p=await r.json(); }catch(e){}
       if(!r.ok||!p.ok){ this.state='error'; this.err=(p&&p.error)||('the server answered '+r.status); }
       else { this.list=Array.isArray(p.items)?p.items:[]; this.today=p.today||todayIso(); this.state='ok'; this.err=''; this.lastAt=Date.now(); asapImport(p.asap); }
@@ -9622,7 +9625,7 @@ const Reminders={ list:[], today:'', state:'idle', err:'', lastAt:0, busy:false,
     const was=r.done; r.done=!undo; renderHomeReminders();
     if(window.DEMO_REMINDERS){ toast(undo?'Back on the list':'Done — off the list'); return; }
     try{
-      const res=await fetch('/api/reminders?done=1',{method:'POST', headers:{...this.hdr(),'Content-Type':'application/json'}, body:JSON.stringify({uid, undo:!!undo})});
+      const res=await fetch(API_BASE+'/api/reminders?done=1',{method:'POST', headers:{...this.hdr(),'Content-Type':'application/json'}, body:JSON.stringify({uid, undo:!!undo})});
       const p=await res.json().catch(()=>({})); if(!res.ok||!p.ok) throw new Error(p.error||'could not save');
       if(!undo) toastUndo(r.client+' · reminder done', ()=>Reminders.done(uid,true)); else toast('Back on the list');
     }catch(e){ r.done=was; renderHomeReminders(); toast(e.message||'Could not save'); }
@@ -9807,7 +9810,7 @@ function renderHomeChats(){
    approvals/edits/results live in the data repo (social/state.json) through /api/social. The server publishes:
    approved posts at their time (every 30 min check), «Post now» at once.
    26 Sept 2026: Auto-post (default on) — every post counts as approved unless held/skipped; month filter; tab after Year. ---------- */
-const SOCIAL_URL='/api/social';
+const SOCIAL_URL=API_BASE+'/api/social';
 const Meta={ posts:[], all:[], auto:true, mf:null, meta:{connected:false}, base:'', month:'', lastAt:0, busy:false, open:{}, edit:null, confirm:null, slide:{}, timer:null,
   async pull(force){
     if(!SYNC_TOKEN) return;
@@ -10039,5 +10042,11 @@ const Meta={ posts:[], all:[], auto:true, mf:null, meta:{connected:false}, base:
 })();
 
 </script>
+<script>/* 5 Oct 2026 — the CRM moved to crm.advonmedia.com. This old copy keeps working (and keeps syncing) so nothing is ever stranded. */
+(function(){ if(!(location.hostname==='advonmedia.com'||location.hostname==='www.advonmedia.com')) return;
+ var b=document.createElement('div'); b.setAttribute('role','status');
+ b.style.cssText='position:sticky;top:0;z-index:9999;background:#13263A;color:#fff;font:600 14px/1.4 system-ui,sans-serif;padding:10px 16px;text-align:center';
+ b.innerHTML='Your CRM has moved to <a href="https://crm.advonmedia.com/" style="color:#7FC4FF;font-weight:800">crm.advonmedia.com</a> — same passphrase, all your data is there. This old page still works and syncs, but new features only arrive at the new address.';
+ document.body.insertBefore(b, document.body.firstChild); })();</script>
 </body>
 </html>
