@@ -1695,6 +1695,36 @@ body.ld-dragging{user-select:none; -webkit-user-select:none; cursor:grabbing;}
 .ld-focus .f-foot .memob{color:#8A6400; background:var(--yellow-soft); display:inline-flex; align-items:center; gap:5px;}
 .ld-focus .f-foot .ic{width:13px; height:13px;}
 #ldFocusEdit .ld-edit{margin-top:12px;}
+/* call-back box on the card: day + time editable in place, the note under it */
+.cbx{margin-top:6px; border-radius:10px; background:var(--blue-soft); border:1px solid #BFD4F2; padding:6px 9px; font-size:12.5px;}
+.cbx.due{background:#FFF1F2; border-color:rgba(255,77,94,.55);}
+.cbx .cbx-r{display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-weight:800; color:var(--brand);}
+.cbx.due .cbx-r{color:#C21F33;}
+.cbx .cbx-r .ic{width:14px; height:14px;}
+.cbx input{border:1px solid var(--line); border-radius:7px; padding:3px 6px; font:inherit; font-weight:800; background:#fff; color:var(--ink); width:auto; min-width:0;}
+.cbx input[type=time]{width:auto; min-width:112px;}
+.cbx button{font-size:11px; font-weight:800; border-radius:7px; padding:3px 8px; background:#fff; border:1px solid var(--line); color:var(--ink);}
+.cbx .now{background:var(--red); color:#fff; border-radius:99px; padding:1px 8px; font-size:10.5px;}
+.cbx .cbx-m{margin-top:5px; font-weight:600; color:var(--ink); white-space:pre-wrap; cursor:pointer; display:flex; gap:6px; align-items:flex-start;}
+.cbx .cbx-m .ic{width:13px; height:13px; margin-top:2px; color:#8A6400; flex-shrink:0;}
+.cbx .cbx-m.empty{color:var(--muted); font-style:italic;}
+.ld-focus .cbx{font-size:14px; padding:9px 12px; margin-top:10px;}
+.ld-focus .cbx input{font-size:14px;}
+/* «Call-backs today» strip */
+.ld-cbday{display:none; background:#fff; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:12px 14px; margin-bottom:16px;}
+.ld-cbday.on{display:block;}
+.ld-cbday .h{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--brand); display:flex; gap:6px; align-items:center; margin-bottom:8px;}
+.ld-cbday .h .ic{width:14px; height:14px;}
+.ld-cbday .list{display:flex; flex-wrap:wrap; gap:8px;}
+.ld-cbday .it{display:flex; align-items:center; gap:8px; border:1px solid #BFD4F2; background:var(--blue-soft); border-radius:12px; padding:6px 8px 6px 10px; cursor:pointer; max-width:100%;}
+.ld-cbday .it.due{background:var(--red); border-color:var(--red); color:#fff;}
+.ld-cbday .it.hot:not(.due){background:var(--green-soft); border-color:rgba(14,198,115,.55);}
+.ld-cbday .it .t{font-weight:900; font-variant-numeric:tabular-nums; font-size:15px;}
+.ld-cbday .it .n{font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:220px;}
+.ld-cbday .it .m{font-size:11px; opacity:.8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:240px;}
+.ld-cbday .it a{display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:9px; background:#fff; color:var(--brand); flex-shrink:0;}
+.ld-cbday .it a .ic{width:15px; height:15px;}
+.ld-edit .row .sep{width:1px; height:22px; background:var(--line); margin:0 2px;}
 .day-row .tm.due{color:var(--red);}
 .ld-focus .f-foot .np{color:#8A6400; background:var(--yellow-soft); display:inline-flex; align-items:center; gap:5px;}
 .ld-focus .f-foot .np .ic{width:13px; height:13px;}
@@ -6840,7 +6870,10 @@ const ldBadPhone=l=>!!LD_SHARED_PHONES[String(l.phone||'')];
 const ldNoPh=l=>l.status==='np' || ((l.status==='new'||l.status==='na') && ldBadPhone(l));
 const ldOpen=l=>(l.status==='new'||l.status==='na') && !ldBadPhone(l);
 /* ---- 5 Oct 2026: call-backs («she said call me tomorrow at 14:00»), notes, «almost booked», manual order ---- */
-const LD_CB_TIMES=['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
+const LD_CB_TIMES=['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
+const LD_CB_MINS=['00','15','30','45'];
+/* now + n minutes, rounded up to 5 — for «in 30 min / 1 h / 2 h» */
+function ldInMin(n){ const d=new Date(Date.now()+n*60000); d.setMinutes(Math.ceil(d.getMinutes()/5)*5,0,0); return {day:isoDate(d), time:String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}; }
 const ldNowHM=()=>{ const n=new Date(); return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); };
 const ldCbAt=l=>(l.cb&&l.cb.day)? l.cb.day+'T'+(l.cb.time||'00:00') : '';
 function ldCbDue(l){ if(!l.cb||!l.cb.day) return false; const t=todayIso(); if(l.cb.day!==t) return l.cb.day<t; return !l.cb.time || l.cb.time<=ldNowHM(); }
@@ -7042,12 +7075,15 @@ function ldCbEl(l){
   const days=qcQuickDays(); const P=ldCbPick;
   box.innerHTML=`<div class="lbl">${IC.clock} Call back ${esc(l.name)} — when?</div>
     <div class="row" data-days>${days.map(o=>`<button type="button" data-day="${o.k}" class="${P.day===o.k?'on':''}" title="${fmtDate(o.k)}">${o.t}</button>`).join('')}<input type="date" data-dayinput value="${P.day}" title="Another day"></div>
-    <div class="row" data-times>${LD_CB_TIMES.map(t=>`<button type="button" data-time="${t}" class="${P.time===t?'on':''}">${t}</button>`).join('')}<input type="time" data-timeinput value="${P.time}" title="Another time"></div>
+    <div class="row" data-times>${LD_CB_TIMES.map(t=>`<button type="button" data-hour="${t.slice(0,2)}" class="${P.time.slice(0,2)===t.slice(0,2)?'on':''}">${t.slice(0,2)}:</button>`).join('')}<span class="sep"></span>${LD_CB_MINS.map(m=>`<button type="button" data-min="${m}" class="${P.time&&P.time.slice(3)===m?'on':''}">:${m}</button>`).join('')}<input type="time" data-timeinput value="${P.time}" step="300" title="Exact time"></div>
+    <div class="row"><button type="button" data-rel="30">in 30 min</button><button type="button" data-rel="60">in 1 hour</button><button type="button" data-rel="120">in 2 hours</button>${P.day&&P.time?`<b style="margin-left:6px;color:var(--brand)">→ ${esc(ldDayWord(P.day))} · ${esc(P.time)}</b>`:''}</div>
     <textarea data-memo placeholder="What did you say? e.g. very interested — wants to talk more and book">${esc(P.memo)}</textarea>
     <div class="row"><button type="button" class="go" data-go>${IC.check} Save call-back</button>${l.cb?'<button type="button" data-clear>Remove call-back</button>':''}<button type="button" class="x" data-cancel>Cancel</button></div>`;
   const keep=()=>{ P.memo=box.querySelector('[data-memo]').value; };
   box.querySelectorAll('[data-day]').forEach(b=>b.addEventListener('click',()=>{ keep(); P.day= P.day===b.dataset.day?'':b.dataset.day; renderLeads(); }));
-  box.querySelectorAll('[data-time]').forEach(b=>b.addEventListener('click',()=>{ keep(); P.time= P.time===b.dataset.time?'':b.dataset.time; renderLeads(); }));
+  box.querySelectorAll('[data-hour]').forEach(b=>b.addEventListener('click',()=>{ keep(); const m=(P.time&&P.time.slice(3))||'00'; P.time=b.dataset.hour+':'+m; if(!P.day) P.day=todayIso(); renderLeads(); }));
+  box.querySelectorAll('[data-min]').forEach(b=>b.addEventListener('click',()=>{ keep(); let h=P.time? P.time.slice(0,2) : String(Math.min(20,new Date().getHours()+1)).padStart(2,'0'); P.time=h+':'+b.dataset.min; if(!P.day) P.day=todayIso(); renderLeads(); }));
+  box.querySelectorAll('[data-rel]').forEach(b=>b.addEventListener('click',()=>{ keep(); const r=ldInMin(+b.dataset.rel); P.day=r.day; P.time=r.time; renderLeads(); }));
   box.querySelector('[data-dayinput]').addEventListener('change',e=>{ keep(); P.day=e.target.value; renderLeads(); });
   box.querySelector('[data-timeinput]').addEventListener('change',e=>{ keep(); P.time=e.target.value; renderLeads(); });
   box.querySelector('[data-memo]').addEventListener('input',e=>{ P.memo=e.target.value; });
@@ -7056,7 +7092,39 @@ function ldCbEl(l){
   box.querySelector('[data-cancel]').addEventListener('click',()=>{ ldCbFor=null; renderLeads(); });
   return box;
 }
-function ldOpenCb(l){ ldMemoFor=null; ldBookingFor=null; ldCbFor= ldCbFor===l.id? null : l.id; ldCbPick={day:(l.cb&&l.cb.day)||'', time:(l.cb&&l.cb.time)||'', memo:l.memo||''}; renderLeads(); }
+function ldOpenCb(l){ ldMemoFor=null; ldBookingFor=null; ldCbFor= ldCbFor===l.id? null : l.id; ldCbPick={day:(l.cb&&l.cb.day)||todayIso(), time:(l.cb&&l.cb.time)||'', memo:l.memo||''}; renderLeads(); }
+/* change the call-back straight on the card */
+function ldMoveCb(l, day, time){
+  if(!day){ toast('Pick a day'); renderLeads(); return; }
+  l.cb={day, time:time||''}; l.updated=Date.now(); ldCbPinged.delete(l.id+'@'+day+(time||''));
+  renderLeads(); save(); toast(l.name+' → '+ldCbLabel(l));
+}
+/* the box on the card: «Call back [day] [time] · +1 h · tomorrow» with the note under it — everything editable in place */
+function ldCbBox(l){
+  const due=ldCbDue(l);
+  const box=document.createElement('div'); box.className='cbx'+(due?' due':'');
+  box.innerHTML=`<div class="cbx-r">${IC.clock}<span>Call back</span><input type="date" data-cbd value="${esc(l.cb.day)}" title="Change the day"><input type="time" data-cbt value="${esc(l.cb.time||'')}" step="300" title="Change the time"><span style="font-weight:700">${esc(ldDayWord(l.cb.day))}</span>${due?'<span class="now">now</span>':''}<button type="button" data-p1 title="One hour later">+1 h</button><button type="button" data-tm title="Same time tomorrow">tomorrow</button></div>
+    <div class="cbx-m${l.memo?'':' empty'}" data-cbm title="Click to edit the note">${IC.edit}<span>${l.memo?esc(l.memo):'add a note — what did you say?'}</span></div>`;
+  box.querySelector('[data-cbd]').addEventListener('change',e=>ldMoveCb(l, e.target.value, l.cb.time));
+  box.querySelector('[data-cbt]').addEventListener('change',e=>ldMoveCb(l, l.cb.day, e.target.value));
+  box.querySelector('[data-p1]').addEventListener('click',()=>{ const base=new Date(Math.max(Date.now(), Date.parse(l.cb.day+'T'+(l.cb.time||'09:00'))||0)+3600000); base.setMinutes(Math.ceil(base.getMinutes()/5)*5,0,0); ldMoveCb(l, isoDate(base), String(base.getHours()).padStart(2,'0')+':'+String(base.getMinutes()).padStart(2,'0')); });
+  box.querySelector('[data-tm]').addEventListener('click',()=>ldMoveCb(l, isoDate(new Date(Date.now()+864e5)), l.cb.time));
+  box.querySelector('[data-cbm]').addEventListener('click',()=>ldOpenMemo(l));
+  return box;
+}
+/* «Call-backs today» — on top of Leads, earliest first, red when it is time */
+function renderLdCbDay(){
+  let el=$('#ldCbDay');
+  if(!el){ const f=$('#ldFocus'); if(!f) return; el=document.createElement('section'); el.id='ldCbDay'; el.className='ld-cbday'; f.parentNode.insertBefore(el, f); }
+  const t=todayIso();
+  const list=(state.leads||[]).filter(l=>l.cb && l.cb.day && l.cb.day<=t && ldOpen(l)).sort((a,b)=>ldCbAt(a).localeCompare(ldCbAt(b)));
+  el.classList.toggle('on', !!list.length);
+  if(!list.length){ el.innerHTML=''; return; }
+  el.innerHTML=`<div class="h">${IC.clock} Call-backs today · ${list.length} <span style="font-weight:600;text-transform:none;letter-spacing:0;color:var(--muted)">· tap to open in call mode</span></div><div class="list">${list.map(l=>{ const d=ldCbDue(l);
+    return `<div class="it${d?' due':''}${l.hot?' hot':''}" data-cbgo="${esc(l.id)}" title="${esc(l.memo||'')}"><span class="t">${l.cb.day<t?esc(fmtDay(l.cb.day)):esc(l.cb.time||'—')}</span><div style="min-width:0"><div class="n">${esc(l.name)}</div>${l.memo?`<div class="m">${esc(l.memo)}</div>`:''}</div>${l.phone?`<a href="tel:+30${esc(l.phone)}" title="Call ${esc(ldFmtPhone(l.phone))}" data-tel>${IC.phone}</a>`:''}</div>`; }).join('')}</div>`;
+  el.querySelectorAll('[data-tel]').forEach(a=>a.addEventListener('click',e=>e.stopPropagation()));
+  el.querySelectorAll('[data-cbgo]').forEach(it=>it.addEventListener('click',()=>{ ensureLeads(); state.meta.ld.focus=it.dataset.cbgo; ldFilter.list=''; state.meta.ld.list=''; ldCallMode=true; renderLeads(); window.scrollTo({top:0, behavior:'smooth'}); }));
+}
 function ldMemoEl(l){
   const box=document.createElement('div'); box.className='ld-edit memo';
   box.innerHTML=`<div class="lbl">${IC.edit} Note for ${esc(l.name)}</div><textarea data-memo placeholder="Anything to remember — e.g. call after 14:00, the secretary answers, has a site but wants a new one…">${esc(l.memo||'')}</textarea>
@@ -7173,12 +7241,12 @@ function ldItemEl(l, drag){
   if(l.list==='ads' && l.at){ const m=Math.max(0,Math.round((Date.now()-Date.parse(l.at))/60000)); meta.push(`<span class="w-try${m<=15?' hot':''}" title="Filled in the ads form">🔥 ads form · ${m<60?m+' min':m<1440?Math.round(m/60)+' h':Math.round(m/1440)+' d'} ago${m<=5?' · CALL NOW':''}</span>`); }
   if(l.note) meta.push(`<span class="w-note">${esc(l.note)}</span>`);
   if(l.hot && ldOpen(l)) meta.unshift(`<span class="w-hot">Almost booked</span>`);
-  if(l.cb && ldOpen(l)) meta.unshift(`<span class="w-cb${ldCbDue(l)?' due':''}">${IC.clock}${esc(ldCbLabel(l))}${ldCbDue(l)?' · now':''}</span>`);
   if(l.status==='na' && l.tries.length){ const n=l.tries.length; meta.push(`<span class="w-try${n>=3?' hot':''}">${IC.hourglass} called ${l.tries.map(fmtDay).join(', ')} · ${n} ${n===1?'try':'tries'}</span>`); }
   if(ldNoPh(l)) meta.push(`<span class="w-out np">No phone found${l.npAt?' · '+fmtDay(isoDate(new Date(l.npAt))):''}</span>`);
   else if(!ldOpen(l)){ const t={g:'Booked',y:'SMS sent',r:'No',x:'Dropped'}[l.status]; meta.push(`<span class="w-out ${l.status==='x'?'':l.status}">${t}${l.doneAt?' · '+fmtDay(isoDate(new Date(l.doneAt))):''}</span>`); }
-  row.innerHTML=(drag?`<span class="ld-grip" title="Drag up or down to change the order">${IC.grip}</span>`:'')+`<div class="w-main"><div class="w-name">${esc(l.name)}</div><div class="w-meta">${meta.join('')}</div>${l.memo?`<div class="w-memo" data-memo title="Click to edit">${IC.edit}<span>${esc(l.memo)}</span></div>`:''}</div>`;
+  row.innerHTML=(drag?`<span class="ld-grip" title="Drag up or down to change the order">${IC.grip}</span>`:'')+`<div class="w-main"><div class="w-name">${esc(l.name)}</div><div class="w-meta">${meta.join('')}</div>${l.memo && !(l.cb && ldOpen(l))?`<div class="w-memo" data-memo title="Click to edit">${IC.edit}<span>${esc(l.memo)}</span></div>`:''}</div>`;
   const wm=row.querySelector('[data-memo]'); if(wm) wm.addEventListener('click',()=>ldOpenMemo(l));
+  if(l.cb && ldOpen(l)) row.querySelector('.w-main').appendChild(ldCbBox(l));
   const ap=row.querySelector('[data-addphone]'); if(ap) ap.addEventListener('click',()=>{ ap.replaceWith(ldPhoneInput(l,'w-nophone')); });
   row.appendChild(ldActs(l));
   if(ldBookingFor===l.id && !ldCallMode){ const wrap=document.createElement('div'); wrap.style.flexBasis='100%'; wrap.appendChild(ldBookEl(l)); row.appendChild(wrap); }
@@ -7212,7 +7280,7 @@ function renderLdFocus(){
   el.classList.toggle('on', ldCallMode); document.body.classList.toggle('ld-call', ldCallMode); $('#ldCallMode').classList.toggle('on', ldCallMode); $('#ldCallMode').textContent= ldCallMode? 'Exit call mode':'Call mode';
   if(!ldCallMode){ el.innerHTML=''; return; }
   const q=ldQueue(); const ld=state.meta.ld||{};
-  let l = ld.focus? q.find(x=>x.id===ld.focus) : null; if(!l) l=q[0];
+  let l = ld.focus? (q.find(x=>x.id===ld.focus) || state.leads.find(x=>x.id===ld.focus && ldOpen(x))) : null; if(!l) l=q[0];
   if(!l){ el.innerHTML=`<div class="empty-note" style="padding:30px 10px;">Nobody left to call in this filter. Pull new leads, widen the filter, or take the day off — you earned it.</div>`; return; }
   ensureLeads(); state.meta.ld.focus=l.id;
   const idx=q.indexOf(l);
@@ -7221,8 +7289,8 @@ function renderLdFocus(){
       <div class="f-name">${esc(l.name)}</div>
       <div class="f-spec">${esc(l.spec||'')}${l.city?' · '+esc(l.city):''}${l.addr?' · '+esc(l.addr):''}</div>
       ${l.phone?`<a class="f-phone" href="tel:+30${esc(l.phone)}">${IC.phone}${esc(ldFmtPhone(l.phone))}</a>`:`<div class="f-nophone" id="ldFocusPhone">${IC.phone} No phone yet — look it up, then type it: <input type="tel" placeholder="69… / 21…" autocomplete="off"><button type="button">Save</button></div>`}
-      <div class="f-meta">${l.reviews?`<span class="chip">★ ${l.reviews} reviews${l.score?' · '+l.score+'/10':''}</span>`:''}${l.url?`<a class="chip" href="${esc(l.url)}" target="_blank" rel="noopener">doctoranytime profile ↗</a>`:''}${true?`<a class="chip" href="${esc(ldLookup(l))}" target="_blank" rel="noopener">${IC.search} Google ↗</a><a class="chip" href="${esc(ldMaps(l))}" target="_blank" rel="noopener">Maps ↗</a>`:''}<span class="chip">${esc(ldListInfo(ldListOf(l)).t||'')}</span>${l.note?`<span class="chip">${esc(l.note)}</span>`:''}${l.status==='na'&&l.tries.length?`<span class="chip" style="background:var(--yellow-soft);color:#8A6400;">no answer on ${l.tries.map(fmtDay).join(', ')}</span>`:''}${l.cb?`<span class="chip" style="background:${ldCbDue(l)?'var(--red)':'var(--blue-soft)'};color:${ldCbDue(l)?'#fff':'var(--brand)'};font-weight:800;">${esc(ldCbLabel(l))}</span>`:''}${l.hot?'<span class="chip" style="background:var(--green);color:#fff;font-weight:800;">Almost booked</span>':''}</div>
-      ${l.memo?`<div class="f-memo" data-fmemo title="Click to edit">${IC.edit}<span>${esc(l.memo)}</span></div>`:''}
+      <div class="f-meta">${l.reviews?`<span class="chip">★ ${l.reviews} reviews${l.score?' · '+l.score+'/10':''}</span>`:''}${l.url?`<a class="chip" href="${esc(l.url)}" target="_blank" rel="noopener">doctoranytime profile ↗</a>`:''}${true?`<a class="chip" href="${esc(ldLookup(l))}" target="_blank" rel="noopener">${IC.search} Google ↗</a><a class="chip" href="${esc(ldMaps(l))}" target="_blank" rel="noopener">Maps ↗</a>`:''}<span class="chip">${esc(ldListInfo(ldListOf(l)).t||'')}</span>${l.note?`<span class="chip">${esc(l.note)}</span>`:''}${l.status==='na'&&l.tries.length?`<span class="chip" style="background:var(--yellow-soft);color:#8A6400;">no answer on ${l.tries.map(fmtDay).join(', ')}</span>`:''}${l.hot?'<span class="chip" style="background:var(--green);color:#fff;font-weight:800;">Almost booked</span>':''}</div>
+      ${l.memo&&!l.cb?`<div class="f-memo" data-fmemo title="Click to edit">${IC.edit}<span>${esc(l.memo)}</span></div>`:''}<div id="ldFocusCbx"></div>
     </div><div class="f-right">next in line<b>${q.length-idx-1}</b>logging on ${fmtDay(todayIso())}</div></div>
     <div class="f-acts"><button class="g">${IC.check} Booked<small>1 · meeting set</small></button><button class="y">${IC.message} SMS sent<small>2 · wants info</small></button><button class="r">${IC.x} No<small>3 · not interested</small></button><button class="n">${IC.hourglass} No answer<small>4 · try another day</small></button></div>
     <div class="ld-book" id="ldFocusBook"></div><div id="ldFocusEdit"></div>
@@ -7238,6 +7306,7 @@ function renderLdFocus(){
   el.querySelector('[data-hot]').addEventListener('click',()=>ldToggleHot(l));
   el.querySelector('[data-memob]').addEventListener('click',()=>ldOpenMemo(l));
   const fm=el.querySelector('[data-fmemo]'); if(fm) fm.addEventListener('click',()=>ldOpenMemo(l));
+  const fcb=el.querySelector('#ldFocusCbx'); if(fcb && l.cb) fcb.appendChild(ldCbBox(l));
   const fe=el.querySelector('#ldFocusEdit'); if(fe){ if(ldCbFor===l.id) fe.appendChild(ldCbEl(l)); else if(ldMemoFor===l.id) fe.appendChild(ldMemoEl(l)); }
   const fp=el.querySelector('#ldFocusPhone'); if(fp){ const inp=fp.querySelector('input'); fp.querySelector('button').addEventListener('click',()=>ldSetPhone(l, inp.value)); inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); ldSetPhone(l, inp.value); } }); }
   if(ldBookingFor===l.id){ const b=$('#ldFocusBook'); b.replaceWith(ldBookEl(l)); }
@@ -7284,7 +7353,7 @@ function renderLeadsInner(){
   if(!state || !$('#ldList')) return;
   ensureLeads(); if(ldFilter.list===null) ldFilter.list=state.meta.ld.list||'';
   if(ldFilter.list && !state.leads.some(l=>ldListOf(l)===ldFilter.list && ldOpen(l)) && !ldLists()[ldFilter.list]) ldFilter.list='';
-  ldFillSelects(); renderLdLists(); renderLdBanner(); renderLdFocus();
+  ldFillSelects(); renderLdLists(); renderLdBanner(); renderLdCbDay(); renderLdFocus();
   const f=ldFiltered();
   const fresh=f.filter(l=>l.status==='new' && ldOpen(l) && !l.cb), na=f.filter(l=>(l.status==='na' && ldOpen(l)) || (l.cb && ldOpen(l))).sort(ldNaCmp), done=f.filter(l=>!ldOpen(l) && !ldNoPh(l)).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
   const np=f.filter(ldNoPh);
@@ -7301,7 +7370,7 @@ function renderLeadsInner(){
   if(!na.length) na_el.innerHTML='<div class="empty-note">Nobody parked. When someone doesn\'t pick up, tap «No answer» and they land here with the date.</div>';
   else { const t=todayIso(); const cbs=na.filter(l=>l.cb).sort((a,b)=>ldCbAt(a).localeCompare(ldCbAt(b))), rest=na.filter(l=>!l.cb);
     const again=rest.filter(l=>ldLastTry(l)!==t), todayNa=rest.filter(l=>ldLastTry(l)===t);
-    if(cbs.length) na_el.appendChild(ldGroup('Call back at a set time', IC.clock, cbs, 'cbk', {sub:'earliest first · red = now'}));
+    if(cbs.length) na_el.appendChild(ldGroup('Call back at a set time', IC.clock, cbs, 'cbk', {sub:'today first, earliest first · red = now · change day / time right on the card'}));
     if(again.length) na_el.appendChild(ldGroup('Try again', IC.phone, again, 'again', {drag:true, sub:'drag ⋮⋮ to reorder · green = almost booked'}));
     if(todayNa.length) na_el.appendChild(ldGroup('Called today · no answer', IC.hourglass, todayNa, 'today', {drag:true})); }
   const d_el=$('#ldDoneList'); d_el.innerHTML='';
@@ -7343,7 +7412,7 @@ $('#ldImportFile').addEventListener('change',e=>{ const f=e.target.files[0]; if(
 document.addEventListener('keydown',e=>{
   if(curView!=='leads' || !ldCallMode || !state) return;
   const tag=(e.target.tagName||'').toLowerCase(); if(tag==='input'||tag==='textarea'||tag==='select'||e.metaKey||e.ctrlKey||e.altKey) return;
-  const q=ldQueue(); const l=q.find(x=>x.id===(state.meta.ld||{}).focus)||q[0]; if(!l) return;
+  const q=ldQueue(); const fid=(state.meta.ld||{}).focus; const l=q.find(x=>x.id===fid)||state.leads.find(x=>x.id===fid && ldOpen(x))||q[0]; if(!l) return;
   const map={'1':'g','2':'y','3':'r','4':'n'};
   if(map[e.key]){ e.preventDefault(); ldOutcome(l,map[e.key]); }
   else if(e.key==='s'||e.key==='S'){ e.preventDefault(); ldSkip(l); }
