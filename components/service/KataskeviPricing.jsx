@@ -44,7 +44,7 @@ const GROWTH_LIST = [
   { el: 'Προτεραιότητα στις αλλαγές', en: 'Priority on change requests' },
 ];
 
-export default function KataskeviPricing() {
+export default function KataskeviPricing({ infra = true }) {
   const { lang } = useLangStore();
   const [billingAnnual, setBillingAnnual] = useState(true);
 
@@ -255,6 +255,7 @@ export default function KataskeviPricing() {
           </p>
         </ScrollReveal>
 
+        {infra && (<>
         {/* ─── HOSTING TECHNICAL FEATURES ─── */}
         <ScrollReveal delay={60} direction="fade" className="mt-20">
           <div className="text-center mb-12">
@@ -326,6 +327,8 @@ export default function KataskeviPricing() {
             ))}
           </div>
         </ScrollReveal>
+
+        </>)}
 
         {/* ─── FUTURE CHANGES POLICY + ADD-ONS ─── */}
         <ScrollReveal delay={80} className="mt-20">
