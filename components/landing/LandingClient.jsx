@@ -318,9 +318,9 @@ export default function LandingClient() {
                 </p>
                 <p className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-gray-400 text-base leading-relaxed">
                   {lang === 'el' ? (
-                    <>Κερδίζουμε κι εμείς: κάθε ιστοσελίδα που παραδίδουμε μεγαλώνει το πορτφόλιό μας και μας φέρνει τους επόμενους πελάτες. Εσείς αποκτάτε μια premium ιστοσελίδα χωρίς ρίσκο, εμείς ένα ακόμα δείγμα δουλειάς που μας κάνει περήφανους. <span className="text-electric-cyan font-bold">Όλοι κερδίζουν.</span></>
+                    <>Κερδίζουμε κι εμείς: κάθε ιστοσελίδα που παραδίδουμε μεγαλώνει το πορτφόλιό μας και μας φέρνει τους επόμενους πελάτες. Προσφέρουμε επίσης κι άλλες υπηρεσίες, όπως διαχείριση social media και διαφημίσεις στο Google, που μπορείτε να επιλέξετε αν και όταν τις χρειαστείτε. Η δωρεάν ιστοσελίδα είναι ο τρόπος μας να ξεκινήσει μια συνεργασία που κρατάει. Εσείς αποκτάτε μια premium ιστοσελίδα χωρίς ρίσκο, εμείς ένα ακόμα δείγμα δουλειάς που μας κάνει περήφανους. <span className="text-electric-cyan font-bold">Όλοι κερδίζουν.</span></>
                   ) : (
-                    <>We win too: every website we deliver grows our portfolio and brings us our next clients. You get a premium website with zero risk; we get one more project we&apos;re proud of. <span className="text-electric-cyan font-bold">Everyone wins.</span></>
+                    <>We win too: every website we deliver grows our portfolio and brings us our next clients. We also offer other services, such as social media management and Google Ads, which you can choose if and when you need them. The free website is how a lasting collaboration starts. You get a premium website with zero risk; we get one more project we&apos;re proud of. <span className="text-electric-cyan font-bold">Everyone wins.</span></>
                   )}
                 </p>
               </div>
