@@ -228,64 +228,6 @@ export default function LandingClient() {
       {/* ─── STATS ─── */}
       <Stats />
 
-      {/* ─── PORTFOLIO — real client sites first, so the offer is seen next to the work ─── */}
-      <section id="portfolio" className="py-24 bg-[#0a1418]/60 border-b border-electric-cyan/8 backdrop-blur-sm scroll-mt-28">
-        <div className="max-w-[1600px] mx-auto px-4 md:px-8">
-          <ScrollReveal className="text-center mb-14">
-            <span className="section-label">{lang === 'el' ? 'Πορτφόλιο' : 'Portfolio'}</span>
-            <h2 className="text-4xl md:text-5xl font-black font-display mb-3 text-white tracking-tight">
-              {lang === 'el' ? 'Δείτε μερικές από τις Δουλειές μας' : 'Check Out Some Of Our Work'}
-            </h2>
-            <p className="text-sm text-gray-500 leading-relaxed max-w-2xl mx-auto">
-              {lang === 'el' ? (
-                <>
-                  {'Όλες είναι ιστοσελίδες πελατών μας, online στο δικό τους domain, '}
-                  <strong className="text-gray-300 font-semibold">γραμμένες από την αρχή σε κώδικα</strong>
-                  {' — '}
-                  <strong className="text-gray-300 font-semibold">όχι πάνω σε έτοιμο template</strong>
-                  {'. Πατήστε όποια θέλετε για να την ανοίξετε.'}
-                </>
-              ) : (
-                <>
-                  {'Every one is a client’s website, live on their own domain, '}
-                  <strong className="text-gray-300 font-semibold">written from scratch in code</strong>
-                  {' — '}
-                  <strong className="text-gray-300 font-semibold">not on a ready-made template</strong>
-                  {'. Tap any of them to open it.'}
-                </>
-              )}
-            </p>
-          </ScrollReveal>
-          <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3">
-            {work.map((item, index) => (
-              <PortfolioCard key={item.url + index} item={item} lang={lang} eager={index < 12} cls={allWork ? lastRowStart(index, work.length) : ''} />
-            ))}
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-4 mt-10">
-            {!allWork && (
-              <button
-                type="button"
-                onClick={() => setShown((n) => n + MORE_CARDS)}
-                className="btn-premium inline-flex items-center gap-2 px-7 py-3.5 border border-electric-cyan/40 text-electric-cyan text-sm font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all"
-              >
-                {lang === 'el' ? 'Δείτε περισσότερες' : 'See more'}
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M12 5v14"/><path d="m5 12 7 7 7-7"/></svg>
-              </button>
-            )}
-            {shown > FIRST_CARDS && (
-              <a
-                href="#contact"
-                onClick={(e) => goTo(e, 'contact')}
-                className="btn-premium inline-flex items-center gap-2 px-7 py-3.5 bg-electric-cyan text-[#050a0e] text-sm font-black uppercase tracking-wide rounded-xl hover:bg-white transition-all"
-              >
-                {lang === 'el' ? 'Θέλω κι εγώ μια τέτοια' : 'I want one like these'}
-                {arrow('w-4 h-4')}
-              </a>
-            )}
-          </div>
-        </div>
-      </section>
-
       {/* ─── PRICE — the ΔΩΡΕΑΝ block of the website page ─── */}
       <section id="timi" className="pt-24 pb-16 relative overflow-hidden scroll-mt-28">
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -384,6 +326,64 @@ export default function LandingClient() {
               </div>
             </div>
           </ScrollReveal>
+        </div>
+      </section>
+
+      {/* ─── PORTFOLIO — real client sites first, so the offer is seen next to the work ─── */}
+      <section id="portfolio" className="py-24 bg-[#0a1418]/60 border-b border-electric-cyan/8 backdrop-blur-sm scroll-mt-28">
+        <div className="max-w-[1600px] mx-auto px-4 md:px-8">
+          <ScrollReveal className="text-center mb-14">
+            <span className="section-label">{lang === 'el' ? 'Πορτφόλιο' : 'Portfolio'}</span>
+            <h2 className="text-4xl md:text-5xl font-black font-display mb-3 text-white tracking-tight">
+              {lang === 'el' ? 'Δείτε μερικές από τις Δουλειές μας' : 'Check Out Some Of Our Work'}
+            </h2>
+            <p className="text-sm text-gray-500 leading-relaxed max-w-2xl mx-auto">
+              {lang === 'el' ? (
+                <>
+                  {'Όλες είναι ιστοσελίδες πελατών μας, online στο δικό τους domain, '}
+                  <strong className="text-gray-300 font-semibold">γραμμένες από την αρχή σε κώδικα</strong>
+                  {' — '}
+                  <strong className="text-gray-300 font-semibold">όχι πάνω σε έτοιμο template</strong>
+                  {'. Πατήστε όποια θέλετε για να την ανοίξετε.'}
+                </>
+              ) : (
+                <>
+                  {'Every one is a client’s website, live on their own domain, '}
+                  <strong className="text-gray-300 font-semibold">written from scratch in code</strong>
+                  {' — '}
+                  <strong className="text-gray-300 font-semibold">not on a ready-made template</strong>
+                  {'. Tap any of them to open it.'}
+                </>
+              )}
+            </p>
+          </ScrollReveal>
+          <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3">
+            {work.map((item, index) => (
+              <PortfolioCard key={item.url + index} item={item} lang={lang} eager={index < 12} cls={allWork ? lastRowStart(index, work.length) : ''} />
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-4 mt-10">
+            {!allWork && (
+              <button
+                type="button"
+                onClick={() => setShown((n) => n + MORE_CARDS)}
+                className="btn-premium inline-flex items-center gap-2 px-7 py-3.5 border border-electric-cyan/40 text-electric-cyan text-sm font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all"
+              >
+                {lang === 'el' ? 'Δείτε περισσότερες' : 'See more'}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M12 5v14"/><path d="m5 12 7 7 7-7"/></svg>
+              </button>
+            )}
+            {shown > FIRST_CARDS && (
+              <a
+                href="#contact"
+                onClick={(e) => goTo(e, 'contact')}
+                className="btn-premium inline-flex items-center gap-2 px-7 py-3.5 bg-electric-cyan text-[#050a0e] text-sm font-black uppercase tracking-wide rounded-xl hover:bg-white transition-all"
+              >
+                {lang === 'el' ? 'Θέλω κι εγώ μια τέτοια' : 'I want one like these'}
+                {arrow('w-4 h-4')}
+              </a>
+            )}
+          </div>
         </div>
       </section>
 
