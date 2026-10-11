@@ -10,11 +10,10 @@ import { useLangStore } from '@/store/langStore';
 import Reviews from '@/components/Reviews';
 import Stats from '@/components/sats';
 import ScrollReveal from '@/components/ScrollReveal';
-import PitchQuote from '@/components/PitchQuote';
 import KataskeviPricing from '@/components/service/KataskeviPricing';
-import { StepsSection, IncludesSection, FaqSection } from '@/components/service/blocks';
+import { StepsSection, FaqSection, ICONS } from '@/components/service/blocks';
 import { portfolioData } from '@/lib/data';
-import { getService, HOME_FAQS } from '@/lib/services';
+import { getService } from '@/lib/services';
 
 const PROFESSIONS = [
   'Οδοντίατροι', 'Ψυχολόγοι', 'Ψυχοθεραπευτές', 'Οφθαλμίατροι', 'Παιδίατροι',
@@ -22,7 +21,9 @@ const PROFESSIONS = [
 ];
 
 // How many portfolio cards before «see all» (4 full rows of 6 on desktop, 12 rows of 2 on phones).
-const FIRST_CARDS = 24;
+// Portfolio: 36 cards at once (6 full rows on desktop), «Δείτε περισσότερες» adds 36 more each time.
+const FIRST_CARDS = 36;
+const MORE_CARDS = 36;
 
 const arrow = (cls = 'w-5 h-5') => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={cls}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -42,7 +43,7 @@ export default function LandingClient() {
   const service = getService('kataskevi-istoselidas');
   const heroDecoRef = useRef(null);
   const magnetRef = useRef(null);
-  const [allWork, setAllWork] = useState(false);
+  const [shown, setShown] = useState(FIRST_CARDS);
   const [showBar, setShowBar] = useState(false);
 
   const onMagnetMove = (e) => {
@@ -68,8 +69,9 @@ export default function LandingClient() {
   }, []);
 
   // FAQ: the website-service questions + the two general ones from the homepage that ad visitors ask.
-  const faqs = [...service.faqs, ...HOME_FAQS.filter((f) => /τεχνικές γνώσεις|αλλάξω πράγματα/.test(f.q.el))];
-  const work = allWork ? portfolioData : portfolioData.slice(0, FIRST_CARDS);
+  const faqs = LANDING_FAQS;
+  const allWork = shown >= portfolioData.length;
+  const work = portfolioData.slice(0, shown);
 
   return (
     <>
@@ -172,8 +174,8 @@ export default function LandingClient() {
           <div className="reveal-item delay-6 flex flex-wrap items-center justify-center gap-5">
             <a
               ref={magnetRef}
-              href="#contact"
-              onClick={(e) => goTo(e, 'contact')}
+              href="#timi"
+              onClick={(e) => goTo(e, 'timi')}
               onMouseMove={onMagnetMove}
               onMouseLeave={onMagnetLeave}
               className="btn-premium group relative overflow-hidden px-9 py-4 bg-electric-cyan text-[#050a0e] font-black text-base uppercase tracking-[0.1em] rounded-xl flex items-center gap-3 transition-all duration-300"
@@ -193,20 +195,12 @@ export default function LandingClient() {
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
               {lang === 'el' ? 'ΠΟΡΤΦΟΛΙΟ' : 'PORTFOLIO'}
             </a>
-            <a
-              href="#timi"
-              onClick={(e) => goTo(e, 'timi')}
-              className="btn-premium group px-9 py-4 bg-white/5 border border-white/20 text-white font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-white hover:text-[#050a0e] transition-all duration-300 flex items-center gap-3 backdrop-blur-sm"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>
-              {lang === 'el' ? 'ΤΙΜΕΣ' : 'PRICES'}
-            </a>
           </div>
 
           <p className="reveal-item delay-6 text-gray-500 text-xs md:text-sm tracking-wide mt-8">
             {lang === 'el'
-              ? 'Κατασκευή 0€ · Χωρίς προκαταβολή · Απεριόριστες αλλαγές · Πρώτο σχέδιο σε 4–10 ημέρες'
-              : 'Build 0€ · No deposit · Unlimited changes · First design in 4–10 days'}
+              ? 'Κατασκευή 0€ · Χωρίς προκαταβολή · Απεριόριστες αλλαγές πριν βγει online · Πρώτο σχέδιο σε 4–10 ημέρες'
+              : 'Build 0€ · No deposit · Unlimited changes before launch · First design in 4–10 days'}
           </p>
 
           <div className="reveal-item delay-6 flex justify-center mt-16">
@@ -264,20 +258,21 @@ export default function LandingClient() {
           </ScrollReveal>
           <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3">
             {work.map((item, index) => (
-              <PortfolioCard key={item.url + index} item={item} lang={lang} cls={allWork ? lastRowStart(index, work.length) : ''} />
+              <PortfolioCard key={item.url + index} item={item} lang={lang} eager={index < 12} cls={allWork ? lastRowStart(index, work.length) : ''} />
             ))}
           </div>
-          <div className="text-center mt-10">
-            {!allWork ? (
+          <div className="flex flex-wrap items-center justify-center gap-4 mt-10">
+            {!allWork && (
               <button
                 type="button"
-                onClick={() => setAllWork(true)}
+                onClick={() => setShown((n) => n + MORE_CARDS)}
                 className="btn-premium inline-flex items-center gap-2 px-7 py-3.5 border border-electric-cyan/40 text-electric-cyan text-sm font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all"
               >
-                {lang === 'el' ? 'Δείτε όλο το πορτφόλιο' : 'See the whole portfolio'}
+                {lang === 'el' ? 'Δείτε περισσότερες' : 'See more'}
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M12 5v14"/><path d="m5 12 7 7 7-7"/></svg>
               </button>
-            ) : (
+            )}
+            {shown > FIRST_CARDS && (
               <a
                 href="#contact"
                 onClick={(e) => goTo(e, 'contact')}
@@ -314,7 +309,7 @@ export default function LandingClient() {
           </ScrollReveal>
           <ScrollReveal delay={100}>
             <span className="text-electric-cyan text-xs font-bold tracking-widest uppercase mb-6 block">{lang === 'el' ? 'ΤΙΜΗ ΚΑΤΑΣΚΕΥΗΣ' : 'CREATION PRICE'}</span>
-            <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-8 mb-5">
+            <div className="flex flex-col items-center justify-center gap-3 mb-6">
               <div className="relative inline-block">
                 <span className="text-2xl md:text-3xl font-bold text-gray-400/75 tracking-tight whitespace-nowrap select-none">700€ – 5.000€</span>
                 <svg aria-hidden="true" viewBox="0 0 210 40" fill="none" className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
@@ -334,7 +329,7 @@ export default function LandingClient() {
                 ? 'Η κατασκευή είναι πραγματικά δωρεάν — το ποσό αυτό καλύπτει αποκλειστικά τα απαραίτητα λειτουργικά που χρειάζεται κάθε ιστοσελίδα για να είναι online, όσα θα πληρώνατε ούτως ή άλλως, όπου κι αν τη φτιάχνατε. Εδώ, τα έχετε όλα σε ένα, χωρίς τίποτα επιπλέον.'
                 : "The build itself is genuinely free — this amount covers only the essential running services every website needs to stay online, what you would pay anyway, wherever you had it built. Here, it's all in one, with nothing extra on top."}
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-3xl mx-auto">
+            <div className="flex flex-wrap items-center justify-center gap-2.5 lg:flex-nowrap">
               {[
                 { el: 'Φιλοξενία (hosting)', en: 'Hosting' },
                 { el: 'Domain name της επιλογής σας', en: 'Domain name of your choice' },
@@ -353,30 +348,33 @@ export default function LandingClient() {
             </div>
           </ScrollReveal>
           <ScrollReveal delay={160} direction="scale">
-            <PitchQuote className="text-left mt-12 max-w-3xl mx-auto">{service.pitch[lang]}</PitchQuote>
+            <blockquote className="relative mt-12 max-w-3xl mx-auto rounded-2xl border border-electric-cyan/30 bg-gradient-to-b from-electric-cyan/10 via-electric-cyan/4 to-transparent px-7 pt-10 pb-8 md:px-12 shadow-[0_0_40px_rgba(71,200,245,0.1)]">
+              <span aria-hidden="true" className="absolute left-1/2 -translate-x-1/2 -top-1 text-7xl font-display font-black text-electric-cyan/30 leading-none select-none">&ldquo;</span>
+              <p className="text-white text-lg md:text-xl leading-relaxed font-semibold text-center">{service.pitch[lang]}</p>
+            </blockquote>
           </ScrollReveal>
         </div>
       </section>
 
       {/* ─── WHY FREE ─── */}
       <section className="pb-20">
-        <div className="max-w-4xl mx-auto px-6">
+        <div className="max-w-5xl mx-auto px-6">
           <ScrollReveal delay={60}>
             <div className="relative overflow-hidden rounded-3xl border border-electric-cyan/30 bg-gradient-to-br from-electric-cyan/8 via-transparent to-transparent p-8 md:p-12 shadow-[0_0_40px_rgba(71,200,245,0.1)]">
               <div aria-hidden="true" className="absolute -right-24 -top-24 w-72 h-72 bg-electric-cyan/8 rounded-full blur-[90px] pointer-events-none" />
-              <h3 className="text-2xl md:text-3xl font-black text-white mb-6 font-display relative z-10">{lang === 'el' ? 'Γιατί είναι Δωρεάν;' : 'Why is it Free?'}</h3>
-              <div className="relative z-10 space-y-5">
-                <p className="text-gray-200 text-lg leading-relaxed border-l-2 border-electric-cyan/60 pl-5">
-                  {lang === 'el'
-                    ? 'Στη σημερινή εποχή, δεν νοείται επιχείρηση ή επαγγελματίας χωρίς παρουσία στο διαδίκτυο. Μια δική σας ιστοσελίδα δεν είναι πολυτέλεια — είναι αναγκαιότητα: είναι ο χώρος όπου σας βρίσκουν όσοι σας αναζητούν και όπου παρουσιάζεστε όπως πραγματικά σας αξίζει — με το δικό σας περιεχόμενο, τα δικά σας λόγια, τη δική σας ταυτότητα.'
-                    : "In today's world, no business or professional can afford to be invisible online. A website of your own isn't a luxury — it's a necessity: it's where people find you when they're looking for you, and where you present yourself the way you truly deserve — with your own content, your own words, your own identity."}
-                </p>
-                <p className="text-gray-400 text-base leading-relaxed">
+              <h3 className="text-2xl md:text-3xl font-black text-white mb-6 font-display relative z-10 text-center">{lang === 'el' ? 'Γιατί είναι Δωρεάν;' : 'Why is it Free?'}</h3>
+              <p className="relative z-10 text-gray-200 text-lg leading-relaxed text-center max-w-3xl mx-auto mb-8">
+                {lang === 'el'
+                  ? 'Στη σημερινή εποχή, δεν νοείται επιχείρηση ή επαγγελματίας χωρίς παρουσία στο διαδίκτυο. Μια δική σας ιστοσελίδα δεν είναι πολυτέλεια — είναι αναγκαιότητα: είναι ο χώρος όπου σας βρίσκουν όσοι σας αναζητούν και όπου παρουσιάζεστε όπως πραγματικά σας αξίζει — με το δικό σας περιεχόμενο, τα δικά σας λόγια, τη δική σας ταυτότητα.'
+                  : "In today's world, no business or professional can afford to be invisible online. A website of your own isn't a luxury — it's a necessity: it's where people find you when they're looking for you, and where you present yourself the way you truly deserve — with your own content, your own words, your own identity."}
+              </p>
+              <div className="relative z-10 grid md:grid-cols-2 gap-5">
+                <p className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-gray-400 text-base leading-relaxed">
                   {lang === 'el'
                     ? 'Πιστεύουμε ότι κάθε επαγγελματίας αξίζει μια πραγματικά επαγγελματική παρουσία στο διαδίκτυο — όχι μόνο όσοι μπορούν να διαθέσουν χιλιάδες ευρώ. Γι’ αυτό αναλαμβάνουμε την κατασκευή εντελώς δωρεάν: για να στηρίξουμε μικρές επιχειρήσεις, ελεύθερους επαγγελματίες και όσους κάνουν τώρα τα πρώτα τους βήματα, χωρίς κανένα εμπόδιο στην εκκίνηση.'
                     : "We believe every professional deserves a truly professional online presence — not just those who can spend thousands of euros. That's why we build your website completely free: to support small businesses, freelancers, and anyone taking their first steps, with zero barriers to getting started."}
                 </p>
-                <p className="text-gray-400 text-base leading-relaxed">
+                <p className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-gray-400 text-base leading-relaxed">
                   {lang === 'el' ? (
                     <>Κερδίζουμε κι εμείς: κάθε ιστοσελίδα που παραδίδουμε μεγαλώνει το πορτφόλιό μας και μας φέρνει τους επόμενους πελάτες. Εσείς αποκτάτε μια premium ιστοσελίδα χωρίς ρίσκο, εμείς ένα ακόμα δείγμα δουλειάς που μας κάνει περήφανους. <span className="text-electric-cyan font-bold">Όλοι κερδίζουν.</span></>
                   ) : (
@@ -391,7 +389,7 @@ export default function LandingClient() {
 
       {/* ─── HOW IT WORKS · WHAT'S INCLUDED · PACKAGES (same as the website page) ─── */}
       <div id="vimata" className="scroll-mt-28"><StepsSection service={service} /></div>
-      <IncludesSection service={service} />
+      <LandingIncludes service={service} lang={lang} />
       <KataskeviPricing infra={false} />
 
       {/* ─── GOOGLE REVIEWS (all of them, as on the homepage) ─── */}
@@ -435,7 +433,7 @@ function lastRowStart(i, n) {
   return out.join(' ');
 }
 
-function PortfolioCard({ item, lang, cls = '' }) {
+function PortfolioCard({ item, lang, cls = '', eager = false }) {
   return (
     <a
       href={item.url}
@@ -444,7 +442,7 @@ function PortfolioCard({ item, lang, cls = '' }) {
       className={`col-span-2 ${cls} group img-shine relative overflow-hidden rounded-2xl border border-white/8 block bg-[#050a0e] glow-border-hover shadow-lg transition-transform duration-500 hover:-translate-y-1.5`}
       style={{ aspectRatio: '4/3' }}
     >
-      <Image src={item.image} alt={item.name} fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 17vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+      <Image src={item.image} alt={item.name} fill priority={eager} sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 17vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#050a0e] via-[#050a0e]/55 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-400 flex flex-col justify-end p-4">
         <div className="translate-y-3 group-hover:translate-y-0 transition-transform duration-400">
           <p className="text-sm font-black text-white mb-2 leading-tight line-clamp-2">{lang === 'el' ? item.name : item.nameEn}</p>
@@ -457,3 +455,83 @@ function PortfolioCard({ item, lang, cls = '' }) {
     </a>
   );
 }
+
+/* «Τι περιλαμβάνει» on the landing: 3 + 2 cards, centred (the shared block puts the 5th card alone across the width). */
+function LandingIncludes({ service, lang }) {
+  return (
+    <section className="py-24">
+      <div className="max-w-6xl mx-auto px-6">
+        <ScrollReveal className="text-center mb-14">
+          <span className="section-label">{lang === 'el' ? 'Παροχές' : 'What You Get'}</span>
+          <h2 className="text-3xl md:text-4xl font-black font-display mb-3 text-white tracking-tight">{lang === 'el' ? 'Τι περιλαμβάνει' : "What's Included"}</h2>
+        </ScrollReveal>
+        <div className="flex flex-wrap justify-center gap-5">
+          {service.includes.map((item, i) => (
+            <ScrollReveal key={i} delay={i * 70} className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)]">
+              <div className="glass-panel card-sweep rounded-2xl p-6 flex items-start gap-4 h-full group">
+                <div className="w-11 h-11 rounded-xl bg-electric-cyan/10 border border-electric-cyan/20 flex items-center justify-center text-electric-cyan shrink-0 icon-glow group-hover:bg-electric-cyan/20 transition-colors duration-300">
+                  {ICONS.check('w-5 h-5')}
+                </div>
+                <p className="text-gray-200 text-[0.95rem] leading-relaxed pt-1">{item[lang]}</p>
+              </div>
+            </ScrollReveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* FAQ for the ads landing — every answer checked against the real offer (Angelo, 11 Oct 2026):
+   changes after publishing are charged, less than 1 hour from the client, we can follow a site they like. */
+const LANDING_FAQS = [
+  {
+    q: { el: 'Πόσο κοστίζει η κατασκευή;', en: 'How much does the build cost?' },
+    a: {
+      el: 'Η κατασκευή είναι δωρεάν. Πληρώνετε μόνο φιλοξενία και domain: 130€ τον χρόνο (10,83€ τον μήνα) ή 15€ τον μήνα με μηνιαία πληρωμή — και μόνο αφού δείτε το πρώτο σχέδιο της σελίδας σας. Καμία προκαταβολή, καμία κρυφή χρέωση.',
+      en: 'The build is free. You pay only hosting and domain: 130€ a year (10.83€ a month) or 15€ a month on monthly billing — and only after you have seen the first design of your website. No deposit, no hidden fees.',
+    },
+  },
+  {
+    q: { el: 'Πόσο χρόνο χρειάζεται από εμένα;', en: 'How much of my time does it take?' },
+    a: {
+      el: 'Λιγότερο από 1 ώρα συνολικά. Ένα δωρεάν τηλεφώνημα 15 λεπτών για να μας πείτε τι κάνετε, και μετά μας στέλνετε λίγες φωτογραφίες, τις υπηρεσίες σας και τα στοιχεία επικοινωνίας — αν δεν ξέρετε τι να στείλετε, σας καθοδηγούμε εμείς. Αν έχετε προφίλ στο doctoranytime, ξεκινάμε από εκεί και συνήθως χρειαζόμαστε μόνο τις φωτογραφίες σας. Τον σχεδιασμό, την κατασκευή, το domain και όλα τα τεχνικά τα αναλαμβάνουμε εμείς. Αν δεν έχετε λογότυπο, σχεδιάζουμε ένα για εσάς.',
+      en: 'Less than 1 hour in total. A free 15-minute call to tell us what you do, then you send us a few photos, your services and your contact details — if you are not sure what to send, we guide you. If you have a doctoranytime profile we start from it and usually need only your photos. Design, build, domain and everything technical are on us. If you have no logo, we design one.',
+    },
+  },
+  {
+    q: { el: 'Πόσο γρήγορα θα είναι έτοιμη;', en: 'How fast will it be ready?' },
+    a: {
+      el: 'Μόλις λάβουμε το υλικό σας, το πρώτο σχέδιο είναι έτοιμο σε 4–10 ημέρες. Μετά κάνουμε μαζί όσες αλλαγές θέλετε, και μόλις την εγκρίνετε βγαίνει online σε 1–2 ημέρες.',
+      en: 'Once we have your material, the first design is ready in 4–10 days. Then we make as many changes as you want together, and once you approve it, it goes live in 1–2 days.',
+    },
+  },
+  {
+    q: { el: 'Τι γίνεται αν δεν μου αρέσει το αποτέλεσμα;', en: 'What if I don’t like the result?' },
+    a: {
+      el: 'Το αλλάζουμε — όσες φορές χρειαστεί, χωρίς χρέωση, μέχρι να είναι ακριβώς όπως το θέλετε, πριν βγει online. Κι επειδή δεν έχετε δώσει προκαταβολή, δεν ρισκάρετε τίποτα για να δείτε το πρώτο σχέδιο.',
+      en: 'We change it — as many times as needed, free of charge, until it is exactly how you want it, before it goes live. And since you paid no deposit, seeing the first design costs you nothing.',
+    },
+  },
+  {
+    q: { el: 'Μπορώ να σας δείξω μια ιστοσελίδα που μου αρέσει;', en: 'Can I show you a website I like?' },
+    a: {
+      el: 'Ναι, και μας βοηθάει πολύ. Στείλτε μας το link — μπορεί να είναι ιστοσελίδα άλλου επαγγελματία, ξένη, ή κάποια από το πορτφόλιό μας. Μπορούμε να κρατήσουμε μόνο το ύφος της ή να φτιάξουμε τη δική σας σχεδόν ίδια, με τα δικά σας κείμενα, φωτογραφίες και χρώματα.',
+      en: 'Yes, and it helps a lot. Send us the link — another professional’s site, a foreign one, or one from our portfolio. We can keep just its style, or build yours almost the same, with your own texts, photos and colours.',
+    },
+  },
+  {
+    q: { el: 'Χρειάζομαι τεχνικές γνώσεις;', en: 'Do I need technical knowledge?' },
+    a: {
+      el: 'Όχι. Αναλαμβάνουμε τα πάντα: σχεδιασμό, κατασκευή, domain, φιλοξενία, ασφάλεια και συντήρηση. Εσείς στέλνετε το υλικό σας και εγκρίνετε το αποτέλεσμα — τίποτα τεχνικό δεν περνάει από εσάς.',
+      en: 'No. We handle everything: design, build, domain, hosting, security and maintenance. You send your material and approve the result — nothing technical goes through you.',
+    },
+  },
+  {
+    q: { el: 'Μπορώ να αλλάξω πράγματα στη σελίδα αργότερα;', en: 'Can I change things later?' },
+    a: {
+      el: 'Ναι. Μέχρι να βγει online, οι αλλαγές είναι απεριόριστες και χωρίς χρέωση. Μετά τη δημοσίευση, κάθε αίτημα αλλαγών κοστίζει 50€ — ένα αίτημα μπορεί να περιλαμβάνει όσες αλλαγές θέλετε, σε ένα μήνυμα — και ολοκληρώνεται εντός 3 εργάσιμων ημερών. Αν προτιμάτε να αλλάζετε μόνοι σας κείμενα και εικόνες, προσθέτουμε πίνακα διαχείρισης (180€ εφάπαξ). Με το πακέτο Growth έχετε 1 αίτημα αλλαγών κάθε μήνα χωρίς χρέωση.',
+      en: 'Yes. Until it goes live, changes are unlimited and free. After publishing, each change request costs 50€ — one request can include as many changes as you like, in one message — and is done within 3 working days. If you prefer to change texts and images yourself, we add an admin panel (180€ one-off). With the Growth plan you get 1 free change request every month.',
+    },
+  },
+];
