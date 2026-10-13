@@ -122,7 +122,9 @@ const current = (c) => currentHead(c);
 // what the client page may see of a card — plus `dat` (Angelo ticked «has a doctoranytime profile», so the page asks only for
 // photos) and `ready` ({kind:'build'|'changes'|'live', at} — the button the client pressed last, cleared when the stage moves on)
 const publicThread = (t) => ({ slug: t.slug, name: t.name, stage: normStage(t.stage), site: t.site || '', adminSeenAt: t.adminSeenAt || null, createdAt: t.createdAt, log: (t.log || []).slice(-3), dat: !!t.dat, form: !!t.form, ready: t.ready || null, demo: !!t.demo });
-const READY_KINDS = ['build', 'changes', 'live'];
+// 'email' (13 Oct 2026): at Υλικό the client says «I sent everything by e-mail» (to advonmd@gmail.com, which the agent cannot read) —
+// Angelo checks the inbox, hands the material to Claude and taps «✓ Sent to Claude» in the CRM (meta readyGot → ready.got)
+const READY_KINDS = ['build', 'changes', 'live', 'email'];
 
 // ---------- the write: append a message ----------
 async function appendMessage(c, slug, msg, blobFiles = [], opts = {}) {
@@ -142,6 +144,8 @@ async function appendMessage(c, slug, msg, blobFiles = [], opts = {}) {
     // until the stage moves on or we answer with clearReady, so the agent knows exactly when to build / change / publish
     if (msg.from === 'client' && msg.kind && msg.kind.startsWith('ready:')) t.ready = { kind: msg.kind.slice(6), at: msg.at, id: msg.id };
     if (msg.from !== 'client' && opts.clearReady) delete t.ready;
+    // a message Angelo already sent the client himself (the post-meeting e-mail/Viber carries the link): stored, but no «new message» e-mail
+    if (msg.from !== 'client' && opts.quiet) t.clientNotifiedAt = msg.at;
     if (opts.patch) { if (opts.patch.stage && STAGES.includes(opts.patch.stage) && t.stage !== opts.patch.stage) { t.stage = opts.patch.stage; t.stageAt = msg.at; delete t.ready; } if (opts.patch.site) t.site = opts.patch.site; }
     t.lastAt = msg.at; t.lastFrom = msg.from; t.lastText = (msg.text || (msg.files && msg.files.length ? '📎 ' + msg.files.map((f) => f.name).join(', ') : '')).slice(0, 140); t.n = arr.length;
     if (msg.from === 'client') { t.unreadAdmin = (t.unreadAdmin || 0) + 1; t.clientSeenAt = msg.at; t.unreadClient = 0; t.remindersSent = 0; t.lastReminderAt = null; }
@@ -242,8 +246,8 @@ async function __GET(req) {
       const waiting = idx.filter((t) => t.lastFrom === 'client');
       const L = [`CHATS — ${waiting.length} conversation(s) waiting for an answer (${idx.length} active)`];
       waiting.sort((a, b) => (b.pin ? 1 : 0) - (a.pin ? 1 : 0) || (a.ord ?? 1e9) - (b.ord ?? 1e9) || String(a.lastAt).localeCompare(String(b.lastAt)));
-      const READY_EN = { build: 'READY TO BUILD (pressed «ξεκινήστε»)', changes: 'READY FOR CHANGES (pressed «έστειλα όλες τις αλλαγές»)', live: 'WANTS TO GO LIVE (pressed «πάμε live» — domain in the message)' };
-      const flags = (t) => `${t.pin ? '★ PRIORITY ' : ''}${t.ready && READY_EN[t.ready.kind] ? (t.ready.manual ? '🔧 ' + READY_EN[t.ready.kind] + ' — set from the Board: Angelo is building it himself, do NOT build ' : '✅ ' + READY_EN[t.ready.kind] + ' ') : ''}${t.dat ? '[doctoranytime] ' : ''}${t.form ? '[has contact form] ' : ''}`;
+      const READY_EN = { build: 'READY TO BUILD (pressed «ξεκινήστε»)', changes: 'READY FOR CHANGES (pressed «έστειλα όλες τις αλλαγές»)', live: 'WANTS TO GO LIVE (pressed «πάμε live» — domain in the message)', email: 'SENT THE MATERIAL BY E-MAIL (pressed «τα έστειλα όλα με email») — it is in advonmd@gmail.com, which you cannot read: do NOT build, do NOT reply, do NOT ask the client; Angelo checks the inbox and hands it to Claude' };
+      const flags = (t) => `${t.pin ? '★ PRIORITY ' : ''}${t.ready && t.ready.kind === 'email' ? '📧 ' + READY_EN.email + (t.ready.got ? ` — Angelo marked it «sent to Claude» ${String(t.ready.got).slice(0, 10)}` : '') + ' ' : t.ready && READY_EN[t.ready.kind] ? (t.ready.manual ? '🔧 ' + READY_EN[t.ready.kind] + ' — set from the Board: Angelo is building it himself, do NOT build ' : '✅ ' + READY_EN[t.ready.kind] + ' ') : ''}${t.dat ? '[doctoranytime] ' : ''}${t.form ? '[has contact form] ' : ''}`;
       waiting.forEach((t) => L.push(`  • ${flags(t)}${t.name} (${t.slug}) — stage ${t.stage} — ${t.unreadAdmin || 0} unread — last ${String(t.lastAt).slice(0, 16).replace('T', ' ')}: «${(t.lastText || '').slice(0, 160)}»`));
       const readyQuiet = idx.filter((t) => t.ready && t.lastFrom !== 'client');
       if (readyQuiet.length) { L.push(`STILL FLAGGED — the client pressed a button and we have written since, but the work is not marked done (clearReady / the READY badge in the CRM):`); readyQuiet.forEach((t) => L.push(`  • ${flags(t)}${t.name} (${t.slug}) — stage ${t.stage}`)); }
@@ -274,7 +278,7 @@ async function __GET(req) {
     }
     if (q('h') && q('h') === (await current(c))) return json({ ok: true, same: true, head: headNow() });
     const idx = await getIndex(c);
-    return json({ ok: true, threads: idx, head: headNow(), notify: { email: !!process.env.RESEND_API_KEY, telegram: !!(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) }, onlineSlugs: [...online.entries()].filter(([, at]) => Date.now() - at < 60 * 1000).map(([s]) => s) });
+    return json({ ok: true, threads: idx, head: headNow(), caps: ['quiet', 'email'], notify: { email: !!process.env.RESEND_API_KEY, telegram: !!(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) }, onlineSlugs: [...online.entries()].filter(([, at]) => Date.now() - at < 60 * 1000).map(([s]) => s) });
   } catch (e) {
     return json({ error: e.message || 'read failed' }, 502);
   }
@@ -524,6 +528,8 @@ async function __POST(req) {
         if ('dat' in body) t.dat = !!body.dat;                        // «has a doctoranytime profile» — the client page then asks only for photos
         if ('demo' in body) { if (body.demo) t.demo = true; else delete t.demo; }   // sandbox chat: answers by itself, no alerts, invisible to the agent
         if (body.ready === null) delete t.ready;                       // Angelo ticked the READY badge off (the work is done)
+        if (body.readyGot === true && t.ready) t.ready.got = nowIso();  // «📧 e-mailed»: Angelo handed the material to Claude — his daily reminder stops
+        if (body.readyGot === false && t.ready) delete t.ready.got;
         if (typeof body.log === 'string' && body.log.trim()) { t.log = (t.log || []).concat([{ at: nowIso(), by: 'angelo', text: clean(body.log, 400) }]).slice(-30); }
         if ('archived' in body) t.archived = !!body.archived;
         if ('pin' in body) { t.pin = !!body.pin; if (t.pin) { if (typeof t.ord !== 'number') t.ord = list.reduce((m, x) => (x.pin && typeof x.ord === 'number' ? Math.max(m, x.ord + 1) : m), 0); t.pinAt = nowIso(); } else { delete t.ord; delete t.pinAt; } }
@@ -550,7 +556,7 @@ async function __POST(req) {
     if (who === 'client' && body.ua) msg.ua = clean(body.ua, 200);
     if (who === 'client' && READY_KINDS.includes(body.kind)) msg.kind = 'ready:' + body.kind;      // a button press, not a plain message
     let t, dup;
-    try { ({ thread: t, dup } = await appendMessage(c, slug, msg, files, { clearReady: who !== 'client' && body.clearReady === true })); }
+    try { ({ thread: t, dup } = await appendMessage(c, slug, msg, files, { clearReady: who !== 'client' && body.clearReady === true, quiet: who !== 'client' && body.quiet === true })); }
     catch (e) { if (e.code === 'no_thread') return json({ error: 'unknown link' }, 404); throw e; }
     if (dup) return json({ ok: true, message: dup, thread: who === 'client' ? publicThread(t) : t, duplicate: true });
     // «Όλα καλά — πάμε live» → Angelo gets «buy the domain … for …» at the top of Do ASAP (via /api/reminders)
@@ -561,6 +567,21 @@ async function __POST(req) {
         const item = { uid: `live-${slug}-${msg.id}`, day: new Date().toISOString().slice(0, 10), hot: true, slug,
           text: `${t && t.demo ? '(δοκιμή) ' : ''}Αγόρασε το domain ${domain || '(δες το μήνυμα)'} για ${t ? t.name : slug} στο Papaki — μετά «🌐 Domain connected» στο chat` };
         await ghCommit(c, `asap: buy ${domain || 'domain'} for ${slug}`, async (ctx) => {
+          const { data } = await ctx.readJson('asap/inbox.json', []);
+          const list = (Array.isArray(data) ? data : []).filter((x) => Date.now() - Date.parse(x.day || 0) < 90 * 864e5);
+          if (list.some((x) => x.uid === item.uid)) return null;
+          list.push(item);
+          return [{ path: 'asap/inbox.json', content: JSON.stringify(list, null, 1) }];
+        });
+        forgetHead();
+      } catch (e) { console.warn('asap inbox failed', e.message); }
+    }
+    // «Τα έστειλα όλα με email» → Angelo gets «check advonmd@gmail.com for X» at the top of Do ASAP (via /api/reminders)
+    if (who === 'client' && msg.kind === 'ready:email' && t && !t.demo) {
+      try {
+        const item = { uid: `mail-${slug}-${msg.id}`, day: new Date().toISOString().slice(0, 10), hot: true, slug,
+          text: `Δες το advonmd@gmail.com — ${t.name} έστειλε το υλικό με e-mail · δώσ' το στον Claude για το πρώτο draft, μετά «✓ Sent to Claude» στο chat` };
+        await ghCommit(c, `asap: check e-mail for ${slug}`, async (ctx) => {
           const { data } = await ctx.readJson('asap/inbox.json', []);
           const list = (Array.isArray(data) ? data : []).filter((x) => Date.now() - Date.parse(x.day || 0) < 90 * 864e5);
           if (list.some((x) => x.uid === item.uid)) return null;
