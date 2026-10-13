@@ -6,6 +6,8 @@
 //   3. we wrote last and the client has been silent 3+ days  → a gentle stage-aware reminder e-mail (max 2, 3 days apart)
 //   4. chats/outbox.json                                     → pings queued by the chat agent (it can only reach GitHub);
 //      an entry with notBefore waits for its time (kind 'tiktok' = the daily «post today's TikTok» nudge)
+//   6. the client pressed «Τα έστειλα όλα με email» at Υλικό and Angelo has not tapped «✓ Sent to Claude» → a reminder to ANGELO
+//      once a day (never to the client — the ball is on our side), 09:00–20:00 Athens, until he taps it or the stage moves on
 //   5. Claude left a reply waiting for approval (t.suggest)  → «APPROVAL NEEDED — <client>» to Angelo: what the client asked,
 //      what was done / is intended, the exact reply — Telegram + e-mail, once per suggestion (suggestNotifiedAt)
 // Every message to Angelo starts with the CLIENT'S NAME and is built in lib/chatcore.js (clientWroteNote, approvalNote,
@@ -18,13 +20,17 @@
 
 import { ghConf, ghReady, commit as ghCommit } from '../../lib/ghdata.js';
 import { ackText, isQuestion } from '../../lib/chatdemo.js';
-import { INDEX_PATH, OUTBOX_PATH, STAGE_EL, normStage, readTemplates, currentHead, forgetHead, getIndex, getMessages, readChatJson, mailConf, emailOk, sendEmail, sendTelegram, telegramDiag, newMessageMail, reminderMail, plainClientMail, clientWroteNote, approvalNote, quietNote, reminderSentNote, agentNote, politeHour, tgEsc } from '../../lib/chatcore.js';
+import { INDEX_PATH, OUTBOX_PATH, STAGE_EL, normStage, readTemplates, currentHead, forgetHead, getIndex, getMessages, readChatJson, mailConf, emailOk, sendEmail, sendTelegram, telegramDiag, newMessageMail, reminderMail, plainClientMail, clientWroteNote, approvalNote, quietNote, reminderSentNote, agentNote, emailWaitNote, politeHour, tgEsc } from '../../lib/chatcore.js';
 
 export const config = { schedule: '*/5 * * * *' };
 
 const DAY = 86400000;
 const REMIND_AFTER = 3 * DAY;
 const REMIND_MAX = 2;
+// the client has the link only if we wrote something in the chat or they opened the page themselves.
+// A chat the Board created quietly («nothing sent yet») must NEVER e-mail the client (Angelo, 11 Oct 2026 — MAKEDOU
+// and PAPALUM got a «reminder» with the link before he had sent it).
+const linkGiven = (t) => (t.n || 0) > 0 || !!t.clientSeenAt;
 const GRACE = 90 * 1000;              // let Angelo finish a burst of messages before the e-mail goes
 const ACK_AFTER = 10 * 60 * 1000;     // Υλικό: «Λάβαμε … κάτι άλλο;» once the client has been quiet this long (25 Sept 2026)
 const BURST = 15 * 60 * 1000;         // the client e-mail shows only what we wrote in the last burst, never the old conversation
@@ -168,8 +174,11 @@ export default async (req) => {
       }
     }
 
+    // chats paused by hand on 11 Oct 2026 (heldUntilSent) get their normal reminders back once the link is really given
+    if (t.heldUntilSent && linkGiven(t)) upd(t, { heldUntilSent: false, remindersSent: 0, lastReminderAt: null });
+
     // 3a. quiet for 3+ days and NO e-mail on the card → nothing can remind the client, so Angelo is told once (he nudges on Viber)
-    if (polite && canTg && t.lastFrom !== 'client' && t.stage !== 'live' && !emailOk(t.email) && now - lastAt >= REMIND_AFTER && (t.quietPingAt || '') < (t.lastAt || '')) {
+    if (polite && canTg && linkGiven(t) && t.lastFrom !== 'client' && t.stage !== 'live' && !emailOk(t.email) && now - lastAt >= REMIND_AFTER && (t.quietPingAt || '') < (t.lastAt || '')) {
       if (dry) { report.sent.push(`[dry] quiet-no-email ${t.slug}`); }
       else {
         const a = await toAngelo(quietNote(t, Math.floor((now - lastAt) / DAY)), false);
@@ -179,7 +188,7 @@ export default async (req) => {
 
     // 3. reminders — we wrote last, silence for 3+ days, not live (09:00–20:00 Athens, never on a Sunday)
     const lastRem = Date.parse(t.lastReminderAt || 0) || 0;
-    if (polite && t.lastFrom !== 'client' && t.stage !== 'live' && emailOk(t.email) && canMail && now - lastAt >= REMIND_AFTER && (t.remindersSent || 0) < REMIND_MAX && now - lastRem >= REMIND_AFTER && (t.clientNotifiedAt || '') >= (t.lastAt || '')) {
+    if (polite && linkGiven(t) && !t.heldUntilSent && !t.ready && t.lastFrom !== 'client' && t.stage !== 'live' && emailOk(t.email) && canMail && now - lastAt >= REMIND_AFTER && (t.remindersSent || 0) < REMIND_MAX && now - lastRem >= REMIND_AFTER && (t.clientNotifiedAt || '') >= (t.lastAt || '')) {
       const mail = reminderMail(t);
       if (mail) {
         if (dry) { report.sent.push(`[dry] reminder ${t.slug}`); continue; }
@@ -193,6 +202,18 @@ export default async (req) => {
         } else report.skipped.push(`${t.slug}: reminder (${r.why})`);
       }
     }
+  }
+
+  // 6. «📧 e-mailed it» and Angelo has not handed it to Claude yet → remind ANGELO once a day (13 Oct 2026)
+  for (const t of idx) {
+    if (t.archived || t.demo || !t.ready || t.ready.kind !== 'email' || t.ready.got || normStage(t.stage) !== 'yliko') continue;
+    const at = Date.parse(t.ready.at || 0) || 0, last = Date.parse(t.emailRemAt || 0) || 0;
+    if (!polite || now - at < DAY || now - last < DAY - 30 * 60 * 1000) continue;     // first one the next day, then daily
+    if (!canTg && !canMail) { report.skipped.push(`${t.slug}: e-mail wait (nothing configured)`); continue; }
+    if (dry) { report.sent.push(`[dry] e-mail wait ${t.slug}`); continue; }
+    const r = await toAngelo(emailWaitNote(t, Math.max(1, Math.floor((now - at) / DAY))));
+    if (r.ok) { upd(t, { emailRemAt: nowIso() }); log(t, 'Υπενθύμιση στον Άγγελο: το υλικό περιμένει στο e-mail'); report.sent.push(`e-mail wait ${t.slug} (${r.how})`); }
+    else report.skipped.push(`${t.slug}: e-mail wait (${r.why})`);
   }
 
   // 5. a reply prepared by Claude waits for Angelo's OK → one clear «approval needed» message per suggestion

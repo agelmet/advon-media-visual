@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<title>Advon Media · Συνομιλία</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#2F7FE0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Advon Chat">
+<link rel="icon" href="/img/advon-icon-32.png">
+<link rel="apple-touch-icon" href="/img/advon-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#2F7FE0; --brand2:#35C7E9; --ink:#10141F; --muted:#6B7488; --line:#E3E9F4;
+  --bg:#EEF3FA; --card:#FFFFFF; --me:linear-gradient(135deg,#2F7FE0 0%,#2A9BEA 60%,#35C7E9 140%);
+  --green:#12B76A; --red:#F04452; --shadow:0 1px 2px rgba(20,40,80,.06),0 10px 30px rgba(20,40,80,.10);
+  --radius:22px; --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Manrope',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:15.5px;line-height:1.45;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(900px 520px at 8% -10%,rgba(47,127,224,.18),transparent 60%),radial-gradient(800px 500px at 100% 110%,rgba(53,199,233,.16),transparent 60%),var(--bg)}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+textarea{font-family:inherit}
+a{color:inherit}
+.app{position:relative;z-index:1;display:flex;flex-direction:column;height:100dvh;max-width:820px;margin:0 auto;background:var(--card)}
+@media (min-width:860px){
+  .app{height:min(920px,calc(100dvh - 40px));margin:20px auto;border-radius:28px;box-shadow:var(--shadow);overflow:hidden;border:1px solid rgba(255,255,255,.8)}
+}
+/* ---------- header ---------- */
+.top{display:flex;align-items:center;gap:12px;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top,0px));background:rgba(255,255,255,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);position:relative;z-index:5}
+.top .logo{width:44px;height:44px;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(47,127,224,.28);flex:none;position:relative}
+.top .logo img{width:100%;height:100%;object-fit:cover;display:block}
+.top .logo i{position:absolute;right:-2px;bottom:-2px;width:13px;height:13px;border-radius:50%;background:var(--green);border:2.5px solid #fff}
+.top .who{flex:1;min-width:0}
+.top .who b{display:block;font-weight:800;font-size:16px;letter-spacing:-.01em}
+.top .who small{display:block;color:var(--muted);font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .act{display:flex;gap:6px}
+.top .act a,.top .act button{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 12px;border-radius:12px;background:#F1F5FB;color:var(--brand);font-weight:800;font-size:13px;text-decoration:none;transition:background .15s,transform .15s}
+.top .act a:hover,.top .act button:hover{background:#E4EEFB;transform:translateY(-1px)}
+.top .act svg{width:16px;height:16px}
+@media (max-width:560px){ .top .act a span,.top .act button span{display:none} .top .act a,.top .act button{padding:0 10px} .top .who small{font-size:11.5px} }
+/* ---------- stage strip ---------- */
+.stages{display:flex;align-items:center;gap:0;padding:10px 16px 12px;background:#fff;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.stages::-webkit-scrollbar{display:none}
+.st{display:flex;align-items:center;gap:8px;flex:1;min-width:max-content}
+.st .dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:11px;font-weight:800;color:var(--muted);background:#fff;flex:none;transition:all .3s}
+.st .lbl{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
+.st .bar{flex:1;height:2px;background:var(--line);min-width:14px;margin:0 8px;border-radius:2px}
+.st.done .dot{background:var(--green);border-color:var(--green);color:#fff}
+.st.done .lbl{color:var(--ink)}
+.st.done .bar{background:var(--green)}
+.st.now .dot{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 0 0 5px rgba(47,127,224,.16);animation:pulse 2.4s ease-in-out infinite}
+.st.now .lbl{color:var(--brand)}
+.st:last-child .bar{display:none}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(47,127,224,.14)}50%{box-shadow:0 0 0 8px rgba(47,127,224,.06)}}
+/* ---------- messages ---------- */
+.feed{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:14px 14px 10px;scroll-behavior:smooth;
+  background:linear-gradient(180deg,#F5F8FD 0%,#EEF3FA 100%)}
+.feed::-webkit-scrollbar{width:8px}.feed::-webkit-scrollbar-thumb{background:#D5DEEC;border-radius:8px}
+.day{display:flex;justify-content:center;margin:14px 0 10px}
+.day span{font-size:11.5px;font-weight:800;color:var(--muted);background:rgba(255,255,255,.9);padding:5px 12px;border-radius:999px;box-shadow:0 1px 2px rgba(20,40,80,.06);letter-spacing:.02em}
+.row{display:flex;align-items:flex-end;gap:8px;margin:2px 0;animation:in .28s cubic-bezier(.2,.8,.2,1) both}
+.row.me{justify-content:flex-end}
+.row.gap{margin-top:12px}
+@keyframes in{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+.av{width:30px;height:30px;border-radius:10px;overflow:hidden;flex:none;visibility:hidden;box-shadow:0 2px 8px rgba(47,127,224,.2)}
+.av img{width:100%;height:100%;object-fit:cover;display:block}
+.row.last .av{visibility:visible}
+.bub{max-width:min(78%,560px);padding:10px 13px 8px;border-radius:18px;position:relative;font-size:15.5px;line-height:1.48;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere;box-shadow:0 1px 1.5px rgba(20,40,80,.08)}
+.row.them .bub{background:#fff;border-bottom-left-radius:6px}
+.row.them.last .bub{border-bottom-left-radius:18px}
+.row.them.last .bub::after{content:'';position:absolute;left:-6px;bottom:0;width:14px;height:14px;background:#fff;clip-path:polygon(100% 0,100% 100%,0 100%);border-bottom-left-radius:4px}
+.row.me .bub{background:var(--me);color:#fff;border-bottom-right-radius:6px;box-shadow:0 6px 18px rgba(47,127,224,.25)}
+.row.me.last .bub{border-bottom-right-radius:18px}
+.row.me.last .bub::after{content:'';position:absolute;right:-6px;bottom:0;width:14px;height:14px;background:#33B0EA;clip-path:polygon(0 0,100% 100%,0 100%)}
+.bub a{text-decoration:underline;text-underline-offset:2px}
+.bub .meta{display:flex;justify-content:flex-end;align-items:center;gap:4px;font-size:10.5px;font-weight:700;opacity:.62;margin-top:4px;margin-bottom:-2px;user-select:none}
+.row.me .meta{opacity:.85}
+.bub .meta svg{width:14px;height:14px}
+.bub .meta .seen{color:#DFF6FF}
+.row.me .bub .meta .seen svg{filter:drop-shadow(0 0 1px rgba(255,255,255,.5))}
+.bub.pending{opacity:.72}
+.bub.failed{outline:2px solid var(--red)}
+.bub .fail{display:block;font-size:12px;font-weight:800;color:#fff;background:var(--red);padding:5px 9px;border-radius:9px;margin-top:6px;cursor:pointer;line-height:1.3}
+.bub .fail::before{content:'↻ ';font-weight:900}
+.row.them .bub .fail{color:var(--red);background:#FFE9EB}
+/* attachments */
+.pics{display:grid;gap:4px;grid-template-columns:repeat(2,1fr);margin:-4px -7px 6px;max-width:420px}
+.pics.one{grid-template-columns:1fr}
+.pics img{width:100%;height:100%;max-height:340px;object-fit:cover;border-radius:12px;display:block;cursor:zoom-in;background:#E7EEF8;min-height:80px}
+.pics.one img{max-height:420px;object-fit:contain;background:transparent}
+.file{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:rgba(0,0,0,.05);margin:2px 0 6px;text-decoration:none!important;color:inherit}
+.row.me .file{background:rgba(255,255,255,.16)}
+.file .ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:10px;font-weight:900;color:#fff;background:#8A94A8;flex:none;letter-spacing:.03em}
+.file .ic.pdf{background:#F04452}.file .ic.doc{background:#2F7FE0}.file .ic.xls{background:#12B76A}.file .ic.zip{background:#F59E0B}
+.file .n{font-weight:700;font-size:13.5px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:230px}
+.file small{display:block;font-size:11.5px;opacity:.7;font-weight:600}
+.prog{height:3px;background:rgba(255,255,255,.35);border-radius:3px;margin:6px 0 2px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:#fff;transition:width .25s}
+/* welcome */
+.hello{margin:18px auto 8px;max-width:440px;text-align:center;background:#fff;border-radius:22px;padding:22px 20px;box-shadow:var(--shadow)}
+.hello img{width:64px;height:64px;border-radius:18px;box-shadow:0 8px 24px rgba(47,127,224,.28)}
+.hello h2{font-size:19px;font-weight:800;margin:12px 0 6px;letter-spacing:-.01em}
+.hello p{color:var(--muted);font-size:14px;font-weight:500}
+/* new-message pill */
+.newpill{position:absolute;left:50%;transform:translateX(-50%) translateY(20px);bottom:calc(84px + var(--safe-b));background:var(--brand);color:#fff;font-weight:800;font-size:13px;padding:9px 16px;border-radius:999px;box-shadow:0 8px 24px rgba(47,127,224,.4);opacity:0;pointer-events:none;transition:all .25s;z-index:6}
+.newpill.on{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+/* ---------- composer ---------- */
+.dock{background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:10px 12px calc(10px + var(--safe-b));position:relative;z-index:5}
+.tray{display:flex;gap:8px;overflow-x:auto;padding:0 2px 10px;scrollbar-width:none}
+.tray:empty{display:none}
+.tray .t{position:relative;flex:none;width:64px;height:64px;border-radius:14px;overflow:hidden;background:#F1F5FB;display:grid;place-items:center;font-size:10px;font-weight:800;color:var(--muted);text-align:center;padding:4px;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.tray .t img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.tray .t b{position:absolute;top:-4px;right:-4px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:14px;line-height:1;cursor:pointer;border:2px solid #fff}
+.bar{display:flex;align-items:flex-end;gap:8px}
+.ibtn{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:var(--brand);background:#F1F5FB;flex:none;transition:background .15s,transform .15s}
+.ibtn:hover{background:#E4EEFB}.ibtn:active{transform:scale(.94)}
+.ibtn.pulse{animation:ipulse 1s ease-in-out 3}
+@keyframes ipulse{0%,100%{box-shadow:0 0 0 0 rgba(47,127,224,0)}50%{box-shadow:0 0 0 7px rgba(47,127,224,.25)}}
+.ibtn svg{width:22px;height:22px}
+.input{flex:1;min-width:0;background:#F1F5FB;border-radius:16px;display:flex;align-items:flex-end;padding:4px 6px 4px 14px;transition:box-shadow .15s}
+.input:focus-within{box-shadow:0 0 0 3px rgba(47,127,224,.18)}
+.input textarea{flex:1;border:0;background:transparent;resize:none;outline:none;font-size:16px;line-height:1.4;max-height:140px;padding:9px 0;color:var(--ink)}
+.input textarea::placeholder{color:#98A2B8}
+.send{width:44px;height:44px;border-radius:14px;background:var(--me);color:#fff;display:grid;place-items:center;flex:none;box-shadow:0 6px 16px rgba(47,127,224,.35);transition:transform .15s,opacity .15s,box-shadow .15s}
+.send:disabled{opacity:.45;box-shadow:none;cursor:default}
+.send:not(:disabled):hover{transform:translateY(-1px)}
+.send:not(:disabled):active{transform:scale(.94)}
+.send svg{width:20px;height:20px;transform:translateX(1px)}
+.hint{text-align:center;font-size:11px;color:#98A2B8;font-weight:600;padding-top:8px}
+.hint a{color:var(--muted);text-decoration:none}
+/* stage hint + chips + guide sheet */
+.demoband{display:flex;align-items:center;gap:8px;background:#FFF4D6;color:#7A5A00;font-size:12px;font-weight:700;padding:7px 16px;border-bottom:1px solid #F5E2A8}
+.demoband[hidden]{display:none}
+.stagehint{font-size:12.5px;font-weight:600;color:var(--muted);background:#fff;border-bottom:1px solid var(--line);padding:0 16px 10px;line-height:1.45}
+.stagehint a{color:var(--brand);font-weight:800;text-decoration:none}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:0 2px 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips:empty{display:none}
+.chip{flex:none;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 13px;border-radius:999px;background:#fff;border:1.5px solid var(--line);font-weight:700;font-size:13px;color:var(--ink);transition:all .15s}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip:active{transform:scale(.96)}
+.sheet{position:fixed;inset:0;z-index:45;background:rgba(10,14,22,.5);backdrop-filter:blur(3px);display:none;align-items:flex-end;justify-content:center}
+.sheet.on{display:flex}
+.sheet-card{background:#fff;width:100%;max-width:640px;max-height:88dvh;border-radius:24px 24px 0 0;display:flex;flex-direction:column;box-shadow:var(--shadow);animation:up .25s cubic-bezier(.2,.8,.2,1)}
+@media (min-width:860px){.sheet{align-items:center;padding:20px}.sheet-card{border-radius:24px;max-height:82dvh}}
+@keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line);font-size:16px;font-weight:800}
+.sheet-head button{width:36px;height:36px;border-radius:12px;background:#F1F5FB;font-size:16px}
+.sheet-body{overflow-y:auto;padding:16px 18px calc(18px + var(--safe-b));font-size:14.5px;line-height:1.5}
+.sheet-body h4{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--brand);margin:16px 0 8px}
+.sheet-body ul{list-style:none;display:grid;gap:7px}
+.sheet-body li{background:#F5F8FD;border-radius:12px;padding:9px 12px}
+.sheet-body .lead{color:var(--muted);font-weight:500}
+.sheet-body a{color:var(--brand);font-weight:700}
+.xg{display:grid;gap:8px}
+.x{background:#F5F8FD;border-radius:14px;padding:11px 13px;font-size:13.5px;color:var(--muted);line-height:1.45}
+.xh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:4px}
+.xh b{color:var(--ink);font-size:14px}
+.xh span{flex:none;font-size:12px;font-weight:800;color:var(--brand);background:#E4EEFB;padding:3px 9px;border-radius:999px}
+/* drop overlay */
+.drop{position:fixed;inset:0;z-index:40;display:none;place-items:center;background:rgba(47,127,224,.14);backdrop-filter:blur(3px)}
+.drop.on{display:grid}
+.drop div{background:#fff;padding:26px 34px;border-radius:22px;font-weight:800;color:var(--brand);box-shadow:var(--shadow);font-size:17px}
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:50;background:rgba(10,14,22,.92);display:none;align-items:center;justify-content:center;padding:20px}
+.lb.on{display:flex}
+.lb img{max-width:100%;max-height:100%;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.lb .x,.lb .dl{position:absolute;top:16px;width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.14);color:#fff;display:grid;place-items:center;backdrop-filter:blur(8px)}
+.lb .x{right:16px}.lb .dl{right:68px}
+.lb svg{width:22px;height:22px}
+/* toast + error */
+.toast{position:fixed;left:50%;bottom:calc(90px + var(--safe-b));transform:translateX(-50%) translateY(16px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:14px;font-weight:700;font-size:13.5px;opacity:0;transition:all .25s;z-index:60;pointer-events:none;max-width:90vw;text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.err{flex:1;display:grid;place-items:center;text-align:center;padding:30px}
+.err img{width:70px;height:70px;border-radius:20px;box-shadow:0 8px 24px rgba(47,127,224,.28)}
+.err h1{font-size:22px;font-weight:800;margin:16px 0 8px}
+.err p{color:var(--muted);max-width:360px;margin:0 auto}
+.err a{display:inline-block;margin-top:16px;background:var(--brand);color:#fff;text-decoration:none;font-weight:800;padding:12px 20px;border-radius:14px}
+.skel{flex:1;display:grid;place-items:center;color:var(--muted);font-weight:700}
+.skel i{width:26px;height:26px;border:3px solid var(--line);border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite;display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* delete own message */
+.bub{contain:layout style}
+.bub .del{position:absolute;bottom:2px;left:-40px;width:32px;height:32px;border-radius:11px;display:grid;place-items:center;background:#fff;color:#A3ACBD;border:1px solid var(--line);box-shadow:0 1px 3px rgba(20,40,80,.08);z-index:2;transition:color .15s,border-color .15s,transform .15s}
+.bub .del:hover,.bub .del:active{color:var(--red);border-color:#F8C3C8}
+.bub .del:active{transform:scale(.92)}
+.bub .del svg{width:16px;height:16px}
+.bub.pending .del{opacity:.6}
+/* the client's undo bar (5 s after a delete) */
+.undo{position:fixed;left:50%;bottom:calc(96px + var(--safe-b));transform:translateX(-50%) translateY(16px);display:flex;align-items:center;gap:14px;background:var(--ink);color:#fff;padding:9px 10px 9px 16px;border-radius:14px;font-weight:700;font-size:13.5px;opacity:0;pointer-events:none;transition:all .22s;z-index:60;box-shadow:0 10px 30px rgba(10,14,22,.3);white-space:nowrap}
+.undo.on{opacity:1;transform:translateX(-50%);pointer-events:auto}
+.undo button{background:#fff;color:var(--ink);font-weight:800;font-size:13px;padding:7px 12px;border-radius:10px}
+/* buttons inside a message: [Όχι — ξεκινήστε](#start) · [Ναι, θα στείλω κι άλλα](#more) */
+.mbtns{display:grid;gap:7px;margin:10px 0 2px}
+.mbtn{display:block;width:100%;text-align:center;min-height:42px;padding:10px 12px;border-radius:12px;font-weight:800;font-size:14px;line-height:1.25;white-space:normal}
+.mbtn.go{background:var(--me);color:#fff;box-shadow:0 5px 14px rgba(47,127,224,.28)}
+.mbtn.more{background:#F1F5FB;color:var(--brand)}
+body.st-built .mbtn.go,body.st-built .mbtn.more{opacity:.45;box-shadow:none}
+.bub.gone{background:#EEF2F8!important;color:#98A2B8!important;box-shadow:none!important;font-size:14px}
+.row.me .bub.gone{background:#E3EAF5!important}
+.bub.gone::after{display:none!important}
+.bub .ilink{display:inline-block;font-weight:800;text-decoration:none!important;background:rgba(47,127,224,.10);color:var(--brand);padding:2px 9px;border-radius:9px;margin:1px 0}
+.row.me .bub .ilink{background:rgba(255,255,255,.22);color:#fff}
+.sheet-body ol{margin:0;padding-left:0;list-style:none;display:grid;gap:7px}
+.sheet-body .nb{background:#F5F8FD;border-radius:12px;padding:10px 12px}
+.sheet-body .nb b.t{display:block;color:var(--ink);margin-bottom:2px}
+.sheet-body .tl{display:grid;gap:7px}
+.sheet-body .tl div{background:#F5F8FD;border-radius:12px;padding:9px 12px}
+.sheet-body .note{background:#FFF7E6;border-radius:12px;padding:10px 12px;color:#8A6D1F;font-weight:600}
+/* ready bar — the ONE thing we need from the client at this stage, as a button (21 Sept 2026) */
+.ready{margin:0 2px 10px;border-radius:18px;padding:12px 14px;background:linear-gradient(135deg,#EAF3FF,#E8FBF3);border:1.5px solid #CFE3FA;display:grid;gap:9px}
+.ready[hidden]{display:none}
+.ready p{font-size:13px;font-weight:600;color:#3C4658;line-height:1.42;margin:0}
+.ready .rb{display:flex;gap:8px;flex-wrap:wrap}
+.ready .rb button{flex:1 1 170px;min-height:46px;border-radius:14px;font-weight:800;font-size:14.5px;padding:10px 12px;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:transform .15s,box-shadow .15s;white-space:nowrap}
+.ready .rb button:active{transform:scale(.97)}
+.ready .go{background:var(--me);color:#fff;box-shadow:0 6px 18px rgba(47,127,224,.3)}
+.ready .ok{background:#fff;color:#0B7A47;border:1.5px solid #9EDFC0}
+.ready.done{background:#EFFAF4;border-color:#BFE9D3}
+.ready.done p{color:#0B7A47;font-size:13.5px;font-weight:700}
+.ready.nudge{animation:nudge 1.1s ease-in-out 3}
+@keyframes nudge{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 6px rgba(47,127,224,.2)}}
+.bub.kind{background:linear-gradient(135deg,#12B76A 0%,#0EA5A0 100%)!important;box-shadow:0 6px 18px rgba(18,183,106,.28)!important;font-weight:700}
+.row.me.last .bub.kind::after{background:#0FAF8E}
+.dform{display:grid;gap:8px;margin:12px 0 8px}
+.dform input{height:46px;border:1.5px solid var(--line);border-radius:12px;padding:0 14px;font-size:16px;font-family:inherit;outline:none;width:100%}
+.dform input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(47,127,224,.15)}
+.sheet-body .big{width:100%;min-height:50px;border-radius:14px;background:var(--me);color:#fff;font-weight:800;font-size:15px;margin-top:8px;box-shadow:0 6px 18px rgba(47,127,224,.3)}
+.sheet-body .quiet{width:100%;min-height:44px;border-radius:14px;background:#F1F5FB;color:var(--muted);font-weight:700;font-size:14px;margin-top:8px}
+.sheet-body .quiet[hidden]{display:none}
+@media (max-width:440px){
+  .stages{padding:9px 12px 11px}
+  .st .lbl{font-size:11px}
+  .st .dot{width:19px;height:19px;font-size:10px}
+  .st .bar{min-width:8px;margin:0 5px}
+  .stagehint{padding:0 12px 9px;font-size:12px}
+}
+/* contact-form offer (21 Sept 2026) */
+.up{margin:14px auto 6px;max-width:440px;background:#fff;border:1.5px solid #DCE7F7;border-radius:18px;padding:12px 13px;box-shadow:0 6px 22px rgba(20,40,80,.07);animation:in .35s cubic-bezier(.2,.8,.2,1) both}
+.up-h{display:flex;align-items:center;gap:10px}
+.up-ic{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,#EAF3FF,#E3F8FC);color:var(--brand);flex:none}
+.up-ic svg{width:19px;height:19px}
+.up-t{flex:1;min-width:0}
+.up-t b{display:block;font-size:14px;font-weight:800;line-height:1.25}
+.up-t small{display:block;font-size:11.5px;font-weight:700;color:var(--brand)}
+.up-x{width:28px;height:28px;border-radius:9px;color:#98A2B8;font-size:13px;flex:none}
+.up p{font-size:13px;color:var(--muted);font-weight:500;line-height:1.45;margin:8px 0 10px}
+.up-b{display:flex;gap:8px}
+.up-b button{flex:1;min-height:38px;border-radius:12px;font-weight:800;font-size:13px}
+.up-go{background:var(--me);color:#fff;box-shadow:0 5px 14px rgba(47,127,224,.28)}
+.up-no{background:#F1F5FB;color:var(--muted)}
+.x.xf{background:linear-gradient(135deg,#EFF6FF,#EAFBF7);border:1.5px solid #CFE3FA}
+.xh b em{font-style:normal;display:inline-block;margin-left:6px;font-size:10.5px;font-weight:800;color:#0B7A47;background:#DDF6E9;padding:2px 7px;border-radius:999px;vertical-align:2px}
+.xbtn{display:block;width:100%;margin-top:9px;min-height:40px;border-radius:12px;background:var(--me);color:#fff;font-weight:800;font-size:13.5px;box-shadow:0 5px 14px rgba(47,127,224,.25)}
+.xbtn:disabled{background:#DDF6E9;color:#0B7A47;box-shadow:none;cursor:default}
+.addon{display:flex;gap:10px;align-items:flex-start;background:#F5F8FD;border:1.5px solid var(--line);border-radius:14px;padding:11px 12px;margin:2px 0 10px;cursor:pointer}
+.addon[hidden]{display:none}
+.addon input{width:20px;height:20px;margin-top:1px;accent-color:var(--brand);flex:none}
+.addon b{display:block;font-size:14px;color:var(--ink)}
+.addon small{display:block;font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.4;margin-top:2px}
+.addon:has(input:checked){border-color:var(--brand);background:#EFF6FF}
+/* ---------- phones: smaller type, compact bars, everything reachable with a thumb (21 Sept 2026) ---------- */
+@media (max-width:560px){
+  body{font-size:14.5px}
+  .top{gap:9px;padding:8px 10px;padding-top:calc(8px + env(safe-area-inset-top,0px))}
+  .top .logo{width:36px;height:36px;border-radius:11px}
+  .top .logo i{width:11px;height:11px;border-width:2px}
+  .top .who b{font-size:14.5px}
+  .top .who small{font-size:11px}
+  .top .act{gap:4px}
+  .top .act a,.top .act button{height:34px;width:34px;padding:0;justify-content:center;border-radius:10px}
+  .top .act svg{width:17px;height:17px}
+  .stages{padding:7px 10px 8px}
+  .st{gap:5px}
+  .st .dot{width:18px;height:18px;font-size:9.5px;border-width:1.5px}
+  .st .lbl{font-size:10.5px}
+  .st .bar{min-width:6px;margin:0 5px}
+  .st.now .dot{box-shadow:0 0 0 3px rgba(47,127,224,.16);animation:none}
+  .stagehint{padding:0 12px 8px;font-size:12px;line-height:1.4;cursor:pointer}
+  .stagehint .tx{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .stagehint.open .tx{display:block}
+  .feed{padding:10px 10px 8px}
+  .day{margin:10px 0 8px}
+  .day span{font-size:10.5px;padding:4px 10px}
+  .av{width:26px;height:26px;border-radius:8px}
+  .row{gap:6px}
+  .bub{max-width:84%;font-size:14.5px;line-height:1.42;padding:8px 11px 6px;border-radius:16px}
+  .bub .meta{font-size:10px;margin-top:3px}
+  .pics{margin:-3px -6px 5px}
+  .file .n{max-width:170px;font-size:13px}
+  .hello{margin:12px 6px 6px;padding:18px 16px}
+  .hello h2{font-size:17px}
+  .hello p{font-size:13px}
+  .dock{padding:8px 10px calc(8px + var(--safe-b))}
+  .ready{margin:0 0 8px;padding:9px 10px;border-radius:15px;gap:7px}
+  .ready p{font-size:12px;line-height:1.38}
+  .ready .rb{flex-wrap:nowrap;gap:6px}
+  .ready .rb button{flex:1 1 0;min-width:0;min-height:40px;font-size:13px;padding:8px 8px;border-radius:12px;white-space:normal;line-height:1.2;text-align:center}
+  .ready.done p{font-size:12.5px}
+  .chips{gap:6px;padding:0 0 8px}
+  .chip{height:30px;padding:0 11px;font-size:12px;gap:5px;border-width:1px}
+  .dock:has(.tray:not(:empty)) .chips{display:none}
+  .dock:has(.tray:not(:empty)) .ready{display:none}
+  .bub .fail{font-size:11.5px;padding:5px 9px}
+  .tray .t{width:56px;height:56px}
+  .bar{gap:6px}
+  .ibtn,.send{width:40px;height:40px;border-radius:12px}
+  .ibtn svg{width:20px;height:20px}.send svg{width:18px;height:18px}
+  .input{border-radius:14px;padding:2px 6px 2px 12px}
+  .input textarea{padding:8px 0;max-height:110px}
+  .hint{display:none}
+  .newpill{bottom:calc(150px + var(--safe-b));font-size:12px;padding:7px 13px}
+  .sheet-card{max-height:92dvh;border-radius:20px 20px 0 0}
+  .sheet-head{padding:12px 14px;font-size:15px}
+  .sheet-head button{width:32px;height:32px;border-radius:10px;font-size:14px}
+  .sheet-body{padding:12px 14px calc(16px + var(--safe-b));font-size:13.5px;line-height:1.45}
+  .sheet-body h4{font-size:11.5px;margin:14px 0 6px}
+  .sheet-body li,.sheet-body .nb,.sheet-body .tl div{padding:8px 10px;border-radius:10px}
+  .x{padding:10px 11px;font-size:12.5px}
+  .xh b{font-size:13.5px}
+  .xh span{font-size:11px;padding:2px 8px}
+  .dform input{height:42px}
+  .sheet-body .big{min-height:46px;font-size:14.5px}
+  .sheet-body .quiet{min-height:40px;font-size:13.5px}
+  .up{margin:12px 4px 4px;padding:10px 11px;border-radius:16px}
+  .up-ic{width:32px;height:32px;border-radius:10px}
+  .up-t b{font-size:13.5px}
+  .up p{font-size:12.5px;margin:6px 0 9px}
+  .up-b button{min-height:36px;font-size:12.5px}
+  /* typing: fold the explanations away so the conversation keeps the room above the keyboard */
+  body.typing .stagehint,body.typing .ready,body.typing .stages{display:none}
+}
+@media (max-width:360px){
+  .top .who small{display:none}
+  .st .lbl{font-size:9.5px}
+  .ready .rb button{font-size:12px}
+}
+@media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important;scroll-behavior:auto!important} }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="top">
+    <div class="logo"><img src="/img/advon-logo-232.webp" alt="Advon Media" onerror="this.onerror=null;this.src='/img/advon-icon-180.png'"><i title="Ενεργό"></i></div>
+    <div class="who"><b>Advon Media</b><small id="sub">Άγγελος · Απαντάμε συνήθως μέσα σε λίγες ώρες</small></div>
+    <div class="act" id="act"></div>
+  </header>
+  <div class="stages" id="stages" hidden></div>
+  <div class="stagehint" id="stagehint" hidden></div>
+  <div class="demoband" id="demoband" hidden>🧪 Δοκιμαστική συνομιλία — απαντά αμέσως, όπως θα απαντούσαμε στην πραγματικότητα μετά από μερικές ημέρες.</div>
+  <div class="feed" id="feed"><div class="skel"><i></i></div></div>
+  <button class="newpill" id="newpill">↓ Νέο μήνυμα</button>
+  <footer class="dock" id="dock" hidden>
+    <div class="ready" id="ready" hidden></div>
+    <div class="chips" id="chips"></div>
+    <div class="tray" id="tray"></div>
+    <div class="bar">
+      <button class="ibtn" id="attach" title="Επισύναψη αρχείου ή φωτογραφίας" aria-label="Επισύναψη">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.4 11.05l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.65 5.65l-9.2 9.2a2 2 0 0 1-2.83-2.83l8.5-8.5"/></svg>
+      </button>
+      <input type="file" id="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.mp4,.mov,.heic" hidden>
+      <div class="input"><textarea id="txt" rows="1" placeholder="Γράψτε μήνυμα…" enterkeyhint="enter"></textarea></div>
+      <button class="send" id="send" disabled aria-label="Αποστολή">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a1 1 0 0 0-1.38 1.13L3.7 11h7.3a1 1 0 1 1 0 2H3.7l-1.68 6.27A1 1 0 0 0 3.4 20.4z"/></svg>
+      </button>
+    </div>
+    <div class="hint">Αρχεία έως 4 MB · μεγαλύτερα μέσω <a href="https://wetransfer.com" target="_blank" rel="noopener">wetransfer.com</a> · <a href="https://advonmedia.com" target="_blank" rel="noopener">advonmedia.com</a></div>
+  </footer>
+</div>
+<div class="sheet" id="guide"><div class="sheet-card">
+  <div class="sheet-head"><b>Οδηγός αλλαγών</b><button class="sx" aria-label="Κλείσιμο">✕</button></div>
+  <div class="sheet-body">
+    <p class="lead">Γράψτε μας ό,τι θέλετε, όπως θα το λέγατε σε έναν φίλο. Για να γίνει σωστά με την πρώτη, βοηθάει να λέτε <b>πού</b> (σε ποιο σημείο της σελίδας) και <b>τι ακριβώς</b>.</p>
+    <h4>Παραδείγματα αλλαγών που μπορείτε να ζητήσετε</h4>
+    <ul>
+      <li>«Αλλάξτε το τηλέφωνο σε <b>210 555 0199</b> παντού.»</li>
+      <li>«Στις <b>Υπηρεσίες</b> προσθέστε: <b>Λεύκανση δοντιών</b> — ολοκληρώνεται σε μία επίσκεψη.»</li>
+      <li>«Το κείμενο στο <b>Σχετικά με εμένα</b> να γίνει: …» (γράψτε το νέο κείμενο ολόκληρο)</li>
+      <li>«Βάλτε τη φωτογραφία που σας στέλνω <b>πρώτη</b>, στην αρχή της σελίδας.»</li>
+      <li>«Νέο ωράριο: Δευ–Παρ 9:00–17:00, Σάββατο με ραντεβού.»</li>
+      <li>«Πιο ανοιχτό μπλε στο μενού» · «Μεγαλύτερα γράμματα στον τίτλο» · «Αφαιρέστε την ενότητα Συχνές ερωτήσεις».</li>
+      <li>«Προσθέστε το Instagram μου: @onoma» · «Συνδέστε το κουμπί ραντεβού με το doctoranytime μου».</li>
+    </ul>
+    <h4>Για να γίνει γρήγορα και σωστά</h4>
+    <ul>
+      <li>Στείλτε <b>όλες τις αλλαγές μαζί</b>, αριθμημένες (1, 2, 3…), και μετά πατήστε το κουμπί <b>«Έστειλα όλες τις αλλαγές»</b> — έτσι ολοκληρώνονται μέσα σε 24 ώρες.</li>
+      <li>Για κείμενα, στείλτε το <b>τελικό κείμενο</b> όπως θέλετε να μπει — όχι «κάντε το πιο ωραίο».</li>
+      <li>Για φωτογραφίες, στείλτε τις <b>πρωτότυπες</b> (όχι screenshot). Από κινητό επιλέξτε «Πλήρες μέγεθος».</li>
+      <li>Αρχείο πάνω από <b>4 MB</b>; Ανεβάστε το δωρεάν στο <a href="https://wetransfer.com" target="_blank" rel="noopener">wetransfer.com</a> και στείλτε μας εδώ τον σύνδεσμο.</li>
+      <li>Σας άρεσε κάποια <b>άλλη ιστοσελίδα</b>; Στείλτε τον σύνδεσμο και πείτε μας τι ακριβώς σας άρεσε — <a href="#" data-sheet="yliko">δείτε πώς</a>.</li>
+    </ul>
+    <h4>Πόσο γρήγορα προχωράμε</h4>
+    <div class="tl">
+      <div><b>1.</b> Πατάτε «Ξεκινήστε την ιστοσελίδα μου» → <b>πρώτο draft σε 4–10 ημέρες</b>.</div>
+      <div><b>2.</b> Στέλνετε αλλαγές, όλες μαζί, και πατάτε «Έστειλα όλες τις αλλαγές» → <b>έτοιμες μέσα σε 24 ώρες</b>.</div>
+      <div><b>3.</b> Πατάτε «Όλα καλά — πάμε live» και μας γράφετε το domain → <b>online σε 1–2 ημέρες</b>.</div>
+    </div>
+    <p class="lead">Δηλαδή ο χρόνος είναι ουσιαστικά στα χέρια σας: όσο πιο γρήγορα μας στέλνετε υλικό και απαντήσεις, τόσο πιο γρήγορα είναι online η σελίδα σας.</p>
+    <p class="lead">Απορία; Γράψτε μας εδώ, στη συνομιλία.<br>Τι χρειαζόμαστε στην αρχή: <a href="#" data-sheet="yliko">Υλικό</a> · Τι άλλο μπορούμε να κάνουμε: <a href="#" data-sheet="extras">Extras</a>.</p>
+  </div>
+</div></div>
+<div class="sheet" id="yliko"><div class="sheet-card">
+  <div class="sheet-head"><b>Τι χρειαζόμαστε στο «Υλικό»</b><button class="sx" aria-label="Κλείσιμο">✕</button></div>
+  <div class="sheet-body">
+    <p class="lead"><b>Τίποτα από αυτά δεν είναι υποχρεωτικό.</b> Στείλτε ό,τι έχετε εύκολα — τα υπόλοιπα τα συμπληρώνουμε εμείς και τα βλέπετε στο πρώτο draft. Το πιο σημαντικό είναι οι φωτογραφίες σας.</p>
+    <div class="note">Στείλτε τα εδώ, στη συνομιλία — ένα-ένα ή όλα μαζί σε ένα αρχείο Word. Μόλις στείλετε ό,τι έχετε, πατήστε <b>«Ξεκινήστε την ιστοσελίδα μου»</b>.</div>
+    <ol>
+      <li class="nb"><b class="t">1 · Φωτογραφίες</b>Εσείς, ο χώρος σας, η ομάδα σας, το λογότυπο αν υπάρχει. Πρωτότυπες, σε καλή ανάλυση (όχι screenshot). Δεν έχετε ακόμη; Ξεκινάμε με προσωρινές και τις αντικαθιστούμε μόλις τις έχετε.</li>
+      <li class="nb"><b class="t">2 · Δυο λόγια για εσάς</b>Σπουδές, εμπειρία, τι σας ξεχωρίζει. Ακόμη και σε bullet points είναι μια χαρά — το κείμενο το γράφουμε εμείς.</li>
+      <li class="nb"><b class="t">3 · Οι υπηρεσίες σας</b>Ποιες είναι, και μία σύντομη πρόταση για την καθεμία.</li>
+      <li class="nb"><b class="t">4 · Στοιχεία επικοινωνίας</b>Τηλέφωνο, e-mail, διεύθυνση, ωράριο, social και ο σύνδεσμος για τις κριτικές σας στο Google.</li>
+    </ol>
+    <h4>Έχετε ήδη προφίλ στο doctoranytime;</h4>
+    <ul>
+      <li>Τότε <b>δεν χρειάζεται να γράψετε τίποτα</b> — τα κείμενα, τις υπηρεσίες και τα στοιχεία σας τα παίρνουμε από εκεί.</li>
+      <li>Χρειαζόμαστε μόνο τις <b>φωτογραφίες σας σε καλή ανάλυση</b> (από το doctoranytime κατεβαίνουν σε χαμηλή ποιότητα) — εδώ, στη συνομιλία.</li>
+      <li>Αν έχετε κάτι συγκεκριμένο στο μυαλό σας, γράψτε το μας. Αλλιώς, το αφήνετε <b>εντελώς πάνω μας</b> — και διορθώνουμε ό,τι θέλετε στο draft.</li>
+    </ul>
+    <h4>Μεγάλα αρχεία</h4>
+    <div class="note">Εδώ ανεβαίνουν αρχεία έως <b>4 MB</b> το καθένα. Για μεγαλύτερα, ή για πολλές φωτογραφίες μαζί, ανεβάστε τα δωρεάν στο <a href="https://wetransfer.com" target="_blank" rel="noopener">wetransfer.com</a> και στείλτε μας εδώ τον σύνδεσμο.</div>
+    <h4>Σας αρέσει κάποια άλλη ιστοσελίδα;</h4>
+    <ul>
+      <li>Στείλτε μας τον σύνδεσμο και πείτε μας <b>τι ακριβώς</b> σας άρεσε:</li>
+      <li><b>Όλη η σελίδα;</b> Δηλαδή να φτιάξουμε κάτι αντίστοιχο σε χρώματα, σχεδίαση, γραμματοσειρές και δομή.</li>
+      <li><b>Μόνο κάτι συγκεκριμένο;</b> Τα χρώματα · ένα συγκεκριμένο κομμάτι · ο τρόπος που παρουσιάζονται οι υπηρεσίες · ένα κείμενο · κάποιο εφέ ή κίνηση.</li>
+      <li>Όσο πιο συγκεκριμένοι είστε, τόσο πιο κοντά θα είναι το αποτέλεσμα σε αυτό που έχετε στο μυαλό σας.</li>
+    </ul>
+    <h4>Πόσο γρήγορα προχωράμε</h4>
+    <div class="tl">
+      <div><b>1.</b> Πατάτε «Ξεκινήστε την ιστοσελίδα μου» → <b>πρώτο draft σε 4–10 ημέρες</b>.</div>
+      <div><b>2.</b> Στέλνετε αλλαγές, όλες μαζί, και πατάτε «Έστειλα όλες τις αλλαγές» → <b>έτοιμες μέσα σε 24 ώρες</b>.</div>
+      <div><b>3.</b> Πατάτε «Όλα καλά — πάμε live» και μας γράφετε το domain → <b>online σε 1–2 ημέρες</b>.</div>
+    </div>
+    <p class="lead">Δηλαδή ο χρόνος είναι ουσιαστικά στα χέρια σας: όσο πιο γρήγορα μας στέλνετε υλικό και απαντήσεις, τόσο πιο γρήγορα είναι online η σελίδα σας.</p>
+    <p class="lead">Απορία; Γράψτε μας εδώ, στη συνομιλία. Δείτε επίσης τον <a href="#" data-sheet="odigos">Οδηγό αλλαγών</a> και τα <a href="#" data-sheet="extras">Extras</a>.</p>
+  </div>
+</div></div>
+<div class="sheet" id="faq"><div class="sheet-card">
+  <div class="sheet-head"><b>Extras &amp; συχνές ερωτήσεις</b><button class="sx" aria-label="Κλείσιμο">✕</button></div>
+  <div class="sheet-body">
+    <p class="lead">Ό,τι μπορεί να χρειαστείτε πέρα από τη βασική ιστοσελίδα, με απλά λόγια. Για οποιοδήποτε από αυτά, γράψτε μας εδώ.</p>
+    <h4>Extras — προαιρετικά</h4>
+    <div class="xg">
+      <div class="x xf" id="xForm"><div class="xh"><b>Φόρμα Επικοινωνίας <em>Η πιο συχνή επιλογή</em></b><span>50€ εφάπαξ</span></div>Οι επισκέπτες σας σάς γράφουν απευθείας από τη σελίδα — ακόμη κι όταν δεν μπορείτε να σηκώσετε το τηλέφωνο — και το μήνυμα έρχεται αμέσως στο e-mail σας. Χωρίς μηνιαία χρέωση.<button class="xbtn" data-up="yes">Τη θέλω στη σελίδα μου</button></div>
+      <div class="x"><div class="xh"><b>Αλλαγές μετά τη δημοσίευση</b><span>50€ / αίτημα</span></div>Μέχρι να δημοσιευτεί η σελίδα, οι αλλαγές είναι απεριόριστες. Μετά, κάθε αίτημα αλλαγών ολοκληρώνεται εντός 3 εργάσιμων ημερών — και ένα αίτημα μπορεί να περιλαμβάνει πολλές λεπτομερείς αλλαγές.</div>
+      <div class="x"><div class="xh"><b>Πίνακας Διαχείρισης (Admin Panel)</b><span>180€ εφάπαξ</span></div>Ένας απλός πίνακας ώστε να αλλάζετε μόνοι σας κείμενα και εικόνες όποτε θέλετε — δωρεάν, έως 5 αλλαγές τον μήνα.</div>
+      <div class="x"><div class="xh"><b>Ενότητα Άρθρων / Σεμιναρίων</b><span>70€ εφάπαξ</span></div>Αποκλειστική ενότητα άρθρων, σεμιναρίων ή εργαστηρίων. Ανεβάζετε και επεξεργάζεστε το περιεχόμενο μόνοι σας, ανεξάρτητα.</div>
+      <div class="x"><div class="xh"><b>Google Business Profile</b><span>90€ εφάπαξ</span></div>Στήνουμε ή διορθώνουμε το προφίλ σας στο Google (Maps &amp; αναζήτηση), το συνδέουμε με τη σελίδα σας και σας δίνουμε κάρτα NFC για να αφήνουν οι πελάτες σας κριτική με ένα άγγιγμα.</div>
+      <div class="x"><div class="xh"><b>Online ραντεβού · AI βοηθός · QR μενού</b><span>ρωτήστε μας</span></div>Σελίδα κρατήσεων με αυτόματες υπενθυμίσεις, βοηθός που απαντά στους επισκέπτες σας 24/7, ψηφιακό μενού χωρίς επανεκτυπώσεις.</div>
+    </div>
+    <h4>Συχνές ερωτήσεις</h4>
+    <ul>
+      <li><b>Πόσο διαρκεί;</b> Από τη στιγμή που πατάτε «Ξεκινήστε την ιστοσελίδα μου», το πρώτο draft έρχεται σε 4–10 ημέρες. Μετά, όσες αλλαγές χρειαστούν — κάθε γύρος αλλαγών ολοκληρώνεται μέσα σε 24 ώρες.</li>
+      <li><b>Το domain (π.χ. epitheto-epaggelma.gr);</b> Περιλαμβάνεται, χωρίς επιπλέον κόστος. Όταν η σελίδα είναι έτοιμη, μας γράφετε το όνομα που θέλετε και ελέγχουμε ότι είναι διαθέσιμο.</li>
+      <li><b>Τι περιλαμβάνει η φιλοξενία (hosting);</b> Τον server όπου «ζει» η σελίδα, το domain, την ασφάλεια, τα backups και τη συνεχή λειτουργία της — όλα σε ένα.</li>
+      <li><b>Θα με βρίσκουν στο Google;</b> Ναι — κάθε σελίδα φτιάχνεται με σωστή δομή, ταχύτητα και τα στοιχεία που χρειάζεται το Google. Το Google Business Profile τη βοηθά ακόμη περισσότερο.</li>
+      <li><b>Μπορώ να αλλάξω κάτι μόνος μου;</b> Με τον Πίνακα Διαχείρισης, ναι — κείμενα και εικόνες, όποτε θέλετε.</li>
+      <li><b>Μπορώ να σβήσω ένα μήνυμα;</b> Ναι — πατήστε πάνω στο δικό σας μήνυμα και θα εμφανιστεί ο κάδος δίπλα του.</li>
+      <li><b>Πώς σας βρίσκω;</b> Εδώ, στη συνομιλία — σας απαντάμε το συντομότερο.</li>
+    </ul>
+  </div>
+</div></div>
+<div class="sheet" id="confirm"><div class="sheet-card">
+  <div class="sheet-head"><b id="cfTitle"></b><button class="sx" aria-label="Κλείσιμο">✕</button></div>
+  <div class="sheet-body"><p class="lead" id="cfText"></p><button class="big" id="cfYes"></button><button class="quiet sx">Όχι ακόμη</button></div>
+</div></div>
+<div class="sheet" id="golive"><div class="sheet-card">
+  <div class="sheet-head"><b>Πάμε live 🚀</b><button class="sx" aria-label="Κλείσιμο">✕</button></div>
+  <div class="sheet-body">
+    <p class="lead">Τέλεια! Για να δημοσιεύσουμε την ιστοσελίδα σας χρειαζόμαστε μόνο το όνομά της (domain). Γράψτε το όνομα που θέλετε — ελέγχουμε ότι είναι διαθέσιμο, το αγοράζουμε εμείς (περιλαμβάνεται) και σε 1–2 ημέρες είστε online.</p>
+    <div class="dform"><input id="d1" autocomplete="off" autocapitalize="none" inputmode="url" placeholder="π.χ. epitheto-epaggelma.gr"></div>
+    <label class="addon" id="dFormWrap"><input type="checkbox" id="dForm"><span><b>Προσθέστε και Φόρμα Επικοινωνίας</b><small>Η πιο συχνή προσθήκη · 50€ εφάπαξ — οι επισκέπτες σας σάς γράφουν από τη σελίδα και το μήνυμα έρχεται στο e-mail σας.</small></span></label>
+    <p class="lead" style="font-size:13px">Συμβουλή: απλό και επαγγελματικό, με λατινικούς χαρακτήρες και χωρίς κενά — π.χ. epitheto-epaggelma.gr ή onoma-epitheto.gr.</p>
+    <button class="big" id="dGo">Όλα καλά — πάμε live 🚀</button>
+    <button class="quiet sx">Όχι ακόμη</button>
+  </div>
+</div></div>
+<div class="drop" id="drop"><div>Αφήστε τα αρχεία εδώ</div></div>
+<div class="lb" id="lb"><a class="dl" id="lbdl" download title="Λήψη"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></a><button class="x" id="lbx" aria-label="Κλείσιμο"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><img id="lbimg" alt=""></div>
+<div class="toast" id="toast"></div>
+<div class="undo" id="undo" role="status"><span id="undoTx">Το μήνυμα διαγράφηκε</span><button id="undoBtn">Αναίρεση</button></div>
+
+<script>
+(function(){
+'use strict';
+const API='/api/chat';
+const $=s=>document.querySelector(s);
+const feed=$('#feed'), dock=$('#dock'), txt=$('#txt'), sendBtn=$('#send'), tray=$('#tray'), fileIn=$('#file');
+const code=(location.pathname.match(/\/c\/([a-z0-9-]+)/i)||[])[1]||new URLSearchParams(location.search).get('c')||'';
+const STAGES=[['yliko','Υλικό'],['draft','Πρώτο draft'],['changes','Αλλαγές'],['live','Live']];
+/* one clear sentence per stage: what we need from the client, and which button to press when they are done */
+function stageHint(t){
+  const stg=curStage(t);
+  if(stg==='yliko') return t.dat
+    ? 'Τα στοιχεία σας τα έχουμε ήδη από το doctoranytime. Χρειαζόμαστε μόνο τις φωτογραφίες σας σε καλή ανάλυση — στείλτε τις εδώ. Μόλις τις στείλετε, πατήστε «Ξεκινήστε την ιστοσελίδα μου».'
+    : 'Στείλτε ό,τι έχετε εύκολα: φωτογραφίες, δυο λόγια για εσάς, τις υπηρεσίες και τα στοιχεία σας. Τίποτα δεν είναι υποχρεωτικό. Μετά πατήστε «Ξεκινήστε την ιστοσελίδα μου».';
+  if(stg==='draft') return 'Δείτε το πρώτο draft με την ησυχία σας — και από υπολογιστή. Θέλετε αλλαγές; Γράψτε τις (1., 2., 3.) και πατήστε «Έστειλα όλες τις αλλαγές». Είναι όπως το θέλετε; Πατήστε «Πάμε live».';
+  if(stg==='changes') return 'Οι αλλαγές σας έγιναν — ελέγξτε όλη τη σελίδα μια φορά. Κι άλλες αλλαγές; Γράψτε τις και πατήστε «Έστειλα όλες τις αλλαγές». Όλα εντάξει; Πατήστε «Πάμε live».';
+  return 'Η ιστοσελίδα σας είναι online! Για οποιαδήποτε αλλαγή ή ερώτηση, γράψτε μας εδώ.';
+}
+const curStage=t=>t&&t.stage==='payment'?'changes':(t&&t.stage)||'yliko';
+const READY_TXT={build:'✅ Έστειλα ό,τι ήθελα — μπορείτε να ξεκινήσετε την ιστοσελίδα μου!',changes:'✅ Έστειλα όλες τις αλλαγές μου — μπορείτε να προχωρήσετε.'};
+/* the contact form (50€) — the add-on most clients take. Offered quietly: one small card under the conversation once the
+   client has a draft to look at, one unticked line in «πάμε live», and first place in Extras. Never when Angelo ticked
+   «has a contact form» in the CRM (t.form), never again once asked for or dismissed on this device. */
+const FORM_TXT='📨 Θα ήθελα να προσθέσετε και τη Φόρμα Επικοινωνίας στην ιστοσελίδα μου (50€ εφάπαξ).';
+const formAsked=()=>state.msgs.concat(state.pending).some(m=>m.from==='client'&&!m.deleted&&/φόρμα επικοινωνίας/i.test(m.text||''));
+const formOffer=()=>{ const t=state.thread; return !!t && !t.form && !formAsked(); };
+const ENV_IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 8l9 6 9-6"/></svg>';
+function upsellItem(){
+  const t=state.thread; if(!formOffer()||mem.get('formNo')) return null;
+  if(!/^(draft|changes|live)$/.test(curStage(t))) return null;
+  return {key:'up|form',html:'<div class="up" role="note"><div class="up-h"><span class="up-ic">'+ENV_IC+'</span><div class="up-t"><b>Φόρμα Επικοινωνίας</b><small>Η πιο συχνή προσθήκη · 50€ εφάπαξ</small></div><button class="up-x" data-up="no" aria-label="Απόκρυψη">✕</button></div><p>Οι επισκέπτες σας σάς γράφουν απευθείας από τη σελίδα — ακόμη κι όταν δεν μπορείτε να σηκώσετε το τηλέφωνο — και το μήνυμα έρχεται αμέσως στο e-mail σας.</p><div class="up-b"><button class="up-go" data-up="yes">Τη θέλω</button><button class="up-no" data-up="no">Όχι, ευχαριστώ</button></div></div>'};
+}
+const CHIP_ALLAGES=['✏️','Θέλω αλλαγές','Θα ήθελα τις εξής αλλαγές:\n1. \n2. \n3. '];
+const CHIP_FOTO=['📷','Στέλνω φωτογραφίες','Σας στέλνω φωτογραφίες για την ιστοσελίδα: '];
+const CHIP_Q=['❓','Έχω ερώτηση','Έχω μια ερώτηση: '];
+const CHIPS={yliko:[CHIP_FOTO,['📝','Στέλνω στοιχεία','Τα στοιχεία μου για την ιστοσελίδα:\n• Λίγα λόγια για εμένα: \n• Υπηρεσίες: \n• Τηλέφωνο / διεύθυνση / ωράριο: '],['💡','Έχω κάτι στο μυαλό μου','Για την ιστοσελίδα θα ήθελα: '],CHIP_Q],draft:[CHIP_ALLAGES,CHIP_FOTO,CHIP_Q],changes:[CHIP_ALLAGES,CHIP_FOTO,CHIP_Q],live:[['✏️','Θέλω μια αλλαγή','Θα ήθελα την εξής αλλαγή στη σελίδα:\n1. '],['📷','Στέλνω υλικό','Σας στέλνω το υλικό για την ιστοσελίδα: '],CHIP_Q,['⭐','Κριτική στο Google','Πού μπορώ να γράψω κριτική;']]};
+const chipsFor=t=>(CHIPS[curStage(t)]||[]).filter(c=>!(t&&t.dat&&c[1]==='Στέλνω στοιχεία'));
+const state={thread:null,msgs:[],head:null,pending:[],queue:[],lastActive:Date.now(),timer:null,unread:0,sound:false};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtT=iso=>{const d=new Date(iso);return d.toLocaleTimeString('el-GR',{hour:'2-digit',minute:'2-digit',hour12:false});};
+const dayKey=iso=>{const d=new Date(iso);return d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();};
+function dayLabel(iso){const d=new Date(iso),n=new Date();const t0=new Date(n.getFullYear(),n.getMonth(),n.getDate());const dd=Math.round((t0-new Date(d.getFullYear(),d.getMonth(),d.getDate()))/864e5);if(dd===0)return 'Σήμερα';if(dd===1)return 'Χθες';const o={weekday:'short',day:'numeric',month:'short'};if(d.getFullYear()!==n.getFullYear())o.year='numeric';return d.toLocaleDateString('el-GR',o);}
+const kb=n=>n>1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
+const isImg=n=>/\.(jpe?g|png|webp|gif|bmp)$/i.test(n||'');
+const fileKind=n=>{const e=(n.split('.').pop()||'').toLowerCase();return e==='pdf'?'pdf':/^docx?$|^rtf$|^txt$/.test(e)?'doc':/^xlsx?$|^csv$/.test(e)?'xls':/^zip$/.test(e)?'zip':'';};
+function linkify(t){
+  const keep=[]; let s=esc(t);
+  s=s.replace(/(?:\[([^\]\n]{1,90})\]\(#(start|more)\)\s*)+/g,m=>{ const b=[...m.matchAll(/\[([^\]\n]{1,90})\]\(#(start|more)\)/g)].map(x=>'<button class="mbtn '+(x[2]==='start'?'go':'more')+'" data-act="'+x[2]+'">'+x[1]+'</button>').join(''); keep.push('<span class="mbtns">'+b+'</span>'); return '\u0001'+(keep.length-1)+'\u0001'; });
+  s=s.replace(/\[([^\]\n]{1,90})\]\(#(odigos|extras|yliko)\)/g,(m,x,id)=>{keep.push('<a href="#" class="ilink" data-sheet="'+id+'">'+x+'</a>');return '\u0001'+(keep.length-1)+'\u0001';});
+  s=s.replace(/\[([^\]\n]{1,90})\]\((https?:\/\/[^\s)]+)\)/g,(m,x,u)=>{keep.push('<a href="'+u+'" target="_blank" rel="noopener">'+x+'</a>');return '\u0001'+(keep.length-1)+'\u0001';});
+  s=s.replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)»"'])/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+  return s.replace(/\u0001(\d+)\u0001/g,(m,i)=>keep[+i]);
+}
+const fileUrl=p=>API+'?c='+encodeURIComponent(code)+'&file='+encodeURIComponent(p);
+/* small per-device memory (a draft in progress, «not now» on the e-mail bar) — the page works the same without it */
+const mem={get(k){try{return localStorage.getItem('advon_c_'+code+'_'+k);}catch(e){return null;}},set(k,v){try{v==null?localStorage.removeItem('advon_c_'+code+'_'+k):localStorage.setItem('advon_c_'+code+'_'+k,v);}catch(e){}}};
+let toastT; function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2600);}
+
+/* ---------- render ---------- */
+function tick(m){
+  const seen=state.thread&&state.thread.adminSeenAt&&state.thread.adminSeenAt>=m.at;
+  if(m.state==='pending')return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2.5 2.5"/></svg>';
+  if(m.state==='failed')return '';
+  const one='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>';
+  const two='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12.5l5 5L17.5 7"/><path d="M9.5 15.5l2 2L22 7"/></svg>';
+  return seen?'<span class="seen" title="Το είδε ο Άγγελος">'+two+'</span>':one;
+}
+const DELIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>';
+function bubble(m,me){
+  let inner='';
+  if(m.deleted) return '<span>Το μήνυμα διαγράφηκε</span><div class="meta">'+fmtT(m.at)+'</div>';
+  const files=m.files||[], pics=files.filter(f=>isImg(f.name)), docs=files.filter(f=>!isImg(f.name));
+  if(pics.length){inner+='<div class="pics'+(pics.length===1?' one':'')+'">'+pics.map(f=>'<img loading="lazy" src="'+(f.local||fileUrl(f.path))+'" alt="'+esc(f.name)+'" data-full="'+(f.local||fileUrl(f.path))+'" data-name="'+esc(f.name)+'">').join('')+'</div>';}
+  docs.forEach(f=>{inner+='<a class="file" '+(f.local?'':'href="'+fileUrl(f.path)+'" target="_blank" rel="noopener"')+'><span class="ic '+fileKind(f.name)+'">'+esc((f.name.split('.').pop()||'').slice(0,4).toUpperCase())+'</span><span><span class="n">'+esc(f.name)+'</span><small>'+kb(f.bytes||0)+'</small></span></a>';});
+  if(m.text)inner+=linkify(m.text);
+  if(m.state==='pending'&&m.progress!=null)inner+='<div class="prog"><i style="width:'+Math.round(m.progress*100)+'%"></i></div>';
+  inner+='<div class="meta">'+(m.state==='pending'?'αποστολή…':fmtT(m.at))+(me?' '+tick(m):'')+'</div>';
+  if(m.state==='failed')inner+='<span class="fail" data-retry="'+esc(m.id)+'">Δεν στάλθηκε — πατήστε για επανάληψη</span>';
+  if(me)inner+='<button class="del" data-del="'+esc(m.id)+'" title="Διαγραφή μηνύματος" aria-label="Διαγραφή">'+DELIC+'</button>';
+  return inner;
+}
+function seenKey(m){return (state.thread&&state.thread.adminSeenAt&&state.thread.adminSeenAt>=m.at)?'s':'';}
+function items(){
+  const all=state.msgs.concat(state.pending).filter(m=>!m.deleted&&!delQ.has(m.id)).sort((a,b)=>a.at<b.at?-1:1);
+  const out=[]; let lastDay='',prev=null;
+  all.forEach((m,i)=>{
+    const dk=dayKey(m.at);
+    if(dk!==lastDay){ out.push({key:'d'+dk,html:'<div class="day"><span>'+dayLabel(m.at)+'</span></div>'}); lastDay=dk; prev=null; }
+    if(m.deleted||delQ.has(m.id)) return;
+    const me=m.from==='client', next=all[i+1];
+    const sameNext=next&&next.from===m.from&&dayKey(next.at)===dk&&(new Date(next.at)-new Date(m.at))<6*60000;
+    const gap=prev&&prev.from!==m.from;
+    const cls='row '+(me?'me':'them')+(sameNext?'':' last')+(gap?' gap':'');
+    const key=m.id+'|'+cls+'|'+(m.state||'')+'|'+(m.progress==null?'':Math.round(m.progress*100))+'|'+(m.deleted?'x':'')+'|'+seenKey(m)+'|'+((m.files||[]).length);
+    out.push({key,html:'<div class="'+cls+'" data-id="'+esc(m.id)+'">'+(me?'':'<div class="av"><img src="/img/advon-icon-180.png" alt=""></div>')+'<div class="bub'+(m.state?' '+m.state:'')+(m.deleted?' gone':'')+(m.kind&&!m.deleted?' kind':'')+'">'+bubble(m,me)+'</div></div>'});
+    prev=m;
+  });
+  const up=all.length?upsellItem():null; if(up) out.push(up);
+  return out;
+}
+function node(it){const d=document.createElement('div');d.innerHTML=it.html;const el=d.firstElementChild;el.dataset.k=it.key;requestAnimationFrame(()=>{el.style.animation='none';});return el;}
+/* On the first paint the web font is often still loading, so the thread grows
+   right after we scroll to the end. Stay pinned to the bottom for a moment —
+   and stop the instant the reader scrolls themselves. */
+let userScrolled=false;
+['wheel','touchstart','keydown'].forEach(ev=>feed.addEventListener(ev,()=>{userScrolled=true;},{passive:true}));
+function stickBottom(ms){
+  userScrolled=false;
+  const end=Date.now()+ms, sb=feed.style.scrollBehavior;
+  feed.style.scrollBehavior='auto';
+  const go=()=>{
+    if(userScrolled){ feed.style.scrollBehavior=sb; return; }
+    feed.scrollTop=feed.scrollHeight;
+    if(Date.now()<end) requestAnimationFrame(go); else feed.style.scrollBehavior=sb;
+  };
+  go();
+}
+/* the feed changes height when the keyboard opens/closes, the bars fold away or the tray appears: stay at the end */
+let atEnd=true; feed.addEventListener('scroll',()=>{ atEnd=feed.scrollHeight-feed.scrollTop-feed.clientHeight<140; },{passive:true});
+if(window.ResizeObserver) new ResizeObserver(()=>{ if(atEnd){ const sb=feed.style.scrollBehavior; feed.style.scrollBehavior='auto'; feed.scrollTop=feed.scrollHeight; feed.style.scrollBehavior=sb; } }).observe(feed);
+function render(keepScroll){
+  const nearBottom=feed.scrollHeight-feed.scrollTop-feed.clientHeight<140;
+  const list=items();
+  if(!list.length){ feed.innerHTML='<div class="hello"><img src="/img/advon-icon-180.png" alt=""><h2>Καλώς ήρθατε!</h2><p>Εδώ μιλάμε για την ιστοσελίδα σας: στείλτε φωτογραφίες, κείμενα, αλλαγές ή ό,τι σας απασχολεί. Απαντάμε το συντομότερο.</p></div>'; return; }
+  const kids=[...feed.children];
+  if(kids.length&&!kids[0].dataset.k){ feed.innerHTML=''; kids.length=0; }
+  const cur=kids.map(el=>el.dataset.k);
+  let added=false, prefix=cur.length<=list.length;
+  if(prefix) for(let i=0;i<cur.length;i++){ if(cur[i]!==list[i].key){prefix=false;break;} }
+  if(prefix){
+    for(let i=cur.length;i<list.length;i++){ feed.appendChild(node(list[i])); added=true; }
+  }else{
+    const old=new Map(); kids.forEach(el=>old.set(el.dataset.k,el));
+    const frag=document.createDocumentFragment();
+    for(const it of list){ let el=old.get(it.key); if(el){old.delete(it.key);} else {el=node(it);added=true;} frag.appendChild(el); }
+    old.forEach(el=>el.remove());
+    feed.appendChild(frag);
+  }
+  if(!keepScroll||nearBottom)feed.scrollTop=feed.scrollHeight; else if(added)$('#newpill').classList.add('on');
+}
+function renderHead(){
+  const t=state.thread; if(!t)return;
+  const act=$('#act'); act.innerHTML=(t.site?'<a href="'+esc(/^https?:/.test(t.site)?t.site:'https://'+t.site)+'" target="_blank" rel="noopener" title="Η ιστοσελίδα σας"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span>Η σελίδα σας</span></a>':'')+'<a href="mailto:advonmd@gmail.com?subject='+encodeURIComponent('Ιστοσελίδα — '+(t.name||''))+'" title="Στείλτε μας e-mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 8l9 6 9-6"/></svg><span>E-mail</span></a><button data-sheet="extras" title="Extras και συχνές ερωτήσεις"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h7"/></svg><span>Extras</span></button><button data-sheet="yliko" title="Τι χρειαζόμαστε από εσάς"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/><path d="M9 3h6v4H9zM10 12l1.5 1.5L15 10"/></svg><span>Υλικό</span></button><button data-sheet="odigos" title="Οδηγός αλλαγών — τι μπορείτε να ζητήσετε και πώς"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5M12 17h.01"/></svg><span>Οδηγός αλλαγών</span></button>';
+  const st=$('#stages'); const stg=t.stage==='payment'?'changes':t.stage; const idx=STAGES.findIndex(s=>s[0]===stg);
+  if(idx<0){st.hidden=true;return;}
+  st.hidden=false; st.innerHTML=STAGES.map((s,i)=>'<div class="st'+(i<idx?' done':i===idx?' now':'')+'"><span class="dot">'+(i<idx?'✓':i+1)+'</span><span class="lbl">'+s[1]+'</span><span class="bar"></span></div>').join('');
+  const sh=$('#stagehint'); sh.hidden=false; sh.innerHTML='<span class="tx">'+esc(stageHint(t))+(stg==='yliko'?' <a href="#" data-sheet="yliko">Τι χρειαζόμαστε →</a>':stg==='live'?'':' <a href="#" data-sheet="odigos">Οδηγός αλλαγών →</a>')+'</span>';
+  { const db=$('#demoband'); if(db) db.hidden=true; }   /* Angelo knows it is the test chat — no band (23 Sept 2026) */
+  const chips=$('#chips'); chips.innerHTML=chipsFor(t).map((c,i)=>'<button class="chip" data-chip="'+i+'"><span>'+c[0]+'</span>'+esc(c[1])+'</button>').join('');
+  renderReady(t);
+  const xb=document.querySelector('#xForm .xbtn'); if(xb){ xb.hidden=!!t.form; const asked=formAsked(); xb.disabled=asked; xb.textContent=asked?'✓ Το ζητήσατε — θα την προσθέσουμε':'Τη θέλω στη σελίδα μου'; }
+}
+/* the ready bar: one big button per stage, then a green «we got it» card until we move the stage on */
+function renderReady(t){
+  const el=$('#ready'); if(!el) return;
+  const stg=curStage(t), r=t.ready&&t.ready.kind;
+  if(stg==='live'){ el.hidden=true; el.innerHTML=''; document.body.classList.add('st-built'); return; }
+  el.hidden=false; el.classList.toggle('done',!!r);
+  document.body.classList.toggle('st-built', stg!=='yliko' || r==='build');
+  if(r==='build') el.innerHTML='<p>✅ Το λάβαμε! Ετοιμάζουμε το πρώτο draft της ιστοσελίδας σας — θα το βρείτε εδώ σε 4–10 ημέρες. Θυμηθήκατε κάτι; Γράψτε το μας.</p>';
+  else if(r==='changes') el.innerHTML='<p>✏️ Τις λάβαμε! Κάνουμε τις αλλαγές σας — έτοιμες συνήθως μέσα σε 24 ώρες. Θα σας γράψουμε εδώ μόλις είναι.</p>';
+  else if(r==='live') el.innerHTML='<p>🚀 Τέλεια! Ελέγχουμε το domain, το αγοράζουμε και σας ενημερώνουμε εδώ μόλις η ιστοσελίδα σας είναι online (1–2 ημέρες).</p>';
+  else if(stg==='yliko') el.innerHTML='<p>'+(t.dat?'Στείλατε τις φωτογραφίες σας; Πατήστε εδώ. Δεν έχετε ακόμη; Πατήστε το έτσι κι αλλιώς — βάζουμε προσωρινές.':'Στείλατε ό,τι έχετε, έστω λίγα; Πατήστε εδώ — ό,τι λείπει το προσθέτουμε μετά.')+'</p><div class="rb"><button class="go" data-ready="build">✅ Ξεκινήστε την ιστοσελίδα μου</button></div>';
+  else el.innerHTML='<p>Όταν τελειώσετε, πατήστε ένα από τα δύο:</p><div class="rb"><button class="ok" data-ready="changes">✏️ Έστειλα όλες τις αλλαγές</button><button class="go" data-ready="live">🚀 Όλα καλά — πάμε live</button></div>';
+}
+
+/* ---------- network ---------- */
+async function load(first){
+  try{
+    const r=await fetch(API+'?c='+encodeURIComponent(code)+(state.head?'&h='+state.head:'')+'&_='+Date.now(),{cache:'no-store'});
+    if(r.status===404||r.status===400){showError();return;}
+    const p=await r.json().catch(()=>({}));
+    if(!r.ok||!p.ok)throw new Error(p.error||('HTTP '+r.status));
+    if(p.same)return;
+    const before=new Set(state.msgs.map(m=>m.id));
+    const prevSeen=state.thread&&state.thread.adminSeenAt;
+    state.thread=p.thread; state.msgs=p.messages||[]; state.head=p.head;
+    // drop pending copies that arrived
+    state.pending=state.pending.filter(pm=>!state.msgs.some(m=>m.id===pm.id));
+    const fresh=state.msgs.filter(m=>!before.has(m.id)&&m.from!=='client');
+    renderHead(); render(!first);
+    if(first&&location.hash==='#start'){ history.replaceState(null,'',location.pathname+location.search); setTimeout(()=>msgAction('start'),600); }
+    if(first){dock.hidden=false; stickBottom(1500); if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>stickBottom(500));}
+    if(fresh.length&&!first){if(document.visibilityState==='visible'&&state.sound)blip();}
+    if(state.msgs.some(m=>m.from!=='client')){ if(document.visibilityState==='visible')markSeen(); else {state.unread=(before.size?fresh.length:0);title();} }
+  }catch(e){ if(first){feed.innerHTML='<div class="err"><img src="/img/advon-icon-180.png" alt=""><h1>Μικρό πρόβλημα σύνδεσης</h1><p>'+esc(e.message||'')+'</p><a href="javascript:location.reload()">Δοκιμάστε ξανά</a></div>';} }
+}
+let seenSent=null;
+async function markSeen(){
+  const last=state.msgs.filter(m=>m.from!=='client').pop(); if(!last)return;
+  state.unread=0; title();
+  if(seenSent===last.id)return; seenSent=last.id;
+  try{await fetch(API+'?c='+encodeURIComponent(code)+'&seen=1',{method:'POST'});}catch(e){}
+}
+function title(){document.title=(state.unread?'('+state.unread+') ':'')+'Advon Media · Συνομιλία';}
+function showError(){
+  $('#stages').hidden=true; dock.hidden=true;
+  feed.innerHTML='<div class="err"><img src="/img/advon-icon-180.png" alt=""><h1>Ο σύνδεσμος δεν είναι έγκυρος</h1><p>Ίσως αντιγράφηκε λάθος ή έχει αλλάξει. Ζητήστε από τον Άγγελο να σας τον ξαναστείλει.</p><a href="https://advonmedia.com">advonmedia.com</a></div>';
+  clearInterval(state.timer);
+}
+function schedule(){
+  clearTimeout(state.timer);
+  const hidden=document.visibilityState!=='visible';
+  const idle=Date.now()-state.lastActive>3*60000;
+  const ms=hidden?45000:idle?15000:5000;
+  state.timer=setTimeout(async()=>{await load(false);schedule();},ms);
+}
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'){state.lastActive=Date.now();load(false).then(()=>{if(state.msgs.some(m=>m.from!=='client'))markSeen();});} schedule(); });
+window.addEventListener('focus',()=>{state.lastActive=Date.now();});
+['pointerdown','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,()=>{state.lastActive=Date.now();state.sound=true;},{passive:true}));
+
+/* ---------- sending ---------- */
+async function shrink(file){
+  if(!/^image\/(jpeg|png|webp|heic|heif)$/i.test(file.type)&&!/\.(jpe?g|png|webp|heic|heif)$/i.test(file.name))return file;
+  try{
+    const bmp=await createImageBitmap(file).catch(()=>null); if(!bmp)return file;
+    const MAX=1800; let {width:w,height:h}=bmp; if(Math.max(w,h)<=MAX&&file.size<1.2e6&&!/heic|heif/i.test(file.type+file.name)){bmp.close();return file;}
+    const s=Math.min(1,MAX/Math.max(w,h)); const cw=Math.round(w*s),ch=Math.round(h*s);
+    const c=document.createElement('canvas'); c.width=cw;c.height=ch; c.getContext('2d').drawImage(bmp,0,0,cw,ch); bmp.close();
+    const blob=await new Promise(res=>c.toBlob(res,'image/jpeg',.86)); if(!blob)return file;
+    return new File([blob],file.name.replace(/\.[^.]+$/,'')+'.jpg',{type:'image/jpeg'});
+  }catch(e){return file;}
+}
+function addFiles(list){
+  for(const f of list){
+    if(state.queue.length>=12){toast('Έως 12 αρχεία τη φορά');break;}
+    state.queue.push({file:f,url:isImg(f.name)||/^image\//.test(f.type)?URL.createObjectURL(f):''});
+  }
+  renderTray();
+}
+function renderTray(){
+  tray.innerHTML=state.queue.map((q,i)=>'<div class="t">'+(q.url?'<img src="'+q.url+'" alt="">':esc((q.file.name.split('.').pop()||'').toUpperCase().slice(0,4)))+'<b data-rm="'+i+'">×</b></div>').join('');
+  updateSend();
+}
+function updateSend(){sendBtn.disabled=!(txt.value.trim()||state.queue.length);}
+tray.addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(!b)return;state.queue.splice(+b.dataset.rm,1);renderTray();});
+$('#attach').addEventListener('click',()=>fileIn.click());
+fileIn.addEventListener('change',()=>{addFiles([...fileIn.files]);fileIn.value='';});
+txt.addEventListener('input',()=>{txt.style.height='auto';txt.style.height=Math.min(140,txt.scrollHeight)+'px';updateSend();});
+txt.addEventListener('focus',()=>document.body.classList.add('typing'));
+txt.addEventListener('blur',()=>setTimeout(()=>{ if(document.activeElement!==txt) document.body.classList.remove('typing'); },150));
+$('#stagehint').addEventListener('click',e=>{ if(e.target.closest('a')) return; e.currentTarget.classList.toggle('open'); });
+txt.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey&&!/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){e.preventDefault();send();} });
+sendBtn.addEventListener('click',()=>send());
+document.addEventListener('paste',e=>{const fs=[...(e.clipboardData&&e.clipboardData.files||[])];if(fs.length){e.preventDefault();addFiles(fs);}});
+let dragN=0; document.addEventListener('dragenter',e=>{e.preventDefault();dragN++;$('#drop').classList.add('on');});
+document.addEventListener('dragleave',e=>{e.preventDefault();if(--dragN<=0){dragN=0;$('#drop').classList.remove('on');}});
+document.addEventListener('dragover',e=>e.preventDefault());
+document.addEventListener('drop',e=>{e.preventDefault();dragN=0;$('#drop').classList.remove('on');if(e.dataTransfer&&e.dataTransfer.files.length)addFiles([...e.dataTransfer.files]);});
+
+async function send(forced){
+  let text, q;
+  if(forced&&typeof forced.text!=='string') forced=null;   // never an Event or anything else — only {text, kind} from the big buttons
+  if(forced){ text=forced.text; q=[]; }
+  else{
+    if(sendBtn.disabled)return;
+    text=txt.value.trim(); q=state.queue.splice(0); txt.value=''; txt.style.height='auto'; renderTray(); updateSend(); clearTimeout(draftT); mem.set('draft',null);
+  }
+  const id='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  const pm={id,from:'client',text,at:new Date().toISOString(),state:'pending',progress:q.length?0:null,files:q.map(x=>({name:x.file.name,bytes:x.file.size,local:x.url})),_q:q};
+  if(forced&&forced.kind) pm.kind='ready:'+forced.kind;
+  state.pending.push(pm); render(false);
+  await push(pm);
+  // wrote changes but did not press the button? a gentle nudge on the bar
+  if(!forced && !(state.thread&&state.thread.ready) && /^(draft|changes)$/.test(curStage(state.thread))){ const el=$('#ready'); el.classList.remove('nudge'); void el.offsetWidth; el.classList.add('nudge'); }
+}
+/* the big buttons: any half-written message goes first, then the button message itself */
+async function pressReady(kind, text){
+  if(txt.value.trim()||state.queue.length) await send();
+  await send({text, kind});
+  closeSheets();
+}
+const ERR_EL={empty:'Γράψτε ένα μήνυμα ή προσθέστε μια φωτογραφία.','too many files':'Στείλατε πολλά αρχεία σε λίγη ώρα — δοκιμάστε ξανά σε λίγο.','file too large':'Το αρχείο είναι πάνω από 4 MB. Ανεβάστε το δωρεάν στο wetransfer.com και στείλτε μας εδώ τον σύνδεσμο.','file type not allowed':'Αυτός ο τύπος αρχείου δεν υποστηρίζεται.','unknown link':'Ο σύνδεσμος δεν ισχύει πια — ζητήστε από τον Άγγελο έναν νέο.','bad link':'Ο σύνδεσμος δεν ισχύει πια — ζητήστε από τον Άγγελο έναν νέο.'};
+const errEl=(code,fallback)=>ERR_EL[String(code||'').toLowerCase()]||fallback;
+async function push(pm){
+  if(!(pm.text||'').trim()&&!(pm._q&&pm._q.length)){ state.pending=state.pending.filter(x=>x.id!==pm.id); render(true); toast(ERR_EL.empty); return; }
+  pm.state='pending'; pm.progress=pm._q&&pm._q.length?0:null; render(true);
+  try{
+    const q=pm._q||[]; const files=new Array(q.length); let next=0, done=0;
+    async function one(i){
+      const f=await shrink(q[i].file);
+      if(f.size>4.5*1024*1024)throw new Error('Το αρχείο «'+f.name+'» ξεπερνά τα 4 MB. Ανεβάστε το δωρεάν στο wetransfer.com και στείλτε μας εδώ τον σύνδεσμο.');
+      const fd=new FormData(); fd.append('file',f,f.name);
+      const r=await fetch(API+'?c='+encodeURIComponent(code)+'&file=1',{method:'POST',body:fd});
+      const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok)throw new Error(errEl(p.error,'Η φωτογραφία δεν ανέβηκε — ελέγξτε τη σύνδεσή σας και πατήστε ξανά.'));
+      files[i]={sha:p.sha,name:p.name,bytes:p.bytes,type:p.type};
+      done++; pm.progress=done/q.length; render(true);
+    }
+    await Promise.all(Array.from({length:Math.min(3,q.length)},async()=>{ while(next<q.length){ await one(next++); } }));
+    const r=await fetch(API+'?c='+encodeURIComponent(code),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:pm.text,files:files.filter(Boolean),cid:pm.id,ua:navigator.userAgent.slice(0,120),...(pm.kind?{kind:pm.kind.slice(6)}:{})})});
+    const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok)throw new Error(errEl(p.error,'Δεν στάλθηκε — ελέγξτε τη σύνδεσή σας και πατήστε ξανά.'));
+    state.pending=state.pending.filter(x=>x.id!==pm.id);
+    (pm._q||[]).forEach(x=>x.url&&setTimeout(()=>URL.revokeObjectURL(x.url),60000));
+    if(!state.msgs.some(m=>m.id===p.message.id)) state.msgs.push(p.message); if(p.thread)state.thread=Object.assign(state.thread||{},p.thread); state.head=null;
+    render(false); if(pm.kind) renderHead();
+  }catch(e){ pm.state='failed'; pm.err=/^(TypeError|Failed to fetch|Load failed|NetworkError)/i.test(e.message||'')?'Χωρίς σύνδεση — ελέγξτε το internet σας και πατήστε ξανά.':(e.message||'Δεν στάλθηκε'); render(true); toast(pm.err); }
+}
+/* the client can take back anything they sent */
+const delQ=new Map();   // id → timer: deletes wait 5 s so «Αναίρεση» can bring the message back
+let undoT;
+function undoBar(on,id){ const u=$('#undo'); clearTimeout(undoT); if(!on){u.classList.remove('on');return;} u.dataset.id=id; u.classList.add('on'); undoT=setTimeout(()=>u.classList.remove('on'),5000); }
+async function delNow(id){
+  const m=state.msgs.find(x=>x.id===id); if(!m){ delQ.delete(id); return; }
+  try{
+    const r=await fetch(API+'?c='+encodeURIComponent(code)+'&del='+encodeURIComponent(id),{method:'POST',keepalive:true});
+    const p=await r.json().catch(()=>({})); if(!r.ok||!p.ok)throw new Error(p.error||'x');
+    m.deleted=true; m.text=''; m.files=[]; state.head=null; delQ.delete(id);
+  }catch(e){ delQ.delete(id); render(true); toast('Δεν έγινε η διαγραφή — δοκιμάστε ξανά'); }
+}
+function delMsg(id){
+  const pend=state.pending.find(x=>x.id===id);
+  if(pend){ state.pending=state.pending.filter(x=>x.id!==id); render(true); return; }
+  const m=state.msgs.find(x=>x.id===id); if(!m||m.deleted||delQ.has(id))return;
+  delQ.set(id,setTimeout(()=>delNow(id),5000)); render(true); undoBar(true,id);
+}
+$('#undoBtn').addEventListener('click',()=>{ const id=$('#undo').dataset.id; const tm=delQ.get(id); if(tm){ clearTimeout(tm); delQ.delete(id); } render(true); undoBar(false); });
+/* leaving the page inside the 5 s still deletes what was asked */
+window.addEventListener('pagehide',()=>{ delQ.forEach((tm,id)=>{ clearTimeout(tm); try{ navigator.sendBeacon(API+'?c='+encodeURIComponent(code)+'&del='+encodeURIComponent(id)); }catch(e){} }); delQ.clear(); });
+function openLb(im){$('#lbimg').src=im.dataset.full;$('#lbdl').href=im.dataset.full;$('#lbdl').download=im.dataset.name||'';$('#lb').classList.add('on');}
+/* the two buttons inside «Λάβαμε … Υπάρχει κάτι άλλο;» */
+function msgAction(act){
+  const t=state.thread||{};
+  if(act==='start'){
+    if(curStage(t)!=='yliko'||(t.ready&&t.ready.kind==='build')){ toast('Το έχουμε ήδη — ετοιμάζουμε το πρώτο draft σας'); return; }
+    pressReady('build', READY_TXT.build); return;
+  }
+  if(act==='more'){ toast('Τέλεια! Στείλτε τα εδώ και μετά πατήστε «Ξεκινήστε την ιστοσελίδα μου»'); const a=$('#attach'); a.classList.remove('pulse'); void a.offsetWidth; a.classList.add('pulse'); }
+}
+feed.addEventListener('click',e=>{
+  const dl=e.target.closest('[data-del]'); if(dl){ e.preventDefault(); e.stopPropagation(); delMsg(dl.dataset.del); return; }
+  const ma=e.target.closest('[data-act]'); if(ma){ e.preventDefault(); msgAction(ma.dataset.act); return; }
+  const rt=e.target.closest('[data-retry]'); if(rt){const pm=state.pending.find(x=>x.id===rt.dataset.retry);if(pm)push(pm);return;}
+  const im=e.target.closest('.pics img'); if(im){ openLb(im); return; }
+});
+const SHEET={odigos:'guide',extras:'faq',yliko:'yliko',confirm:'confirm',golive:'golive'};
+function closeSheets(){document.querySelectorAll('.sheet.on').forEach(el=>el.classList.remove('on'));}
+function openSheet(id){const el=document.getElementById(SHEET[id]||id); if(el){closeSheets();el.classList.add('on');el.querySelector('.sheet-body').scrollTop=0;}}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-sheet]'); if(b){ e.preventDefault(); openSheet(b.dataset.sheet); return; }
+  if(e.target.closest('[data-guide]')){ e.preventDefault(); openSheet('odigos'); return; }
+  if(e.target.closest('[data-faq]')){ e.preventDefault(); openSheet('extras'); return; }
+  if(e.target.closest('.sx')||e.target.classList.contains('sheet')) closeSheets();
+});
+$('#chips').addEventListener('click',e=>{ const b=e.target.closest('[data-chip]'); if(!b) return; const c=chipsFor(state.thread)[+b.dataset.chip]; if(!c) return; txt.value=c[2]; txt.dispatchEvent(new Event('input')); txt.focus(); let pos=c[2].indexOf('\n1. '); if(pos>=0) pos+=4; else { const j=c[2].indexOf(': \n'); pos=j>=0?j+2:txt.value.length; } txt.setSelectionRange(pos,pos); });
+$('#ready').addEventListener('click',e=>{
+  const b=e.target.closest('[data-ready]'); if(!b) return; const k=b.dataset.ready;
+  if(k==='live'){ $('#d1').value=''; $('#dForm').checked=false; $('#dFormWrap').hidden=!formOffer(); openSheet('golive'); setTimeout(()=>$('#d1').focus(),120); return; }
+  const cf={build:['Ξεκινάμε;','Στείλατε ό,τι θέλατε; Δεν πειράζει αν λείπει κάτι — ξεκινάμε τώρα και το προσθέτουμε στην πορεία. Σε 4–10 ημέρες θα έχετε εδώ το πρώτο draft.','Ναι, ξεκινήστε ✅'],changes:['Τις στείλατε όλες;','Θα κάνουμε όλες τις αλλαγές που μας γράψατε μαζί και θα σας ενημερώσουμε εδώ — συνήθως μέσα σε 24 ώρες. Αν θυμηθείτε κάτι ακόμη, γράψτε το μας πριν πατήσετε.','Ναι, τις έστειλα όλες ✏️']}[k]; if(!cf) return;
+  $('#cfTitle').textContent=cf[0]; $('#cfText').textContent=cf[1]; const y=$('#cfYes'); y.textContent=cf[2]; y.dataset.kind=k; y.disabled=false; openSheet('confirm');
+});
+$('#cfYes').addEventListener('click',async e=>{ const k=e.currentTarget.dataset.kind; e.currentTarget.disabled=true; closeSheets();   /* the choice is made — the sheet goes at once, the message follows */
+  if(k==='form'){ closeSheets(); await send({text:FORM_TXT}); renderHead(); render(true); toast('Το λάβαμε — θα την προσθέσουμε'); return; }
+  await pressReady(k, READY_TXT[k]); });
+/* the contact-form offer: «Τη θέλω» asks once for a yes, «Όχι, ευχαριστώ» hides it on this device for good */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-up]'); if(!b) return; e.preventDefault(); e.stopPropagation();
+  if(b.dataset.up==='no'){ mem.set('formNo','1'); render(true); toast('Εντάξει — τη βρίσκετε πάντα στα Extras'); return; }
+  if(!formOffer()) return;
+  $('#cfTitle').textContent='Φόρμα Επικοινωνίας'; $('#cfText').textContent='Θα την προσθέσουμε στην ιστοσελίδα σας και θα σας ενημερώσουμε εδώ μόλις είναι έτοιμη. Κόστος 50€ εφάπαξ, χωρίς μηνιαία χρέωση.';
+  const y=$('#cfYes'); y.textContent='Ναι, τη θέλω'; y.dataset.kind='form'; y.disabled=false; openSheet('confirm');
+},true);
+$('#dGo').addEventListener('click',async e=>{
+  const ds=['d1'].map(id=>document.getElementById(id).value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/.*$/,'')).filter(Boolean);
+  if(!ds.length){ toast('Γράψτε το όνομα (domain) που θέλετε'); $('#d1').focus(); return; }
+  const btn=e.currentTarget; btn.disabled=true;
+  const wantForm=$('#dForm')&&$('#dForm').checked&&!$('#dFormWrap').hidden;
+  closeSheets();
+  await pressReady('live', '🚀 Όλα καλά, είναι όπως το ήθελα — πάμε live!\n\nDomain που θα ήθελα: '+ds[0]+(wantForm?'\n\n'+FORM_TXT:''));
+  btn.disabled=false;
+});
+$('#lbx').addEventListener('click',()=>$('#lb').classList.remove('on'));
+$('#lb').addEventListener('click',e=>{if(e.target.id==='lb')$('#lb').classList.remove('on');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('#lb').classList.remove('on');closeSheets();}});
+$('#newpill').addEventListener('click',()=>{feed.scrollTop=feed.scrollHeight;$('#newpill').classList.remove('on');});
+feed.addEventListener('scroll',()=>{if(feed.scrollHeight-feed.scrollTop-feed.clientHeight<60)$('#newpill').classList.remove('on');},{passive:true});
+function blip(){try{const a=new (window.AudioContext||window.webkitAudioContext)();const o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.setValueAtTime(880,a.currentTime);o.frequency.exponentialRampToValueAtTime(1320,a.currentTime+.08);g.gain.setValueAtTime(.0001,a.currentTime);g.gain.exponentialRampToValueAtTime(.12,a.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+.22);o.connect(g).connect(a.destination);o.start();o.stop(a.currentTime+.24);}catch(e){}}
+
+/* ---------- a half-written message survives a reload (phones love to reload a tab you left for a minute) ---------- */
+{ const d=mem.get('draft'); if(d){ txt.value=d; setTimeout(()=>txt.dispatchEvent(new Event('input')),0); } }
+let draftT; txt.addEventListener('input',()=>{ clearTimeout(draftT); draftT=setTimeout(()=>mem.set('draft',txt.value.trim()?txt.value:null),400); });
+
+/* ---------- go ---------- */
+if(!code){showError();}
+else{ load(true).then(schedule); }
+})();
+</script>
+</body>
+</html>
