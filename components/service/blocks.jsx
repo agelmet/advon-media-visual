@@ -161,7 +161,7 @@ export function ServiceHero({ service, children }) {
         </ScrollReveal>
         {children}
         <ScrollReveal delay={140} direction="scale">
-          <PitchQuote className="text-left mt-8 max-w-3xl mx-auto">{service.pitch[lang]}</PitchQuote>
+          <PitchQuote className="text-left mt-8 max-w-3xl lg:max-w-none mx-auto">{service.pitch[lang]}</PitchQuote>
         </ScrollReveal>
       </div>
     </section>
@@ -172,25 +172,27 @@ export function ServiceHero({ service, children }) {
 export function PainSection({ service }) {
   const { lang } = useLangStore();
   const [lead, ...rest] = service.pain;
+  // Desktop: the lead statement on the left, the supporting paragraphs as plates on the right
+  // (side by side instead of one tall column). Phones: one column, as before.
   return (
     <section className="py-24 relative overflow-hidden mv-amb">
-      <div className="max-w-3xl mx-auto px-6 relative z-10">
+      <div className="max-w-3xl lg:max-w-6xl mx-auto px-6 relative z-10 lg:grid lg:grid-cols-2 lg:gap-14 lg:items-center">
         {/* Pull-quote lead */}
         <ScrollReveal>
           <p
-            className="font-display font-bold text-white leading-snug mb-12 relative pl-6 mv-readable"
-            style={{ fontSize: 'clamp(1.45rem, 2.8vw, 2.05rem)' }}
+            className="font-display font-bold text-white leading-snug mb-12 lg:mb-0 relative pl-6 mv-readable"
+            style={{ fontSize: 'clamp(1.45rem, 2.5vw, 2.05rem)' }}
             data-lit
           >
             <span aria-hidden="true" className="absolute left-0 top-1 bottom-1 w-1 rounded-full bg-gradient-to-b from-electric-cyan to-electric-cyan/10" />
             {lead[lang]}
           </p>
         </ScrollReveal>
-        {/* Supporting paragraphs — generous whitespace */}
-        <div className="space-y-8">
+        {/* Supporting paragraphs */}
+        <div className="space-y-8 lg:space-y-5">
           {rest.map((p, i) => (
-            <ScrollReveal key={i} delay={i * 90} direction={i % 2 ? 'right' : 'left'}>
-              <p className="text-gray-300 text-lg leading-relaxed max-w-2xl mv-readable">
+            <ScrollReveal key={i} delay={i * 110} direction={i % 2 ? 'right' : 'left'} className="pain-card">
+              <p className="text-gray-300 lg:text-gray-200 text-lg leading-relaxed max-w-2xl lg:max-w-none mv-readable">
                 {p[lang]}
               </p>
             </ScrollReveal>
@@ -335,18 +337,11 @@ export function FaqSection({ service, faqs }) {
   const { lang } = useLangStore();
   const [openFaq, setOpenFaq] = useState(null);
   const list = faqs || service.faqs;
-  return (
-    <section className="py-24">
-      <div className="max-w-3xl mx-auto px-6">
-        <ScrollReveal className="text-center mb-14">
-          <span className="section-label">FAQ</span>
-          <h2 className="text-3xl md:text-4xl font-black font-display mb-3 text-white tracking-tight">
-            {lang === 'el' ? 'Συχνές Ερωτήσεις' : 'Frequently Asked Questions'}
-          </h2>
-        </ScrollReveal>
-        <div className="space-y-3">
-          {list.map(({ q, a }, i) => (
-            <ScrollReveal key={i} delay={i * 60}>
+  const half = Math.floor(list.length / 2);
+  const renderItem = (i, delay) => {
+    const { q, a } = list[i];
+    return (
+            <ScrollReveal key={i} delay={delay}>
               <div className="glass-panel rounded-2xl overflow-hidden border border-white/8 hover:border-electric-cyan/25 transition-colors duration-300">
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
@@ -370,8 +365,29 @@ export function FaqSection({ service, faqs }) {
                 </div>
               </div>
             </ScrollReveal>
+    );
+  };
+  return (
+    <section className="py-24">
+      <div className="max-w-3xl lg:max-w-6xl mx-auto px-6">
+        <ScrollReveal className="text-center mb-14">
+          <span className="section-label">FAQ</span>
+          <h2 className="text-3xl md:text-4xl font-black font-display mb-3 text-white tracking-tight">
+            {lang === 'el' ? 'Συχνές Ερωτήσεις' : 'Frequently Asked Questions'}
+          </h2>
+        </ScrollReveal>
+        {/* Desktop: two independent columns (opening one never moves the other); an odd last question
+            sits centred under them. Phones: one list in order. */}
+        <div className="lg:grid lg:grid-cols-2 lg:gap-x-6 lg:items-start space-y-3 lg:space-y-0">
+          {[0, 1].map((c) => (
+            <div key={c} className="space-y-3">
+              {list.slice(c * half, (c + 1) * half).map((_, j) => renderItem(c * half + j, j * 60 + c * 90))}
+            </div>
           ))}
         </div>
+        {list.length % 2 === 1 && (
+          <div className="mt-3 lg:w-[calc(50%-0.75rem)] lg:mx-auto">{renderItem(list.length - 1, 220)}</div>
+        )}
       </div>
     </section>
   );

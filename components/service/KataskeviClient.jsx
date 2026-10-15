@@ -42,7 +42,10 @@ export default function KataskeviClient() {
             }}
           />
         </div>
-        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+        {/* Desktop: two columns — the offer on the left, what the 10.83€ covers on the right;
+            the pitch runs the full width under both. Phones: one centred column as before. */}
+        <div className="max-w-4xl lg:max-w-6xl mx-auto px-6 text-center lg:text-left relative z-10 lg:grid lg:grid-cols-[1.08fr_1fr] lg:gap-x-14 lg:items-center">
+          <div>
           <ScrollReveal>
             <span className="section-label">{lang === 'el' ? 'Υπηρεσία' : 'Service'}</span>
             <h1
@@ -58,7 +61,7 @@ export default function KataskeviClient() {
             <span className="text-electric-cyan text-xs font-bold tracking-widest uppercase mb-6 block">
               {lang === 'el' ? 'ΤΙΜΗ ΚΑΤΑΣΚΕΥΗΣ' : 'CREATION PRICE'}
             </span>
-            <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-8 mb-5">
+            <div className="flex flex-col md:flex-row lg:flex-col items-center lg:items-start justify-center lg:justify-start gap-2 md:gap-8 lg:gap-3 mb-5">
               {/* Anchor / original price — crossed out with hand-drawn SVG line */}
               <div className="relative inline-block mv-strike" data-io>
                 <span className="text-2xl md:text-3xl font-bold text-gray-400/75 tracking-tight whitespace-nowrap select-none">
@@ -101,13 +104,19 @@ export default function KataskeviClient() {
                 <>Only <span className="text-white font-black">10.83€/month</span> — everything included</>
               )}
             </p>
-            <p className="text-sm text-gray-500 leading-relaxed max-w-2xl mx-auto mb-8">
+          </ScrollReveal>
+          </div>
+
+          {/* right column: what the monthly amount covers */}
+          <ScrollReveal delay={160} direction="right" className="mt-6 lg:mt-0">
+          <div className="kat-cover">
+            <p className="text-sm lg:text-[15px] text-gray-500 lg:text-gray-300 leading-relaxed max-w-2xl mx-auto lg:mx-0 mb-8 lg:mb-6">
               {lang === 'el'
                 ? 'Η κατασκευή είναι πραγματικά δωρεάν — το ποσό αυτό καλύπτει αποκλειστικά τα απαραίτητα λειτουργικά που χρειάζεται κάθε ιστοσελίδα για να είναι online, όσα θα πληρώνατε ούτως ή άλλως, όπου κι αν τη φτιάχνατε. Εδώ, τα έχετε όλα σε ένα, χωρίς τίποτα επιπλέον.'
                 : "The build itself is genuinely free — this amount covers only the essential running services every website needs to stay online, what you would pay anyway, wherever you had it built. Here, it's all in one, with nothing extra on top."}
             </p>
             {/* Included-items chips */}
-            <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-3xl mx-auto mv-pop" data-io>
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 max-w-3xl mx-auto lg:mx-0 mv-pop" data-io>
               {[
                 { el: 'Φιλοξενία (hosting)', en: 'Hosting' },
                 { el: 'Domain name της επιλογής σας', en: 'Domain name of your choice' },
@@ -127,40 +136,49 @@ export default function KataskeviClient() {
                 {lang === 'el' ? 'και άλλα' : 'and more'}
               </span>
             </div>
-          </ScrollReveal>
-
-          <ScrollReveal delay={160} direction="scale">
-            <PitchQuote lit className="text-left mt-12 max-w-3xl mx-auto">{service.pitch[lang]}</PitchQuote>
+          </div>
+          <PitchQuote lit className="text-left mt-12 lg:mt-6 max-w-3xl lg:max-w-none mx-auto">{service.pitch[lang]}</PitchQuote>
           </ScrollReveal>
         </div>
       </section>
 
-      {/* ── Why is it free? — story block (kept from previous version) ── */}
+      {/* ── Why is it free? — one wide plate: the heading, then the three reasons side by side on desktop ── */}
       <section className="pb-24 pt-6 mv-amb alt">
-        <div className="max-w-4xl mx-auto px-6">
+        <div className="max-w-4xl lg:max-w-6xl mx-auto px-6">
           <ScrollReveal delay={60} direction="scale">
             <div className="mv-frost relative overflow-hidden rounded-3xl p-8 md:p-12">
-              <h2 data-fx="mask" className="text-3xl md:text-4xl font-black text-white mb-7 font-display relative z-10">
-                {lang === 'el' ? 'Γιατί είναι Δωρεάν;' : 'Why is it Free?'}
-              </h2>
-              <div className="relative z-10 space-y-6">
-                <p className="text-white text-lg md:text-xl leading-relaxed border-l-2 border-electric-cyan/70 pl-5" data-lit>
-                  {lang === 'el'
-                    ? 'Στη σημερινή εποχή, δεν νοείται επιχείρηση ή επαγγελματίας χωρίς παρουσία στο διαδίκτυο. Μια δική σας ιστοσελίδα δεν είναι πολυτέλεια — είναι αναγκαιότητα: είναι ο χώρος όπου σας βρίσκουν όσοι σας αναζητούν και όπου παρουσιάζεστε όπως πραγματικά σας αξίζει — με το δικό σας περιεχόμενο, τα δικά σας λόγια, τη δική σας ταυτότητα.'
-                    : "In today's world, no business or professional can afford to be invisible online. A website of your own isn't a luxury — it's a necessity: it's where people find you when they're looking for you, and where you present yourself the way you truly deserve — with your own content, your own words, your own identity."}
-                </p>
-                <p className="text-gray-200 text-base md:text-[17px] leading-relaxed">
-                  {lang === 'el'
-                    ? 'Πιστεύουμε ότι κάθε επαγγελματίας αξίζει μια πραγματικά επαγγελματική παρουσία στο διαδίκτυο — όχι μόνο όσοι μπορούν να διαθέσουν χιλιάδες ευρώ. Γι’ αυτό αναλαμβάνουμε την κατασκευή εντελώς δωρεάν: για να στηρίξουμε μικρές επιχειρήσεις, ελεύθερους επαγγελματίες και όσους κάνουν τώρα τα πρώτα τους βήματα, χωρίς κανένα εμπόδιο στην εκκίνηση.'
-                    : "We believe every professional deserves a truly professional online presence — not just those who can spend thousands of euros. That's why we build your website completely free: to support small businesses, freelancers, and anyone taking their first steps, with zero barriers to getting started."}
-                </p>
-                <p className="text-gray-200 text-base md:text-[17px] leading-relaxed">
-                  {lang === 'el' ? (
-                    <>Κερδίζουμε κι εμείς: κάθε ιστοσελίδα που παραδίδουμε μεγαλώνει το πορτφόλιό μας και μας φέρνει τους επόμενους πελάτες μέσα από τη δουλειά μας — όχι από διαφημίσεις. Εσείς αποκτάτε μια premium ιστοσελίδα χωρίς ρίσκο, εμείς ένα ακόμα δείγμα δουλειάς που μας κάνει περήφανους. <span className="text-white font-bold mv-mark" data-io>Όλοι κερδίζουν.</span></>
-                  ) : (
-                    <>We win too: every website we deliver grows our portfolio and brings us our next clients through our work — not through ads. You get a premium website with zero risk; we get one more project we&apos;re proud of. <span className="text-white font-bold mv-mark" data-io>Everyone wins.</span></>
-                  )}
-                </p>
+              <div className="relative z-10 space-y-6 lg:space-y-0 lg:grid lg:grid-cols-[1fr_1.08fr] lg:gap-0 why-cols">
+                <div className="why-col">
+                  <h2 data-fx="mask" className="text-3xl md:text-4xl font-black text-white mb-7 lg:mb-6 font-display">
+                    {lang === 'el' ? 'Γιατί είναι Δωρεάν;' : 'Why is it Free?'}
+                  </h2>
+                  <span className="why-num" aria-hidden="true">01</span>
+                  <p className="text-white text-lg md:text-xl lg:text-[1.22rem] leading-relaxed border-l-2 border-electric-cyan/70 pl-5 lg:border-l-0 lg:pl-0" data-lit>
+                    {lang === 'el'
+                      ? 'Στη σημερινή εποχή, δεν νοείται επιχείρηση ή επαγγελματίας χωρίς παρουσία στο διαδίκτυο. Μια δική σας ιστοσελίδα δεν είναι πολυτέλεια — είναι αναγκαιότητα: είναι ο χώρος όπου σας βρίσκουν όσοι σας αναζητούν και όπου παρουσιάζεστε όπως πραγματικά σας αξίζει — με το δικό σας περιεχόμενο, τα δικά σας λόγια, τη δική σας ταυτότητα.'
+                      : "In today's world, no business or professional can afford to be invisible online. A website of your own isn't a luxury — it's a necessity: it's where people find you when they're looking for you, and where you present yourself the way you truly deserve — with your own content, your own words, your own identity."}
+                  </p>
+                </div>
+                <div className="why-col space-y-6 lg:space-y-7">
+                <div>
+                  <span className="why-num" aria-hidden="true">02</span>
+                  <p className="text-gray-200 text-base md:text-[17px] leading-relaxed">
+                    {lang === 'el'
+                      ? 'Πιστεύουμε ότι κάθε επαγγελματίας αξίζει μια πραγματικά επαγγελματική παρουσία στο διαδίκτυο — όχι μόνο όσοι μπορούν να διαθέσουν χιλιάδες ευρώ. Γι’ αυτό αναλαμβάνουμε την κατασκευή εντελώς δωρεάν: για να στηρίξουμε μικρές επιχειρήσεις, ελεύθερους επαγγελματίες και όσους κάνουν τώρα τα πρώτα τους βήματα, χωρίς κανένα εμπόδιο στην εκκίνηση.'
+                      : "We believe every professional deserves a truly professional online presence — not just those who can spend thousands of euros. That's why we build your website completely free: to support small businesses, freelancers, and anyone taking their first steps, with zero barriers to getting started."}
+                  </p>
+                </div>
+                <div className="lg:pt-7 lg:border-t lg:border-white/8">
+                  <span className="why-num" aria-hidden="true">03</span>
+                  <p className="text-gray-200 text-base md:text-[17px] leading-relaxed">
+                    {lang === 'el' ? (
+                      <>Κερδίζουμε κι εμείς: κάθε ιστοσελίδα που παραδίδουμε μεγαλώνει το πορτφόλιό μας και μας φέρνει τους επόμενους πελάτες μέσα από τη δουλειά μας — όχι από διαφημίσεις. Εσείς αποκτάτε μια premium ιστοσελίδα χωρίς ρίσκο, εμείς ένα ακόμα δείγμα δουλειάς που μας κάνει περήφανους. <span className="text-white font-bold mv-mark" data-io>Όλοι κερδίζουν.</span></>
+                    ) : (
+                      <>We win too: every website we deliver grows our portfolio and brings us our next clients through our work — not through ads. You get a premium website with zero risk; we get one more project we&apos;re proud of. <span className="text-white font-bold mv-mark" data-io>Everyone wins.</span></>
+                    )}
+                  </p>
+                </div>
+                </div>
               </div>
             </div>
           </ScrollReveal>

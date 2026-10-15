@@ -1205,3 +1205,29 @@ html.mv-intro h1 .reveal-word:nth-child(2) { animation-delay: 1.25s !important; 
   .sr, .stat-tile, .mv-pf { opacity: 1 !important; animation: none !important; transform: none !important; }
   .card-sweep::after { animation: none !important; }
 }
+
+/* ═══ Wide desktop layouts (15 Oct 2026) — long text spreads across the page instead of a tall narrow column ═══ */
+@media (min-width: 1024px) {
+  /* website page hero: the right-hand plate with what the monthly amount covers */
+  .kat-cover { position: relative; border-radius: 1.5rem; padding: 2rem 2.25rem;
+    background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.025) 60%, rgba(255,255,255,.018));
+    border: 1px solid rgba(255,255,255,.13);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 40px 90px -30px rgba(0,0,0,.9), 0 0 60px rgba(71,200,245,.06); }
+  /* «Γιατί είναι Δωρεάν;»: three reasons side by side, thin dividers, a quiet number on top */
+  .why-cols .why-col { padding: 0 2.6rem; border-left: 1px solid rgba(255,255,255,.09); align-self: center; }
+  .why-cols .why-col:first-child { padding-left: 0; border-left: 0; }
+  .why-cols .why-col:last-child { padding-right: 0; }
+  .why-num { display: block; margin-bottom: .9rem; font: 800 .72rem/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .22em; color: rgba(71,200,245,.85); }
+  .why-num::after { content: ''; display: inline-block; width: 2.2rem; height: 1px; margin-left: .7rem; vertical-align: middle; background: linear-gradient(90deg, rgba(71,200,245,.7), transparent); }
+}
+.why-num { display: none; }
+@media (min-width: 1024px) { .why-num { display: block; } }
+@media (min-width: 1024px) {
+  /* problem section: the supporting paragraphs sit on frosted plates beside the lead */
+  .pain-card { position: relative; border-radius: 1.25rem; padding: 1.5rem 1.75rem 1.5rem 2rem;
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 30px 70px -30px rgba(0,0,0,.9); }
+  .pain-card::before { content: ''; position: absolute; left: 0; top: 1.4rem; bottom: 1.4rem; width: 2px; border-radius: 2px;
+    background: linear-gradient(180deg, rgba(71,200,245,.8), rgba(71,200,245,.05)); }
+}
