@@ -14,7 +14,6 @@ import {
   IncludesSection,
   ProofStrip,
   FaqSection,
-  CtaBand,
 } from '@/components/service/blocks';
 
 export default function GoogleReviewsClient() {
@@ -73,7 +72,6 @@ export default function GoogleReviewsClient() {
       <IncludesSection service={service} />
       <ProofStrip />
       <FaqSection service={service} />
-      <CtaBand />
     </>
   );
 }

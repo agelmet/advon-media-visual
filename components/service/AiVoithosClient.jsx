@@ -16,7 +16,6 @@ import {
   IncludesSection,
   ProofStrip,
   FaqSection,
-  CtaBand,
 } from '@/components/service/blocks';
 
 export default function AiVoithosClient() {
@@ -98,7 +97,6 @@ export default function AiVoithosClient() {
 
       <ProofStrip />
       <FaqSection service={service} />
-      <CtaBand />
     </>
   );
 }

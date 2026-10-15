@@ -16,7 +16,6 @@ import {
   IncludesSection,
   ProofStrip,
   FaqSection,
-  CtaBand,
 } from '@/components/service/blocks';
 
 export default function RantevouClient() {
@@ -101,7 +100,6 @@ export default function RantevouClient() {
 
       <ProofStrip />
       <FaqSection service={service} />
-      <CtaBand />
     </>
   );
 }

@@ -15,7 +15,6 @@ import {
   IncludesSection,
   ProofStrip,
   FaqSection,
-  CtaBand,
 } from '@/components/service/blocks';
 
 export default function DirectBookingClient() {
@@ -95,7 +94,6 @@ export default function DirectBookingClient() {
       <IncludesSection service={service} icons={['globe', 'refresh', 'chart', 'sparkles']} />
       <ProofStrip />
       <FaqSection service={service} />
-      <CtaBand />
     </>
   );
 }

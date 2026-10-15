@@ -15,7 +15,6 @@ import {
   IncludesSection,
   ProofStrip,
   FaqSection,
-  CtaBand,
 } from '@/components/service/blocks';
 
 export default function LogismikoClient() {
@@ -153,7 +152,6 @@ export default function LogismikoClient() {
 
       <ProofStrip />
       <FaqSection service={service} />
-      <CtaBand />
     </>
   );
 }

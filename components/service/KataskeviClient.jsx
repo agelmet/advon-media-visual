@@ -17,7 +17,6 @@ import {
   StepsSection,
   ProofStrip,
   FaqSection,
-  CtaBand,
 } from '@/components/service/blocks';
 
 export default function KataskeviClient() {
@@ -246,7 +245,6 @@ export default function KataskeviClient() {
       </section>
 
       <FaqSection service={service} />
-      <CtaBand />
     </>
   );
 }

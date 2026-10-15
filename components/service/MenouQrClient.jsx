@@ -14,7 +14,6 @@ import {
   IncludesSection,
   ProofStrip,
   FaqSection,
-  CtaBand,
 } from '@/components/service/blocks';
 
 export default function MenouQrClient() {
@@ -87,7 +86,6 @@ export default function MenouQrClient() {
       <IncludesSection service={service} icons={['qr', 'pen', 'printer']} />
       <ProofStrip />
       <FaqSection service={service} />
-      <CtaBand />
     </>
   );
 }

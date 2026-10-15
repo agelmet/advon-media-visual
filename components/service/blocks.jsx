@@ -393,7 +393,7 @@ export function FaqSection({ service, faqs }) {
   );
 }
 
-/* ─── Final CTA — full-width band, identical on every page ─── */
+/* ─── Final CTA band — NOT used any more (15 Oct 2026, Angelo: the contact form + booking sit right under every page, and Contact is in the menu) ─── */
 export function CtaBand() {
   const { lang } = useLangStore();
   return (

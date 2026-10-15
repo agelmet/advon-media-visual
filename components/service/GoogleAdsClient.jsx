@@ -8,7 +8,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import ScrollReveal from '@/components/ScrollReveal';
 import TiltCard from '@/components/TiltCard';
-import { FaqSection, CtaBand } from '@/components/service/blocks';
+import { FaqSection } from '@/components/service/blocks';
 import { Phone, ChatMock, SetupStep, TotalBand, RuleList, Head, Chips, PriceCard, KV, Stat, useLang } from '@/components/service/setup';
 
 const T = {
@@ -342,7 +342,6 @@ export default function GoogleAdsClient({ service }) {
           </ScrollReveal>
         </div>
       </section>
-      <CtaBand />
     </>
   );
 }
