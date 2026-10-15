@@ -295,8 +295,23 @@ export default function HomeClient() {
       {/* ─── STATS ─── */}
       <Stats />
 
+      {/* ─── STATEMENT — the promise lights up word by word as you read it ─── */}
+      <section className="mv-band mv-amb">
+        <div className="max-w-5xl mx-auto px-6 text-center" data-io>
+          <div className="mv-band-rule" aria-hidden="true" />
+          <p className="mv-statement mv-readable" data-lit>
+            {lang === 'el'
+              ? 'Δεν πληρώνετε για υποσχέσεις. Πληρώνετε όταν δείτε τη σελίδα σας μπροστά σας — και τη φτιάχνουμε μαζί μέχρι να είναι δική σας.'
+              : "You don't pay for promises. You pay when you see your website in front of you — and we shape it together until it's truly yours."}
+          </p>
+          <p className="mt-8 text-electric-cyan/80 text-xs md:text-sm font-black tracking-[0.3em] uppercase">
+            {lang === 'el' ? '220+ ιστοσελίδες · 125+ κριτικές 5★ στο Google' : '220+ websites · 125+ 5★ reviews on Google'}
+          </p>
+        </div>
+      </section>
+
       {/* ─── SERVICES ─── */}
-      <section id="services" className="py-32 relative scroll-mt-24">
+      <section id="services" className="py-32 relative scroll-mt-24 mv-amb">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[96%] h-[80%] bg-[radial-gradient(ellipse,rgba(71,200,245,0.028)_0%,rgba(71,200,245,0.012)_40%,transparent_70%)]" />
         </div>
@@ -307,7 +322,7 @@ export default function HomeClient() {
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black font-display mb-4 tracking-tight">
               {lang === 'el' ? 'Οι Υπηρεσίες μας' : 'Our Services'}
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mv-readable" data-lit>
               {lang === 'el'
                 ? 'Ό,τι χρειάζεται η επιχείρησή σας για να σας βρίσκουν, να σας εμπιστεύονται — και να κλείνουν.'
                 : 'Everything your business needs to be found, to be trusted — and to get booked.'}

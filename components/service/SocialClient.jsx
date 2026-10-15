@@ -223,7 +223,7 @@ export default function SocialClient({ service }) {
       </section>
 
       {/* ─── CONTENT SOURCES ─── */}
-      <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder">
+      <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder mv-amb">
         <div className="max-w-6xl mx-auto px-6">
           <Head center label={t.srcLabel} title={t.srcTitle} lead={t.srcLead} />
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mt-12">
@@ -265,7 +265,7 @@ export default function SocialClient({ service }) {
       </section>
 
       {/* ─── METHOD ─── */}
-      <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder">
+      <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder mv-amb alt">
         <div className="max-w-6xl mx-auto px-6">
           <Head label={t.mLabel} title={t.mTitle} lead={t.mLead} />
           <div ref={mixRef} className="svc-mix" aria-hidden="true">
@@ -322,7 +322,7 @@ export default function SocialClient({ service }) {
       </section>
 
       {/* ─── MONTHLY ─── */}
-      <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder">
+      <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder mv-amb">
         <div className="max-w-6xl mx-auto px-6">
           <Head label={t.moLabel} title={t.moTitle} lead={t.moLead} />
           <div ref={tlRef} className="svc-timeline mt-12">

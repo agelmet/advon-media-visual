@@ -173,16 +173,14 @@ export function PainSection({ service }) {
   const { lang } = useLangStore();
   const [lead, ...rest] = service.pain;
   return (
-    <section className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute rounded-full" style={{ top: '-10%', right: '-12%', width: 'min(45vw, 460px)', height: 'min(45vw, 460px)', background: 'radial-gradient(circle, rgba(107,63,160,0.1) 0%, transparent 65%)', filter: 'blur(90px)' }} />
-      </div>
+    <section className="py-24 relative overflow-hidden mv-amb">
       <div className="max-w-3xl mx-auto px-6 relative z-10">
         {/* Pull-quote lead */}
         <ScrollReveal>
           <p
-            className="font-display font-bold text-white leading-snug mb-12 relative pl-6"
-            style={{ fontSize: 'clamp(1.35rem, 2.6vw, 1.85rem)' }}
+            className="font-display font-bold text-white leading-snug mb-12 relative pl-6 mv-readable"
+            style={{ fontSize: 'clamp(1.45rem, 2.8vw, 2.05rem)' }}
+            data-lit
           >
             <span aria-hidden="true" className="absolute left-0 top-1 bottom-1 w-1 rounded-full bg-gradient-to-b from-electric-cyan to-electric-cyan/10" />
             {lead[lang]}
@@ -191,8 +189,8 @@ export function PainSection({ service }) {
         {/* Supporting paragraphs — generous whitespace */}
         <div className="space-y-8">
           {rest.map((p, i) => (
-            <ScrollReveal key={i} delay={i * 90}>
-              <p className="text-gray-400 text-lg leading-relaxed max-w-2xl">
+            <ScrollReveal key={i} delay={i * 90} direction={i % 2 ? 'right' : 'left'}>
+              <p className="text-gray-300 text-lg leading-relaxed max-w-2xl mv-readable">
                 {p[lang]}
               </p>
             </ScrollReveal>
@@ -209,7 +207,7 @@ export function StepsSection({ service }) {
   const cols = service.steps.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-4';
   const inset = service.steps.length === 3 ? 'md:left-[calc(16.66%+1rem)] md:right-[calc(16.66%+1rem)]' : 'lg:left-[calc(12.5%+1rem)] lg:right-[calc(12.5%+1rem)]';
   return (
-    <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 backdrop-blur-sm relative overflow-hidden">
+    <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 relative overflow-hidden mv-amb alt mv-shoulder">
       <div className="max-w-6xl mx-auto px-6">
         <ScrollReveal className="text-center mb-16">
           <span className="section-label">{lang === 'el' ? 'Βήμα - Βήμα' : 'Step by Step'}</span>
@@ -218,27 +216,24 @@ export function StepsSection({ service }) {
           </h2>
         </ScrollReveal>
 
-        <div className={`grid gap-10 md:gap-8 relative ${cols}`}>
-          {/* Connector line between milestone nodes (desktop) */}
-          <div
-            aria-hidden="true"
-            className={`hidden md:block absolute top-8 h-px bg-gradient-to-r from-electric-cyan/25 via-electric-cyan/60 to-electric-cyan/25 left-0 right-0 ${inset}`}
-          />
-          {/* Mobile connector — vertical */}
-          <div aria-hidden="true" className="md:hidden absolute top-4 bottom-8 left-[31px] w-px bg-gradient-to-b from-electric-cyan/50 via-electric-cyan/30 to-transparent" />
+        <div className={`grid gap-10 md:gap-8 relative ${cols}`} data-progress>
+          {/* Connector (desktop): fills with the scroll */}
+          <div aria-hidden="true" className={`mv-track hidden md:block top-8 h-[3px] -mt-px left-0 right-0 ${inset}`}><i /></div>
+          {/* Mobile connector — vertical, fills with the scroll */}
+          <div aria-hidden="true" className="mv-track v md:hidden top-4 bottom-8 left-[30px] w-[3px]"><i /></div>
 
-          {service.steps.map((step, i) => (
+          {service.steps.map((step, i, all) => (
             <ScrollReveal key={i} delay={i * 120} direction="up" className="h-full">
-              <div className="relative flex md:flex-col items-start md:items-center gap-5 md:gap-0 md:text-center h-full pl-0">
+              <div data-at={(i / Math.max(1, all.length - 1)) * 0.9} className="relative flex md:flex-col items-start md:items-center gap-5 md:gap-0 md:text-center h-full pl-0">
                 <div
-                  className="w-16 h-16 shrink-0 md:mx-auto md:mb-6 rounded-full bg-[#0a1418] border-2 border-electric-cyan/45 flex items-center justify-center relative z-10"
+                  className="mv-node w-16 h-16 shrink-0 md:mx-auto md:mb-6 rounded-full bg-[#0a1418] border-2 border-electric-cyan/60 flex items-center justify-center relative z-10"
                   style={{ boxShadow: '0 0 26px rgba(71,200,245,0.18), inset 0 0 14px rgba(71,200,245,0.06)' }}
                 >
                   <span className="text-xl font-black text-electric-cyan">{String(i + 1).padStart(2, '0')}</span>
                 </div>
-                <div>
+                <div className="mv-frost rounded-2xl p-5 md:mt-1 w-full md:flex-1">
                   <h3 className="text-white font-bold text-lg mb-2 leading-snug">{step.title[lang]}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed max-w-xs md:mx-auto">{step.body[lang]}</p>
+                  <p className="text-gray-300 text-sm leading-relaxed max-w-xs md:mx-auto">{step.body[lang]}</p>
                 </div>
               </div>
             </ScrollReveal>
@@ -258,7 +253,7 @@ export function IncludesSection({ service, icons, items }) {
   const list = items || service.includes;
   const twoCol = list.length !== 3;
   return (
-    <section className="py-24">
+    <section className="py-24 mv-amb">
       <div className="max-w-5xl mx-auto px-6">
         <ScrollReveal className="text-center mb-14">
           <span className="section-label">{lang === 'el' ? 'Παροχές' : 'What You Get'}</span>
@@ -270,8 +265,9 @@ export function IncludesSection({ service, icons, items }) {
           {list.map((item, i) => (
             <ScrollReveal
               key={i}
-              delay={(i % 2) * 90 + Math.floor(i / 2) * 50}
-              direction={i % 2 === 0 ? 'left' : 'right'}
+              delay={(i % 2) * 90 + Math.floor(i / 2) * 60}
+              direction="deal"
+              style={{ '--rz': `${i % 2 ? 2 : -2}deg` }}
               className={`h-full ${twoCol && list.length % 2 === 1 && i === list.length - 1 ? 'sm:col-span-2' : ''}`}
             >
               <div className="glass-panel card-sweep rounded-2xl p-6 flex items-start gap-4 h-full group">

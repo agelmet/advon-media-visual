@@ -110,7 +110,8 @@ export function Chips({ items }) {
 /* ─── Price card (same look as the hosting cards) ─── */
 export function PriceCard({ tier, price, priceNote, sub, items, cta, href = '#contact', hot = false, badge }) {
   return (
-    <div className={`glass-panel card-sweep rounded-3xl p-7 flex flex-col h-full svc-price ${hot ? 'svc-price-hot' : 'border border-white/8'}`} data-badge={badge}>
+    <div className={`glass-panel card-sweep rounded-3xl p-7 flex flex-col h-full svc-price ${hot ? 'svc-price-hot' : 'border border-white/8'}`}>
+      {hot && badge && <span className="svc-badge">{badge}</span>}
       <span className="svc-tier">{tier}</span>
       <div className="svc-amt">{price}<small>{priceNote}</small></div>
       {sub && <div className="svc-sub">{sub}</div>}

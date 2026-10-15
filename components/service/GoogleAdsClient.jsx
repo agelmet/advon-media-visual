@@ -213,10 +213,10 @@ export default function GoogleAdsClient({ service }) {
       </section>
 
       {/* ─── WHY GOOGLE ─── */}
-      <section className="py-20 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder">
+      <section className="py-20 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder mv-amb">
         <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-10 items-center">
           <Head label={t.wLabel} title={t.wTitle} />
-          <ScrollReveal direction="right"><p className="text-gray-300 text-lg leading-relaxed">{service.pain[0][lang]}</p></ScrollReveal>
+          <ScrollReveal direction="right"><p className="text-white text-xl leading-relaxed mv-readable" data-lit>{service.pain[0][lang]}</p></ScrollReveal>
         </div>
       </section>
 
@@ -242,7 +242,7 @@ export default function GoogleAdsClient({ service }) {
       </section>
 
       {/* ─── METHOD ─── */}
-      <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder">
+      <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder mv-amb alt">
         <div className="max-w-6xl mx-auto px-6">
           <Head label={t.mLabel} title={t.mTitle} lead={t.mLead} />
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-12">
@@ -299,7 +299,7 @@ export default function GoogleAdsClient({ service }) {
       </section>
 
       {/* ─── REPORT + CALCULATOR ─── */}
-      <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder">
+      <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder mv-amb">
         <div className="max-w-6xl mx-auto px-6">
           <Head label={t.rLabel} title={t.rTitle} lead={t.rLead} />
           <ScrollReveal direction="scale" className="mt-10">

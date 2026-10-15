@@ -89,17 +89,17 @@ export default function Roadmap() {
   }, [lang]);
 
   return (
-    <section className="py-28 relative overflow-hidden border-t border-electric-cyan/8 bg-[#0a1418]/40 mv-shoulder">
+    <section className="py-28 relative overflow-hidden border-t border-electric-cyan/8 bg-[#0a1418]/40 mv-shoulder mv-amb alt">
       <div className="max-w-6xl mx-auto px-6">
         <ScrollReveal className="text-center mb-16">
-          <span className="section-label">{lang === 'el' ? 'Πώς δουλεύουμε μαζί' : 'How we work together'}</span>
+          <span className="section-label">{lang === 'el' ? 'Η ιστοσελίδα σας · πώς τη φτιάχνουμε' : 'Your website · how we build it'}</span>
           <h2 className="text-4xl md:text-5xl font-black font-display mb-4 tracking-tight text-white">
-            {lang === 'el' ? 'Από το υλικό σας στον αέρα.' : 'From your material to live.'}
+            {lang === 'el' ? 'Η ιστοσελίδα σας: από το υλικό σας στον αέρα.' : 'Your website: from your material to live.'}
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             {lang === 'el'
-              ? 'Τέσσερα βήματα, χωρίς προκαταβολή. Σε κάθε βήμα ξέρετε τι γίνεται και τι ακολουθεί.'
-              : 'Four steps, no deposit. At every step you know what is happening and what comes next.'}
+              ? 'Τέσσερα βήματα για την κατασκευή της ιστοσελίδας σας, χωρίς προκαταβολή. Σε κάθε βήμα ξέρετε τι γίνεται και τι ακολουθεί.'
+              : 'Four steps to build your website, no deposit. At every step you know what is happening and what comes next.'}
           </p>
         </ScrollReveal>
 
@@ -118,9 +118,11 @@ export default function Roadmap() {
             {steps.map((st, i) => (
               <div key={i} className="rm-step">
                 <span className={`rm-dot ${i === steps.length - 1 ? 'last' : ''}`}>{i + 1}</span>
-                <span className="rm-when">{WHEN[lang][i]}</span>
-                <h3 className="font-display text-lg">{st.title[lang]}</h3>
-                <p>{st.body[lang]}</p>
+                <div className="rm-card mv-frost rounded-2xl">
+                  <span className="rm-when">{WHEN[lang][i]}</span>
+                  <h3 className="font-display text-lg">{st.title[lang]}</h3>
+                  <p>{st.body[lang]}</p>
+                </div>
               </div>
             ))}
           </div>
