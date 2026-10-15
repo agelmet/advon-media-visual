@@ -4,6 +4,7 @@
 // the previous version (all pricing removed per the site-wide rule).
 'use client';
 
+import Link from 'next/link';
 import Image from 'next/image';
 import { useLangStore } from '@/store/langStore';
 import { portfolioData } from '@/lib/data';
@@ -175,9 +176,9 @@ export default function KataskeviClient() {
                   <span className="why-num" aria-hidden="true">03</span>
                   <p className="text-gray-200 text-base md:text-[17px] leading-relaxed">
                     {lang === 'el' ? (
-                      <>Κερδίζουμε κι εμείς: κάθε ιστοσελίδα που παραδίδουμε μεγαλώνει το πορτφόλιό μας και μας φέρνει τους επόμενους πελάτες μέσα από τη δουλειά μας — όχι από διαφημίσεις. Εσείς αποκτάτε μια premium ιστοσελίδα χωρίς ρίσκο, εμείς ένα ακόμα δείγμα δουλειάς που μας κάνει περήφανους. <span className="text-white font-bold mv-mark" data-io>Όλοι κερδίζουν.</span></>
+                      <>Κερδίζουμε κι εμείς: κάθε ιστοσελίδα που παραδίδουμε μεγαλώνει το πορτφόλιό μας και μας φέρνει τους επόμενους πελάτες. Προσφέρουμε επίσης κι άλλες υπηρεσίες, όπως <Link href="/diaxeirisi-social-media" className="text-white underline decoration-electric-cyan/40 underline-offset-4 hover:decoration-electric-cyan">διαχείριση social media</Link> και <Link href="/google-ads" className="text-white underline decoration-electric-cyan/40 underline-offset-4 hover:decoration-electric-cyan">διαφημίσεις στο Google</Link>, που μπορείτε να επιλέξετε αν και όταν τις χρειαστείτε. Η δωρεάν ιστοσελίδα είναι ο τρόπος μας να ξεκινήσει μια συνεργασία που κρατάει. Εσείς αποκτάτε μια premium ιστοσελίδα χωρίς ρίσκο, εμείς ένα ακόμα δείγμα δουλειάς που μας κάνει περήφανους. <span className="text-white font-bold mv-mark" data-io>Όλοι κερδίζουν.</span></>
                     ) : (
-                      <>We win too: every website we deliver grows our portfolio and brings us our next clients through our work — not through ads. You get a premium website with zero risk; we get one more project we&apos;re proud of. <span className="text-white font-bold mv-mark" data-io>Everyone wins.</span></>
+                      <>We win too: every website we deliver grows our portfolio and brings us our next clients. We also offer other services, such as <Link href="/diaxeirisi-social-media" className="text-white underline decoration-electric-cyan/40 underline-offset-4 hover:decoration-electric-cyan">social media management</Link> and <Link href="/google-ads" className="text-white underline decoration-electric-cyan/40 underline-offset-4 hover:decoration-electric-cyan">Google ads</Link>, which you can choose if and when you need them. The free website is our way of starting a partnership that lasts. You get a premium website with zero risk; we get one more project we&apos;re proud of. <span className="text-white font-bold mv-mark" data-io>Everyone wins.</span></>
                     )}
                   </p>
                 </div>

@@ -1,14 +1,13 @@
 // components/service/IncludesTech.jsx — «Παροχές · Τι περιλαμβάνει» + «Τεχνικά χαρακτηριστικά»
 // in ONE section (15 Oct 2026, Angelo: clearly stated, easy to view, chic, not boring).
 //   left plate  = what every website includes (lib/services.js → includes), the first line as the
-//                 headline, the next three as a checklist, the premium option as a quiet link;
+//                 headline, the next three as a checklist;
 //   right plate = the six infrastructure features as small tabs + one description at a time
 //                 (all descriptions share one grid cell, so switching never changes the height);
 //                 it moves on by itself every 6 s while on screen, and stops for good once the
 //                 visitor picks a tab or hovers the plate.
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
 import { useLangStore } from '@/store/langStore';
 import ScrollReveal from '@/components/ScrollReveal';
 
@@ -73,8 +72,8 @@ export default function IncludesTech({ service }) {
   const { lang } = useLangStore();
   const L = (el, en) => (lang === 'el' ? el : en);
   const [first, ...more] = service.includes;
-  const premium = more.length > 3 ? more[more.length - 1] : null;
-  const list = premium ? more.slice(0, -1) : more;
+  // the 5th include («Για μεγαλύτερες ανάγκες, πολυσέλιδη premium κατασκευή») is not shown here (Angelo, 15 Oct 2026)
+  const list = more.slice(0, 3);
 
   const [active, setActive] = useState(0);
   const [auto, setAuto] = useState(true);
@@ -110,14 +109,14 @@ export default function IncludesTech({ service }) {
         <div className="grid lg:grid-cols-[1fr_1.08fr] gap-6 items-stretch">
           {/* ── what every website includes ── */}
           <ScrollReveal direction="left" className="h-full">
-            <div className="inc-plate h-full">
+            <div className="inc-plate h-full flex flex-col">
               <div className="flex items-start gap-4 pb-6 mb-2 border-b border-white/10">
                 <Check big />
                 <p className="font-display font-bold text-white leading-snug" style={{ fontSize: 'clamp(1.25rem, 2vw, 1.55rem)' }}>
                   {first[lang]}
                 </p>
               </div>
-              <ul className="divide-y divide-white/[0.07]">
+              <ul className="divide-y divide-white/[0.07] flex-1 flex flex-col justify-around">
                 {list.map((it) => (
                   <li key={it.en} className="flex items-start gap-3.5 py-4">
                     <Check />
@@ -125,13 +124,6 @@ export default function IncludesTech({ service }) {
                   </li>
                 ))}
               </ul>
-              {premium && (
-                <Link href="#contact" className="inc-premium group">
-                  <span className="inc-premium-dot" aria-hidden="true" />
-                  <span className="flex-1">{premium[lang]}</span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                </Link>
-              )}
             </div>
           </ScrollReveal>
 
