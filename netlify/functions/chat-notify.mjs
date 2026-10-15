@@ -101,6 +101,12 @@ export default async (req) => {
   const idx = await getIndex(conf);
   const outbox = await readChatJson(conf, 'outbox.json', []);
   const T = await readTemplates(conf);
+  // CLIENT MAIL SWITCH (Angelo, 15 Oct 2026): nothing goes to a client by itself unless chats/settings.json says
+  // {"clientAuto": true}. Off (or file missing) = no client e-mails, no reminders, no automatic «Λάβαμε», no outbox
+  // client mails. Telegram/e-mail to Angelo keep working. Turning it back on is a data-repo edit (0 credits).
+  const settings = await readChatJson(conf, 'settings.json', {});
+  const clientAuto = !!(settings && settings.clientAuto === true);
+  report.clientAuto = clientAuto;
   const patch = new Map();      // slug → fields to merge
   const upd = (t, f) => { Object.assign(t, f); patch.set(t.slug, { ...(patch.get(t.slug) || {}), ...f }); };
   const log = (t, text) => upd(t, { log: (t.log || []).concat([{ at: nowIso(), by: 'system', text }]).slice(-30) });
@@ -134,7 +140,7 @@ export default async (req) => {
     }
 
     // 0. Υλικό, material in, no «Ξεκινήστε» after ACK_AFTER → «Λάβαμε … Υπάρχει κάτι άλλο;» with the two buttons
-    if (normStage(t.stage) === 'yliko' && !t.ready && !t.suggest && t.lastFrom === 'client' && now - lastAt >= ACK_AFTER && now - lastAt < 2 * DAY && (t.ackFor || '') < (t.lastAt || '')) {
+    if (clientAuto && normStage(t.stage) === 'yliko' && !t.ready && !t.suggest && t.lastFrom === 'client' && now - lastAt >= ACK_AFTER && now - lastAt < 2 * DAY && (t.ackFor || '') < (t.lastAt || '')) {
       if (dry) report.sent.push(`[dry] auto-ack ${t.slug}`);
       else {
         try {
@@ -148,7 +154,8 @@ export default async (req) => {
     // 2. Angelo/Claude → client e-mail (if they already opened the page and saw it, there is nothing to send)
     if (t.lastFrom !== 'client' && !(t.unreadClient || 0) && (t.clientNotifiedAt || '') < (t.lastAt || '')) upd(t, { clientNotifiedAt: t.lastAt });
     if (t.lastFrom !== 'client' && (t.unreadClient || 0) > 0 && emailOk(t.email) && (t.clientNotifiedAt || '') < (t.lastAt || '') && now - lastAt > GRACE) {
-      if (!canMail) report.skipped.push(`${t.slug}: client e-mail (no RESEND_API_KEY)`);
+      if (!clientAuto) upd(t, { clientNotifiedAt: t.lastAt });      // switch off: marked as handled, so nothing piles up for later
+      else if (!canMail) report.skipped.push(`${t.slug}: client e-mail (no RESEND_API_KEY)`);
       else if (now - lastAt > 7 * DAY) upd(t, { clientNotifiedAt: t.lastAt });
       else {
         const msgs = await getMessages(conf, t.slug);
@@ -179,7 +186,7 @@ export default async (req) => {
 
     // 3. reminders — we wrote last, silence for 3+ days, not live (09:00–20:00 Athens, never on a Sunday)
     const lastRem = Date.parse(t.lastReminderAt || 0) || 0;
-    if (polite && t.lastFrom !== 'client' && t.stage !== 'live' && emailOk(t.email) && canMail && now - lastAt >= REMIND_AFTER && (t.remindersSent || 0) < REMIND_MAX && now - lastRem >= REMIND_AFTER && (t.clientNotifiedAt || '') >= (t.lastAt || '')) {
+    if (clientAuto && polite && t.lastFrom !== 'client' && t.stage !== 'live' && emailOk(t.email) && canMail && now - lastAt >= REMIND_AFTER && (t.remindersSent || 0) < REMIND_MAX && now - lastRem >= REMIND_AFTER && (t.clientNotifiedAt || '') >= (t.lastAt || '')) {
       const mail = reminderMail(t);
       if (mail) {
         if (dry) { report.sent.push(`[dry] reminder ${t.slug}`); continue; }
@@ -231,6 +238,7 @@ export default async (req) => {
     let ok = false;
     if (o.kind === 'angelo') { ok = (await toAngelo(agentNote(o, idx))).ok; }
     else if (o.kind === 'tiktok') { ok = (await toAngelo(tiktokNote(o), false)).ok; }
+    else if (o.kind === 'client' && !clientAuto) { o.sentAt = nowIso(); o.skipped = 'client mail off'; outChanged = true; report.skipped.push(`outbox client ${o.slug || ''}: client mail off`); continue; }
     else if (o.kind === 'client' && o.slug) { const t = idx.find((x) => x.slug === o.slug); if (t && emailOk(t.email) && canMail) { const m = plainClientMail(t, o.subject, o.text || ''); const r = await sendEmail(mc, t.email, m.subject, m.text, m.html); ok = r.ok; } }
     if (ok) { o.sentAt = nowIso(); outChanged = true; report.sent.push(`outbox ${o.kind}${o.slug ? ' ' + o.slug : ''}`); }
     else if (!canTg && !canMail) { report.skipped.push(`outbox ${o.kind}: nothing configured`); break; }
