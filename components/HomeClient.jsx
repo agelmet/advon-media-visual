@@ -11,6 +11,7 @@ import PitchQuote from '@/components/PitchQuote';
 import { services, extras, HOME_FAQS } from '@/lib/services';
 import { ICONS, FaqSection } from '@/components/service/blocks';
 import Roadmap from '@/components/Roadmap';
+import { SocialMarks, GoogleMark } from '@/components/BrandMarks';
 
 const marqueeItems = [
   'Κατασκευή Ιστοσελίδων',
@@ -275,9 +276,15 @@ export default function HomeClient() {
                             {lang === 'el' ? 'Νέο' : 'New'}
                           </span>
                         )}
-                        <div className="w-14 h-14 rounded-2xl bg-electric-cyan/10 border border-electric-cyan/20 flex items-center justify-center mb-6 text-electric-cyan group-hover:bg-electric-cyan/20 group-hover:scale-110 transition-all duration-300">
-                          {ICONS[service.icon]('w-7 h-7')}
-                        </div>
+                        {service.slug === 'diaxeirisi-social-media' ? (
+                          <div className="h-14 flex items-center mb-6"><SocialMarks /></div>
+                        ) : service.slug === 'google-ads' ? (
+                          <div className="h-14 flex items-center mb-6"><GoogleMark /></div>
+                        ) : (
+                          <div className="w-14 h-14 rounded-2xl bg-electric-cyan/10 border border-electric-cyan/20 flex items-center justify-center mb-6 text-electric-cyan group-hover:bg-electric-cyan/20 group-hover:scale-110 transition-all duration-300">
+                            {ICONS[service.icon]('w-7 h-7')}
+                          </div>
+                        )}
                         {price && (
                           <div className="flex items-baseline gap-2 mb-4 flex-wrap">
                             <span className="text-3xl font-black price-gradient">{price.v}</span>
