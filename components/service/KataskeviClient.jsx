@@ -10,11 +10,10 @@ import { portfolioData } from '@/lib/data';
 import { getService } from '@/lib/services';
 import ScrollReveal from '@/components/ScrollReveal';
 import PitchQuote from '@/components/PitchQuote';
+import IncludesTech from '@/components/service/IncludesTech';
 import KataskeviPricing from '@/components/service/KataskeviPricing';
 import {
-  PainSection,
   StepsSection,
-  IncludesSection,
   ProofStrip,
   FaqSection,
   CtaBand,
@@ -190,8 +189,7 @@ export default function KataskeviClient() {
       </section>
 
       <StepsSection service={service} />
-      <IncludesSection service={service} />
-      <PainSection service={service} />
+      <IncludesTech service={service} />
 
       {/* ─── HOSTING PRICING + INFRASTRUCTURE + EXTRAS (restored from history) ─── */}
       <KataskeviPricing />

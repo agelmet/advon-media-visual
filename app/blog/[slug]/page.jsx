@@ -45,6 +45,22 @@ export default async function BlogPost({ params }) {
     publisher: { '@type': 'Organization', name: 'Advon Media', url: SITE_URL },
   };
 
+  // FAQ rich result (only posts that carry a `faq`) + breadcrumb trail for search results.
+  const faqJsonLd = post.faq?.length ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: post.faq.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+  } : null;
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Advon Media', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog` },
+      { '@type': 'ListItem', position: 3, name: post.title.el, item: `${SITE_URL}/blog/${post.slug}` },
+    ],
+  };
+
   // Two other posts as "read next" — the neighbours in the sorted list.
   const all = sortedPosts();
   const idx = all.findIndex((p) => p.slug === post.slug);
@@ -56,6 +72,8 @@ export default async function BlogPost({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      {faqJsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />}
 
       <article className="relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -87,9 +105,27 @@ export default async function BlogPost({ params }) {
 
           {/* Body */}
           <div
-            className="text-gray-300 leading-relaxed [&>h2]:text-electric-cyan [&>h2]:font-display [&>h2]:text-xl [&>h2]:md:text-2xl [&>h2]:font-bold [&>h2]:mt-12 [&>h2]:mb-4 [&>p]:mb-5 [&>p]:leading-relaxed [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-5 [&>ul]:space-y-2 [&_strong]:text-white [&_a]:text-electric-cyan [&_a]:font-semibold [&_a]:underline [&_a]:underline-offset-4 [&_a]:decoration-electric-cyan/40 hover:[&_a]:decoration-electric-cyan"
+            className="text-gray-300 leading-relaxed [&>h2]:text-electric-cyan [&>h2]:font-display [&>h2]:text-xl [&>h2]:md:text-2xl [&>h2]:font-bold [&>h2]:mt-12 [&>h2]:mb-4 [&>h3]:text-white [&>h3]:font-bold [&>h3]:text-lg [&>h3]:mt-8 [&>h3]:mb-2 [&>p]:mb-5 [&>p]:leading-relaxed [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-5 [&>ul]:space-y-2 [&_strong]:text-white [&_a]:text-electric-cyan [&_a]:font-semibold [&_a]:underline [&_a]:underline-offset-4 [&_a]:decoration-electric-cyan/40 hover:[&_a]:decoration-electric-cyan"
             dangerouslySetInnerHTML={{ __html: post.body }}
           />
+
+          {/* Short FAQ (posts with `faq`) — the same answers go to Google as FAQPage data */}
+          {post.faq?.length > 0 && (
+            <section className="mt-14" aria-labelledby="post-faq">
+              <h2 id="post-faq" className="text-electric-cyan font-display text-xl md:text-2xl font-bold mb-5">Συχνές ερωτήσεις</h2>
+              <div className="space-y-3">
+                {post.faq.map(({ q, a }) => (
+                  <details key={q} className="post-faq glass-panel rounded-2xl border border-white/8 px-6 py-4 group">
+                    <summary className="cursor-pointer list-none flex items-center justify-between gap-4 font-bold text-white">
+                      {q}
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-electric-cyan shrink-0 transition-transform duration-300 group-open:rotate-180" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                    </summary>
+                    <p className="text-gray-300 leading-relaxed mt-3 text-[0.95rem]">{a}</p>
+                  </details>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* CTA to the relevant service */}
           <div className="mt-14 relative overflow-hidden rounded-3xl border border-electric-cyan/30 bg-gradient-to-br from-electric-cyan/8 via-transparent to-transparent p-8 text-center shadow-[0_0_40px_rgba(71,200,245,0.1)]">

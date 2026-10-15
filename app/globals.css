@@ -367,13 +367,8 @@
   }
 
   /* ─── 3D Tilt ─── */
-  .tilt-wrap {
-    perspective: 900px;
-  }
-  .tilt-inner {
-    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-    transform-style: preserve-3d;
-  }
+  .tilt-wrap { position: relative; }
+  .tilt-inner { position: relative; }
 
   /* ─── Pricing Toggle Transition ─── */
   .pricing-swap-in {
@@ -1195,11 +1190,13 @@ html.mv-intro h1 .reveal-word:nth-child(2) { animation-delay: 1.25s !important; 
 /* hover: a calm lift on its own property, deeper shadow, brighter hairline — no jumps */
 .glass-panel { transition: translate .55s cubic-bezier(.22,1,.36,1), box-shadow .55s cubic-bezier(.22,1,.36,1), border-color .45s ease, background-color .45s ease, transform .5s cubic-bezier(.16,1,.3,1); }
 @media (hover: hover) and (pointer: fine) {
-  .card-sweep.glass-panel:hover { translate: 0 -6px; border-color: rgba(255,246,232,.16) !important;
+  .card-sweep.glass-panel:hover { border-color: rgba(255,246,232,.16) !important;
     box-shadow: inset 0 1px 0 rgba(255,246,232,.14), 0 40px 90px -28px rgba(0,0,0,.95), 0 18px 40px -24px rgba(71,200,245,.28), 0 0 0 1px rgba(71,200,245,.08); }
-  .tilt-wrap:hover .card-sweep.glass-panel { translate: 0 -4px; }
+  /* Cards v6: the LIFT is driven by the card's still wrapper, not by the card itself — a card that
+     moves up under the pointer used to slip out from under it at its bottom edge (exactly where
+     the button is), un-hover, drop back, re-hover… = the flicker on the buttons. */
+  :where(div):has(> .card-sweep.glass-panel:only-child):hover > .card-sweep.glass-panel { translate: 0 -6px; }
 }
-.card-sweep.glass-panel:active { translate: 0 -2px; transition-duration: .2s; }
 
 @media (prefers-reduced-motion: reduce) {
   .sr, .stat-tile, .mv-pf { opacity: 1 !important; animation: none !important; transform: none !important; }
@@ -1231,3 +1228,50 @@ html.mv-intro h1 .reveal-word:nth-child(2) { animation-delay: 1.25s !important; 
   .pain-card::before { content: ''; position: absolute; left: 0; top: 1.4rem; bottom: 1.4rem; width: 2px; border-radius: 2px;
     background: linear-gradient(180deg, rgba(71,200,245,.8), rgba(71,200,245,.05)); }
 }
+
+/* ═══ Παροχές + Τεχνικά (IncludesTech.jsx, 15 Oct 2026) ═══ */
+.inc-plate, .tech-plate { position: relative; border-radius: 1.6rem; padding: 2rem 1.6rem;
+  background: linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.022) 55%, rgba(255,255,255,.015));
+  border: 1px solid rgba(255,255,255,.11);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 40px 90px -34px rgba(0,0,0,.95); }
+@media (min-width: 768px) { .inc-plate, .tech-plate { padding: 2.4rem 2.4rem; } }
+.inc-plate::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(90% 60% at 0% 0%, rgba(71,200,245,.10), transparent 60%); }
+.tech-plate::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(90% 60% at 100% 0%, rgba(255,236,205,.07), transparent 60%); }
+.inc-plate > *, .tech-plate > * { position: relative; }
+.inc-check { flex: none; width: 1.55rem; height: 1.55rem; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
+  color: #47c8f5; background: rgba(71,200,245,.1); border: 1px solid rgba(71,200,245,.35); margin-top: .1rem; }
+.inc-check svg { width: .8rem; height: .8rem; }
+.inc-check.big { width: 2.6rem; height: 2.6rem; color: #050608; background: #47c8f5; border: 0; box-shadow: 0 0 26px rgba(71,200,245,.45); margin-top: .15rem; }
+.inc-check.big svg { width: 1.2rem; height: 1.2rem; }
+.inc-premium { margin-top: 1.1rem; display: flex; align-items: center; gap: .8rem; padding: .95rem 1.1rem; border-radius: 1rem;
+  color: #e7d6b4; font-weight: 600; font-size: .95rem; background: linear-gradient(90deg, rgba(255,230,190,.08), rgba(255,230,190,.02));
+  border: 1px solid rgba(255,230,190,.18); transition: border-color .35s ease, background-color .35s ease; }
+.inc-premium:hover { border-color: rgba(255,230,190,.4); }
+.inc-premium-dot { width: .5rem; height: .5rem; border-radius: 99px; background: #e7c88f; box-shadow: 0 0 12px rgba(231,200,143,.8); flex: none; }
+.tech-eyebrow { display: inline-block; font-size: .66rem; font-weight: 900; letter-spacing: .22em; text-transform: uppercase; color: #47c8f5; }
+.tech-tab { position: relative; overflow: hidden; display: flex; align-items: center; gap: .55rem; text-align: left; padding: .7rem .8rem; border-radius: .9rem;
+  font-size: .8rem; font-weight: 700; line-height: 1.2; color: #c9d2db; background: rgba(255,255,255,.035); border: 1px solid rgba(255,255,255,.08);
+  transition: color .3s ease, background-color .3s ease, border-color .3s ease, box-shadow .3s ease; }
+.tech-tab:hover { color: #fff; border-color: rgba(255,255,255,.18); }
+.tech-tab.on { color: #fff; background: rgba(71,200,245,.1); border-color: rgba(71,200,245,.45); box-shadow: 0 0 22px rgba(71,200,245,.16), inset 0 1px 0 rgba(255,255,255,.1); }
+.tech-tab:focus-visible { outline: 2px solid #47c8f5; outline-offset: 2px; }
+.tech-tab-ico { width: 1.05rem; height: 1.05rem; flex: none; color: #47c8f5; }
+.tech-tab-bar { position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; background: linear-gradient(90deg, #47c8f5, #fff6e6);
+  transform-origin: 0 50%; transform: scaleX(0); animation: techBar 6s linear forwards; }
+@keyframes techBar { to { transform: scaleX(1); } }
+.tech-stage { display: grid; padding: 1.3rem 1.35rem; border-radius: 1.1rem; background: rgba(0,0,0,.28); border: 1px solid rgba(255,255,255,.07); }
+.tech-panel { grid-area: 1 / 1; opacity: 0; transform: translateY(8px); visibility: hidden;
+  transition: opacity .45s ease, transform .55s cubic-bezier(.22,1,.36,1), visibility 0s linear .45s; }
+.tech-panel.on { opacity: 1; transform: none; visibility: visible; transition: opacity .45s ease .05s, transform .55s cubic-bezier(.22,1,.36,1) .05s, visibility 0s; }
+.tech-panel-ico { width: 2.2rem; height: 2.2rem; padding: .5rem; border-radius: .7rem; flex: none; color: #47c8f5; background: rgba(71,200,245,.1); border: 1px solid rgba(71,200,245,.3); }
+@media (prefers-reduced-motion: reduce) { .tech-panel, .tech-panel.on { transition: none; transform: none; } .tech-tab-bar { display: none; } }
+
+/* ═══ Buttons v6 (15 Oct 2026) — calm, crisp buttons inside cards ═══
+   • the shine runs on transform (composited), not on `left` (re-layout every frame);
+   • the rounded clip always holds (own stacking context), so the shine never pokes out of a corner;
+   • no 3D on the cards around them any more (TiltCard retired). */
+.btn-premium { isolation: isolate; -webkit-mask-image: -webkit-radial-gradient(white, black); backface-visibility: hidden; }
+.btn-premium::after { left: 0 !important; transform: translateX(-110%) skewX(-20deg); transition: transform .75s cubic-bezier(.22,1,.36,1) !important; }
+.btn-premium:hover::after { transform: translateX(190%) skewX(-20deg); }
