@@ -207,7 +207,7 @@ export function StepsSection({ service }) {
   const cols = service.steps.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-4';
   const inset = service.steps.length === 3 ? 'md:left-[calc(16.66%+1rem)] md:right-[calc(16.66%+1rem)]' : 'lg:left-[calc(12.5%+1rem)] lg:right-[calc(12.5%+1rem)]';
   return (
-    <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 relative overflow-hidden mv-amb alt mv-shoulder">
+    <section className="py-24 bg-[#0b0c10]/60 border-y border-electric-cyan/8 relative overflow-hidden mv-amb alt mv-shoulder">
       <div className="max-w-6xl mx-auto px-6">
         <ScrollReveal className="text-center mb-16">
           <span className="section-label">{lang === 'el' ? 'Βήμα - Βήμα' : 'Step by Step'}</span>
@@ -226,7 +226,7 @@ export function StepsSection({ service }) {
             <ScrollReveal key={i} delay={i * 120} direction="up" className="h-full">
               <div data-at={(i / Math.max(1, all.length - 1)) * 0.9} className="relative flex md:flex-col items-start md:items-center gap-5 md:gap-0 md:text-center h-full pl-0">
                 <div
-                  className="mv-node w-16 h-16 shrink-0 md:mx-auto md:mb-6 rounded-full bg-[#0a1418] border-2 border-electric-cyan/60 flex items-center justify-center relative z-10"
+                  className="mv-node w-16 h-16 shrink-0 md:mx-auto md:mb-6 rounded-full bg-[#0b0c10] border-2 border-electric-cyan/60 flex items-center justify-center relative z-10"
                   style={{ boxShadow: '0 0 26px rgba(71,200,245,0.18), inset 0 0 14px rgba(71,200,245,0.06)' }}
                 >
                   <span className="text-xl font-black text-electric-cyan">{String(i + 1).padStart(2, '0')}</span>
@@ -297,7 +297,7 @@ export function ProofStrip() {
     { num: '125+', el: 'ΚΡΙΤΙΚΕΣ 5★ ΣΤΟ GOOGLE', en: '5★ REVIEWS ON GOOGLE' },
   ];
   return (
-    <div className="border-y border-electric-cyan/10 bg-[#0a1418]/50 backdrop-blur-sm py-12 relative overflow-hidden">
+    <div className="border-y border-electric-cyan/10 bg-[#0b0c10]/50 backdrop-blur-sm py-12 relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{ width: '70%', height: '180%', background: 'radial-gradient(ellipse, rgba(71,200,245,0.06) 0%, transparent 65%)', filter: 'blur(70px)' }} />
       </div>
@@ -320,7 +320,7 @@ export function ProofStrip() {
           <div className="hidden md:block w-px h-16 bg-electric-cyan/15" aria-hidden="true" />
           <Link
             href="/kataskevi-istoselidas#portfolio"
-            className="btn-premium inline-flex items-center gap-2 px-7 py-3 border border-electric-cyan/40 text-electric-cyan text-sm font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all"
+            className="btn-premium inline-flex items-center gap-2 px-7 py-3 border border-electric-cyan/40 text-electric-cyan text-sm font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050608] transition-all"
           >
             {lang === 'el' ? 'Δείτε το πορτφόλιό μας →' : 'See our portfolio →'}
           </Link>
@@ -381,7 +381,7 @@ export function FaqSection({ service, faqs }) {
 export function CtaBand() {
   const { lang } = useLangStore();
   return (
-    <section className="py-24 relative overflow-hidden border-t border-electric-cyan/10 bg-gradient-to-b from-transparent to-[#0a1418]/60">
+    <section className="py-24 relative overflow-hidden border-t border-electric-cyan/10 bg-gradient-to-b from-transparent to-[#0b0c10]/60">
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_75%_70%_at_50%_100%,rgba(71,200,245,0.08)_0%,transparent_70%)]" />
         <div className="absolute top-0 left-0 right-0 cyber-divider" />
@@ -402,7 +402,7 @@ export function CtaBand() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="#contact"
-              className="btn-premium inline-flex items-center gap-3 px-10 py-4 bg-electric-cyan text-[#050a0e] font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-white transition-all duration-300 hover:scale-105"
+              className="btn-premium inline-flex items-center gap-3 px-10 py-4 bg-electric-cyan text-[#050608] font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-white transition-all duration-300 hover:scale-105"
               style={{ boxShadow: '0 0 30px rgba(71,200,245,0.4), 0 4px 20px rgba(0,0,0,0.4)', animation: 'heroCTAPulse 3s ease-in-out infinite' }}
             >
               {lang === 'el' ? 'Φόρμα Επικοινωνίας' : 'Contact Form'}
@@ -410,7 +410,7 @@ export function CtaBand() {
             </Link>
             <a
               href="mailto:angelos@advonmedia.com"
-              className="btn-premium inline-flex items-center gap-3 px-10 py-4 bg-transparent border-2 border-electric-cyan text-electric-cyan font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all duration-300"
+              className="btn-premium inline-flex items-center gap-3 px-10 py-4 bg-transparent border-2 border-electric-cyan text-electric-cyan font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-electric-cyan hover:text-[#050608] transition-all duration-300"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               Email

@@ -98,7 +98,7 @@ export default async function BlogPost({ params }) {
             </p>
             <Link
               href={post.cta.href}
-              className="btn-premium inline-flex items-center gap-2 px-8 py-3.5 bg-electric-cyan text-[#050a0e] font-black rounded-xl hover:bg-white transition-colors text-sm uppercase tracking-[0.08em]"
+              className="btn-premium inline-flex items-center gap-2 px-8 py-3.5 bg-electric-cyan text-[#050608] font-black rounded-xl hover:bg-white transition-colors text-sm uppercase tracking-[0.08em]"
               style={{ boxShadow: '0 0 30px rgba(71,200,245,0.35)' }}
             >
               {post.cta.label.el}

@@ -51,7 +51,7 @@ export default function BlogIndexClient({ posts }) {
                   {featured.excerpt[lang]}
                 </p>
               </div>
-              <span className="shrink-0 inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-electric-cyan text-[#050a0e] font-black text-xs uppercase tracking-widest group-hover:bg-white transition-colors duration-300 self-start md:self-center">
+              <span className="shrink-0 inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-electric-cyan text-[#050608] font-black text-xs uppercase tracking-widest group-hover:bg-white transition-colors duration-300 self-start md:self-center">
                 {lang === 'el' ? 'ΔΙΑΒΑΣΤΕ ΤΟ' : 'READ IT'}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
               </span>

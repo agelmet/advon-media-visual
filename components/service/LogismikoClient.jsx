@@ -72,7 +72,7 @@ export default function LogismikoClient() {
                 href="/crm-demo"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-premium inline-flex items-center gap-3 px-9 py-4 bg-electric-cyan text-[#050a0e] font-black text-base rounded-xl hover:bg-white transition-all duration-300 hover:scale-105"
+                className="btn-premium inline-flex items-center gap-3 px-9 py-4 bg-electric-cyan text-[#050608] font-black text-base rounded-xl hover:bg-white transition-all duration-300 hover:scale-105"
                 style={{ boxShadow: '0 0 30px rgba(71,200,245,0.4), 0 4px 20px rgba(0,0,0,0.4)' }}
               >
                 {lang === 'el' ? 'Δείτε το CRM που φτιάξαμε για εμάς' : 'See the CRM we built for ourselves'}
@@ -206,7 +206,7 @@ function AppWindow() {
     <ScrollReveal delay={340} direction="right">
       <div className="relative max-w-[520px] mx-auto">
         <div aria-hidden="true" className="absolute inset-0 bg-electric-cyan/8 blur-[80px] rounded-full pointer-events-none" />
-        <div className="relative z-10 rounded-2xl border border-electric-cyan/25 bg-[#0a1418] overflow-hidden shadow-[0_24px_80px_rgba(0,0,0,0.6),0_0_50px_rgba(71,200,245,0.12)]">
+        <div className="relative z-10 rounded-2xl border border-electric-cyan/25 bg-[#0b0c10] overflow-hidden shadow-[0_24px_80px_rgba(0,0,0,0.6),0_0_50px_rgba(71,200,245,0.12)]">
           {/* Chrome */}
           <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/6 bg-white/2">
             <span className="w-2.5 h-2.5 rounded-full bg-white/12" />

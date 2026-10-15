@@ -21,7 +21,7 @@ export default function Header() {
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       style={{
         background: scrolled
-          ? 'rgba(5,10,14,0.85)'
+          ? 'rgba(5,6,8,0.85)'
           : 'transparent',
         backdropFilter: scrolled ? 'blur(24px)' : 'blur(0px)',
         WebkitBackdropFilter: scrolled ? 'blur(24px)' : 'blur(0px)',
@@ -100,7 +100,7 @@ export default function Header() {
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 transition-transform group-hover:rotate-180 duration-300"><path d="m6 9 6 6 6-6"/></svg>
             </div>
             <div className="absolute top-full left-[-20px] hidden group-hover:block z-[100] pt-2">
-              <div className="bg-[rgba(5,10,14,0.97)] min-w-[250px] rounded-2xl border border-electric-cyan/20 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(71,200,245,0.05)] py-2 overflow-hidden">
+              <div className="bg-[rgba(5,6,8,0.97)] min-w-[250px] rounded-2xl border border-electric-cyan/20 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(71,200,245,0.05)] py-2 overflow-hidden">
                 {services.map((service) => (
                   <Link
                     key={service.slug}
@@ -128,14 +128,14 @@ export default function Header() {
 
           <Link
             href="#contact"
-            className="btn-premium px-5 py-2.5 rounded-full bg-electric-cyan/10 border border-electric-cyan/30 text-xs font-bold text-electric-cyan hover:bg-electric-cyan hover:text-[#050a0e] transition-all duration-300 shadow-[0_0_20px_rgba(71,200,245,0.15)]"
+            className="btn-premium px-5 py-2.5 rounded-full bg-electric-cyan/10 border border-electric-cyan/30 text-xs font-bold text-electric-cyan hover:bg-electric-cyan hover:text-[#050608] transition-all duration-300 shadow-[0_0_20px_rgba(71,200,245,0.15)]"
           >
             {lang === 'el' ? 'Επικοινωνία' : 'Contact'}
           </Link>
 
           <button
             onClick={toggleLang}
-            className="btn-premium flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg border border-electric-cyan/40 bg-electric-cyan/8 text-xs font-bold text-electric-cyan hover:bg-electric-cyan hover:text-[#050a0e] transition-all duration-300"
+            className="btn-premium flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg border border-electric-cyan/40 bg-electric-cyan/8 text-xs font-bold text-electric-cyan hover:bg-electric-cyan hover:text-[#050608] transition-all duration-300"
           >
             {lang === 'el' ? '🇬🇧 EN' : '🇬🇷 EL'}
           </button>
@@ -145,7 +145,7 @@ export default function Header() {
         <div className="md:hidden flex items-center gap-3">
           <button
             onClick={toggleLang}
-            className="flex items-center gap-1 px-2 py-1 rounded-lg border border-electric-cyan/40 bg-electric-cyan/10 text-xs font-bold text-electric-cyan hover:bg-electric-cyan hover:text-[#050a0e] transition-all"
+            className="flex items-center gap-1 px-2 py-1 rounded-lg border border-electric-cyan/40 bg-electric-cyan/10 text-xs font-bold text-electric-cyan hover:bg-electric-cyan hover:text-[#050608] transition-all"
           >
             {lang === 'el' ? '🇬🇧 EN' : '🇬🇷 EL'}
           </button>
@@ -165,7 +165,7 @@ export default function Header() {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden bg-[#050a0e]/97 backdrop-blur-xl border-b border-electric-cyan/15 transition-all duration-400 ${isMobileMenuOpen ? 'max-h-[calc(100vh-7rem)] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0 overflow-hidden'}`}
+        className={`md:hidden bg-[#050608]/97 backdrop-blur-xl border-b border-electric-cyan/15 transition-all duration-400 ${isMobileMenuOpen ? 'max-h-[calc(100vh-7rem)] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0 overflow-hidden'}`}
       >
         <nav className="flex flex-col p-6 gap-4 text-lg font-medium text-electric-cyan">
           <Link href="/"                        onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Αρχική' : 'Home'}</Link>

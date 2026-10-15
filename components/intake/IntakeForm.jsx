@@ -14,7 +14,7 @@ const IMG_EDGE = 2400;
 const IMG_TYPES = /^image\/(jpeg|png|webp|gif|bmp|tiff)$/i;
 const DOC_TYPES = /\.(pdf|docx?|txt|rtf|svg|ai|eps|heic|heif|zip|mp4|mov)$/i;
 
-const F = 'w-full bg-[#050a0e]/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-electric-cyan transition-colors';
+const F = 'w-full bg-[#050608]/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-electric-cyan transition-colors';
 
 async function resizeImage(file) {
   if (!IMG_TYPES.test(file.type)) return null;
@@ -135,7 +135,7 @@ export default function IntakeForm() {
           onDragOver={(e) => { e.preventDefault(); setDrag(true); }} onDragLeave={() => setDrag(false)}
           onDrop={(e) => { e.preventDefault(); setDrag(false); if (!sending) addFiles(e.dataTransfer.files); }}
           onClick={() => !sending && inputRef.current && inputRef.current.click()}
-          className={`rounded-2xl border-2 border-dashed px-6 py-10 text-center cursor-pointer transition-colors ${drag ? 'border-electric-cyan bg-electric-cyan/10' : 'border-white/15 hover:border-electric-cyan/60 bg-[#050a0e]/40'}`}
+          className={`rounded-2xl border-2 border-dashed px-6 py-10 text-center cursor-pointer transition-colors ${drag ? 'border-electric-cyan bg-electric-cyan/10' : 'border-white/15 hover:border-electric-cyan/60 bg-[#050608]/40'}`}
           role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inputRef.current && inputRef.current.click(); } }}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-9 h-9 mx-auto mb-3 text-electric-cyan" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
@@ -170,7 +170,7 @@ export default function IntakeForm() {
       {errMsg && <p className="text-red-300 text-sm">{errMsg}</p>}
 
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        <button type="submit" disabled={sending} className="inline-flex items-center justify-center gap-2 rounded-xl bg-electric-cyan text-[#050a0e] font-bold px-7 py-3.5 text-base hover:brightness-110 disabled:opacity-60 transition">
+        <button type="submit" disabled={sending} className="inline-flex items-center justify-center gap-2 rounded-xl bg-electric-cyan text-[#050608] font-bold px-7 py-3.5 text-base hover:brightness-110 disabled:opacity-60 transition">
           {sending ? `Αποστολή… ${uploaded}/${good}` : 'Αποστολή'}
         </button>
         <p className="text-white/40 text-xs">Το υλικό σας φτάνει μόνο σε εμάς — δεν δημοσιεύεται πουθενά.</p>

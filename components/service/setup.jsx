@@ -119,7 +119,7 @@ export function PriceCard({ tier, price, priceNote, sub, items, cta, href = '#co
         {items.map((it, i) => <li key={i}>{it}</li>)}
       </ul>
       {cta && (
-        <Link href={href} className={`btn-premium flex items-center justify-center gap-2 w-full py-3.5 rounded-xl font-bold uppercase text-sm tracking-wide mt-6 transition-colors ${hot ? 'bg-electric-cyan text-[#050a0e] hover:bg-white' : 'border border-white/20 text-white hover:bg-white hover:text-[#050a0e]'}`}>
+        <Link href={href} className={`btn-premium flex items-center justify-center gap-2 w-full py-3.5 rounded-xl font-bold uppercase text-sm tracking-wide mt-6 transition-colors ${hot ? 'bg-electric-cyan text-[#050608] hover:bg-white' : 'border border-white/20 text-white hover:bg-white hover:text-[#050608]'}`}>
           {cta}
         </Link>
       )}

@@ -76,84 +76,16 @@ export default function HomeClient() {
           aria-hidden="true"
           style={{ willChange: 'transform' }}
         >
-          {/* Ambient aurora orbs */}
-          {/* Same three orbs — drawn as soft gradients (no blur filter to recompute every frame) */}
-          <div className="absolute rounded-full aurora" style={{ top: '-22%', left: '-16%', width: 'min(84vw, 840px)', height: 'min(84vw, 840px)', background: 'radial-gradient(circle, rgba(71,200,245,0.12) 0%, rgba(71,200,245,0.06) 30%, rgba(71,200,245,0.02) 52%, transparent 70%)', animation: 'auroraFloat1 22s ease-in-out infinite' }} />
-          <div className="absolute rounded-full aurora" style={{ bottom: '-20%', right: '-12%', width: 'min(74vw, 760px)', height: 'min(74vw, 760px)', background: 'radial-gradient(circle, rgba(107,63,160,0.15) 0%, rgba(107,63,160,0.07) 30%, rgba(107,63,160,0.025) 52%, transparent 70%)', animation: 'auroraFloat2 28s ease-in-out infinite' }} />
-          <div className="absolute rounded-full aurora" style={{ top: '22%', left: '50%', width: 'min(48vw, 540px)', height: 'min(48vw, 540px)', background: 'radial-gradient(circle, rgba(71,200,245,0.085) 0%, rgba(71,200,245,0.04) 30%, rgba(71,200,245,0.012) 52%, transparent 68%)', animation: 'auroraFloat3 17s ease-in-out infinite' }} />
-
-          {/* Tech grid */}
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                'linear-gradient(rgba(71,200,245,0.055) 1px, transparent 1px),' +
-                'linear-gradient(90deg, rgba(71,200,245,0.055) 1px, transparent 1px)',
-              backgroundSize: '64px 64px',
-              maskImage: 'radial-gradient(ellipse 90% 80% at 50% 50%, black 5%, transparent 72%)',
-              WebkitMaskImage: 'radial-gradient(ellipse 90% 80% at 50% 50%, black 5%, transparent 72%)',
-            }}
-          />
-
-          {/* Orbit rings — two dashed circles turning very slowly behind the headline, one dot each */}
-          <div className="hero-orbit hero-orbit-a" aria-hidden="true"><span className="hero-orbit-dot" /><span className="hero-orbit-dot d2" /></div>
-          <div className="hero-orbit hero-orbit-b" aria-hidden="true"><span className="hero-orbit-dot" /></div>
-
-          {/* Laser beams — skewed outer wrapper keeps angle fixed; inner div sweeps via laserSweep */}
-          {[
-            { top: '17%', skew: -8,  dur: '5s',    delay: '0s',   w: 2, cyan: true,  op: 0.65 },
-            { top: '40%', skew: -5,  dur: '8.5s',  delay: '1.8s', w: 1, cyan: true,  op: 0.4  },
-            { top: '63%', skew: -13, dur: '11.5s', delay: '0.5s', w: 2, cyan: true,  op: 0.5  },
-            { top: '29%', skew: -6,  dur: '7s',    delay: '3.5s', w: 1, cyan: false, op: 0.36 },
-          ].map((b, i) => (
-            <div
-              key={i}
-              style={{
-                position: 'absolute',
-                top: b.top,
-                left: 0,
-                right: 0,
-                height: `${b.w}px`,
-                transform: `skewX(${b.skew}deg)`,
-                overflow: 'hidden',
-              }}
-            >
-              <div
-                style={{
-                  position: 'absolute',
-                  left: '-30%',
-                  width: '30%',
-                  height: '100%',
-                  opacity: b.op,
-                  background: b.cyan
-                    ? 'linear-gradient(90deg, transparent 0%, rgba(71,200,245,0.6) 25%, #47c8f5 50%, rgba(71,200,245,0.6) 75%, transparent 100%)'
-                    : 'linear-gradient(90deg, transparent 0%, rgba(201,255,0,0.5) 25%, #c9ff00 50%, rgba(201,255,0,0.5) 75%, transparent 100%)',
-                  boxShadow: b.cyan
-                    ? '0 0 6px 2px rgba(71,200,245,0.9), 0 0 20px 5px rgba(71,200,245,0.3)'
-                    : '0 0 6px 2px rgba(201,255,0,0.75), 0 0 20px 5px rgba(201,255,0,0.22)',
-                  animation: `laserSweep ${b.dur} ${b.delay} infinite linear`,
-                  willChange: 'transform',
-                }}
-              />
-            </div>
-          ))}
+          {/* Starlight: the background itself carries the stars; the hero only adds a soft
+              «ceiling light» from above, like the lit headliner of a Rolls-Royce. */}
+          <div className="absolute inset-0 rr-ceiling" />
         </div>
-
-        {/* ── Scanline overlay (fixed — not parallaxed) ── */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          aria-hidden="true"
-          style={{
-            backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.1) 3px, rgba(0,0,0,0.1) 4px)',
-            opacity: 0.35,
-          }}
-        />
 
         {/* ── Central radial glow ── */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-            style={{ width: '1100px', height: '760px', background: 'radial-gradient(ellipse, rgba(71,200,245,0.075) 0%, rgba(71,200,245,0.035) 32%, rgba(71,200,245,0.01) 55%, transparent 70%)' }}
+            style={{ width: '1100px', height: '760px', background: 'radial-gradient(ellipse, rgba(255,240,218,0.05) 0%, rgba(255,240,218,0.02) 34%, transparent 66%)' }}
           />
         </div>
 
@@ -232,7 +164,7 @@ export default function HomeClient() {
               onMouseMove={onMagnetMove}
               onMouseLeave={onMagnetLeave}
               href="/kataskevi-istoselidas"
-              className="btn-premium group relative overflow-hidden px-9 py-4 bg-electric-cyan text-[#050a0e] font-black text-base uppercase tracking-[0.1em] rounded-xl flex items-center gap-3 transition-all duration-300"
+              className="btn-premium group relative overflow-hidden px-9 py-4 bg-electric-cyan text-[#050608] font-black text-base uppercase tracking-[0.1em] rounded-xl flex items-center gap-3 transition-all duration-300"
               style={{ animation: 'heroCTAPulse 3s ease-in-out infinite' }}
             >
               <span className="relative z-10 flex items-center gap-3">
@@ -244,7 +176,7 @@ export default function HomeClient() {
             {/* Secondary — neon border glow */}
             <Link
               href="/#services"
-              className="btn-premium group px-9 py-4 bg-transparent border-2 border-electric-cyan text-electric-cyan font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all duration-300 flex items-center gap-3 backdrop-blur-sm"
+              className="btn-premium group px-9 py-4 bg-transparent border-2 border-electric-cyan text-electric-cyan font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-electric-cyan hover:text-[#050608] transition-all duration-300 flex items-center gap-3 backdrop-blur-sm"
               style={{ animation: 'borderGlow 3s ease-in-out infinite 1s' }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>
@@ -253,7 +185,7 @@ export default function HomeClient() {
 
             <Link
               href="#contact"
-              className="btn-premium group px-9 py-4 bg-white/5 border border-white/20 text-white font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-white hover:text-[#050a0e] transition-all duration-300 flex items-center gap-3 backdrop-blur-sm"
+              className="btn-premium group px-9 py-4 bg-white/5 border border-white/20 text-white font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-white hover:text-[#050608] transition-all duration-300 flex items-center gap-3 backdrop-blur-sm"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
               {lang === 'el' ? 'ΕΠΙΚΟΙΝΩΝΙΑ' : 'CONTACT'}
@@ -280,8 +212,8 @@ export default function HomeClient() {
       </section>
 
       {/* ─── MARQUEE TICKER ─── */}
-      <div className="overflow-hidden py-5 border-y border-electric-cyan/10 bg-[#050a0e]/60 backdrop-blur-sm relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#050a0e] via-transparent to-[#050a0e] z-10 pointer-events-none" />
+      <div className="overflow-hidden py-5 border-y border-electric-cyan/10 bg-[#050608]/60 backdrop-blur-sm relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#050608] via-transparent to-[#050608] z-10 pointer-events-none" />
         <div className="flex gap-0 marquee-track mv-skew" style={{ width: 'max-content' }}>
           {[...marqueeItems, ...marqueeItems, ...marqueeItems, ...marqueeItems].map((item, i) => (
             <span key={i} className="flex items-center gap-5 px-6 whitespace-nowrap">
@@ -295,20 +227,6 @@ export default function HomeClient() {
       {/* ─── STATS ─── */}
       <Stats />
 
-      {/* ─── STATEMENT — the promise lights up word by word as you read it ─── */}
-      <section className="mv-band mv-amb">
-        <div className="max-w-5xl mx-auto px-6 text-center" data-io>
-          <div className="mv-band-rule" aria-hidden="true" />
-          <p className="mv-statement mv-readable" data-lit>
-            {lang === 'el'
-              ? 'Δεν πληρώνετε για υποσχέσεις. Πληρώνετε όταν δείτε τη σελίδα σας μπροστά σας — και τη φτιάχνουμε μαζί μέχρι να είναι δική σας.'
-              : "You don't pay for promises. You pay when you see your website in front of you — and we shape it together until it's truly yours."}
-          </p>
-          <p className="mt-8 text-electric-cyan/80 text-xs md:text-sm font-black tracking-[0.3em] uppercase">
-            {lang === 'el' ? '220+ ιστοσελίδες · 125+ κριτικές 5★ στο Google' : '220+ websites · 125+ 5★ reviews on Google'}
-          </p>
-        </div>
-      </section>
 
       {/* ─── SERVICES ─── */}
       <section id="services" className="py-32 relative scroll-mt-24 mv-amb">
@@ -351,7 +269,7 @@ export default function HomeClient() {
                     <TiltCard className="h-full">
                       <div className={`glass-panel service-card card-sweep rounded-3xl p-8 flex flex-col h-full group relative ${featured ? 'svc-featured' : ''}`}>
                         {isNew && (
-                          <span className="absolute -top-3 right-6 bg-electric-cyan text-[#050a0e] text-[0.62rem] font-black tracking-[0.18em] uppercase px-3 py-1 rounded-full shadow-[0_0_18px_rgba(71,200,245,0.5)]">
+                          <span className="absolute -top-3 right-6 bg-electric-cyan text-[#050608] text-[0.62rem] font-black tracking-[0.18em] uppercase px-3 py-1 rounded-full shadow-[0_0_18px_rgba(71,200,245,0.5)]">
                             {lang === 'el' ? 'Νέο' : 'New'}
                           </span>
                         )}
@@ -399,7 +317,7 @@ export default function HomeClient() {
                         </div>
                         <Link
                           href={`/${service.slug}`}
-                          className="btn-premium flex items-center justify-center gap-2 w-full py-3.5 bg-electric-cyan text-[#050a0e] font-bold rounded-xl hover:bg-white transition-colors uppercase text-sm tracking-wide mt-auto"
+                          className="btn-premium flex items-center justify-center gap-2 w-full py-3.5 bg-electric-cyan text-[#050608] font-bold rounded-xl hover:bg-white transition-colors uppercase text-sm tracking-wide mt-auto"
                         >
                           {service.card.cta[lang]}
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -480,7 +398,7 @@ export default function HomeClient() {
                   <span className="text-gray-500 text-sm"> {lang === 'el' ? '/μήνα + ΦΠΑ αντί 138€' : '/month + VAT instead of 138€'}</span>
                 </div>
               </div>
-              <Link href="#contact" className="btn-premium inline-flex items-center gap-2 px-7 py-3.5 bg-electric-cyan text-[#050a0e] text-sm font-black uppercase tracking-[0.1em] rounded-xl hover:bg-white transition-colors" style={{ boxShadow: '0 0 24px rgba(71,200,245,0.35)' }}>
+              <Link href="#contact" className="btn-premium inline-flex items-center gap-2 px-7 py-3.5 bg-electric-cyan text-[#050608] text-sm font-black uppercase tracking-[0.1em] rounded-xl hover:bg-white transition-colors" style={{ boxShadow: '0 0 24px rgba(71,200,245,0.35)' }}>
                 {lang === 'el' ? 'Δωρεάν έλεγχος για εσάς' : 'Free check for you'}
               </Link>
             </div>
@@ -488,7 +406,7 @@ export default function HomeClient() {
           <ScrollReveal delay={100} className="mt-10 text-center">
             <div className="inline-flex items-center gap-4 flex-wrap justify-center">
               <span className="text-gray-500 text-sm">{lang === 'el' ? 'Δεν είστε σίγουροι ποια υπηρεσία ταιριάζει;' : 'Not sure which service fits?'}</span>
-              <Link href="#contact" className="btn-premium inline-flex items-center gap-2 px-6 py-2.5 border border-electric-cyan/40 text-electric-cyan text-sm font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all">
+              <Link href="#contact" className="btn-premium inline-flex items-center gap-2 px-6 py-2.5 border border-electric-cyan/40 text-electric-cyan text-sm font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050608] transition-all">
                 {lang === 'el' ? 'Δωρεάν Ραντεβού →' : 'Free Consultation →'}
               </Link>
             </div>

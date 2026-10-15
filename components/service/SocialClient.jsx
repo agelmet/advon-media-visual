@@ -213,8 +213,8 @@ export default function SocialClient({ service }) {
               <p className="text-gray-300 text-lg leading-relaxed max-w-xl">{service.pitch[lang]}</p>
               <Chips items={t.chips} />
               <div className="flex flex-wrap gap-3">
-                <a href="#paketa" className="btn-premium inline-flex items-center gap-2 px-8 py-4 bg-electric-cyan text-[#050a0e] font-black text-sm uppercase tracking-[0.1em] rounded-xl hover:bg-white transition-colors" style={{ boxShadow: '0 0 30px rgba(71,200,245,0.35)' }}>{t.cta1}</a>
-                <a href="#ksekinima" className="btn-premium inline-flex items-center gap-2 px-8 py-4 border border-white/20 text-white font-black text-sm uppercase tracking-[0.1em] rounded-xl hover:bg-white hover:text-[#050a0e] transition-colors">{t.cta2}</a>
+                <a href="#paketa" className="btn-premium inline-flex items-center gap-2 px-8 py-4 bg-electric-cyan text-[#050608] font-black text-sm uppercase tracking-[0.1em] rounded-xl hover:bg-white transition-colors" style={{ boxShadow: '0 0 30px rgba(71,200,245,0.35)' }}>{t.cta1}</a>
+                <a href="#ksekinima" className="btn-premium inline-flex items-center gap-2 px-8 py-4 border border-white/20 text-white font-black text-sm uppercase tracking-[0.1em] rounded-xl hover:bg-white hover:text-[#050608] transition-colors">{t.cta2}</a>
               </div>
             </ScrollReveal>
           </div>
@@ -223,7 +223,7 @@ export default function SocialClient({ service }) {
       </section>
 
       {/* ─── CONTENT SOURCES ─── */}
-      <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder mv-amb">
+      <section className="py-24 bg-[#0b0c10]/60 border-y border-electric-cyan/8 mv-shoulder mv-amb">
         <div className="max-w-6xl mx-auto px-6">
           <Head center label={t.srcLabel} title={t.srcTitle} lead={t.srcLead} />
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mt-12">
@@ -265,7 +265,7 @@ export default function SocialClient({ service }) {
       </section>
 
       {/* ─── METHOD ─── */}
-      <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder mv-amb alt">
+      <section className="py-24 bg-[#0b0c10]/60 border-y border-electric-cyan/8 mv-shoulder mv-amb alt">
         <div className="max-w-6xl mx-auto px-6">
           <Head label={t.mLabel} title={t.mTitle} lead={t.mLead} />
           <div ref={mixRef} className="svc-mix" aria-hidden="true">
@@ -322,7 +322,7 @@ export default function SocialClient({ service }) {
       </section>
 
       {/* ─── MONTHLY ─── */}
-      <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 mv-shoulder mv-amb">
+      <section className="py-24 bg-[#0b0c10]/60 border-y border-electric-cyan/8 mv-shoulder mv-amb">
         <div className="max-w-6xl mx-auto px-6">
           <Head label={t.moLabel} title={t.moTitle} lead={t.moLead} />
           <div ref={tlRef} className="svc-timeline mt-12">
@@ -358,7 +358,7 @@ export default function SocialClient({ service }) {
               <span className="section-label">{t.bandLabel}</span>
               <h2 className="font-black font-display text-white tracking-tight mb-3" style={{ fontSize: 'clamp(1.8rem, 3.6vw, 2.8rem)' }}>{t.bandTitle}</h2>
               <p className="text-gray-400 text-lg mb-7">{t.bandLead}</p>
-              <Link href="#contact" className="btn-premium inline-flex items-center gap-3 px-10 py-4 bg-electric-cyan text-[#050a0e] font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-white transition-all" style={{ boxShadow: '0 0 30px rgba(71,200,245,0.4)' }}>{t.bandCta}</Link>
+              <Link href="#contact" className="btn-premium inline-flex items-center gap-3 px-10 py-4 bg-electric-cyan text-[#050608] font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-white transition-all" style={{ boxShadow: '0 0 30px rgba(71,200,245,0.4)' }}>{t.bandCta}</Link>
               <div className="flex flex-wrap justify-center gap-x-7 gap-y-2 mt-6 text-sm text-gray-400">{t.trust.map((s) => <span key={s}><b className="text-white">{s.split(' ')[0]}</b> {s.split(' ').slice(1).join(' ')}</span>)}</div>
             </div>
           </ScrollReveal>

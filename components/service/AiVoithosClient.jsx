@@ -121,7 +121,7 @@ function ChatReplay({ lang }) {
               <div className="w-9 h-9 rounded-full bg-electric-cyan/12 border border-electric-cyan/35 flex items-center justify-center text-electric-cyan">
                 {ICONS.bot('w-5 h-5')}
               </div>
-              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-cyber-lime border-2 border-[#0a1418]" />
+              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-cyber-lime border-2 border-[#0b0c10]" />
             </div>
             <div className="space-y-1.5 flex-1">
               <div className="h-2.5 w-24 rounded-full bg-white/20" />

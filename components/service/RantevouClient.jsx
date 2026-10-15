@@ -133,13 +133,13 @@ function BookingPricing({ lang }) {
             <div className="inline-flex items-center gap-2 mt-6 p-1.5 rounded-full bg-white/5 border border-white/12">
               <button
                 onClick={() => setSolo(true)}
-                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${solo ? 'bg-electric-cyan text-[#050a0e] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
+                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${solo ? 'bg-electric-cyan text-[#050608] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
               >
                 {lang === 'el' ? 'Ένας επαγγελματίας' : 'One professional'}
               </button>
               <button
                 onClick={() => setSolo(false)}
-                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${!solo ? 'bg-electric-cyan text-[#050a0e] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
+                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${!solo ? 'bg-electric-cyan text-[#050608] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
               >
                 {lang === 'el' ? 'Ομάδα' : 'Team'}
               </button>
@@ -240,8 +240,8 @@ function BookingPhone({ lang }) {
       <div aria-hidden="true" className="absolute inset-0 bg-electric-cyan/8 blur-[90px] rounded-full pointer-events-none" />
 
       {/* Frame */}
-      <div className="relative z-10 rounded-[2.75rem] border border-white/12 bg-[#0a1418] p-2.5 shadow-[0_24px_80px_rgba(0,0,0,0.6),0_0_50px_rgba(71,200,245,0.12)]">
-        <div className="rounded-[2.25rem] bg-[#050a0e] overflow-hidden">
+      <div className="relative z-10 rounded-[2.75rem] border border-white/12 bg-[#0b0c10] p-2.5 shadow-[0_24px_80px_rgba(0,0,0,0.6),0_0_50px_rgba(71,200,245,0.12)]">
+        <div className="rounded-[2.25rem] bg-[#050608] overflow-hidden">
           {/* Notch */}
           <div className="flex justify-center pt-2.5 pb-1">
             <div className="w-20 h-1.5 rounded-full bg-white/10" />
@@ -264,7 +264,7 @@ function BookingPhone({ lang }) {
                   key={i}
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-[0.6rem] font-black ${
                     i === 5
-                      ? 'bg-electric-cyan text-[#050a0e] shadow-[0_0_14px_rgba(71,200,245,0.5)]'
+                      ? 'bg-electric-cyan text-[#050608] shadow-[0_0_14px_rgba(71,200,245,0.5)]'
                       : 'bg-white/4 text-gray-500 border border-white/6'
                   }`}
                 >
@@ -300,7 +300,7 @@ function BookingPhone({ lang }) {
                   key={t}
                   className={`rounded-lg py-2 text-center text-[0.6rem] font-bold flex items-center justify-center gap-1 ${
                     t === booked
-                      ? 'bg-electric-cyan text-[#050a0e] shadow-[0_0_16px_rgba(71,200,245,0.5)]'
+                      ? 'bg-electric-cyan text-[#050608] shadow-[0_0_16px_rgba(71,200,245,0.5)]'
                       : 'bg-white/4 text-gray-400 border border-white/6'
                   }`}
                 >
@@ -317,7 +317,7 @@ function BookingPhone({ lang }) {
 
       {/* Floating confirmation — booked on a Sunday night, while you slept */}
       <div className="absolute -top-4 -right-3 md:-right-8 z-20 animate-float">
-        <div className="flex items-center gap-2.5 rounded-2xl border border-electric-cyan/35 bg-[#0a1418]/95 backdrop-blur-md px-4 py-3 shadow-[0_12px_40px_rgba(0,0,0,0.6),0_0_24px_rgba(71,200,245,0.2)]">
+        <div className="flex items-center gap-2.5 rounded-2xl border border-electric-cyan/35 bg-[#0b0c10]/95 backdrop-blur-md px-4 py-3 shadow-[0_12px_40px_rgba(0,0,0,0.6),0_0_24px_rgba(71,200,245,0.2)]">
           <div className="w-8 h-8 rounded-full bg-electric-cyan/12 border border-electric-cyan/30 flex items-center justify-center text-electric-cyan">
             {ICONS.calendar('w-4 h-4')}
           </div>

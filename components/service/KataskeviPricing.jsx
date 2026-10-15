@@ -98,7 +98,7 @@ export default function KataskeviPricing() {
               className="pricing-swap-in pricing-featured glass-panel rounded-2xl p-8 border-2 border-electric-cyan/60 relative shadow-[0_0_50px_rgba(71,200,245,0.18)] flex flex-col"
             >
               {billingAnnual && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full bg-electric-cyan text-[#050a0e] text-[0.6rem] font-black tracking-[0.2em] uppercase shadow-[0_0_20px_rgba(71,200,245,0.5)] whitespace-nowrap">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full bg-electric-cyan text-[#050608] text-[0.6rem] font-black tracking-[0.2em] uppercase shadow-[0_0_20px_rgba(71,200,245,0.5)] whitespace-nowrap">
                   {lang === 'el' ? 'ΚΑΛΥΤΕΡΗ ΤΙΜΗ' : 'BEST VALUE'}
                 </div>
               )}
@@ -112,7 +112,7 @@ export default function KataskeviPricing() {
                     type="button"
                     onClick={() => setBillingAnnual(true)}
                     aria-pressed={billingAnnual}
-                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${billingAnnual ? 'bg-electric-cyan text-[#050a0e] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${billingAnnual ? 'bg-electric-cyan text-[#050608] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
                   >
                     {lang === 'el' ? 'Ετήσια' : 'Annual'}
                   </button>
@@ -120,7 +120,7 @@ export default function KataskeviPricing() {
                     type="button"
                     onClick={() => setBillingAnnual(false)}
                     aria-pressed={!billingAnnual}
-                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${!billingAnnual ? 'bg-electric-cyan text-[#050a0e] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${!billingAnnual ? 'bg-electric-cyan text-[#050608] shadow-[0_0_16px_rgba(71,200,245,0.35)]' : 'text-gray-400 hover:text-white'}`}
                   >
                     {lang === 'el' ? 'Μηνιαία' : 'Monthly'}
                   </button>
@@ -176,7 +176,7 @@ export default function KataskeviPricing() {
 
             {/* ── Growth card — 39.58€/month paid yearly (475€) or 49€/month ── */}
             <div key={billingAnnual ? 'g-annual' : 'g-monthly'} className="pricing-swap-in growth-card glass-panel rounded-2xl p-8 border-2 border-white/15 relative flex flex-col">
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full bg-white text-[#050a0e] text-[0.6rem] font-black tracking-[0.2em] uppercase whitespace-nowrap">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full bg-white text-[#050608] text-[0.6rem] font-black tracking-[0.2em] uppercase whitespace-nowrap">
                 {lang === 'el' ? 'ΝΕΟ' : 'NEW'}
               </div>
               <div className="flex items-center justify-between gap-3 mb-4 mt-1 min-h-[38px]">
@@ -187,7 +187,7 @@ export default function KataskeviPricing() {
                     type="button"
                     onClick={() => setBillingAnnual(true)}
                     aria-pressed={billingAnnual}
-                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${billingAnnual ? 'bg-white text-[#050a0e]' : 'text-gray-400 hover:text-white'}`}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${billingAnnual ? 'bg-white text-[#050608]' : 'text-gray-400 hover:text-white'}`}
                   >
                     {lang === 'el' ? 'Ετήσια' : 'Annual'}
                   </button>
@@ -195,7 +195,7 @@ export default function KataskeviPricing() {
                     type="button"
                     onClick={() => setBillingAnnual(false)}
                     aria-pressed={!billingAnnual}
-                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${!billingAnnual ? 'bg-white text-[#050a0e]' : 'text-gray-400 hover:text-white'}`}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${!billingAnnual ? 'bg-white text-[#050608]' : 'text-gray-400 hover:text-white'}`}
                   >
                     {lang === 'el' ? 'Μηνιαία' : 'Monthly'}
                   </button>
@@ -434,7 +434,7 @@ export default function KataskeviPricing() {
           <div className="mt-10 text-center">
             <Link
               href="#contact"
-              className="btn-premium inline-flex items-center gap-2 px-8 py-3.5 border border-electric-cyan/40 text-electric-cyan font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all duration-300 text-sm"
+              className="btn-premium inline-flex items-center gap-2 px-8 py-3.5 border border-electric-cyan/40 text-electric-cyan font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050608] transition-all duration-300 text-sm"
             >
               {lang === 'el' ? 'Επικοινωνία' : 'Contact Us'}
             </Link>

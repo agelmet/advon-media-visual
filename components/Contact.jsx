@@ -21,7 +21,7 @@ const ZOHO_SCRIPT_ID = 'zoho-bookings-embed';
 const ZOHO_PARENT_ID = 'zoho-booking-inline';
 
 const inputCls =
-  'w-full bg-[#050a0e]/60 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-electric-cyan focus:shadow-[0_0_0_3px_rgba(71,200,245,0.15),0_0_24px_rgba(71,200,245,0.18)] transition-all duration-300';
+  'w-full bg-[#050608]/60 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-electric-cyan focus:shadow-[0_0_0_3px_rgba(71,200,245,0.15),0_0_24px_rgba(71,200,245,0.18)] transition-all duration-300';
 
 export default function Contact() {
   const { lang } = useLangStore();
@@ -118,7 +118,7 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contact" className="py-32 relative border-t border-electric-cyan/10 bg-gradient-to-b from-[#050a0e] to-[#0a1418] z-20 overflow-hidden">
+    <section id="contact" className="py-32 relative border-t border-electric-cyan/10 bg-gradient-to-b from-[#050608] to-[#0b0c10] z-20 overflow-hidden">
       {/* Ambient depth layers */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div
@@ -186,7 +186,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={sent}
-                  className="btn-premium w-full py-4 bg-electric-cyan text-[#050a0e] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-[0_0_24px_rgba(71,200,245,0.35)] hover:shadow-[0_0_44px_rgba(255,255,255,0.5)] disabled:opacity-70 disabled:cursor-default"
+                  className="btn-premium w-full py-4 bg-electric-cyan text-[#050608] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-[0_0_24px_rgba(71,200,245,0.35)] hover:shadow-[0_0_44px_rgba(255,255,255,0.5)] disabled:opacity-70 disabled:cursor-default"
                 >
                   {sent ? (lang === 'el' ? 'Εστάλη ✓' : 'Sent ✓') : (lang === 'el' ? 'Αποστολή' : 'Send')}
                 </button>
@@ -238,7 +238,7 @@ export default function Contact() {
                 rel={t.external ? 'noopener noreferrer' : undefined}
                 className="group glass-panel card-sweep p-6 md:p-8 rounded-3xl h-full block transition-all duration-300 hover:bg-electric-cyan/5"
               >
-                <div className="w-14 h-14 md:w-16 md:h-16 bg-electric-cyan/10 rounded-2xl flex items-center justify-center mx-auto mb-5 text-electric-cyan group-hover:bg-electric-cyan group-hover:text-[#050a0e] group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                <div className="w-14 h-14 md:w-16 md:h-16 bg-electric-cyan/10 rounded-2xl flex items-center justify-center mx-auto mb-5 text-electric-cyan group-hover:bg-electric-cyan group-hover:text-[#050608] group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                   {t.icon}
                 </div>
                 <h3 className="text-lg md:text-xl font-black mb-1.5 text-white">{t.title}</h3>

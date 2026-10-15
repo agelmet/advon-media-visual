@@ -89,7 +89,7 @@ export default function Roadmap() {
   }, [lang]);
 
   return (
-    <section className="py-28 relative overflow-hidden border-t border-electric-cyan/8 bg-[#0a1418]/40 mv-shoulder mv-amb alt">
+    <section className="py-28 relative overflow-hidden border-t border-electric-cyan/8 bg-[#0b0c10]/40 mv-shoulder mv-amb alt">
       <div className="max-w-6xl mx-auto px-6">
         <ScrollReveal className="text-center mb-16">
           <span className="section-label">{lang === 'el' ? 'Η ιστοσελίδα σας · πώς τη φτιάχνουμε' : 'Your website · how we build it'}</span>
