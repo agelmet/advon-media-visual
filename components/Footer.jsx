@@ -53,11 +53,6 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link href="/diaxeirisi-social-media" className="footer-link text-sm text-gray-400 hover:text-electric-cyan transition-colors">
-                  {lang === 'el' ? 'Διαχείριση Social Media' : 'Social Media Management'}
-                </Link>
-              </li>
             </ul>
           </div>
 

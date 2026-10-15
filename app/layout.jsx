@@ -9,6 +9,7 @@ import DeferredWidget from '@/components/DeferredWidget';
 import ScrollProgress from '@/components/ScrollProgress';
 import Spotlight from '@/components/Spotlight';
 import Analytics from '@/components/Analytics';
+import Motion from '@/components/Motion';
 import { displayFont, bodyFont } from '@/lib/fonts';
 
 export const metadata = {
@@ -37,6 +38,7 @@ export default function RootLayout({ children }) {
         <CustomCursor />
         <ScrollProgress />
         <Spotlight />
+        <Motion />
         <Header />
         <main className="relative z-10 pt-28 flex-1">
           {children}

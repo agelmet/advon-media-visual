@@ -10,9 +10,12 @@ import TiltCard from '@/components/TiltCard';
 import PitchQuote from '@/components/PitchQuote';
 import { services, extras, HOME_FAQS } from '@/lib/services';
 import { ICONS, FaqSection } from '@/components/service/blocks';
+import Roadmap from '@/components/Roadmap';
 
 const marqueeItems = [
   'Κατασκευή Ιστοσελίδων',
+  'Social Media',
+  'Google Ads',
   'Παρουσία στο Google',
   'Online Ραντεβού',
   'AI Βοηθός Ιστοσελίδας',
@@ -154,8 +157,8 @@ export default function HomeClient() {
           />
         </div>
 
-        {/* ── CONTENT ── */}
-        <div className="container max-w-7xl mx-auto px-6 text-center z-10">
+        {/* ── CONTENT (lifts and fades as you scroll — Motion v3) ── */}
+        <div className="container max-w-7xl mx-auto px-6 text-center z-10 mv-hero-scrub">
 
           {/* Animated badge */}
           <div
@@ -225,6 +228,7 @@ export default function HomeClient() {
             {/* Primary — animated glow pulse */}
             <Link
               ref={magnetRef}
+              data-no-mag
               onMouseMove={onMagnetMove}
               onMouseLeave={onMagnetLeave}
               href="/kataskevi-istoselidas"
@@ -259,8 +263,8 @@ export default function HomeClient() {
           {/* One-line services teaser */}
           <p className="reveal-item delay-6 text-gray-500 text-xs md:text-sm tracking-wide mt-8">
             {lang === 'el'
-              ? 'Κριτικές Google · Online ραντεβού · Κρατήσεις χωρίς προμήθειες · AI βοηθός'
-              : 'Google reviews · Online appointments · Commission-free bookings · AI assistant'}
+              ? 'Social Media · Google Ads · Κριτικές Google · Online ραντεβού · AI βοηθός'
+              : 'Social Media · Google Ads · Google reviews · Online appointments · AI assistant'}
           </p>
 
           {/* Scroll indicator */}
@@ -278,7 +282,7 @@ export default function HomeClient() {
       {/* ─── MARQUEE TICKER ─── */}
       <div className="overflow-hidden py-5 border-y border-electric-cyan/10 bg-[#050a0e]/60 backdrop-blur-sm relative">
         <div className="absolute inset-0 bg-gradient-to-r from-[#050a0e] via-transparent to-[#050a0e] z-10 pointer-events-none" />
-        <div className="flex gap-0 marquee-track" style={{ width: 'max-content' }}>
+        <div className="flex gap-0 marquee-track mv-skew" style={{ width: 'max-content' }}>
           {[...marqueeItems, ...marqueeItems, ...marqueeItems, ...marqueeItems].map((item, i) => (
             <span key={i} className="flex items-center gap-5 px-6 whitespace-nowrap">
               <span className="text-[0.7rem] font-black tracking-[0.2em] uppercase text-gray-500">{item}</span>
@@ -310,77 +314,105 @@ export default function HomeClient() {
             </p>
           </ScrollReveal>
 
-          {/* 3 + 4 symmetric grid: three anchor services on row one (span 4/12),
-              four on row two (span 3/12); tablet gets a full-width 7th card. */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 items-stretch">
-            {services.map((service, i) => {
-              const isKataskevi = service.slug === 'kataskevi-istoselidas';
-              const span = i < 3 ? 'lg:col-span-4' : 'lg:col-span-3';
-              const tabletFix = i === services.length - 1 ? 'md:col-span-2 lg:col-span-3' : '';
-              return (
-                <ScrollReveal
-                  key={service.slug}
-                  delay={(i % 4) * 100}
-                  direction="up"
-                  className={`h-full ${span} ${tabletFix}`}
-                >
-                  <TiltCard className="h-full">
-                    <div className="glass-panel service-card card-sweep rounded-3xl p-8 flex flex-col h-full group">
-                      <div className="w-14 h-14 rounded-2xl bg-electric-cyan/10 border border-electric-cyan/20 flex items-center justify-center mb-6 text-electric-cyan group-hover:bg-electric-cyan/20 group-hover:scale-110 transition-all duration-300">
-                        {ICONS[service.icon]('w-7 h-7')}
-                      </div>
-                      {isKataskevi && (
-                        <div className="flex items-baseline gap-2 mb-4">
-                          <span className="text-3xl font-black price-gradient">{lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE'}</span>
-                          <span className="text-sm text-gray-500">{lang === 'el' ? '(10.83€/μήνα hosting)' : '(10.83€/mo hosting)'}</span>
+          {/* Row one = the three services that go together (website · social · Google Ads),
+              each with its price; the other six below in two rows of three. */}
+          {[services.slice(0, 3), services.slice(3)].map((group, g) => (
+            <div key={g} className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch ${g ? 'mt-8' : ''}`}>
+              {group.map((service, i) => {
+                const idx = g * 3 + i;
+                const featured = g === 0;
+                const isNew = service.slug === 'diaxeirisi-social-media' || service.slug === 'google-ads';
+                const price = service.slug === 'kataskevi-istoselidas'
+                  ? { v: lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE', n: lang === 'el' ? '(10.83€/μήνα hosting)' : '(10.83€/mo hosting)' }
+                  : service.card.price ? { v: service.card.price[lang], n: service.card.priceNote[lang] } : null;
+                return (
+                  <ScrollReveal
+                    key={service.slug}
+                    delay={(i % 3) * 110}
+                    direction={featured ? 'deal' : 'up'}
+                    style={featured ? { '--rz': `${(i - 1) * 2.5}deg` } : undefined}
+                    className={`h-full ${g === 1 && i === group.length - 1 ? 'md:col-span-2 lg:col-span-1' : ''}`}
+                  >
+                    <TiltCard className="h-full">
+                      <div className={`glass-panel service-card card-sweep rounded-3xl p-8 flex flex-col h-full group relative ${featured ? 'svc-featured' : ''}`}>
+                        {isNew && (
+                          <span className="absolute -top-3 right-6 bg-electric-cyan text-[#050a0e] text-[0.62rem] font-black tracking-[0.18em] uppercase px-3 py-1 rounded-full shadow-[0_0_18px_rgba(71,200,245,0.5)]">
+                            {lang === 'el' ? 'Νέο' : 'New'}
+                          </span>
+                        )}
+                        <div className="w-14 h-14 rounded-2xl bg-electric-cyan/10 border border-electric-cyan/20 flex items-center justify-center mb-6 text-electric-cyan group-hover:bg-electric-cyan/20 group-hover:scale-110 transition-all duration-300">
+                          {ICONS[service.icon]('w-7 h-7')}
                         </div>
-                      )}
-                      <h3 className="text-xl font-bold mb-4 font-display text-white">{service.nav[lang]}</h3>
-                      {isKataskevi ? (
-                        <>
-                          <p className="text-gray-400 mb-5 leading-relaxed text-sm">
-                            {lang === 'el' ? 'Επαγγελματική ιστοσελίδα που κατακτά υψηλές θέσεις στη Google.' : 'Professional website that conquers high rankings on Google.'}
-                          </p>
+                        {price && (
+                          <div className="flex items-baseline gap-2 mb-4 flex-wrap">
+                            <span className="text-3xl font-black price-gradient">{price.v}</span>
+                            <span className="text-sm text-gray-500">{price.n}</span>
+                          </div>
+                        )}
+                        <h3 className="text-xl font-bold mb-4 font-display text-white">{service.nav[lang]}</h3>
+                        {service.slug === 'kataskevi-istoselidas' ? (
+                          <>
+                            <p className="text-gray-400 mb-5 leading-relaxed text-sm">
+                              {lang === 'el' ? 'Επαγγελματική ιστοσελίδα που κατακτά υψηλές θέσεις στη Google.' : 'Professional website that conquers high rankings on Google.'}
+                            </p>
+                            <ul className="space-y-2.5 mb-5">
+                              {[
+                                { el: 'Επαγγελματικός σχεδιασμός', en: 'Professional design' },
+                                { el: 'SEO βελτιστοποίηση', en: 'SEO optimization' },
+                                { el: 'Mobile responsive', en: 'Mobile responsive' },
+                                { el: 'Απεριόριστες αλλαγές μέχρι την τελειότητα', en: 'Unlimited changes until perfection' },
+                              ].map((item) => (
+                                <li key={item.en} className="flex items-start gap-3 text-sm text-gray-400 leading-relaxed">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5 icon-glow"><polyline points="20 6 9 17 4 12"/></svg>
+                                  {item[lang]}
+                                </li>
+                              ))}
+                            </ul>
+                          </>
+                        ) : (
                           <ul className="space-y-2.5 mb-5">
-                            {[
-                              { el: 'Επαγγελματικός σχεδιασμός', en: 'Professional design' },
-                              { el: 'SEO βελτιστοποίηση', en: 'SEO optimization' },
-                              { el: 'Mobile responsive', en: 'Mobile responsive' },
-                              { el: 'Απεριόριστες αλλαγές μέχρι την τελειότητα', en: 'Unlimited changes until perfection' },
-                            ].map((item) => (
-                              <li key={item.en} className="flex items-start gap-3 text-sm text-gray-400 leading-relaxed">
+                            {service.card.points.map((pi) => (
+                              <li key={pi} className="flex items-start gap-3 text-sm text-gray-400 leading-relaxed">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5 icon-glow"><polyline points="20 6 9 17 4 12"/></svg>
-                                {item[lang]}
+                                {service.includes[pi][lang]}
                               </li>
                             ))}
                           </ul>
-                        </>
-                      ) : (
-                        <ul className="space-y-2.5 mb-5">
-                          {service.card.points.map((pi) => (
-                            <li key={pi} className="flex items-start gap-3 text-sm text-gray-400 leading-relaxed">
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5 icon-glow"><polyline points="20 6 9 17 4 12"/></svg>
-                              {service.includes[pi][lang]}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                      <div className="mb-7 flex-grow">
-                        <PitchQuote compact>{service.pitch[lang]}</PitchQuote>
+                        )}
+                        <div className="mb-7 flex-grow">
+                          <PitchQuote compact>{service.pitch[lang]}</PitchQuote>
+                        </div>
+                        <Link
+                          href={`/${service.slug}`}
+                          className="btn-premium flex items-center justify-center gap-2 w-full py-3.5 bg-electric-cyan text-[#050a0e] font-bold rounded-xl hover:bg-white transition-colors uppercase text-sm tracking-wide mt-auto"
+                        >
+                          {service.card.cta[lang]}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        </Link>
                       </div>
-                      <Link
-                        href={`/${service.slug}`}
-                        className="btn-premium flex items-center justify-center gap-2 w-full py-3.5 bg-electric-cyan text-[#050a0e] font-bold rounded-xl hover:bg-white transition-colors uppercase text-sm tracking-wide mt-auto"
-                      >
-                        {service.card.cta[lang]}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                      </Link>
-                    </div>
-                  </TiltCard>
+                    </TiltCard>
+                  </ScrollReveal>
+                );
+              })}
+              {g === 0 && (
+                <ScrollReveal delay={120} className="md:col-span-2 lg:col-span-3">
+                  <div className="glass-panel rounded-2xl px-6 py-5 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    {[
+                      { el: ['Χωρίς κωδικούς', 'Δεν ζητάμε ποτέ password — μας δίνετε πρόσβαση συνεργάτη.'], en: ['No passwords', 'We never ask for a password — you give us partner access.'] },
+                      { el: ['Ρύθμιση σε λίγα λεπτά', 'Social ~3 λεπτά, Google Ads ~5 λεπτά, με οδηγό βήμα-βήμα.'], en: ['Setup in minutes', 'Social ~3 min, Google Ads ~5 min, with a step-by-step guide.'] },
+                      { el: ['Μας αφαιρείτε με ένα κλικ', 'Τα προφίλ και ο λογαριασμός μένουν πάντα δικά σας.'], en: ['Remove us with one click', 'The profiles and the account always stay yours.'] },
+                      { el: ['Χωρίς δέσμευση', 'Σταματάτε με ένα μήνυμα, όποτε θέλετε.'], en: ['No commitment', 'Stop with one message, whenever you want.'] },
+                    ].map((p) => (
+                      <div key={p.en[0]}>
+                        <b className="block text-white text-[15px]">{p[lang][0]}</b>
+                        <span className="text-[13px] text-gray-500 leading-snug">{p[lang][1]}</span>
+                      </div>
+                    ))}
+                  </div>
                 </ScrollReveal>
-              );
-            })}
-          </div>
+              )}
+            </div>
+          ))}
 
           {/* ── «Ακόμη» strip ── */}
           <ScrollReveal delay={80} className="mt-16">
@@ -422,8 +454,23 @@ export default function HomeClient() {
             </div>
           </ScrollReveal>
 
-          {/* Bottom CTA */}
-          <ScrollReveal delay={100} className="mt-16 text-center">
+          {/* Bottom CTA — the bundle, then the «not sure» line */}
+          <ScrollReveal delay={80} className="mt-16">
+            <div className="rounded-2xl border border-electric-cyan/30 px-6 md:px-8 py-6 flex flex-wrap items-center justify-between gap-5" style={{ background: 'linear-gradient(90deg, rgba(71,200,245,0.12), rgba(107,63,160,0.12))' }}>
+              <div>
+                <span className="section-label !mb-2">{lang === 'el' ? 'Μαζί κοστίζουν λιγότερο' : 'Together they cost less'}</span>
+                <div className="text-gray-200 text-[17px]">
+                  {lang === 'el' ? 'Social «Ανάπτυξη» + Google Ads: ' : 'Social “Growth” + Google Ads: '}
+                  <b className="text-white text-[26px] font-display">119€</b>
+                  <span className="text-gray-500 text-sm"> {lang === 'el' ? '/μήνα + ΦΠΑ αντί 138€' : '/month + VAT instead of 138€'}</span>
+                </div>
+              </div>
+              <Link href="#contact" className="btn-premium inline-flex items-center gap-2 px-7 py-3.5 bg-electric-cyan text-[#050a0e] text-sm font-black uppercase tracking-[0.1em] rounded-xl hover:bg-white transition-colors" style={{ boxShadow: '0 0 24px rgba(71,200,245,0.35)' }}>
+                {lang === 'el' ? 'Δωρεάν έλεγχος για εσάς' : 'Free check for you'}
+              </Link>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={100} className="mt-10 text-center">
             <div className="inline-flex items-center gap-4 flex-wrap justify-center">
               <span className="text-gray-500 text-sm">{lang === 'el' ? 'Δεν είστε σίγουροι ποια υπηρεσία ταιριάζει;' : 'Not sure which service fits?'}</span>
               <Link href="#contact" className="btn-premium inline-flex items-center gap-2 px-6 py-2.5 border border-electric-cyan/40 text-electric-cyan text-sm font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all">
@@ -433,6 +480,9 @@ export default function HomeClient() {
           </ScrollReveal>
         </div>
       </section>
+
+      {/* ─── ROADMAP — the path draws as you scroll ─── */}
+      <Roadmap />
 
       {/* ─── REVIEWS ─── */}
       <Reviews />

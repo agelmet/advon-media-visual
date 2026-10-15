@@ -2,7 +2,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 
-export default function ScrollReveal({ children, className = '', delay = 0, direction = 'up', threshold = 0.12, once = true }) {
+export default function ScrollReveal({ children, className = '', delay = 0, direction = 'up', threshold = 0.12, once = true, style, id, as: Tag = 'div' }) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -16,6 +16,7 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
       right: 'sr-right',
       scale: 'sr-scale',
       fade: 'sr-fade',
+      deal: 'sr-deal',
     };
 
     el.classList.add('sr', dirMap[direction] || 'sr-up');
@@ -27,7 +28,7 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
     let releaseTimer;
     const release = (e) => {
       if (e && e.target !== el) return; // ignore transitionend bubbling from children
-      el.classList.remove('sr', 'sr-up', 'sr-left', 'sr-right', 'sr-scale', 'sr-fade', 'sr-visible');
+      el.classList.remove('sr', 'sr-up', 'sr-left', 'sr-right', 'sr-scale', 'sr-fade', 'sr-deal', 'sr-visible');
       el.style.transitionDelay = '';
       el.removeEventListener('transitionend', release);
       clearTimeout(releaseTimer);
@@ -47,7 +48,7 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
           el.classList.remove('sr-visible');
         }
       },
-      { threshold }
+      { threshold, rootMargin: '0px 0px -6% 0px' }
     );
 
     observer.observe(el);
@@ -59,8 +60,8 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
   }, [delay, direction, threshold, once]);
 
   return (
-    <div ref={ref} className={className}>
+    <Tag ref={ref} id={id} className={className} style={style}>
       {children}
-    </div>
+    </Tag>
   );
 }
