@@ -45,3 +45,22 @@ export function GoogleMark() {
     </span>
   );
 }
+
+/* Line versions in the site's own icon style (cyan strokes, same tile as the other service icons) */
+export const InstagramLine = ({ className = '' }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <circle cx="17.3" cy="6.7" r=".9" fill="currentColor" stroke="none" />
+  </svg>
+);
+export const FacebookLine = ({ className = '' }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+    <path d="M15.5 3.5h-2.2c-2.4 0-3.8 1.5-3.8 4v2.6H7v3.3h2.5V21h3.4v-7.6h2.6l.5-3.3h-3.1V8c0-.9.4-1.4 1.4-1.4h1.7z" />
+  </svg>
+);
+export const GoogleLine = ({ className = '' }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+    <path d="M19.4 6.8A9 9 0 1 0 21 12h-8.5" />
+  </svg>
+);
