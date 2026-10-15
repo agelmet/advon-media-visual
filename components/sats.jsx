@@ -103,17 +103,18 @@ export default function Stats() {
                 <div className={`stat-line h-[2px] rounded-full ${accent ? 'bg-[#FBBC05]/60' : 'bg-electric-cyan/50'}`} />
               )}
             </div>
-            <div className="text-[0.65rem] font-black tracking-[0.2em] text-gray-500 uppercase transition-colors duration-300 group-hover:text-gray-300 flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1.5">
+            {/* label row: the same height on all four tiles, so every row lines up */}
+            <div className="min-h-7 md:min-h-8 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-[0.65rem] font-black tracking-[0.2em] text-gray-500 uppercase transition-colors duration-300 group-hover:text-gray-300">
               {google && (
-                <span className="stat-gchip inline-flex items-center gap-1.5 normal-case tracking-normal">
-                  <span className="inline-flex items-center justify-center w-[18px] h-[18px] rounded-full bg-white shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
-                    <GoogleG className="w-[11px] h-[11px]" />
+                <span className="stat-gchip inline-flex items-center gap-2 normal-case tracking-normal">
+                  <span className="stat-google inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-full bg-white shadow-[0_3px_12px_rgba(0,0,0,0.55)] shrink-0">
+                    <GoogleG className="w-[17px] h-[17px] md:w-5 md:h-5" />
                   </span>
-                  <span className="text-[0.72rem] font-bold text-gray-200">5,0</span>
+                  <span className="text-[0.9rem] md:text-base font-bold text-gray-100 leading-none">5,0</span>
                   <span className="text-gray-600 hidden md:inline">·</span>
                 </span>
               )}
-              {lang === 'el' ? labelEl : labelEn}
+              <span>{lang === 'el' ? labelEl : labelEn}</span>
             </div>
           </Tile>
           );

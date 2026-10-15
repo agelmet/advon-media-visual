@@ -46,18 +46,19 @@ export default function Background() {
       W = window.innerWidth; H = window.innerHeight;
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const n = Math.floor((W * H) / (coarse ? 1900 : 1150));
+      const n = Math.floor((W * H) / (coarse ? 620 : 380));
       stars = [];
       for (let i = 0; i < n; i++) {
         const r = Math.random();
-        const big = r > 0.982;                       // a few brighter «feature» fibres
+        const big = r > 0.988;                      // ~1 in 80: brighter «feature» fibres
+        const mid = !big && r > 0.93;              // a layer of clearly visible stars                       // a few brighter «feature» fibres
         const tint = Math.random() > 0.82 ? 2 : Math.random() > 0.45 ? 0 : 1;
         stars.push({
           x: Math.random() * W,
           y: Math.random() * H * 1.6,                 // taller than the screen, for the parallax
           d: 0.25 + Math.random() * 0.75,             // depth: deeper fibres move less
-          s: big ? 1.2 + Math.random() * 0.6 : 0.35 + Math.pow(Math.random(), 2.2) * 0.75,
-          b: big ? 0.95 : 0.3 + Math.random() * 0.62, // base brightness
+          s: big ? 1.2 + Math.random() * 0.6 : mid ? 0.75 + Math.random() * 0.35 : 0.3 + Math.pow(Math.random(), 2.4) * 0.6,
+          b: big ? 0.95 : mid ? 0.7 + Math.random() * 0.3 : 0.18 + Math.random() * 0.55, // base brightness
           w: 0.35 + Math.random() * 1.3,              // twinkle speed (rad/s)
           p: Math.random() * 6.283,                   // phase
           t: tint,

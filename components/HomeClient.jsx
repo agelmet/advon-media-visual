@@ -57,7 +57,9 @@ export default function HomeClient() {
   useEffect(() => {
     const onScroll = () => {
       if (heroDecoRef.current) {
-        heroDecoRef.current.style.transform = `translateY(${window.scrollY * 0.25}px)`;
+        // the ceiling light stays put (a moving layer would show its top edge under the menu);
+        // it only fades a little as you scroll away from it
+        heroDecoRef.current.style.opacity = String(Math.max(0.35, 1 - window.scrollY / 900));
       }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -67,14 +69,14 @@ export default function HomeClient() {
   return (
     <>
       {/* ─── HERO ─── */}
-      <section className="relative min-h-screen flex items-center justify-center py-20 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center -mt-28 pt-48 pb-20 overflow-hidden">
 
         {/* ── PARALLAX DECORATION LAYERS (slower than scroll) ── */}
         <div
           ref={heroDecoRef}
           className="absolute inset-0 pointer-events-none"
           aria-hidden="true"
-          style={{ willChange: 'transform' }}
+          style={{ willChange: 'opacity' }}
         >
           {/* Starlight: the background itself carries the stars; the hero only adds a soft
               «ceiling light» from above, like the lit headliner of a Rolls-Royce. */}
