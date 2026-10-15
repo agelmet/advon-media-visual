@@ -113,7 +113,7 @@ export default function GrowthWhy({ lang, billingAnnual }) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="why-title"
-            className="why-panel relative w-full sm:max-w-2xl flex flex-col rounded-t-3xl sm:rounded-3xl border border-white/12 bg-[#0a1017] shadow-[0_30px_120px_rgba(0,0,0,0.7),0_0_80px_rgba(71,200,245,0.12)]"
+            className="why-panel relative w-full sm:max-w-2xl flex flex-col rounded-t-3xl sm:rounded-3xl border border-white/12 bg-[#0a0b0e] shadow-[0_30px_120px_rgba(0,0,0,0.7),0_0_80px_rgba(71,200,245,0.12)]"
           >
             <div className="why-glow" aria-hidden="true" />
             {/* head */}
@@ -209,11 +209,11 @@ export default function GrowthWhy({ lang, billingAnnual }) {
             </div>
 
             {/* foot */}
-            <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3 px-6 sm:px-8 py-4 border-t border-white/8 bg-[#0a1017] rounded-b-none sm:rounded-b-3xl">
+            <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3 px-6 sm:px-8 py-4 border-t border-white/8 bg-[#0a0b0e] rounded-b-none sm:rounded-b-3xl">
               <a
                 href="#contact"
                 onClick={() => setOpen(false)}
-                className="btn-premium flex-1 inline-flex items-center justify-center text-center gap-2 px-6 py-3.5 rounded-xl bg-electric-cyan text-[#050a0e] font-black text-sm shadow-[0_0_30px_rgba(71,200,245,0.35)] hover:shadow-[0_0_44px_rgba(71,200,245,0.55)] transition-shadow duration-300"
+                className="btn-premium flex-1 inline-flex items-center justify-center text-center gap-2 px-6 py-3.5 rounded-xl bg-electric-cyan text-[#050608] font-black text-sm shadow-[0_0_30px_rgba(71,200,245,0.35)] hover:shadow-[0_0_44px_rgba(71,200,245,0.55)] transition-shadow duration-300"
               >
                 {el ? 'Θέλω το Growth · δωρεάν 15λεπτη κλήση' : 'I want Growth · free 15-minute call'}
               </a>

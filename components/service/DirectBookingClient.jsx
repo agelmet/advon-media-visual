@@ -15,7 +15,6 @@ import {
   IncludesSection,
   ProofStrip,
   FaqSection,
-  CtaBand,
 } from '@/components/service/blocks';
 
 export default function DirectBookingClient() {
@@ -85,7 +84,7 @@ export default function DirectBookingClient() {
       <PainSection service={service} />
 
       {/* ─── SYNC DIAGRAM — every channel, one calendar ─── */}
-      <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 backdrop-blur-sm relative overflow-hidden">
+      <section className="py-24 bg-[#0b0c10]/60 border-y border-electric-cyan/8 backdrop-blur-sm relative overflow-hidden">
         <div className="max-w-5xl mx-auto px-6">
           <SyncDiagram lang={lang} />
         </div>
@@ -95,7 +94,6 @@ export default function DirectBookingClient() {
       <IncludesSection service={service} icons={['globe', 'refresh', 'chart', 'sparkles']} />
       <ProofStrip />
       <FaqSection service={service} />
-      <CtaBand />
     </>
   );
 }
@@ -148,7 +146,7 @@ function SyncDiagram({ lang }) {
       <ScrollReveal delay={320} direction="right">
         <div className="relative mx-auto md:mx-0 w-fit">
           <div aria-hidden="true" className="absolute inset-0 bg-electric-cyan/10 blur-[60px] rounded-full pointer-events-none" />
-          <div className="relative z-10 rounded-3xl border-2 border-electric-cyan/45 bg-[#0a1418] p-7 shadow-[0_0_40px_rgba(71,200,245,0.18)]">
+          <div className="relative z-10 rounded-3xl border-2 border-electric-cyan/45 bg-[#0b0c10] p-7 shadow-[0_0_40px_rgba(71,200,245,0.18)]">
             <div className="text-electric-cyan icon-glow mb-4">{ICONS.calendar('w-10 h-10')}</div>
             {/* Mini month: every channel writes to the same squares */}
             <div className="grid grid-cols-7 gap-1.5" aria-hidden="true">

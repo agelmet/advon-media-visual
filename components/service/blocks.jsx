@@ -52,6 +52,9 @@ export const ICONS = {
   instagram: (cls = 'w-7 h-7') => (
     <svg {...iconProps} className={cls}><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
   ),
+  ads: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/><path d="M11 8v6"/></svg>
+  ),
   check: (cls = 'w-5 h-5') => (
     <svg {...iconProps} strokeWidth="2.5" className={cls}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
   ),
@@ -158,7 +161,7 @@ export function ServiceHero({ service, children }) {
         </ScrollReveal>
         {children}
         <ScrollReveal delay={140} direction="scale">
-          <PitchQuote className="text-left mt-8 max-w-3xl mx-auto">{service.pitch[lang]}</PitchQuote>
+          <PitchQuote className="text-left mt-8 max-w-3xl lg:max-w-none mx-auto">{service.pitch[lang]}</PitchQuote>
         </ScrollReveal>
       </div>
     </section>
@@ -169,27 +172,27 @@ export function ServiceHero({ service, children }) {
 export function PainSection({ service }) {
   const { lang } = useLangStore();
   const [lead, ...rest] = service.pain;
+  // Desktop: the lead statement on the left, the supporting paragraphs as plates on the right
+  // (side by side instead of one tall column). Phones: one column, as before.
   return (
-    <section className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute rounded-full" style={{ top: '-10%', right: '-12%', width: 'min(45vw, 460px)', height: 'min(45vw, 460px)', background: 'radial-gradient(circle, rgba(107,63,160,0.1) 0%, transparent 65%)', filter: 'blur(90px)' }} />
-      </div>
-      <div className="max-w-3xl mx-auto px-6 relative z-10">
+    <section className="py-24 relative overflow-hidden mv-amb">
+      <div className="max-w-3xl lg:max-w-6xl mx-auto px-6 relative z-10 lg:grid lg:grid-cols-2 lg:gap-14 lg:items-center">
         {/* Pull-quote lead */}
         <ScrollReveal>
           <p
-            className="font-display font-bold text-white leading-snug mb-12 relative pl-6"
-            style={{ fontSize: 'clamp(1.35rem, 2.6vw, 1.85rem)' }}
+            className="font-display font-bold text-white leading-snug mb-12 lg:mb-0 relative pl-6 mv-readable"
+            style={{ fontSize: 'clamp(1.45rem, 2.5vw, 2.05rem)' }}
+            data-lit
           >
             <span aria-hidden="true" className="absolute left-0 top-1 bottom-1 w-1 rounded-full bg-gradient-to-b from-electric-cyan to-electric-cyan/10" />
             {lead[lang]}
           </p>
         </ScrollReveal>
-        {/* Supporting paragraphs — generous whitespace */}
-        <div className="space-y-8">
+        {/* Supporting paragraphs */}
+        <div className="space-y-8 lg:space-y-5">
           {rest.map((p, i) => (
-            <ScrollReveal key={i} delay={i * 90}>
-              <p className="text-gray-400 text-lg leading-relaxed max-w-2xl">
+            <ScrollReveal key={i} delay={i * 110} direction={i % 2 ? 'right' : 'left'} className="pain-card">
+              <p className="text-gray-300 lg:text-gray-200 text-lg leading-relaxed max-w-2xl lg:max-w-none mv-readable">
                 {p[lang]}
               </p>
             </ScrollReveal>
@@ -206,7 +209,7 @@ export function StepsSection({ service }) {
   const cols = service.steps.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-4';
   const inset = service.steps.length === 3 ? 'md:left-[calc(16.66%+1rem)] md:right-[calc(16.66%+1rem)]' : 'lg:left-[calc(12.5%+1rem)] lg:right-[calc(12.5%+1rem)]';
   return (
-    <section className="py-24 bg-[#0a1418]/60 border-y border-electric-cyan/8 backdrop-blur-sm relative overflow-hidden">
+    <section className="py-24 bg-[#0b0c10]/60 border-y border-electric-cyan/8 relative overflow-hidden mv-amb alt mv-shoulder">
       <div className="max-w-6xl mx-auto px-6">
         <ScrollReveal className="text-center mb-16">
           <span className="section-label">{lang === 'el' ? 'Βήμα - Βήμα' : 'Step by Step'}</span>
@@ -215,27 +218,24 @@ export function StepsSection({ service }) {
           </h2>
         </ScrollReveal>
 
-        <div className={`grid gap-10 md:gap-8 relative ${cols}`}>
-          {/* Connector line between milestone nodes (desktop) */}
-          <div
-            aria-hidden="true"
-            className={`hidden md:block absolute top-8 h-px bg-gradient-to-r from-electric-cyan/25 via-electric-cyan/60 to-electric-cyan/25 left-0 right-0 ${inset}`}
-          />
-          {/* Mobile connector — vertical */}
-          <div aria-hidden="true" className="md:hidden absolute top-4 bottom-8 left-[31px] w-px bg-gradient-to-b from-electric-cyan/50 via-electric-cyan/30 to-transparent" />
+        <div className={`grid gap-10 md:gap-8 relative ${cols}`} data-progress>
+          {/* Connector (desktop): fills with the scroll */}
+          <div aria-hidden="true" className={`mv-track hidden md:block top-8 h-[3px] -mt-px left-0 right-0 ${inset}`}><i /></div>
+          {/* Mobile connector — vertical, fills with the scroll */}
+          <div aria-hidden="true" className="mv-track v md:hidden top-4 bottom-8 left-[30px] w-[3px]"><i /></div>
 
-          {service.steps.map((step, i) => (
+          {service.steps.map((step, i, all) => (
             <ScrollReveal key={i} delay={i * 120} direction="up" className="h-full">
-              <div className="relative flex md:flex-col items-start md:items-center gap-5 md:gap-0 md:text-center h-full pl-0">
+              <div data-at={(i / Math.max(1, all.length - 1)) * 0.9} className="relative flex md:flex-col items-start md:items-center gap-5 md:gap-0 md:text-center h-full pl-0">
                 <div
-                  className="w-16 h-16 shrink-0 md:mx-auto md:mb-6 rounded-full bg-[#0a1418] border-2 border-electric-cyan/45 flex items-center justify-center relative z-10"
+                  className="mv-node w-16 h-16 shrink-0 md:mx-auto md:mb-6 rounded-full bg-[#0b0c10] border-2 border-electric-cyan/60 flex items-center justify-center relative z-10"
                   style={{ boxShadow: '0 0 26px rgba(71,200,245,0.18), inset 0 0 14px rgba(71,200,245,0.06)' }}
                 >
                   <span className="text-xl font-black text-electric-cyan">{String(i + 1).padStart(2, '0')}</span>
                 </div>
-                <div>
+                <div className="mv-frost rounded-2xl p-5 md:mt-1 w-full md:flex-1">
                   <h3 className="text-white font-bold text-lg mb-2 leading-snug">{step.title[lang]}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed max-w-xs md:mx-auto">{step.body[lang]}</p>
+                  <p className="text-gray-300 text-sm leading-relaxed max-w-xs md:mx-auto">{step.body[lang]}</p>
                 </div>
               </div>
             </ScrollReveal>
@@ -255,7 +255,7 @@ export function IncludesSection({ service, icons, items }) {
   const list = items || service.includes;
   const twoCol = list.length !== 3;
   return (
-    <section className="py-24">
+    <section className="py-24 mv-amb">
       <div className="max-w-5xl mx-auto px-6">
         <ScrollReveal className="text-center mb-14">
           <span className="section-label">{lang === 'el' ? 'Παροχές' : 'What You Get'}</span>
@@ -267,8 +267,9 @@ export function IncludesSection({ service, icons, items }) {
           {list.map((item, i) => (
             <ScrollReveal
               key={i}
-              delay={(i % 2) * 90 + Math.floor(i / 2) * 50}
-              direction={i % 2 === 0 ? 'left' : 'right'}
+              delay={(i % 2) * 90 + Math.floor(i / 2) * 60}
+              direction="deal"
+              style={{ '--rz': `${i % 2 ? 2 : -2}deg` }}
               className={`h-full ${twoCol && list.length % 2 === 1 && i === list.length - 1 ? 'sm:col-span-2' : ''}`}
             >
               <div className="glass-panel card-sweep rounded-2xl p-6 flex items-start gap-4 h-full group">
@@ -298,7 +299,7 @@ export function ProofStrip() {
     { num: '125+', el: 'ΚΡΙΤΙΚΕΣ 5★ ΣΤΟ GOOGLE', en: '5★ REVIEWS ON GOOGLE' },
   ];
   return (
-    <div className="border-y border-electric-cyan/10 bg-[#0a1418]/50 backdrop-blur-sm py-12 relative overflow-hidden">
+    <div className="border-y border-electric-cyan/10 bg-[#0b0c10]/50 backdrop-blur-sm py-12 relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{ width: '70%', height: '180%', background: 'radial-gradient(ellipse, rgba(71,200,245,0.06) 0%, transparent 65%)', filter: 'blur(70px)' }} />
       </div>
@@ -321,7 +322,7 @@ export function ProofStrip() {
           <div className="hidden md:block w-px h-16 bg-electric-cyan/15" aria-hidden="true" />
           <Link
             href="/kataskevi-istoselidas#portfolio"
-            className="btn-premium inline-flex items-center gap-2 px-7 py-3 border border-electric-cyan/40 text-electric-cyan text-sm font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all"
+            className="btn-premium inline-flex items-center gap-2 px-7 py-3 border border-electric-cyan/40 text-electric-cyan text-sm font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050608] transition-all"
           >
             {lang === 'el' ? 'Δείτε το πορτφόλιό μας →' : 'See our portfolio →'}
           </Link>
@@ -336,18 +337,11 @@ export function FaqSection({ service, faqs }) {
   const { lang } = useLangStore();
   const [openFaq, setOpenFaq] = useState(null);
   const list = faqs || service.faqs;
-  return (
-    <section className="py-24">
-      <div className="max-w-3xl mx-auto px-6">
-        <ScrollReveal className="text-center mb-14">
-          <span className="section-label">FAQ</span>
-          <h2 className="text-3xl md:text-4xl font-black font-display mb-3 text-white tracking-tight">
-            {lang === 'el' ? 'Συχνές Ερωτήσεις' : 'Frequently Asked Questions'}
-          </h2>
-        </ScrollReveal>
-        <div className="space-y-3">
-          {list.map(({ q, a }, i) => (
-            <ScrollReveal key={i} delay={i * 60}>
+  const half = Math.floor(list.length / 2);
+  const renderItem = (i, delay) => {
+    const { q, a } = list[i];
+    return (
+            <ScrollReveal key={i} delay={delay}>
               <div className="glass-panel rounded-2xl overflow-hidden border border-white/8 hover:border-electric-cyan/25 transition-colors duration-300">
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
@@ -371,18 +365,39 @@ export function FaqSection({ service, faqs }) {
                 </div>
               </div>
             </ScrollReveal>
+    );
+  };
+  return (
+    <section className="py-24">
+      <div className="max-w-3xl lg:max-w-6xl mx-auto px-6">
+        <ScrollReveal className="text-center mb-14">
+          <span className="section-label">FAQ</span>
+          <h2 className="text-3xl md:text-4xl font-black font-display mb-3 text-white tracking-tight">
+            {lang === 'el' ? 'Συχνές Ερωτήσεις' : 'Frequently Asked Questions'}
+          </h2>
+        </ScrollReveal>
+        {/* Desktop: two independent columns (opening one never moves the other); an odd last question
+            sits centred under them. Phones: one list in order. */}
+        <div className="lg:grid lg:grid-cols-2 lg:gap-x-6 lg:items-start space-y-3 lg:space-y-0">
+          {[0, 1].map((c) => (
+            <div key={c} className="space-y-3">
+              {list.slice(c * half, (c + 1) * half).map((_, j) => renderItem(c * half + j, j * 60 + c * 90))}
+            </div>
           ))}
         </div>
+        {list.length % 2 === 1 && (
+          <div className="mt-3 lg:w-[calc(50%-0.75rem)] lg:mx-auto">{renderItem(list.length - 1, 220)}</div>
+        )}
       </div>
     </section>
   );
 }
 
-/* ─── Final CTA — full-width band, identical on every page ─── */
+/* ─── Final CTA band — NOT used any more (15 Oct 2026, Angelo: the contact form + booking sit right under every page, and Contact is in the menu) ─── */
 export function CtaBand() {
   const { lang } = useLangStore();
   return (
-    <section className="py-24 relative overflow-hidden border-t border-electric-cyan/10 bg-gradient-to-b from-transparent to-[#0a1418]/60">
+    <section className="py-24 relative overflow-hidden border-t border-electric-cyan/10 bg-gradient-to-b from-transparent to-[#0b0c10]/60">
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_75%_70%_at_50%_100%,rgba(71,200,245,0.08)_0%,transparent_70%)]" />
         <div className="absolute top-0 left-0 right-0 cyber-divider" />
@@ -403,7 +418,7 @@ export function CtaBand() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="#contact"
-              className="btn-premium inline-flex items-center gap-3 px-10 py-4 bg-electric-cyan text-[#050a0e] font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-white transition-all duration-300 hover:scale-105"
+              className="btn-premium inline-flex items-center gap-3 px-10 py-4 bg-electric-cyan text-[#050608] font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-white transition-all duration-300 hover:scale-105"
               style={{ boxShadow: '0 0 30px rgba(71,200,245,0.4), 0 4px 20px rgba(0,0,0,0.4)', animation: 'heroCTAPulse 3s ease-in-out infinite' }}
             >
               {lang === 'el' ? 'Φόρμα Επικοινωνίας' : 'Contact Form'}
@@ -411,7 +426,7 @@ export function CtaBand() {
             </Link>
             <a
               href="mailto:angelos@advonmedia.com"
-              className="btn-premium inline-flex items-center gap-3 px-10 py-4 bg-transparent border-2 border-electric-cyan text-electric-cyan font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all duration-300"
+              className="btn-premium inline-flex items-center gap-3 px-10 py-4 bg-transparent border-2 border-electric-cyan text-electric-cyan font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-electric-cyan hover:text-[#050608] transition-all duration-300"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               Email

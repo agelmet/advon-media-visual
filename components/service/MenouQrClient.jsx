@@ -14,7 +14,6 @@ import {
   IncludesSection,
   ProofStrip,
   FaqSection,
-  CtaBand,
 } from '@/components/service/blocks';
 
 export default function MenouQrClient() {
@@ -87,7 +86,6 @@ export default function MenouQrClient() {
       <IncludesSection service={service} icons={['qr', 'pen', 'printer']} />
       <ProofStrip />
       <FaqSection service={service} />
-      <CtaBand />
     </>
   );
 }
@@ -114,7 +112,7 @@ function PaperMenu({ lang }) {
     <div className="relative max-w-[380px] mx-auto">
       <div className="relative -rotate-2 rounded-lg bg-[#f2ecdd] p-7 pb-9 shadow-[0_24px_60px_rgba(0,0,0,0.55)]">
         {/* Label */}
-        <span className="absolute -top-3.5 left-6 text-[0.58rem] font-black tracking-[0.25em] uppercase text-gray-400 bg-[#0d1a21] border border-white/10 rounded-full px-3 py-1.5 rotate-1">
+        <span className="absolute -top-3.5 left-6 text-[0.58rem] font-black tracking-[0.25em] uppercase text-gray-400 bg-[#0e1014] border border-white/10 rounded-full px-3 py-1.5 rotate-1">
           {lang === 'el' ? 'Έντυπος κατάλογος' : 'Printed menu'}
         </span>
         {/* Heading rule */}
@@ -165,8 +163,8 @@ function PhoneMenu() {
     <div className="relative max-w-[300px] mx-auto">
       <div aria-hidden="true" className="absolute inset-0 bg-electric-cyan/8 blur-[80px] rounded-full pointer-events-none" />
 
-      <div className="relative z-10 rounded-[2.75rem] border border-white/12 bg-[#0a1418] p-2.5 shadow-[0_24px_80px_rgba(0,0,0,0.6),0_0_50px_rgba(71,200,245,0.12)]">
-        <div className="rounded-[2.25rem] bg-[#050a0e] overflow-hidden">
+      <div className="relative z-10 rounded-[2.75rem] border border-white/12 bg-[#0b0c10] p-2.5 shadow-[0_24px_80px_rgba(0,0,0,0.6),0_0_50px_rgba(71,200,245,0.12)]">
+        <div className="rounded-[2.25rem] bg-[#050608] overflow-hidden">
           <div className="flex justify-center pt-2.5 pb-1">
             <div className="w-20 h-1.5 rounded-full bg-white/10" />
           </div>
@@ -175,7 +173,7 @@ function PhoneMenu() {
             <div className="flex items-center justify-between mb-4">
               <div className="h-2.5 w-24 rounded-full bg-white/20" />
               <div className="flex rounded-full border border-white/10 overflow-hidden text-[0.55rem] font-black">
-                <span className="px-2 py-1 bg-electric-cyan text-[#050a0e]">ΕΛ</span>
+                <span className="px-2 py-1 bg-electric-cyan text-[#050608]">ΕΛ</span>
                 <span className="px-2 py-1 text-gray-500">EN</span>
               </div>
             </div>
@@ -211,7 +209,7 @@ function PhoneMenu() {
       {/* The QR that never changes — floats by the phone */}
       <div className="absolute -top-5 -right-4 md:-right-8 z-20 animate-float">
         <div className="badge-scan rounded-2xl bg-white p-3 shadow-[0_12px_40px_rgba(0,0,0,0.5),0_0_24px_rgba(71,200,245,0.25)]">
-          <span className="text-[#050a0e]">{ICONS.qr('w-9 h-9')}</span>
+          <span className="text-[#050608]">{ICONS.qr('w-9 h-9')}</span>
         </div>
       </div>
     </div>

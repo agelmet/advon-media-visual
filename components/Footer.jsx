@@ -18,7 +18,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-[#050a0e] border-t border-electric-cyan/20 text-gray-400 relative z-20 overflow-hidden">
+    <footer className="bg-[#050608] border-t border-electric-cyan/20 text-gray-400 relative z-20 overflow-hidden">
       <div className="absolute top-0 left-0 right-0 cyber-divider" aria-hidden="true" />
       {/* Soft glow that breathes very slowly behind the brand column */}
       <div className="absolute -top-40 -left-32 w-[520px] h-[520px] rounded-full pointer-events-none aurora" aria-hidden="true"
@@ -53,11 +53,6 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link href="/diaxeirisi-social-media" className="footer-link text-sm text-gray-400 hover:text-electric-cyan transition-colors">
-                  {lang === 'el' ? 'Διαχείριση Social Media' : 'Social Media Management'}
-                </Link>
-              </li>
             </ul>
           </div>
 

@@ -73,7 +73,7 @@ export default function FAQ() {
           <div className="space-y-3">
             {faqs.map((faq, index) => (
               <ScrollReveal key={index} delay={index * 50} direction="up">
-                <div className="bg-[#081219]/80 border border-electric-cyan/10 rounded-2xl overflow-hidden hover:border-electric-cyan/25 transition-colors duration-300">
+                <div className="bg-[#08090c]/80 border border-electric-cyan/10 rounded-2xl overflow-hidden hover:border-electric-cyan/25 transition-colors duration-300">
                   <button
                     onClick={() => setOpenIndex(openIndex === index ? null : index)}
                     className={`w-full flex items-center justify-between p-6 text-left font-medium hover:text-electric-cyan transition-colors text-lg ${openIndex === index ? 'text-electric-cyan' : 'text-white'}`}

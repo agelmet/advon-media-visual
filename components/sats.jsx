@@ -2,7 +2,7 @@
 'use client';
 import { useEffect, useState, useRef } from 'react';
 import { useLangStore } from '@/store/langStore';
-import { GoogleG } from '@/components/ReviewsGlyphs';
+import { GoogleG, GoogleStar } from '@/components/ReviewsGlyphs';
 
 const AnimatedCounter = ({ end, suffix = '', duration = 2200, hasTriggered }) => {
   const [count, setCount] = useState(0);
@@ -35,6 +35,8 @@ const AnimatedCounter = ({ end, suffix = '', duration = 2200, hasTriggered }) =>
 export default function Stats() {
   const { lang } = useLangStore();
   const [isVisible, setIsVisible] = useState(false);
+  const [settled, setSettled] = useState(false); // entrance + edge light finished → hover ring is free
+  useEffect(() => { if (!isVisible) return; const t = setTimeout(() => setSettled(true), 2400); return () => clearTimeout(t); }, [isVisible]);
   const ref = useRef(null);
 
   useEffect(() => {
@@ -51,13 +53,13 @@ export default function Stats() {
     { end: 3,   suffix: '+', labelEl: 'ΧΡΟΝΙΑ ΕΜΠΕΙΡΙΑΣ', labelEn: 'YEARS EXPERIENCE' },
     { end: 220, suffix: '+', labelEl: 'ΙΣΤΟΣΕΛΙΔΕΣ',       labelEn: 'WEBSITES' },
     { end: 100, suffix: '%', labelEl: 'ΕΠΙΤΥΧΙΑ',          labelEn: 'SUCCESS' },
-    { end: 125, suffix: '+', labelEl: 'ΑΞΙΟΛΟΓΗΣΕΙΣ',      labelEn: '5-STAR REVIEWS', accent: true, google: true },
+    { end: 125, suffix: '+', labelEl: 'ΑΞΙΟΛΟΓΗΣΕΙΣ',      labelEn: 'REVIEWS', accent: true, google: true },
   ];
 
   return (
     <section
       ref={ref}
-      className="py-24 border-y border-electric-cyan/8 bg-[#0a1418]/40 backdrop-blur-sm relative overflow-hidden"
+      className="py-24 border-y border-electric-cyan/8 bg-[#0b0c10]/40 backdrop-blur-sm relative overflow-hidden"
     >
       {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -70,38 +72,57 @@ export default function Stats() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-6 text-center relative z-10">
-        {stats.map(({ end, suffix, labelEl, labelEn, accent, google }, i) => (
-          <div
+        {stats.map(({ end, suffix, labelEl, labelEn, accent, google }, i) => {
+          const Tile = google ? 'a' : 'div';
+          return (
+          <Tile
             key={labelEn}
-            className={`stat-tile group card-sweep glass-panel rounded-3xl px-4 py-8 md:py-10 flex flex-col items-center justify-center h-full ${isVisible ? 'stat-tile-in' : ''}`}
-            style={{ transitionDelay: `${i * 110}ms` }}
+            {...(google ? { href: '#reviews', 'aria-label': lang === 'el' ? '125+ αξιολογήσεις 5 αστέρων στο Google' : '125+ five-star Google reviews' } : {})}
+            className={`stat-tile group card-sweep glass-panel rounded-3xl px-3 md:px-4 py-8 md:py-10 flex flex-col items-center justify-start h-full ${google ? 'stat-google-tile' : ''} ${isVisible ? 'stat-tile-in' : ''} ${settled ? 'stat-settled' : ''}`}
+            style={{ '--srd': `${i * 110}ms` }}
           >
+            {/* the number: same size, same row, same weight on all four tiles */}
             <div
-              className={`font-black font-display mb-2 flex items-center justify-center gap-3 transition-transform duration-300 group-hover:scale-110 ${accent ? 'stat-shine' : 'text-electric-cyan'}`}
+              className={`font-black font-display mb-2 leading-none transition-transform duration-300 group-hover:scale-110 ${accent ? 'stat-shine' : 'text-electric-cyan'}`}
               style={{
                 fontSize: 'clamp(2.4rem, 5.6vw, 3.8rem)',
                 filter: accent
-                  ? 'drop-shadow(0 0 14px rgba(251,188,5,0.5)) drop-shadow(0 0 38px rgba(240,165,0,0.28))'
+                  ? 'drop-shadow(0 0 14px rgba(251,188,5,0.45)) drop-shadow(0 0 34px rgba(240,165,0,0.22))'
                   : 'drop-shadow(0 0 20px rgba(71,200,245,0.3))',
               }}
             >
-              {google && (
-                <span
-                  className="inline-flex items-center justify-center w-11 h-11 md:w-12 md:h-12 rounded-full bg-white shadow-[0_4px_18px_rgba(0,0,0,0.45)] shrink-0 stat-google"
-                  aria-label="Google"
-                  style={{ filter: 'none' }}
-                >
-                  <GoogleG className="w-6 h-6 md:w-7 md:h-7" />
-                </span>
-              )}
               <AnimatedCounter end={end} suffix={suffix} hasTriggered={isVisible} />
             </div>
-            <div className={`stat-line h-[2px] mb-2.5 rounded-full ${accent ? 'bg-[#FBBC05]/60' : 'bg-electric-cyan/50'}`} />
-            <div className="text-[0.65rem] font-black tracking-[0.2em] text-gray-500 uppercase transition-colors duration-300 group-hover:text-gray-300">
-              {lang === 'el' ? labelEl : labelEn}
+            {/* the rule under the number — on the Google tile it is a Google rating badge: G + five stars */}
+            <div className="h-9 md:h-10 mb-2 flex items-center justify-center">
+              {google ? (
+                <span className="stat-gbadge inline-flex items-center gap-1.5 md:gap-2 rounded-full pl-1 pr-2.5 md:pr-3 py-1 bg-white/[0.06] border border-white/12 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]" aria-hidden="true">
+                  <span className="stat-google inline-flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full bg-white shadow-[0_3px_12px_rgba(0,0,0,0.55)] shrink-0">
+                    <GoogleG className="w-[15px] h-[15px] md:w-5 md:h-5" />
+                  </span>
+                  <span className="stat-stars flex items-center gap-px md:gap-[2px]">
+                    {[0, 1, 2, 3, 4].map((k) => (
+                      <GoogleStar key={k} className="w-[13px] h-[13px] md:w-[17px] md:h-[17px] text-[#FBBC05]" style={{ '--k': k }} />
+                    ))}
+                  </span>
+                </span>
+              ) : (
+                <div className={`stat-line h-[2px] rounded-full ${accent ? 'bg-[#FBBC05]/60' : 'bg-electric-cyan/50'}`} />
+              )}
             </div>
-          </div>
-        ))}
+            {/* label row: the same height on all four tiles, so every row lines up */}
+            <div className="min-h-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[0.65rem] font-black tracking-[0.2em] text-gray-500 uppercase transition-colors duration-300 group-hover:text-gray-300">
+              {google && (
+                <span className="inline-flex items-center gap-2 normal-case tracking-normal">
+                  <span className="text-[0.9rem] md:text-[0.95rem] font-bold text-gray-100 leading-none">5,0</span>
+                  <span className="text-gray-600 hidden md:inline">·</span>
+                </span>
+              )}
+              <span>{lang === 'el' ? labelEl : labelEn}</span>
+            </div>
+          </Tile>
+          );
+        })}
       </div>
     </section>
   );

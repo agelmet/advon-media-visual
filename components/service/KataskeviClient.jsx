@@ -4,20 +4,19 @@
 // the previous version (all pricing removed per the site-wide rule).
 'use client';
 
+import Link from 'next/link';
 import Image from 'next/image';
 import { useLangStore } from '@/store/langStore';
 import { portfolioData } from '@/lib/data';
 import { getService } from '@/lib/services';
 import ScrollReveal from '@/components/ScrollReveal';
 import PitchQuote from '@/components/PitchQuote';
+import IncludesTech from '@/components/service/IncludesTech';
 import KataskeviPricing from '@/components/service/KataskeviPricing';
 import {
-  PainSection,
   StepsSection,
-  IncludesSection,
   ProofStrip,
   FaqSection,
-  CtaBand,
 } from '@/components/service/blocks';
 
 export default function KataskeviClient() {
@@ -42,7 +41,10 @@ export default function KataskeviClient() {
             }}
           />
         </div>
-        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+        {/* The title block (service, h1, price, ΔΩΡΕΑΝ, 10.83€) is centred on every screen.
+            Desktop: under it, two equal plates side by side — what the 10.83€ covers | the pitch. */}
+        <div className="max-w-4xl lg:max-w-6xl mx-auto px-6 text-center relative z-10">
+          <div>
           <ScrollReveal>
             <span className="section-label">{lang === 'el' ? 'Υπηρεσία' : 'Service'}</span>
             <h1
@@ -60,7 +62,7 @@ export default function KataskeviClient() {
             </span>
             <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-8 mb-5">
               {/* Anchor / original price — crossed out with hand-drawn SVG line */}
-              <div className="relative inline-block">
+              <div className="relative inline-block mv-strike" data-io>
                 <span className="text-2xl md:text-3xl font-bold text-gray-400/75 tracking-tight whitespace-nowrap select-none">
                   700€ – 5.000€
                 </span>
@@ -72,12 +74,14 @@ export default function KataskeviClient() {
                   preserveAspectRatio="none"
                 >
                   <path
+                    pathLength="1"
                     d="M6,32 C45,25 95,16 140,10 C168,6 190,4 204,2"
                     stroke="#ef4444"
                     strokeWidth="3.8"
                     strokeLinecap="round"
                   />
                   <path
+                    pathLength="1"
                     d="M4,34 C48,28 99,19 144,13 C171,9 192,6 206,4"
                     stroke="#ef4444"
                     strokeWidth="1.8"
@@ -86,8 +90,10 @@ export default function KataskeviClient() {
                   />
                 </svg>
               </div>
-              <span className="free-pulse text-7xl md:text-8xl font-black text-white tracking-tight leading-none">
-                {lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE'}
+              <span className="mv-land" data-io>
+                <span className="free-pulse text-7xl md:text-8xl font-black text-white tracking-tight leading-none">
+                  {lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE'}
+                </span>
               </span>
             </div>
             <p className="text-lg md:text-xl text-gray-300 mb-3">
@@ -97,13 +103,20 @@ export default function KataskeviClient() {
                 <>Only <span className="text-white font-black">10.83€/month</span> — everything included</>
               )}
             </p>
-            <p className="text-sm text-gray-500 leading-relaxed max-w-2xl mx-auto mb-8">
+          </ScrollReveal>
+          </div>
+
+          {/* desktop: two equal plates side by side; phones: stacked and centred as before */}
+          <div className="mt-6 lg:mt-12 lg:grid lg:grid-cols-2 lg:gap-6 lg:items-stretch lg:text-left">
+          <ScrollReveal delay={160} direction="left" className="lg:h-full">
+          <div className="kat-cover lg:h-full lg:flex lg:flex-col lg:justify-center">
+            <p className="text-sm lg:text-[15px] text-gray-500 lg:text-gray-300 leading-relaxed max-w-2xl mx-auto lg:mx-0 mb-8 lg:mb-6">
               {lang === 'el'
                 ? 'Η κατασκευή είναι πραγματικά δωρεάν — το ποσό αυτό καλύπτει αποκλειστικά τα απαραίτητα λειτουργικά που χρειάζεται κάθε ιστοσελίδα για να είναι online, όσα θα πληρώνατε ούτως ή άλλως, όπου κι αν τη φτιάχνατε. Εδώ, τα έχετε όλα σε ένα, χωρίς τίποτα επιπλέον.'
                 : "The build itself is genuinely free — this amount covers only the essential running services every website needs to stay online, what you would pay anyway, wherever you had it built. Here, it's all in one, with nothing extra on top."}
             </p>
             {/* Included-items chips */}
-            <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-3xl mx-auto">
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 max-w-3xl mx-auto lg:mx-0 mv-pop" data-io>
               {[
                 { el: 'Φιλοξενία (hosting)', en: 'Hosting' },
                 { el: 'Domain name της επιλογής σας', en: 'Domain name of your choice' },
@@ -123,41 +136,52 @@ export default function KataskeviClient() {
                 {lang === 'el' ? 'και άλλα' : 'and more'}
               </span>
             </div>
+          </div>
           </ScrollReveal>
-
-          <ScrollReveal delay={160} direction="scale">
-            <PitchQuote className="text-left mt-12 max-w-3xl mx-auto">{service.pitch[lang]}</PitchQuote>
+          <ScrollReveal delay={240} direction="right" className="lg:h-full">
+            <PitchQuote lit className="text-left mt-12 lg:mt-0 max-w-3xl lg:max-w-none mx-auto lg:h-full lg:flex lg:flex-col lg:justify-center">{service.pitch[lang]}</PitchQuote>
           </ScrollReveal>
+          </div>
         </div>
       </section>
 
-      {/* ── Why is it free? — story block (kept from previous version) ── */}
-      <section className="pb-20">
-        <div className="max-w-4xl mx-auto px-6">
-          <ScrollReveal delay={60}>
-            <div className="relative overflow-hidden rounded-3xl border border-electric-cyan/30 bg-gradient-to-br from-electric-cyan/8 via-transparent to-transparent p-8 md:p-12 shadow-[0_0_40px_rgba(71,200,245,0.1)]">
-              <div aria-hidden="true" className="absolute -right-24 -top-24 w-72 h-72 bg-electric-cyan/8 rounded-full blur-[90px] pointer-events-none" />
-              <h3 className="text-2xl md:text-3xl font-black text-white mb-6 font-display relative z-10">
-                {lang === 'el' ? 'Γιατί είναι Δωρεάν;' : 'Why is it Free?'}
-              </h3>
-              <div className="relative z-10 space-y-5">
-                <p className="text-gray-200 text-lg leading-relaxed border-l-2 border-electric-cyan/60 pl-5">
-                  {lang === 'el'
-                    ? 'Στη σημερινή εποχή, δεν νοείται επιχείρηση ή επαγγελματίας χωρίς παρουσία στο διαδίκτυο. Μια δική σας ιστοσελίδα δεν είναι πολυτέλεια — είναι αναγκαιότητα: είναι ο χώρος όπου σας βρίσκουν όσοι σας αναζητούν και όπου παρουσιάζεστε όπως πραγματικά σας αξίζει — με το δικό σας περιεχόμενο, τα δικά σας λόγια, τη δική σας ταυτότητα.'
-                    : "In today's world, no business or professional can afford to be invisible online. A website of your own isn't a luxury — it's a necessity: it's where people find you when they're looking for you, and where you present yourself the way you truly deserve — with your own content, your own words, your own identity."}
-                </p>
-                <p className="text-gray-400 text-base leading-relaxed">
-                  {lang === 'el'
-                    ? 'Πιστεύουμε ότι κάθε επαγγελματίας αξίζει μια πραγματικά επαγγελματική παρουσία στο διαδίκτυο — όχι μόνο όσοι μπορούν να διαθέσουν χιλιάδες ευρώ. Γι’ αυτό αναλαμβάνουμε την κατασκευή εντελώς δωρεάν: για να στηρίξουμε μικρές επιχειρήσεις, ελεύθερους επαγγελματίες και όσους κάνουν τώρα τα πρώτα τους βήματα, χωρίς κανένα εμπόδιο στην εκκίνηση.'
-                    : "We believe every professional deserves a truly professional online presence — not just those who can spend thousands of euros. That's why we build your website completely free: to support small businesses, freelancers, and anyone taking their first steps, with zero barriers to getting started."}
-                </p>
-                <p className="text-gray-400 text-base leading-relaxed">
-                  {lang === 'el' ? (
-                    <>Κερδίζουμε κι εμείς: κάθε ιστοσελίδα που παραδίδουμε μεγαλώνει το πορτφόλιό μας και μας φέρνει τους επόμενους πελάτες μέσα από τη δουλειά μας — όχι από διαφημίσεις. Εσείς αποκτάτε μια premium ιστοσελίδα χωρίς ρίσκο, εμείς ένα ακόμα δείγμα δουλειάς που μας κάνει περήφανους. <span className="text-electric-cyan font-bold">Όλοι κερδίζουν.</span></>
-                  ) : (
-                    <>We win too: every website we deliver grows our portfolio and brings us our next clients through our work — not through ads. You get a premium website with zero risk; we get one more project we&apos;re proud of. <span className="text-electric-cyan font-bold">Everyone wins.</span></>
-                  )}
-                </p>
+      {/* ── Why is it free? — one wide plate: the heading, then the three reasons side by side on desktop ── */}
+      <section className="pb-24 pt-6 mv-amb alt">
+        <div className="max-w-4xl lg:max-w-6xl mx-auto px-6">
+          <ScrollReveal delay={60} direction="scale">
+            <div className="mv-frost relative overflow-hidden rounded-3xl p-8 md:p-12">
+              <div className="relative z-10 space-y-6 lg:space-y-0 lg:grid lg:grid-cols-[1fr_1.08fr] lg:gap-0 why-cols">
+                <div className="why-col">
+                  <h2 data-fx="mask" className="text-3xl md:text-4xl font-black text-white mb-7 lg:mb-6 font-display">
+                    {lang === 'el' ? 'Γιατί είναι Δωρεάν;' : 'Why is it Free?'}
+                  </h2>
+                  <span className="why-num" aria-hidden="true">01</span>
+                  <p className="text-white text-lg md:text-xl lg:text-[1.22rem] leading-relaxed border-l-2 border-electric-cyan/70 pl-5 lg:border-l-0 lg:pl-0" data-lit>
+                    {lang === 'el'
+                      ? 'Στη σημερινή εποχή, δεν νοείται επιχείρηση ή επαγγελματίας χωρίς παρουσία στο διαδίκτυο. Μια δική σας ιστοσελίδα δεν είναι πολυτέλεια — είναι αναγκαιότητα: είναι ο χώρος όπου σας βρίσκουν όσοι σας αναζητούν και όπου παρουσιάζεστε όπως πραγματικά σας αξίζει — με το δικό σας περιεχόμενο, τα δικά σας λόγια, τη δική σας ταυτότητα.'
+                      : "In today's world, no business or professional can afford to be invisible online. A website of your own isn't a luxury — it's a necessity: it's where people find you when they're looking for you, and where you present yourself the way you truly deserve — with your own content, your own words, your own identity."}
+                  </p>
+                </div>
+                <div className="why-col space-y-6 lg:space-y-7">
+                <div>
+                  <span className="why-num" aria-hidden="true">02</span>
+                  <p className="text-gray-200 text-base md:text-[17px] leading-relaxed">
+                    {lang === 'el'
+                      ? 'Πιστεύουμε ότι κάθε επαγγελματίας αξίζει μια πραγματικά επαγγελματική παρουσία στο διαδίκτυο — όχι μόνο όσοι μπορούν να διαθέσουν χιλιάδες ευρώ. Γι’ αυτό αναλαμβάνουμε την κατασκευή εντελώς δωρεάν: για να στηρίξουμε μικρές επιχειρήσεις, ελεύθερους επαγγελματίες και όσους κάνουν τώρα τα πρώτα τους βήματα, χωρίς κανένα εμπόδιο στην εκκίνηση.'
+                      : "We believe every professional deserves a truly professional online presence — not just those who can spend thousands of euros. That's why we build your website completely free: to support small businesses, freelancers, and anyone taking their first steps, with zero barriers to getting started."}
+                  </p>
+                </div>
+                <div className="lg:pt-7 lg:border-t lg:border-white/8">
+                  <span className="why-num" aria-hidden="true">03</span>
+                  <p className="text-gray-200 text-base md:text-[17px] leading-relaxed">
+                    {lang === 'el' ? (
+                      <>Κερδίζουμε κι εμείς: κάθε ιστοσελίδα που παραδίδουμε μεγαλώνει το πορτφόλιό μας και μας φέρνει τους επόμενους πελάτες. Προσφέρουμε επίσης κι άλλες υπηρεσίες, όπως <Link href="/diaxeirisi-social-media" className="text-white underline decoration-electric-cyan/40 underline-offset-4 hover:decoration-electric-cyan">διαχείριση social media</Link> και <Link href="/google-ads" className="text-white underline decoration-electric-cyan/40 underline-offset-4 hover:decoration-electric-cyan">διαφημίσεις στο Google</Link>, που μπορείτε να επιλέξετε αν και όταν τις χρειαστείτε. Η δωρεάν ιστοσελίδα είναι ο τρόπος μας να ξεκινήσει μια συνεργασία που κρατάει. Εσείς αποκτάτε μια premium ιστοσελίδα χωρίς ρίσκο, εμείς ένα ακόμα δείγμα δουλειάς που μας κάνει περήφανους. <span className="text-white font-bold mv-mark" data-io>Όλοι κερδίζουν.</span></>
+                    ) : (
+                      <>We win too: every website we deliver grows our portfolio and brings us our next clients. We also offer other services, such as <Link href="/diaxeirisi-social-media" className="text-white underline decoration-electric-cyan/40 underline-offset-4 hover:decoration-electric-cyan">social media management</Link> and <Link href="/google-ads" className="text-white underline decoration-electric-cyan/40 underline-offset-4 hover:decoration-electric-cyan">Google ads</Link>, which you can choose if and when you need them. The free website is our way of starting a partnership that lasts. You get a premium website with zero risk; we get one more project we&apos;re proud of. <span className="text-white font-bold mv-mark" data-io>Everyone wins.</span></>
+                    )}
+                  </p>
+                </div>
+                </div>
               </div>
             </div>
           </ScrollReveal>
@@ -165,8 +189,7 @@ export default function KataskeviClient() {
       </section>
 
       <StepsSection service={service} />
-      <IncludesSection service={service} />
-      <PainSection service={service} />
+      <IncludesTech service={service} />
 
       {/* ─── HOSTING PRICING + INFRASTRUCTURE + EXTRAS (restored from history) ─── */}
       <KataskeviPricing />
@@ -176,7 +199,7 @@ export default function KataskeviClient() {
       {/* ─── PORTFOLIO (kept) ─── */}
       <section
         id="portfolio"
-        className="py-24 bg-[#0a1418]/60 border-t border-electric-cyan/8 backdrop-blur-sm scroll-mt-24"
+        className="py-24 bg-[#0b0c10]/60 border-t border-electric-cyan/8 backdrop-blur-sm scroll-mt-24"
       >
         <div className="max-w-[1600px] mx-auto px-4 md:px-8">
           <ScrollReveal className="text-center mb-14">
@@ -215,14 +238,13 @@ export default function KataskeviClient() {
               An unfinished last row is centred by giving its first card a start track. */}
           <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3">
             {portfolioData.map((item, index) => (
-              <PortfolioCard key={index} item={item} lang={lang} cls={lastRowStart(index, portfolioData.length)} />
+              <PortfolioCard key={index} item={item} lang={lang} d={index % 6} cls={lastRowStart(index, portfolioData.length)} />
             ))}
           </div>
         </div>
       </section>
 
       <FaqSection service={service} />
-      <CtaBand />
     </>
   );
 }
@@ -244,14 +266,15 @@ function lastRowStart(i, n) {
 }
 
 /* ─── Portfolio card (kept from previous version) ─── */
-function PortfolioCard({ item, lang, cls = '' }) {
+function PortfolioCard({ item, lang, cls = '', d = 0 }) {
   return (
     <a
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`col-span-2 ${cls} group img-shine relative overflow-hidden rounded-2xl border border-white/8 block bg-[#050a0e] glow-border-hover shadow-lg transition-transform duration-500 hover:-translate-y-1.5`}
-      style={{ aspectRatio: '4/3' }}
+      data-io
+      className={`col-span-2 ${cls} mv-pf group img-shine relative overflow-hidden rounded-2xl border border-white/8 block bg-[#050608] glow-border-hover shadow-[0_18px_50px_-14px_rgba(0,0,0,0.9)] hover:-translate-y-1.5`}
+      style={{ aspectRatio: '4/3', '--d': d }}
     >
       <Image
         src={item.image}
@@ -260,7 +283,7 @@ function PortfolioCard({ item, lang, cls = '' }) {
         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 17vw"
         className="object-cover transition-transform duration-700 group-hover:scale-110"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#050a0e] via-[#050a0e]/55 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-400 flex flex-col justify-end p-4">
+      <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/55 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-400 flex flex-col justify-end p-4">
         <div className="translate-y-3 group-hover:translate-y-0 transition-transform duration-400">
           <p className="text-sm font-black text-white mb-2 leading-tight line-clamp-2">
             {lang === 'el' ? item.name : item.nameEn}

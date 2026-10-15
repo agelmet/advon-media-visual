@@ -10,9 +10,13 @@ import TiltCard from '@/components/TiltCard';
 import PitchQuote from '@/components/PitchQuote';
 import { services, extras, HOME_FAQS } from '@/lib/services';
 import { ICONS, FaqSection } from '@/components/service/blocks';
+import Roadmap from '@/components/Roadmap';
+import { InstagramLine, FacebookLine, GoogleLine } from '@/components/BrandMarks';
 
 const marqueeItems = [
   'Κατασκευή Ιστοσελίδων',
+  'Social Media',
+  'Google Ads',
   'Παρουσία στο Google',
   'Online Ραντεβού',
   'AI Βοηθός Ιστοσελίδας',
@@ -54,7 +58,9 @@ export default function HomeClient() {
   useEffect(() => {
     const onScroll = () => {
       if (heroDecoRef.current) {
-        heroDecoRef.current.style.transform = `translateY(${window.scrollY * 0.25}px)`;
+        // the ceiling light stays put (a moving layer would show its top edge under the menu);
+        // it only fades a little as you scroll away from it
+        heroDecoRef.current.style.opacity = String(Math.max(0.35, 1 - window.scrollY / 900));
       }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -64,98 +70,30 @@ export default function HomeClient() {
   return (
     <>
       {/* ─── HERO ─── */}
-      <section className="relative min-h-screen flex items-center justify-center py-20 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center -mt-28 pt-48 pb-20 overflow-hidden">
 
         {/* ── PARALLAX DECORATION LAYERS (slower than scroll) ── */}
         <div
           ref={heroDecoRef}
           className="absolute inset-0 pointer-events-none"
           aria-hidden="true"
-          style={{ willChange: 'transform' }}
+          style={{ willChange: 'opacity' }}
         >
-          {/* Ambient aurora orbs */}
-          {/* Same three orbs — drawn as soft gradients (no blur filter to recompute every frame) */}
-          <div className="absolute rounded-full aurora" style={{ top: '-22%', left: '-16%', width: 'min(84vw, 840px)', height: 'min(84vw, 840px)', background: 'radial-gradient(circle, rgba(71,200,245,0.12) 0%, rgba(71,200,245,0.06) 30%, rgba(71,200,245,0.02) 52%, transparent 70%)', animation: 'auroraFloat1 22s ease-in-out infinite' }} />
-          <div className="absolute rounded-full aurora" style={{ bottom: '-20%', right: '-12%', width: 'min(74vw, 760px)', height: 'min(74vw, 760px)', background: 'radial-gradient(circle, rgba(107,63,160,0.15) 0%, rgba(107,63,160,0.07) 30%, rgba(107,63,160,0.025) 52%, transparent 70%)', animation: 'auroraFloat2 28s ease-in-out infinite' }} />
-          <div className="absolute rounded-full aurora" style={{ top: '22%', left: '50%', width: 'min(48vw, 540px)', height: 'min(48vw, 540px)', background: 'radial-gradient(circle, rgba(71,200,245,0.085) 0%, rgba(71,200,245,0.04) 30%, rgba(71,200,245,0.012) 52%, transparent 68%)', animation: 'auroraFloat3 17s ease-in-out infinite' }} />
-
-          {/* Tech grid */}
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                'linear-gradient(rgba(71,200,245,0.055) 1px, transparent 1px),' +
-                'linear-gradient(90deg, rgba(71,200,245,0.055) 1px, transparent 1px)',
-              backgroundSize: '64px 64px',
-              maskImage: 'radial-gradient(ellipse 90% 80% at 50% 50%, black 5%, transparent 72%)',
-              WebkitMaskImage: 'radial-gradient(ellipse 90% 80% at 50% 50%, black 5%, transparent 72%)',
-            }}
-          />
-
-          {/* Orbit rings — two dashed circles turning very slowly behind the headline, one dot each */}
-          <div className="hero-orbit hero-orbit-a" aria-hidden="true"><span className="hero-orbit-dot" /><span className="hero-orbit-dot d2" /></div>
-          <div className="hero-orbit hero-orbit-b" aria-hidden="true"><span className="hero-orbit-dot" /></div>
-
-          {/* Laser beams — skewed outer wrapper keeps angle fixed; inner div sweeps via laserSweep */}
-          {[
-            { top: '17%', skew: -8,  dur: '5s',    delay: '0s',   w: 2, cyan: true,  op: 0.65 },
-            { top: '40%', skew: -5,  dur: '8.5s',  delay: '1.8s', w: 1, cyan: true,  op: 0.4  },
-            { top: '63%', skew: -13, dur: '11.5s', delay: '0.5s', w: 2, cyan: true,  op: 0.5  },
-            { top: '29%', skew: -6,  dur: '7s',    delay: '3.5s', w: 1, cyan: false, op: 0.36 },
-          ].map((b, i) => (
-            <div
-              key={i}
-              style={{
-                position: 'absolute',
-                top: b.top,
-                left: 0,
-                right: 0,
-                height: `${b.w}px`,
-                transform: `skewX(${b.skew}deg)`,
-                overflow: 'hidden',
-              }}
-            >
-              <div
-                style={{
-                  position: 'absolute',
-                  left: '-30%',
-                  width: '30%',
-                  height: '100%',
-                  opacity: b.op,
-                  background: b.cyan
-                    ? 'linear-gradient(90deg, transparent 0%, rgba(71,200,245,0.6) 25%, #47c8f5 50%, rgba(71,200,245,0.6) 75%, transparent 100%)'
-                    : 'linear-gradient(90deg, transparent 0%, rgba(201,255,0,0.5) 25%, #c9ff00 50%, rgba(201,255,0,0.5) 75%, transparent 100%)',
-                  boxShadow: b.cyan
-                    ? '0 0 6px 2px rgba(71,200,245,0.9), 0 0 20px 5px rgba(71,200,245,0.3)'
-                    : '0 0 6px 2px rgba(201,255,0,0.75), 0 0 20px 5px rgba(201,255,0,0.22)',
-                  animation: `laserSweep ${b.dur} ${b.delay} infinite linear`,
-                  willChange: 'transform',
-                }}
-              />
-            </div>
-          ))}
+          {/* Starlight: the background itself carries the stars; the hero only adds a soft
+              «ceiling light» from above, like the lit headliner of a Rolls-Royce. */}
+          <div className="absolute inset-0 rr-ceiling" />
         </div>
-
-        {/* ── Scanline overlay (fixed — not parallaxed) ── */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          aria-hidden="true"
-          style={{
-            backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.1) 3px, rgba(0,0,0,0.1) 4px)',
-            opacity: 0.35,
-          }}
-        />
 
         {/* ── Central radial glow ── */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-            style={{ width: '1100px', height: '760px', background: 'radial-gradient(ellipse, rgba(71,200,245,0.075) 0%, rgba(71,200,245,0.035) 32%, rgba(71,200,245,0.01) 55%, transparent 70%)' }}
+            style={{ width: '1100px', height: '760px', background: 'radial-gradient(ellipse, rgba(255,240,218,0.05) 0%, rgba(255,240,218,0.02) 34%, transparent 66%)' }}
           />
         </div>
 
-        {/* ── CONTENT ── */}
-        <div className="container max-w-7xl mx-auto px-6 text-center z-10">
+        {/* ── CONTENT (lifts and fades as you scroll — Motion v3) ── */}
+        <div className="container max-w-7xl mx-auto px-6 text-center z-10 mv-hero-scrub">
 
           {/* Animated badge */}
           <div
@@ -225,10 +163,11 @@ export default function HomeClient() {
             {/* Primary — animated glow pulse */}
             <Link
               ref={magnetRef}
+              data-no-mag
               onMouseMove={onMagnetMove}
               onMouseLeave={onMagnetLeave}
               href="/kataskevi-istoselidas"
-              className="btn-premium group relative overflow-hidden px-9 py-4 bg-electric-cyan text-[#050a0e] font-black text-base uppercase tracking-[0.1em] rounded-xl flex items-center gap-3 transition-all duration-300"
+              className="btn-premium group relative overflow-hidden px-9 py-4 bg-electric-cyan text-[#050608] font-black text-base uppercase tracking-[0.1em] rounded-xl flex items-center gap-3 transition-all duration-300"
               style={{ animation: 'heroCTAPulse 3s ease-in-out infinite' }}
             >
               <span className="relative z-10 flex items-center gap-3">
@@ -240,7 +179,7 @@ export default function HomeClient() {
             {/* Secondary — neon border glow */}
             <Link
               href="/#services"
-              className="btn-premium group px-9 py-4 bg-transparent border-2 border-electric-cyan text-electric-cyan font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all duration-300 flex items-center gap-3 backdrop-blur-sm"
+              className="btn-premium group px-9 py-4 bg-transparent border-2 border-electric-cyan text-electric-cyan font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-electric-cyan hover:text-[#050608] transition-all duration-300 flex items-center gap-3 backdrop-blur-sm"
               style={{ animation: 'borderGlow 3s ease-in-out infinite 1s' }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>
@@ -249,7 +188,7 @@ export default function HomeClient() {
 
             <Link
               href="#contact"
-              className="btn-premium group px-9 py-4 bg-white/5 border border-white/20 text-white font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-white hover:text-[#050a0e] transition-all duration-300 flex items-center gap-3 backdrop-blur-sm"
+              className="btn-premium group px-9 py-4 bg-white/5 border border-white/20 text-white font-black text-base uppercase tracking-[0.1em] rounded-xl hover:bg-white hover:text-[#050608] transition-all duration-300 flex items-center gap-3 backdrop-blur-sm"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
               {lang === 'el' ? 'ΕΠΙΚΟΙΝΩΝΙΑ' : 'CONTACT'}
@@ -259,8 +198,8 @@ export default function HomeClient() {
           {/* One-line services teaser */}
           <p className="reveal-item delay-6 text-gray-500 text-xs md:text-sm tracking-wide mt-8">
             {lang === 'el'
-              ? 'Κριτικές Google · Online ραντεβού · Κρατήσεις χωρίς προμήθειες · AI βοηθός'
-              : 'Google reviews · Online appointments · Commission-free bookings · AI assistant'}
+              ? 'Social Media · Google Ads · Κριτικές Google · Online ραντεβού · AI βοηθός'
+              : 'Social Media · Google Ads · Google reviews · Online appointments · AI assistant'}
           </p>
 
           {/* Scroll indicator */}
@@ -276,9 +215,9 @@ export default function HomeClient() {
       </section>
 
       {/* ─── MARQUEE TICKER ─── */}
-      <div className="overflow-hidden py-5 border-y border-electric-cyan/10 bg-[#050a0e]/60 backdrop-blur-sm relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#050a0e] via-transparent to-[#050a0e] z-10 pointer-events-none" />
-        <div className="flex gap-0 marquee-track" style={{ width: 'max-content' }}>
+      <div className="overflow-hidden py-5 border-y border-electric-cyan/10 bg-[#050608]/60 backdrop-blur-sm relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#050608] via-transparent to-[#050608] z-10 pointer-events-none" />
+        <div className="flex gap-0 marquee-track mv-skew" style={{ width: 'max-content' }}>
           {[...marqueeItems, ...marqueeItems, ...marqueeItems, ...marqueeItems].map((item, i) => (
             <span key={i} className="flex items-center gap-5 px-6 whitespace-nowrap">
               <span className="text-[0.7rem] font-black tracking-[0.2em] uppercase text-gray-500">{item}</span>
@@ -291,8 +230,9 @@ export default function HomeClient() {
       {/* ─── STATS ─── */}
       <Stats />
 
+
       {/* ─── SERVICES ─── */}
-      <section id="services" className="py-32 relative scroll-mt-24">
+      <section id="services" className="py-32 relative scroll-mt-24 mv-amb">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[96%] h-[80%] bg-[radial-gradient(ellipse,rgba(71,200,245,0.028)_0%,rgba(71,200,245,0.012)_40%,transparent_70%)]" />
         </div>
@@ -303,84 +243,119 @@ export default function HomeClient() {
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black font-display mb-4 tracking-tight">
               {lang === 'el' ? 'Οι Υπηρεσίες μας' : 'Our Services'}
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mv-readable" data-lit>
               {lang === 'el'
                 ? 'Ό,τι χρειάζεται η επιχείρησή σας για να σας βρίσκουν, να σας εμπιστεύονται — και να κλείνουν.'
                 : 'Everything your business needs to be found, to be trusted — and to get booked.'}
             </p>
           </ScrollReveal>
 
-          {/* 3 + 4 symmetric grid: three anchor services on row one (span 4/12),
-              four on row two (span 3/12); tablet gets a full-width 7th card. */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 items-stretch">
-            {services.map((service, i) => {
-              const isKataskevi = service.slug === 'kataskevi-istoselidas';
-              const span = i < 3 ? 'lg:col-span-4' : 'lg:col-span-3';
-              const tabletFix = i === services.length - 1 ? 'md:col-span-2 lg:col-span-3' : '';
-              return (
-                <ScrollReveal
-                  key={service.slug}
-                  delay={(i % 4) * 100}
-                  direction="up"
-                  className={`h-full ${span} ${tabletFix}`}
-                >
-                  <TiltCard className="h-full">
-                    <div className="glass-panel service-card card-sweep rounded-3xl p-8 flex flex-col h-full group">
-                      <div className="w-14 h-14 rounded-2xl bg-electric-cyan/10 border border-electric-cyan/20 flex items-center justify-center mb-6 text-electric-cyan group-hover:bg-electric-cyan/20 group-hover:scale-110 transition-all duration-300">
-                        {ICONS[service.icon]('w-7 h-7')}
-                      </div>
-                      {isKataskevi && (
-                        <div className="flex items-baseline gap-2 mb-4">
-                          <span className="text-3xl font-black price-gradient">{lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE'}</span>
-                          <span className="text-sm text-gray-500">{lang === 'el' ? '(10.83€/μήνα hosting)' : '(10.83€/mo hosting)'}</span>
+          {/* Row one = the three services that go together (website · social · Google Ads),
+              each with its price; the other six below in two rows of three. */}
+          {[services.slice(0, 3), services.slice(3)].map((group, g) => (
+            <div key={g} className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch ${g ? 'mt-8' : ''}`}>
+              {group.map((service, i) => {
+                const idx = g * 3 + i;
+                const featured = g === 0;
+                const isNew = service.slug === 'diaxeirisi-social-media' || service.slug === 'google-ads';
+                const price = service.slug === 'kataskevi-istoselidas'
+                  ? { v: lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE', n: lang === 'el' ? '(10.83€/μήνα hosting)' : '(10.83€/mo hosting)' }
+                  : service.card.price ? { v: service.card.price[lang], n: service.card.priceNote[lang] } : null;
+                return (
+                  <ScrollReveal
+                    key={service.slug}
+                    delay={(i % 3) * 110}
+                    direction={featured ? 'deal' : 'up'}
+                    style={featured ? { '--rz': `${(i - 1) * 2.5}deg` } : undefined}
+                    className={`h-full ${g === 1 && i === group.length - 1 ? 'md:col-span-2 lg:col-span-1' : ''}`}
+                  >
+                    <TiltCard className="h-full">
+                      <div className={`glass-panel service-card card-sweep rounded-3xl p-8 flex flex-col h-full group relative ${featured ? 'svc-featured' : ''}`}>
+                        {isNew && (
+                          <span className="absolute -top-3 right-6 bg-electric-cyan text-[#050608] text-[0.62rem] font-black tracking-[0.18em] uppercase px-3 py-1 rounded-full shadow-[0_0_18px_rgba(71,200,245,0.5)]">
+                            {lang === 'el' ? 'Νέο' : 'New'}
+                          </span>
+                        )}
+                        <div className={`${service.slug === 'diaxeirisi-social-media' ? 'w-[5.25rem] gap-1.5' : 'w-14'} h-14 rounded-2xl bg-electric-cyan/10 border border-electric-cyan/20 flex items-center justify-center mb-6 text-electric-cyan group-hover:bg-electric-cyan/20 group-hover:scale-110 transition-all duration-300`}
+                          {...(service.slug === 'diaxeirisi-social-media' ? { role: 'img', 'aria-label': 'Instagram · Facebook' } : service.slug === 'google-ads' ? { role: 'img', 'aria-label': 'Google' } : {})}>
+                          {service.slug === 'diaxeirisi-social-media' ? (
+                            <><InstagramLine className="w-7 h-7" /><FacebookLine className="w-7 h-7" /></>
+                          ) : service.slug === 'google-ads' ? (
+                            <GoogleLine className="w-7 h-7" />
+                          ) : (
+                            ICONS[service.icon]('w-7 h-7')
+                          )}
                         </div>
-                      )}
-                      <h3 className="text-xl font-bold mb-4 font-display text-white">{service.nav[lang]}</h3>
-                      {isKataskevi ? (
-                        <>
-                          <p className="text-gray-400 mb-5 leading-relaxed text-sm">
-                            {lang === 'el' ? 'Επαγγελματική ιστοσελίδα που κατακτά υψηλές θέσεις στη Google.' : 'Professional website that conquers high rankings on Google.'}
-                          </p>
+                        {price && (
+                          <div className="flex items-baseline gap-2 mb-4 flex-wrap">
+                            <span className="text-3xl font-black price-gradient">{price.v}</span>
+                            <span className="text-sm text-gray-500">{price.n}</span>
+                          </div>
+                        )}
+                        <h3 className="text-xl font-bold mb-4 font-display text-white">{service.nav[lang]}</h3>
+                        {service.slug === 'kataskevi-istoselidas' ? (
+                          <>
+                            <p className="text-gray-400 mb-5 leading-relaxed text-sm">
+                              {lang === 'el' ? 'Επαγγελματική ιστοσελίδα που κατακτά υψηλές θέσεις στη Google.' : 'Professional website that conquers high rankings on Google.'}
+                            </p>
+                            <ul className="space-y-2.5 mb-5">
+                              {[
+                                { el: 'Επαγγελματικός σχεδιασμός', en: 'Professional design' },
+                                { el: 'SEO βελτιστοποίηση', en: 'SEO optimization' },
+                                { el: 'Mobile responsive', en: 'Mobile responsive' },
+                                { el: 'Απεριόριστες αλλαγές μέχρι την τελειότητα', en: 'Unlimited changes until perfection' },
+                              ].map((item) => (
+                                <li key={item.en} className="flex items-start gap-3 text-sm text-gray-400 leading-relaxed">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5 icon-glow"><polyline points="20 6 9 17 4 12"/></svg>
+                                  {item[lang]}
+                                </li>
+                              ))}
+                            </ul>
+                          </>
+                        ) : (
                           <ul className="space-y-2.5 mb-5">
-                            {[
-                              { el: 'Επαγγελματικός σχεδιασμός', en: 'Professional design' },
-                              { el: 'SEO βελτιστοποίηση', en: 'SEO optimization' },
-                              { el: 'Mobile responsive', en: 'Mobile responsive' },
-                              { el: 'Απεριόριστες αλλαγές μέχρι την τελειότητα', en: 'Unlimited changes until perfection' },
-                            ].map((item) => (
-                              <li key={item.en} className="flex items-start gap-3 text-sm text-gray-400 leading-relaxed">
+                            {service.card.points.map((pi) => (
+                              <li key={pi} className="flex items-start gap-3 text-sm text-gray-400 leading-relaxed">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5 icon-glow"><polyline points="20 6 9 17 4 12"/></svg>
-                                {item[lang]}
+                                {service.includes[pi][lang]}
                               </li>
                             ))}
                           </ul>
-                        </>
-                      ) : (
-                        <ul className="space-y-2.5 mb-5">
-                          {service.card.points.map((pi) => (
-                            <li key={pi} className="flex items-start gap-3 text-sm text-gray-400 leading-relaxed">
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-electric-cyan shrink-0 mt-0.5 icon-glow"><polyline points="20 6 9 17 4 12"/></svg>
-                              {service.includes[pi][lang]}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                      <div className="mb-7 flex-grow">
-                        <PitchQuote compact>{service.pitch[lang]}</PitchQuote>
+                        )}
+                        <div className="mb-7 flex-grow">
+                          <PitchQuote compact>{service.pitch[lang]}</PitchQuote>
+                        </div>
+                        <Link
+                          href={`/${service.slug}`}
+                          className="btn-premium flex items-center justify-center gap-2 w-full py-3.5 bg-electric-cyan text-[#050608] font-bold rounded-xl hover:bg-white transition-colors uppercase text-sm tracking-wide mt-auto"
+                        >
+                          {service.card.cta[lang]}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        </Link>
                       </div>
-                      <Link
-                        href={`/${service.slug}`}
-                        className="btn-premium flex items-center justify-center gap-2 w-full py-3.5 bg-electric-cyan text-[#050a0e] font-bold rounded-xl hover:bg-white transition-colors uppercase text-sm tracking-wide mt-auto"
-                      >
-                        {service.card.cta[lang]}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                      </Link>
-                    </div>
-                  </TiltCard>
+                    </TiltCard>
+                  </ScrollReveal>
+                );
+              })}
+              {g === 0 && (
+                <ScrollReveal delay={120} className="md:col-span-2 lg:col-span-3">
+                  <div className="glass-panel rounded-2xl px-6 py-5 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    {[
+                      { el: ['Χωρίς κωδικούς', 'Δεν ζητάμε ποτέ password — μας δίνετε πρόσβαση συνεργάτη.'], en: ['No passwords', 'We never ask for a password — you give us partner access.'] },
+                      { el: ['Ρύθμιση σε λίγα λεπτά', 'Social ~3 λεπτά, Google Ads ~5 λεπτά, με οδηγό βήμα-βήμα.'], en: ['Setup in minutes', 'Social ~3 min, Google Ads ~5 min, with a step-by-step guide.'] },
+                      { el: ['Μας αφαιρείτε με ένα κλικ', 'Τα προφίλ και ο λογαριασμός μένουν πάντα δικά σας.'], en: ['Remove us with one click', 'The profiles and the account always stay yours.'] },
+                      { el: ['Χωρίς δέσμευση', 'Σταματάτε με ένα μήνυμα, όποτε θέλετε.'], en: ['No commitment', 'Stop with one message, whenever you want.'] },
+                    ].map((p) => (
+                      <div key={p.en[0]}>
+                        <b className="block text-white text-[15px]">{p[lang][0]}</b>
+                        <span className="text-[13px] text-gray-500 leading-snug">{p[lang][1]}</span>
+                      </div>
+                    ))}
+                  </div>
                 </ScrollReveal>
-              );
-            })}
-          </div>
+              )}
+            </div>
+          ))}
 
           {/* ── «Ακόμη» strip ── */}
           <ScrollReveal delay={80} className="mt-16">
@@ -422,17 +397,35 @@ export default function HomeClient() {
             </div>
           </ScrollReveal>
 
-          {/* Bottom CTA */}
-          <ScrollReveal delay={100} className="mt-16 text-center">
+          {/* Bottom CTA — the bundle, then the «not sure» line */}
+          <ScrollReveal delay={80} className="mt-16">
+            <div className="rounded-2xl border border-electric-cyan/30 px-6 md:px-8 py-6 flex flex-wrap items-center justify-between gap-5" style={{ background: 'linear-gradient(90deg, rgba(71,200,245,0.12), rgba(107,63,160,0.12))' }}>
+              <div>
+                <span className="section-label !mb-2">{lang === 'el' ? 'Μαζί κοστίζουν λιγότερο' : 'Together they cost less'}</span>
+                <div className="text-gray-200 text-[17px]">
+                  {lang === 'el' ? 'Social «Ανάπτυξη» + Google Ads: ' : 'Social “Growth” + Google Ads: '}
+                  <b className="text-white text-[26px] font-display">119€</b>
+                  <span className="text-gray-500 text-sm"> {lang === 'el' ? '/μήνα + ΦΠΑ αντί 138€' : '/month + VAT instead of 138€'}</span>
+                </div>
+              </div>
+              <Link href="#contact" className="btn-premium inline-flex items-center gap-2 px-7 py-3.5 bg-electric-cyan text-[#050608] text-sm font-black uppercase tracking-[0.1em] rounded-xl hover:bg-white transition-colors" style={{ boxShadow: '0 0 24px rgba(71,200,245,0.35)' }}>
+                {lang === 'el' ? 'Δωρεάν έλεγχος για εσάς' : 'Free check for you'}
+              </Link>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={100} className="mt-10 text-center">
             <div className="inline-flex items-center gap-4 flex-wrap justify-center">
               <span className="text-gray-500 text-sm">{lang === 'el' ? 'Δεν είστε σίγουροι ποια υπηρεσία ταιριάζει;' : 'Not sure which service fits?'}</span>
-              <Link href="#contact" className="btn-premium inline-flex items-center gap-2 px-6 py-2.5 border border-electric-cyan/40 text-electric-cyan text-sm font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all">
+              <Link href="#contact" className="btn-premium inline-flex items-center gap-2 px-6 py-2.5 border border-electric-cyan/40 text-electric-cyan text-sm font-bold rounded-xl hover:bg-electric-cyan hover:text-[#050608] transition-all">
                 {lang === 'el' ? 'Δωρεάν Ραντεβού →' : 'Free Consultation →'}
               </Link>
             </div>
           </ScrollReveal>
         </div>
       </section>
+
+      {/* ─── ROADMAP — the path draws as you scroll ─── */}
+      <Roadmap />
 
       {/* ─── REVIEWS ─── */}
       <Reviews />
