@@ -35,6 +35,8 @@ const AnimatedCounter = ({ end, suffix = '', duration = 2200, hasTriggered }) =>
 export default function Stats() {
   const { lang } = useLangStore();
   const [isVisible, setIsVisible] = useState(false);
+  const [settled, setSettled] = useState(false); // entrance + edge light finished → hover ring is free
+  useEffect(() => { if (!isVisible) return; const t = setTimeout(() => setSettled(true), 2400); return () => clearTimeout(t); }, [isVisible]);
   const ref = useRef(null);
 
   useEffect(() => {
@@ -76,8 +78,8 @@ export default function Stats() {
           <Tile
             key={labelEn}
             {...(google ? { href: '#reviews', 'aria-label': lang === 'el' ? '125+ αξιολογήσεις 5 αστέρων στο Google' : '125+ five-star Google reviews' } : {})}
-            className={`stat-tile group card-sweep glass-panel rounded-3xl px-3 md:px-4 py-8 md:py-10 flex flex-col items-center justify-start h-full ${google ? 'stat-google-tile' : ''} ${isVisible ? 'stat-tile-in' : ''}`}
-            style={{ transitionDelay: `${i * 110}ms` }}
+            className={`stat-tile group card-sweep glass-panel rounded-3xl px-3 md:px-4 py-8 md:py-10 flex flex-col items-center justify-start h-full ${google ? 'stat-google-tile' : ''} ${isVisible ? 'stat-tile-in' : ''} ${settled ? 'stat-settled' : ''}`}
+            style={{ '--srd': `${i * 110}ms` }}
           >
             {/* the number: same size, same row, same weight on all four tiles */}
             <div
@@ -91,26 +93,28 @@ export default function Stats() {
             >
               <AnimatedCounter end={end} suffix={suffix} hasTriggered={isVisible} />
             </div>
-            {/* the rule under the number — on the Google tile it is the five stars, as Google shows them */}
-            <div className="h-4 mb-2.5 flex items-center justify-center">
+            {/* the rule under the number — on the Google tile it is a Google rating badge: G + five stars */}
+            <div className="h-9 md:h-10 mb-2 flex items-center justify-center">
               {google ? (
-                <span className="stat-stars flex items-center gap-[3px]" aria-hidden="true">
-                  {[0, 1, 2, 3, 4].map((k) => (
-                    <GoogleStar key={k} className="w-[15px] h-[15px] text-[#FBBC05]" style={{ '--k': k }} />
-                  ))}
+                <span className="stat-gbadge inline-flex items-center gap-1.5 md:gap-2 rounded-full pl-1 pr-2.5 md:pr-3 py-1 bg-white/[0.06] border border-white/12 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]" aria-hidden="true">
+                  <span className="stat-google inline-flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full bg-white shadow-[0_3px_12px_rgba(0,0,0,0.55)] shrink-0">
+                    <GoogleG className="w-[15px] h-[15px] md:w-5 md:h-5" />
+                  </span>
+                  <span className="stat-stars flex items-center gap-px md:gap-[2px]">
+                    {[0, 1, 2, 3, 4].map((k) => (
+                      <GoogleStar key={k} className="w-[13px] h-[13px] md:w-[17px] md:h-[17px] text-[#FBBC05]" style={{ '--k': k }} />
+                    ))}
+                  </span>
                 </span>
               ) : (
                 <div className={`stat-line h-[2px] rounded-full ${accent ? 'bg-[#FBBC05]/60' : 'bg-electric-cyan/50'}`} />
               )}
             </div>
             {/* label row: the same height on all four tiles, so every row lines up */}
-            <div className="min-h-7 md:min-h-8 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-[0.65rem] font-black tracking-[0.2em] text-gray-500 uppercase transition-colors duration-300 group-hover:text-gray-300">
+            <div className="min-h-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[0.65rem] font-black tracking-[0.2em] text-gray-500 uppercase transition-colors duration-300 group-hover:text-gray-300">
               {google && (
-                <span className="stat-gchip inline-flex items-center gap-2 normal-case tracking-normal">
-                  <span className="stat-google inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-full bg-white shadow-[0_3px_12px_rgba(0,0,0,0.55)] shrink-0">
-                    <GoogleG className="w-[17px] h-[17px] md:w-5 md:h-5" />
-                  </span>
-                  <span className="text-[0.9rem] md:text-base font-bold text-gray-100 leading-none">5,0</span>
+                <span className="inline-flex items-center gap-2 normal-case tracking-normal">
+                  <span className="text-[0.9rem] md:text-[0.95rem] font-bold text-gray-100 leading-none">5,0</span>
                   <span className="text-gray-600 hidden md:inline">·</span>
                 </span>
               )}

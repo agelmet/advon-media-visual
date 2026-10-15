@@ -2,7 +2,7 @@
 'use client';
 import { useRef } from 'react';
 
-export default function TiltCard({ children, className = '', max = 6 }) {
+export default function TiltCard({ children, className = '', max = 3.5 }) {
   const innerRef = useRef(null);
 
   const canTilt = () =>

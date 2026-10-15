@@ -46,12 +46,12 @@ export default function Background() {
       W = window.innerWidth; H = window.innerHeight;
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const n = Math.floor((W * H) / (coarse ? 620 : 380));
+      const n = Math.floor((W * H) / (coarse ? 470 : 290));
       stars = [];
       for (let i = 0; i < n; i++) {
         const r = Math.random();
         const big = r > 0.988;                      // ~1 in 80: brighter «feature» fibres
-        const mid = !big && r > 0.93;              // a layer of clearly visible stars                       // a few brighter «feature» fibres
+        const mid = !big && r > 0.91;              // a layer of clearly visible stars                       // a few brighter «feature» fibres
         const tint = Math.random() > 0.82 ? 2 : Math.random() > 0.45 ? 0 : 1;
         stars.push({
           x: Math.random() * W,
