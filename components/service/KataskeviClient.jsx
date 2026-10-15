@@ -42,9 +42,9 @@ export default function KataskeviClient() {
             }}
           />
         </div>
-        {/* Desktop: two columns — the offer on the left, what the 10.83€ covers on the right;
-            the pitch runs the full width under both. Phones: one centred column as before. */}
-        <div className="max-w-4xl lg:max-w-6xl mx-auto px-6 text-center lg:text-left relative z-10 lg:grid lg:grid-cols-[1.08fr_1fr] lg:gap-x-14 lg:items-center">
+        {/* The title block (service, h1, price, ΔΩΡΕΑΝ, 10.83€) is centred on every screen.
+            Desktop: under it, two equal plates side by side — what the 10.83€ covers | the pitch. */}
+        <div className="max-w-4xl lg:max-w-6xl mx-auto px-6 text-center relative z-10">
           <div>
           <ScrollReveal>
             <span className="section-label">{lang === 'el' ? 'Υπηρεσία' : 'Service'}</span>
@@ -61,7 +61,7 @@ export default function KataskeviClient() {
             <span className="text-electric-cyan text-xs font-bold tracking-widest uppercase mb-6 block">
               {lang === 'el' ? 'ΤΙΜΗ ΚΑΤΑΣΚΕΥΗΣ' : 'CREATION PRICE'}
             </span>
-            <div className="flex flex-col md:flex-row lg:flex-col items-center lg:items-start justify-center lg:justify-start gap-2 md:gap-8 lg:gap-3 mb-5">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-8 mb-5">
               {/* Anchor / original price — crossed out with hand-drawn SVG line */}
               <div className="relative inline-block mv-strike" data-io>
                 <span className="text-2xl md:text-3xl font-bold text-gray-400/75 tracking-tight whitespace-nowrap select-none">
@@ -107,9 +107,10 @@ export default function KataskeviClient() {
           </ScrollReveal>
           </div>
 
-          {/* right column: what the monthly amount covers */}
-          <ScrollReveal delay={160} direction="right" className="mt-6 lg:mt-0">
-          <div className="kat-cover">
+          {/* desktop: two equal plates side by side; phones: stacked and centred as before */}
+          <div className="mt-6 lg:mt-12 lg:grid lg:grid-cols-2 lg:gap-6 lg:items-stretch lg:text-left">
+          <ScrollReveal delay={160} direction="left" className="lg:h-full">
+          <div className="kat-cover lg:h-full lg:flex lg:flex-col lg:justify-center">
             <p className="text-sm lg:text-[15px] text-gray-500 lg:text-gray-300 leading-relaxed max-w-2xl mx-auto lg:mx-0 mb-8 lg:mb-6">
               {lang === 'el'
                 ? 'Η κατασκευή είναι πραγματικά δωρεάν — το ποσό αυτό καλύπτει αποκλειστικά τα απαραίτητα λειτουργικά που χρειάζεται κάθε ιστοσελίδα για να είναι online, όσα θα πληρώνατε ούτως ή άλλως, όπου κι αν τη φτιάχνατε. Εδώ, τα έχετε όλα σε ένα, χωρίς τίποτα επιπλέον.'
@@ -137,8 +138,11 @@ export default function KataskeviClient() {
               </span>
             </div>
           </div>
-          <PitchQuote lit className="text-left mt-12 lg:mt-6 max-w-3xl lg:max-w-none mx-auto">{service.pitch[lang]}</PitchQuote>
           </ScrollReveal>
+          <ScrollReveal delay={240} direction="right" className="lg:h-full">
+            <PitchQuote lit className="text-left mt-12 lg:mt-0 max-w-3xl lg:max-w-none mx-auto lg:h-full lg:flex lg:flex-col lg:justify-center">{service.pitch[lang]}</PitchQuote>
+          </ScrollReveal>
+          </div>
         </div>
       </section>
 
