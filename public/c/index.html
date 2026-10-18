@@ -225,6 +225,15 @@ body.st-built .mbtn.go,body.st-built .mbtn.more{opacity:.45;box-shadow:none}
 .ready .go{background:var(--me);color:#fff;box-shadow:0 6px 18px rgba(47,127,224,.3)}
 .ready .ok{background:#fff;color:#0B7A47;border:1.5px solid #9EDFC0}
 .ready.done{background:#EFFAF4;border-color:#BFE9D3}
+.ready.done p a{color:#0B7A47;font-weight:800}
+/* «Υλικό» → the material page (advonmedia.com/ylika/<code>, 18 Oct 2026) */
+.ylk{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:15px;background:#fff;border:1.5px solid #BFD8F6;text-decoration:none;color:var(--ink);box-shadow:0 6px 18px -8px rgba(47,127,224,.35);transition:transform .15s,box-shadow .15s}
+.ylk:active{transform:scale(.98)}
+.ylk-i{width:38px;height:38px;border-radius:12px;background:var(--me);display:grid;place-items:center;font-size:19px;flex:none}
+.ylk b{display:block;font-size:15px;font-weight:800;line-height:1.2}
+.ylk small{display:block;font-size:12.5px;color:var(--muted);font-weight:600;margin-top:1px}
+.ylk-a{margin-left:auto;font-size:20px;font-weight:800;color:var(--brand)}
+@media (hover:hover){.ylk:hover{transform:translateY(-1px);box-shadow:0 10px 24px -10px rgba(47,127,224,.45)}}
 .ready.done p{color:#0B7A47;font-size:13.5px;font-weight:700}
 .ready.nudge{animation:nudge 1.1s ease-in-out 3}
 @keyframes nudge{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 6px rgba(47,127,224,.2)}}
@@ -500,8 +509,8 @@ const STAGES=[['yliko','Υλικό'],['draft','Πρώτο draft'],['changes','Α
 function stageHint(t){
   const stg=curStage(t);
   if(stg==='yliko') return t.dat
-    ? 'Τα στοιχεία σας τα έχουμε ήδη από το doctoranytime. Χρειαζόμαστε μόνο τις φωτογραφίες σας σε καλή ανάλυση — στείλτε τις εδώ. Μόλις τις στείλετε, πατήστε «Ξεκινήστε την ιστοσελίδα μου».'
-    : 'Στείλτε ό,τι έχετε εύκολα: φωτογραφίες, δυο λόγια για εσάς, τις υπηρεσίες και τα στοιχεία σας. Τίποτα δεν είναι υποχρεωτικό. Μετά πατήστε «Ξεκινήστε την ιστοσελίδα μου».';
+    ? 'Τα στοιχεία σας τα έχουμε ήδη από το doctoranytime. Χρειαζόμαστε μόνο λίγες φωτογραφίες σας σε καλή ανάλυση — ανεβάστε τες από το κουμπί «Ανεβάστε τις φωτογραφίες σας». Μετά πατήστε «Ξεκινήστε την ιστοσελίδα μου».'
+    : 'Λίγες φωτογραφίες αρκούν — όλα τα άλλα είναι προαιρετικά και τα κείμενα τα γράφουμε εμείς. Ανεβάστε τα από το κουμπί «Ανεβάστε το υλικό σας» και μετά πατήστε «Ξεκινήστε την ιστοσελίδα μου».';
   if(stg==='draft') return 'Δείτε το πρώτο draft με την ησυχία σας — και από υπολογιστή. Θέλετε αλλαγές; Γράψτε τις (1., 2., 3.) και πατήστε «Έστειλα όλες τις αλλαγές». Είναι όπως το θέλετε; Πατήστε «Πάμε live».';
   if(stg==='changes') return 'Οι αλλαγές σας έγιναν — ελέγξτε όλη τη σελίδα μια φορά. Κι άλλες αλλαγές; Γράψτε τις και πατήστε «Έστειλα όλες τις αλλαγές». Όλα εντάξει; Πατήστε «Πάμε live».';
   return 'Η ιστοσελίδα σας είναι online! Για οποιαδήποτε αλλαγή ή ερώτηση, γράψτε μας εδώ.';
@@ -647,11 +656,11 @@ function renderReady(t){
   if(stg==='live'){ el.hidden=true; el.innerHTML=''; document.body.classList.add('st-built'); return; }
   el.hidden=false; el.classList.toggle('done',!!r);
   document.body.classList.toggle('st-built', stg!=='yliko' || r==='build' || r==='email');
-  if(r==='build') el.innerHTML='<p>✅ Το λάβαμε! Ετοιμάζουμε το πρώτο draft της ιστοσελίδας σας — θα το βρείτε εδώ σε 4–10 ημέρες. Θυμηθήκατε κάτι; Γράψτε το μας.</p>';
+  if(r==='build') el.innerHTML='<p>✅ Το λάβαμε! Ετοιμάζουμε το πρώτο draft της ιστοσελίδας σας — θα το βρείτε εδώ σε 4–10 ημέρες. Θυμηθήκατε κάτι; Γράψτε το μας ή <a href="'+ylikaUrl()+'">ανεβάστε το εδώ</a>.</p>';
   else if(r==='email') el.innerHTML='<p>📧 Ευχαριστούμε! Βλέπουμε το email σας και ξεκινάμε την ιστοσελίδα σας — το πρώτο draft θα το βρείτε εδώ σε 4–10 ημέρες. Θυμηθήκατε κάτι; Γράψτε το μας.</p>';
   else if(r==='changes') el.innerHTML='<p>✏️ Τις λάβαμε! Κάνουμε τις αλλαγές σας — έτοιμες συνήθως μέσα σε 24 ώρες. Θα σας γράψουμε εδώ μόλις είναι.</p>';
   else if(r==='live') el.innerHTML='<p>🚀 Τέλεια! Ελέγχουμε το domain, το αγοράζουμε και σας ενημερώνουμε εδώ μόλις η ιστοσελίδα σας είναι online (1–2 ημέρες).</p>';
-  else if(stg==='yliko') el.innerHTML='<p>'+(t.dat?'Στείλατε τις φωτογραφίες σας, εδώ ή με email; Πατήστε το αντίστοιχο κουμπί. Δεν έχετε ακόμη; Πατήστε «Ξεκινήστε» έτσι κι αλλιώς — βάζουμε προσωρινές.':'Στείλατε ό,τι έχετε, εδώ ή με email; Πατήστε το αντίστοιχο κουμπί — ό,τι λείπει το προσθέτουμε μετά.')+'</p><div class="rb"><button class="ok" data-ready="email">📧 Τα έστειλα όλα με email</button><button class="go" data-ready="build">✅ Ξεκινήστε την ιστοσελίδα μου</button></div>';
+  else if(stg==='yliko') el.innerHTML='<a class="ylk" href="'+ylikaUrl()+'"><span class="ylk-i">📷</span><span><b>'+(t.dat?'Ανεβάστε τις φωτογραφίες σας':'Ανεβάστε το υλικό σας')+'</b><small>'+(t.dat?'Λίγες αρκούν · παίρνει 2 λεπτά':'Λίγες φωτογραφίες αρκούν · τα υπόλοιπα προαιρετικά')+'</small></span><span class="ylk-a">→</span></a><p>'+(t.dat?'Τις στείλατε, εδώ ή με email; Πατήστε το αντίστοιχο κουμπί. Δεν έχετε ακόμη; Πατήστε «Ξεκινήστε» έτσι κι αλλιώς — βάζουμε προσωρινές.':'Στείλατε ό,τι έχετε, εδώ ή με email; Πατήστε το αντίστοιχο κουμπί — ό,τι λείπει το προσθέτουμε μετά.')+'</p><div class="rb"><button class="ok" data-ready="email">📧 Τα έστειλα όλα με email</button><button class="go" data-ready="build">✅ Ξεκινήστε την ιστοσελίδα μου</button></div>';
   else el.innerHTML='<p>Όταν τελειώσετε, πατήστε ένα από τα δύο:</p><div class="rb"><button class="ok" data-ready="changes">✏️ Έστειλα όλες τις αλλαγές</button><button class="go" data-ready="live">🚀 Όλα καλά — πάμε live</button></div>';
 }
 
@@ -825,7 +834,8 @@ feed.addEventListener('click',e=>{
 });
 const SHEET={odigos:'guide',extras:'faq',yliko:'yliko',confirm:'confirm',golive:'golive'};
 function closeSheets(){document.querySelectorAll('.sheet.on').forEach(el=>el.classList.remove('on'));}
-function openSheet(id){const el=document.getElementById(SHEET[id]||id); if(el){closeSheets();el.classList.add('on');el.querySelector('.sheet-body').scrollTop=0;}}
+const ylikaUrl=()=>'/ylika/'+encodeURIComponent(code);
+function openSheet(id){ if(id==='yliko'&&code&&curStage(state.thread)==='yliko'){ location.href=ylikaUrl(); return; } const el=document.getElementById(SHEET[id]||id); if(el){closeSheets();el.classList.add('on');el.querySelector('.sheet-body').scrollTop=0;}}
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-sheet]'); if(b){ e.preventDefault(); openSheet(b.dataset.sheet); return; }
   if(e.target.closest('[data-guide]')){ e.preventDefault(); openSheet('odigos'); return; }

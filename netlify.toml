@@ -21,6 +21,18 @@
   to = "/c/index.html"
   status = 200
 
+# The material page — advonmedia.com/ylika (open) and advonmedia.com/ylika/<code> (one client's, files go into their chat).
+# One static page (public/ylika/index.html), like the chat page.
+[[redirects]]
+  from = "/ylika"
+  to = "/ylika/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/ylika/*"
+  to = "/ylika/index.html"
+  status = 200
+
 # Skip the build (15 credits each) when a push only touches notes/docs.
 [build]
   ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)*.md' ':(exclude)Claude outputs'"

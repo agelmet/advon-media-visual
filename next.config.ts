@@ -47,7 +47,12 @@ const nextConfig = {
   },
   async rewrites() {
     // advonmedia.com/c/<code> → the client chat page (netlify.toml has the same rule for the CDN; this is the fallback)
-    return [{ source: '/c/:code', destination: '/c/index.html' }];
+    // advonmedia.com/ylika and /ylika/<code> → the material page (public/ylika/index.html, 18 Oct 2026)
+    return [
+      { source: '/c/:code', destination: '/c/index.html' },
+      { source: '/ylika', destination: '/ylika/index.html' },
+      { source: '/ylika/:code', destination: '/ylika/index.html' },
+    ];
   },
   async headers() {
     return [

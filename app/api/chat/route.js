@@ -14,6 +14,11 @@ import { crmCors, crmPreflight } from '@/lib/crmcors';
 //       POST /api/chat?c=<code>&file=1            multipart {file} → loose blob (no commit) → {sha}
 //       POST /api/chat?c=<code>&seen=1            → the client has read everything (clears their unread counter)
 //       GET  /api/chat?c=<code>&file=<path>       → one attachment of THAT thread
+//   • the MATERIAL page advonmedia.com/ylika/<code> uses the client calls above; the OPEN page advonmedia.com/ylika (no code):
+//       POST /api/chat?ylika=1&file=1             multipart {file} → loose blob → {sha}
+//       POST /api/chat?ylika=1                    JSON {name, phone, email, dat, text, files, cid} → the material lands in the chat
+//                                                  whose card has the same mobile (its link is NEVER returned), otherwise a NEW chat
+//                                                  is created (welcome + Υλικό messages, then the material) → {code, link}
 //   • the CRM «Chats» tab (x-crm-auth, the same sync token as every other CRM route)
 //       GET  /api/chat?list=1[&h=<head>]          → {threads:[…], notify:{email,telegram}, head}
 //       GET  /api/chat?t=<slug>[&h=<head>]        → {thread, messages, head}
@@ -40,7 +45,7 @@ import { crmCors, crmPreflight } from '@/lib/crmcors';
 // reminders) are sent by netlify/functions/chat-notify.mjs every 5 minutes from the same files.
 
 import { ghReady, ghConf, commit as ghCommit, createBlob } from '@/lib/ghdata';
-import { demoSeed, demoReply } from '@/lib/chatdemo';
+import { demoSeed, demoReply, WELCOME as DEF_WELCOME, YLIKO_DAT as DEF_YLIKO_DAT, YLIKO_PLAIN as DEF_YLIKO_PLAIN, tpl } from '@/lib/chatdemo';
 import { readTemplates, readTemplatesAll } from '@/lib/chatcore';
 import { DIR, INDEX_PATH, SITE_URL, STAGES, normStage, currentHead, forgetHead, getIndex as coreIndex, getMessages as coreMessages, readChatBuffer, headNow, mailConf, sendTelegram, telegramDiag, sendEmail, clientWroteNote, approvalNote, agentNote, newMessageMail, reminderMail } from '@/lib/chatcore';
 
@@ -48,12 +53,12 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const MAX_FILE = 4.5 * 1024 * 1024;
-const MAX_FILES = 12;
+const MAX_FILES = 30;                 // the material page (/ylika) sends a whole batch as ONE message (was 12, 18 Oct 2026)
 const MAX_TEXT = 4000;
 const SLUG_RE = /^[a-z0-9-]{2,50}$/;
 const CODE_RE = /^[a-z0-9-]{8,70}$/;
 const SHA_RE = /^[0-9a-f]{40}$/;
-const NAME_OK = /\.(jpe?g|png|webp|gif|bmp|tiff?|heic|heif|svg|pdf|docx?|xlsx?|pptx?|txt|rtf|csv|zip|mp4|mov|m4a|mp3|ogg|webm)$/i;
+const NAME_OK = /\.(jpe?g|png|webp|gif|bmp|tiff?|heic|heif|avif|svg|ai|eps|psd|pdf|docx?|xlsx?|pptx?|txt|rtf|csv|zip|mp4|mov|m4a|mp3|ogg|webm)$/i;
 
 const NO_STORE = {
   'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
@@ -144,6 +149,8 @@ async function appendMessage(c, slug, msg, blobFiles = [], opts = {}) {
     // until the stage moves on or we answer with clearReady, so the agent knows exactly when to build / change / publish
     if (msg.from === 'client' && msg.kind && msg.kind.startsWith('ready:')) t.ready = { kind: msg.kind.slice(6), at: msg.at, id: msg.id };
     if (msg.from !== 'client' && opts.clearReady) delete t.ready;
+    // sent from the material page, which already asked «είναι αυτά όλα;» — the notifier's automatic «Λάβαμε… κάτι άλλο;» is not needed
+    if (msg.from === 'client' && msg.via === 'ylika') t.ackFor = msg.at;
     // a message Angelo already sent the client himself (the post-meeting e-mail/Viber carries the link): stored, but no «new message» e-mail
     if (msg.from !== 'client' && opts.quiet) t.clientNotifiedAt = msg.at;
     if (opts.patch) { if (opts.patch.stage && STAGES.includes(opts.patch.stage) && t.stage !== opts.patch.stage) { t.stage = opts.patch.stage; t.stageAt = msg.at; delete t.ready; } if (opts.patch.site) t.site = opts.patch.site; }
@@ -285,11 +292,88 @@ async function __GET(req) {
 }
 
 // =====================================================================
+// ---------- the open material page (/ylika without a personal link, 18 Oct 2026) ----------
+const last9 = (s) => String(s || '').replace(/\D/g, '').slice(-9);
+const plainName = (s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/ς/g, 'σ').split(/[^a-z0-9\u0370-\u03ff]+/).filter(Boolean).sort().join(' ');
+async function ylikaPost(c, req, q) {
+  if (q('file') === '1') {
+    if (limited(req, 'yfile', 90, 60 * 60 * 1000)) return json({ error: 'too many files' }, 429);
+    let fd; try { fd = await req.formData(); } catch { return json({ error: 'bad form' }, 400); }
+    const file = fd.get('file');
+    if (!file || typeof file === 'string') return json({ error: 'no file' }, 400);
+    if (file.size > MAX_FILE) return json({ error: 'file too large' }, 413);
+    const name = safeName(file.name);
+    if (!NAME_OK.test(name)) return json({ error: 'file type not allowed' }, 415);
+    const buf = Buffer.from(await file.arrayBuffer());
+    const sha = await createBlob(c, buf);
+    return json({ ok: true, sha, name, bytes: buf.length, type: file.type || '' });
+  }
+  if (limited(req, 'ymsg', 8, 60 * 60 * 1000)) return json({ error: 'too many messages' }, 429);
+  let body; try { body = await req.json(); } catch { return json({ error: 'bad json' }, 400); }
+  const name = clean(body.name, 80).replace(/\s+/g, ' ');
+  const phone = clean(body.phone, 40);
+  const email = clean(body.email, 120);
+  if (name.length < 3) return json({ error: 'missing name' }, 400);
+  if (String(phone).replace(/\D/g, '').length < 10) return json({ error: 'missing phone' }, 400);
+  const text = clean(body.text, MAX_TEXT);
+  const id = msgId();
+  const now = nowIso();
+  // 1. a chat that already has this mobile (or, when its card has no phone, exactly this name) → the material goes there.
+  //    Its link is never sent back: knowing someone's number must not open their conversation.
+  const idx = await getIndex(c);
+  const live = idx.filter((t) => !t.archived && !t.demo);
+  let match = live.find((t) => t.phone && last9(t.phone) === last9(phone));
+  if (!match) { const same = live.filter((t) => !t.phone && plainName(t.name) === plainName(name)); if (same.length === 1) match = same[0]; }
+  if (match) {
+    const files = normFiles(match.slug, id, body.files);
+    if (!text && !files.length) return json({ error: 'empty' }, 400);
+    const msg = { id, from: 'client', text, files: stripSha(files), at: now, via: 'ylika' };
+    const cid = clean(body.cid, 40); if (/^[\w-]{6,40}$/.test(cid)) msg.cid = cid;
+    const { thread: t } = await appendMessage(c, match.slug, msg, files);
+    return json({ ok: true, matched: true, thread: { stage: normStage(t.stage), ready: t.ready || null } });
+  }
+  // 2. nobody yet → a new chat, exactly like the CRM's «New» (welcome + Υλικό), with the material as the client's first message
+  let T = {}; try { T = (await readTemplates(c)) || {}; } catch {}
+  const base = slugify(name);
+  let created = null;
+  await ghCommit(c, `chat: new thread from /ylika ${base}`, async (ctx) => {
+    const { data: idx2 } = await ctx.readJson(INDEX_PATH, []);
+    const list = Array.isArray(idx2) ? idx2 : [];
+    let s = base, n = 2; while (list.some((x) => x.slug === s)) s = `${base}-${n++}`;
+    const files = normFiles(s, id, body.files);
+    const dat = !!body.dat;
+    const t0 = Date.parse(now) - 3000;
+    const msgs = [
+      { id: msgId() + '0', from: 'advon', text: tpl(T, 'welcome', DEF_WELCOME), files: [], at: new Date(t0).toISOString() },
+      { id: msgId() + '1', from: 'advon', text: dat ? tpl(T, 'yliko_dat', DEF_YLIKO_DAT) : tpl(T, 'yliko_plain', DEF_YLIKO_PLAIN), files: [], at: new Date(t0 + 1000).toISOString() },
+    ];
+    const msg = { id, from: 'client', text, files: stripSha(files), at: now, via: 'ylika' };
+    if (text || files.length) msgs.push(msg);
+    created = { slug: s, code: `${s}-${rnd(7)}`, name, email: /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) ? email : '', phone, site: '', stage: 'yliko', dat, stageAt: now, createdAt: now,
+      lastAt: msgs[msgs.length - 1].at, lastFrom: msgs[msgs.length - 1].from, lastText: (msg.text || (files.length ? '📎 ' + files.map((f) => f.name).join(', ') : '')).slice(0, 140),
+      n: msgs.length, unreadAdmin: msgs.length > 2 ? 1 : 0, unreadClient: 0, adminSeenAt: msgs[1].at, clientSeenAt: now, archived: false, src: 'ylika', ackFor: now,
+      log: [{ at: now, by: 'system', text: 'Δημιουργήθηκε από τη σελίδα υλικού advonmedia.com/ylika' }] };
+    list.push(created);
+    return [
+      { path: `${DIR}/${s}/messages.json`, content: JSON.stringify(msgs, null, 1) },
+      ...files.map((f) => ({ path: f.path, blobSha: f.sha })),
+      { path: INDEX_PATH, content: JSON.stringify(list, null, 1) },
+    ];
+  });
+  forgetHead();
+  return json({ ok: true, created: true, code: created.code, link: `${SITE_URL}/c/${created.code}`, thread: { stage: 'yliko', ready: null } });
+}
+
 async function __POST(req) {
   const c = cfg();
   if (!ghReady(c)) return json({ error: 'storage not configured' }, 503);
   const url = new URL(req.url);
   const q = (k) => url.searchParams.get(k);
+
+  // ---- the open material page (no personal link) ----
+  if (q('ylika') === '1') {
+    try { return await ylikaPost(c, req, q); } catch (e) { return json({ error: e.message || 'write failed' }, 502); }
+  }
 
   // ---- who is writing? ----
   let who = null, slug = null, thread = null;
@@ -554,6 +638,7 @@ async function __POST(req) {
     const msg = { id, from: who, text, files: stripSha(files), at: nowIso() };
     const cid = clean(body.cid, 40); if (/^[\w-]{6,40}$/.test(cid)) msg.cid = cid;
     if (who === 'client' && body.ua) msg.ua = clean(body.ua, 200);
+    if (who === 'client' && body.via === 'ylika') msg.via = 'ylika';
     if (who === 'client' && READY_KINDS.includes(body.kind)) msg.kind = 'ready:' + body.kind;      // a button press, not a plain message
     let t, dup;
     try { ({ thread: t, dup } = await appendMessage(c, slug, msg, files, { clearReady: who !== 'client' && body.clearReady === true, quiet: who !== 'client' && body.quiet === true })); }
