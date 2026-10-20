@@ -1287,3 +1287,10 @@ html.mv-intro h1 .reveal-word:nth-child(2) { animation-delay: 1.25s !important; 
 .group:hover .brand-tile.fb { translate: 5px 0; rotate: 10deg; box-shadow: 0 14px 30px -10px rgba(24,119,242,.6), 0 0 0 3px #0b0c10; }
 .group:hover .brand-tile.g { rotate: -8deg; box-shadow: 0 14px 30px -10px rgba(66,133,244,.55), 0 0 26px rgba(255,255,255,.12); }
 @media (prefers-reduced-motion: reduce) { .brand-tile { transition: none; } }
+
+/* ===== Booking gate (20 Oct 2026) — the e-mail code before the Zoho calendar (components/BookingGate.jsx) ===== */
+.bk-gate { animation: bkIn .35s ease-out both; }
+@keyframes bkIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.bk-spin { width: 26px; height: 26px; border-radius: 50%; border: 3px solid #e3e7ec; border-top-color: #1a8fc4; animation: bkSpin .8s linear infinite; }
+@keyframes bkSpin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .bk-gate { animation: none; } .bk-spin { animation-duration: 2.4s; } }
