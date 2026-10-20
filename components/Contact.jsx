@@ -1,6 +1,6 @@
 // components/Contact.jsx
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useLangStore } from '@/store/langStore';
 import ScrollReveal from '@/components/ScrollReveal';
 import { SOCIALS, SocialIcon } from '@/components/Socials';
@@ -31,15 +31,6 @@ export default function Contact() {
   // The booking calendar opens only after the visitor confirmed their e-mail with a code (BookingGate, 20 Oct 2026).
   const [bkEmail, setBkEmail] = useState('');
 
-  // The form's «stamp» (20 Oct 2026): fetched when the page opens and sent with the message. A message without
-  // it never came through this page (robots post straight to the address), one sent within 3 s was typed by a
-  // robot — /api/lead files those as spam and still answers «sent ✓».
-  const stampRef = useRef('');
-  const getStamp = async () => {
-    try { const r = await fetch('/api/lead?stamp=1', { cache: 'no-store' }); const j = await r.json(); if (j && j.stamp) stampRef.current = j.stamp; } catch {}
-    return stampRef.current;
-  };
-  useEffect(() => { getStamp(); }, []);
 
   // Calendar injection.
   //
@@ -101,43 +92,20 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const form = e.target;
-    const fd = new FormData(form);
-    const failMsg = lang === 'el' ? 'Ωχ! Υπήρξε ένα πρόβλημα. Στείλτε μας email στο angelos@advonmedia.com.' : 'Oops! There was a problem. Email us at angelos@advonmedia.com.';
-    const phone = String(fd.get('phone') || '').replace(/[^\d+]/g, '');
-    if (phone.replace(/\D/g, '').length < 10) {
-      setStatus(lang === 'el' ? 'Ελέγξτε το τηλέφωνο — χρειαζόμαστε 10 ψηφία, π.χ. 69X XXX XXXX.' : 'Please check the phone number — we need 10 digits, e.g. 69X XXX XXXX.');
-      return;
-    }
     setStatus(lang === 'el' ? 'Αποστολή...' : 'Sending...');
+    const form = e.target;
     try {
-      let stamp = stampRef.current;
-      // The page could not fetch its stamp when it opened (network hiccup) — fetch it now and give it the
-      // 3 seconds the server expects, so a real person is never mistaken for a robot.
-      if (!stamp) { stamp = await getStamp(); await new Promise((r) => setTimeout(r, 3300)); }
-      const response = await fetch('/api/lead', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          name: fd.get('name'), phone: fd.get('phone'), email: fd.get('email'), message: fd.get('message'),
-          website: fd.get('website'), stamp, source: 'site', page: location.pathname,
-        }),
-      });
+      const response = await fetch(form.action, { method: form.method, body: new FormData(form), headers: { 'Accept': 'application/json' }});
       if (response.ok) {
         setStatus(lang === 'el' ? 'Ευχαριστούμε! Το μήνυμά σας εστάλη επιτυχώς — θα επικοινωνήσουμε μαζί σας εντός της ημέρας.' : 'Thank you! Your message has been sent — we will contact you within the day.');
         setSent(true);
         metaTrack('Lead', { content_name: 'contact-form' });
         form.reset();
       } else {
-        let code = ''; try { code = (await response.json()).error || ''; } catch {}
-        setStatus(code === 'invalid_phone'
-          ? (lang === 'el' ? 'Ελέγξτε το τηλέφωνο — χρειαζόμαστε έναν σωστό αριθμό, π.χ. 69X XXX XXXX.' : 'Please check the phone number, e.g. 69X XXX XXXX or +44 …')
-          : code === 'invalid_email'
-            ? (lang === 'el' ? 'Ελέγξτε το email σας.' : 'Please check your email.')
-            : failMsg);
+        setStatus(lang === 'el' ? 'Ωχ! Υπήρξε ένα πρόβλημα. Στείλτε μας email στο angelos@advonmedia.com.' : 'Oops! There was a problem. Email us at angelos@advonmedia.com.');
       }
     } catch (err) {
-      setStatus(failMsg);
+      setStatus(lang === 'el' ? 'Ωχ! Υπήρξε ένα πρόβλημα. Στείλτε μας email στο angelos@advonmedia.com.' : 'Oops! There was a problem. Email us at angelos@advonmedia.com.');
     }
   };
 
@@ -198,7 +166,7 @@ export default function Contact() {
               <h3 className="text-2xl md:text-3xl font-black text-white font-display">{lang === 'el' ? 'Εκδήλωση Ενδιαφέροντος' : 'Express Interest'}</h3>
             </div>
             <p className="text-gray-400 mb-8">{lang === 'el' ? 'Συμπληρώστε τη φόρμα και θα επικοινωνήσουμε μαζί σας μέσω email ή τηλεφώνου εντός της ίδιας ημέρας.' : 'Fill out the form and we will contact you via email or phone within the same day.'}</p>
-            <form action="/api/lead" method="POST" onSubmit={handleSubmit} className="space-y-5 flex-grow flex flex-col">
+            <form action="https://formspree.io/f/xkopgoaj" method="POST" onSubmit={handleSubmit} className="space-y-5 flex-grow flex flex-col">
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="cf-name" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Όνομα / Επωνυμία' : 'Name / Company'}</label>
@@ -217,8 +185,7 @@ export default function Contact() {
                 <label htmlFor="cf-message" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Μήνυμα / Υπηρεσία που σας ενδιαφέρει' : 'Message / Service of Interest'}</label>
                 <textarea id="cf-message" name="message" rows="5" required className={`${inputCls} flex-grow min-h-[150px] resize-none`}></textarea>
               </div>
-              {/* hidden field only robots fill in — kept off-screen (not display:none, which some robots skip) */}
-              <input type="text" name="website" tabIndex="-1" autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] w-px h-px opacity-0" />
+              <input type="text" name="_gotcha" tabIndex="-1" autoComplete="off" className="hidden" aria-hidden="true" />
               <div className="mt-auto pt-1">
                 <button
                   type="submit"
