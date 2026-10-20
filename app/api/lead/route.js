@@ -16,12 +16,16 @@
 // A lead is only reported as failed if BOTH storage and every notification fail.
 
 import { commit as ghCommit, mutateJson } from '@/lib/ghdata';
+import { crmCors, crmPreflight } from '@/lib/crmcors';
+import { makeStamp, checkStamp, contentVerdict, phoneVerdict, tooMany, clientIp } from '@/lib/antispam';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const INBOX_PATH = 'leads/inbox.json';
+const SPAM_PATH = 'leads/spam.json';          // what the robot checks caught (20 Oct 2026) — the CRM shows it
 const MAX_LEADS = 500;
+const MAX_SPAM = 400;
 
 const NO_STORE = {
   'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
@@ -86,7 +90,7 @@ async function storeLead(c, lead) {
   const poolLead = {
     key: `ad:${digits}`, name: lead.name, spec: lead.profession || '', phone: digits, city: '', addr: '',
     reviews: 0, score: null, url: '', added: lead.createdAt.slice(0, 10), src: 'ads', list: 'ads',
-    note: [lead.message, lead.email, [lead.utm_source, lead.utm_campaign, lead.utm_content].filter(Boolean).join(' / ')].filter(Boolean).join(' · '),
+    note: [lead.source === 'site' ? 'Φόρμα advonmedia.com' : '', lead.message, lead.email, [lead.utm_source, lead.utm_campaign, lead.utm_content].filter(Boolean).join(' / ')].filter(Boolean).join(' · '),
     at: lead.createdAt,
   };
   await ghCommit(c, `lead: ${lead.name} (${lead.source})`, async (ctx) => {
@@ -176,10 +180,62 @@ async function notifyTelegram(c, l) {
   return res.ok;
 }
 
+// ---------- robots (20 Oct 2026) ----------
+// Everything a robot sends is answered exactly like a real lead («sent ✓») so it has no reason to try another
+// way, and is filed in leads/spam.json instead of the inbox — nothing is e-mailed, nothing reaches the CRM
+// Leads tab. The CRM shows the list («Caught as spam») with a «Not spam» button that sends it on as a lead.
+const fakeOk = () => json({ ok: true, id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}` });
+async function fileSpam(c, req, body, reason) {
+  const ip = clientIp(req);
+  // A flood must never turn into a flood of commits: at most 3 per address an hour, 40 an hour in all.
+  if (tooMany(`spam:${ip}`, 3, 3600e3) || tooMany('spam:all', 40, 3600e3) || !storageReady(c)) return;
+  const rec = {
+    id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+    at: new Date().toISOString(),
+    reason,
+    source: clean(body.source, 40) || 'website',
+    name: clean(body.name, 120),
+    email: clean(body.email, 160),
+    phone: clean(body.phone, 40),
+    profession: clean(body.profession, 120),
+    message: clean(body.message, 600),
+    page: clean(body.page, 200),
+    ip,
+    ua: clean(req.headers.get('user-agent'), 160),
+  };
+  try {
+    await mutateJson(c, SPAM_PATH, (list) => [...(Array.isArray(list) ? list : []), rec].slice(-MAX_SPAM), `spam caught: ${reason}`, []);
+  } catch (e) { console.error('[lead] spam file failed', e?.message); }
+}
+
+function buildLead(body) {
+  const pv = phoneVerdict(clean(body.phone, 40));
+  return {
+    lead: {
+      id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+      name: clean(body.name, 120),
+      profession: clean(body.profession, 120),
+      phone: pv.e164 || normalisePhone(clean(body.phone, 40)),
+      email: clean(body.email, 160).toLowerCase(),
+      message: clean(body.message, 2000),
+      source: clean(body.source, 40) || 'website',
+      utm_source: clean(body.utm_source, 80),
+      utm_medium: clean(body.utm_medium, 80),
+      utm_campaign: clean(body.utm_campaign, 120),
+      utm_content: clean(body.utm_content, 120),
+      page: clean(body.page, 200),
+      createdAt: new Date().toISOString(),
+    },
+    phoneOk: pv.ok,
+  };
+}
+
 // ---------- handlers ----------
-export async function POST(req) {
+async function __POST(req) {
   const c = cfg();
-  const ip = req.headers.get('x-nf-client-connection-ip') || req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+  const url = new URL(req.url);
+  if (url.searchParams.get('unspam') === '1') return unspam(req, c);
+  const ip = clientIp(req);
   if (limited(ip)) return json({ ok: false, error: 'rate_limited' }, 429);
 
   let body;
@@ -189,26 +245,27 @@ export async function POST(req) {
   } catch {
     return json({ ok: false, error: 'bad_request' }, 400);
   }
-  if (clean(body.website, 50)) return json({ ok: true, id: 'ignored' }); // honeypot filled → pretend success
+  body = body && typeof body === 'object' ? body : {};
 
-  const lead = {
-    id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
-    name: clean(body.name, 120),
-    profession: clean(body.profession, 120),
-    phone: normalisePhone(clean(body.phone, 40)),
-    email: clean(body.email, 160).toLowerCase(),
-    message: clean(body.message, 2000),
-    source: clean(body.source, 40) || 'website',
-    utm_source: clean(body.utm_source, 80),
-    utm_medium: clean(body.utm_medium, 80),
-    utm_campaign: clean(body.utm_campaign, 120),
-    utm_content: clean(body.utm_content, 120),
-    page: clean(body.page, 200),
-    createdAt: new Date().toISOString(),
-  };
+  // 1. the hidden field only robots fill in (named differently on the two forms)
+  if (clean(body.website, 50) || clean(body._gotcha, 50) || clean(body.company_url, 50)) { await fileSpam(c, req, body, 'hidden-field'); return fakeOk(); }
+  // 2 + 3. the page's stamp: missing/forged = never opened the page, under 3 s = a robot
+  const st = checkStamp(body.stamp);
+  if (!st.ok) { await fileSpam(c, req, body, st.why); return fakeOk(); }
+  // 5. links, foreign script, spam phrases, made-up names, throwaway e-mails
+  const why = contentVerdict(body);
+  if (why) { await fileSpam(c, req, body, why); return fakeOk(); }
+
+  const { lead, phoneOk } = buildLead(body);
+  // 4. the phone — a person who came through the page is told to fix it (robots never get this far)
+  if (!phoneOk) return json({ ok: false, error: 'invalid_phone' }, 400);
   const invalid = validLead(lead);
   if (invalid) return json({ ok: false, error: `invalid_${invalid}` }, 400);
 
+  return deliver(c, lead);
+}
+
+async function deliver(c, lead) {
   const results = { stored: false, email: false, telegram: false };
   if (storageReady(c)) {
     try {
@@ -232,9 +289,20 @@ export async function POST(req) {
   return json({ ok: true, id: lead.id, delivered: results });
 }
 
-export async function GET(req) {
+async function __GET(req) {
   const c = cfg();
+  const url = new URL(req.url);
+  // Public: the stamp every form fetches when the page opens.
+  if (url.searchParams.get('stamp') === '1') return json({ ok: true, stamp: makeStamp() });
   if (!(await authorized(req, c))) return json({ ok: false, error: 'unauthorized' }, 401);
+  if (url.searchParams.get('spam') === '1') {
+    if (!storageReady(c)) return json({ ok: false, error: 'not_configured', spam: [] }, 503);
+    try {
+      let spam = [];
+      await ghCommit(c, 'noop', async (ctx) => { const { data } = await ctx.readJson(SPAM_PATH, []); spam = Array.isArray(data) ? data : []; return null; });
+      return json({ ok: true, spam: spam.slice().reverse() });
+    } catch (e) { return json({ ok: false, error: e.message }, 502); }
+  }
   if (!storageReady(c)) return json({ ok: false, error: 'not_configured', leads: [] }, 503);
   try {
     const { leads } = await readInbox(c);
@@ -244,9 +312,10 @@ export async function GET(req) {
   }
 }
 
-export async function DELETE(req) {
+async function __DELETE(req) {
   const c = cfg();
   if (!(await authorized(req, c))) return json({ ok: false, error: 'unauthorized' }, 401);
+  if (new URL(req.url).searchParams.get('spam') === '1') return dropSpam(req, c);
   if (!storageReady(c)) return json({ ok: false, error: 'not_configured' }, 503);
   let ids = [];
   try {
@@ -267,3 +336,44 @@ export async function DELETE(req) {
     return json({ ok: false, error: e.message }, 502);
   }
 }
+
+// CRM: «Not spam» — take one record out of the spam list and deliver it as a normal lead.
+async function unspam(req, c) {
+  if (!(await authorized(req, c))) return json({ ok: false, error: 'unauthorized' }, 401);
+  if (!storageReady(c)) return json({ ok: false, error: 'not_configured' }, 503);
+  let id = '';
+  try { id = String((await req.json())?.id || ''); } catch {}
+  if (!id) return json({ ok: false, error: 'no_id' }, 400);
+  let rec = null;
+  try {
+    await mutateJson(c, SPAM_PATH, (list) => {
+      const arr = Array.isArray(list) ? list : [];
+      rec = arr.find((r) => String(r.id) === id) || null;
+      return rec ? arr.filter((r) => String(r.id) !== id) : undefined;
+    }, 'spam released by Angelo', []);
+  } catch (e) { return json({ ok: false, error: e.message }, 502); }
+  if (!rec) return json({ ok: false, error: 'not_found' }, 404);
+  const { lead } = buildLead({ ...rec, source: rec.source || 'website' });
+  return deliver(c, lead);
+}
+async function dropSpam(req, c) {
+  if (!storageReady(c)) return json({ ok: false, error: 'not_configured' }, 503);
+  let ids = [], all = false;
+  try { const b = await req.json(); ids = Array.isArray(b?.ids) ? b.ids.map(String) : []; all = b?.all === true; } catch {}
+  try {
+    const set = new Set(ids);
+    let removed = 0;
+    await mutateJson(c, SPAM_PATH, (list) => {
+      const arr = Array.isArray(list) ? list : [];
+      const next = all ? [] : arr.filter((r) => !set.has(String(r.id)));
+      removed = arr.length - next.length;
+      return removed ? next : undefined;
+    }, `spam cleared (${all ? 'all' : ids.length})`, []);
+    return json({ ok: true, removed });
+  } catch (e) { return json({ ok: false, error: e.message }, 502); }
+}
+
+export const POST = crmCors(__POST);
+export const GET = crmCors(__GET);
+export const DELETE = crmCors(__DELETE);
+export const OPTIONS = crmPreflight();

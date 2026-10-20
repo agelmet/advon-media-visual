@@ -268,6 +268,27 @@ footer nav a:hover{color:var(--ink)}
 .modal .box header .x:hover{background:#F0ECE3;color:var(--coal)}
 .modal iframe{flex:1;width:100%;border:0;background:#fff}
 .modal .ld{position:absolute;inset:52px 0 0;display:grid;place-items:center;color:#5B6472;font-weight:700;pointer-events:none}
+/* e-mail code before the calendar (20 Oct 2026) */
+.gate{position:absolute;inset:52px 0 0;z-index:2;display:grid;place-items:center;background:#fff;padding:24px 18px;overflow:auto;color:var(--coal)}
+.gate[hidden]{display:none}
+.gate .gi{width:100%;max-width:370px;animation:gIn .35s ease-out both}
+@keyframes gIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.gate .ic{width:56px;height:56px;border-radius:16px;margin:0 auto 18px;display:grid;place-items:center;background:#EAF7FD;color:#1A8FC4}
+.gate h4{font-size:21px;font-weight:800;text-align:center;letter-spacing:-.01em}
+.gate p{font-size:14.5px;color:#5B6472;text-align:center;line-height:1.55;margin-top:10px}
+.gate p b{color:var(--coal)}
+.gate .sm{font-size:12.5px;color:#8A909C;margin-top:4px}
+.gate input{width:100%;margin-top:18px;border:1px solid #D9DDE3;border-radius:12px;padding:14px 16px;font:inherit;font-size:16px;color:var(--coal);background:#fff;outline:none;transition:border-color .2s,box-shadow .2s}
+.gate input:focus{border-color:#1AA9E6;box-shadow:0 0 0 3px rgba(26,169,230,.18)}
+.gate input.code{text-align:center;font-size:26px;font-weight:800;letter-spacing:.5em;padding-left:calc(16px + .5em)}
+.gate .btn{width:100%;margin-top:12px}
+.gate .row{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:13px;font-weight:700}
+.gate .row button{color:#5B6472}
+.gate .row button.again{color:#1A8FC4}
+.gate .row button:disabled{color:#9AA1AD}
+.gate .gerr{display:none;margin-top:14px;border-radius:10px;background:#FFF1F0;color:#B42318;font-weight:700;font-size:14px;padding:9px 12px;text-align:center}
+.gate .fine{font-size:11.5px;color:#8A909C;margin-top:18px}
+@media (prefers-reduced-motion:reduce){.gate .gi{animation:none}}
 
 
 /* ============ effects layer (14 Sept 2026) ============
@@ -613,6 +634,28 @@ h1 .grad{background:linear-gradient(120deg,#8BE3FF 0%,var(--cyan) 28%,#7FA8FF 50
     <header>Διαλέξτε μέρα και ώρα — η κλήση είναι δωρεάν <button class="x" id="mx" aria-label="Κλείσιμο">✕</button></header>
     <div class="ld" id="ld">Φορτώνει το ημερολόγιο…</div>
     <iframe id="bk" title="Κράτηση δωρεάν κλήσης" loading="lazy"></iframe>
+    <div class="gate" id="gate" hidden>
+      <div class="gi">
+        <div class="ic" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/></svg></div>
+        <h4>Δείτε τις διαθέσιμες ώρες</h4>
+        <form id="gStep1" novalidate>
+          <p>Γράψτε το email σας και θα σας στείλουμε έναν 6ψήφιο κωδικό — έτσι ξέρουμε ότι το ραντεβού το κλείνετε εσείς.</p>
+          <label for="gEmail" class="sr-only" style="position:absolute;left:-9999px">Το email σας</label>
+          <input id="gEmail" type="email" inputmode="email" autocomplete="email" placeholder="Το email σας">
+          <button class="btn btn-primary" type="submit" id="gSend">Συνέχεια</button>
+        </form>
+        <form id="gStep2" novalidate hidden>
+          <p>Στείλαμε τον κωδικό στο <b id="gTo"></b>.</p>
+          <p class="sm">Δεν τον βλέπετε; Κοιτάξτε και στα «Ανεπιθύμητα» ή στις «Προωθήσεις».</p>
+          <label for="gCode" style="position:absolute;left:-9999px">Κωδικός 6 ψηφίων</label>
+          <input id="gCode" class="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" placeholder="••••••">
+          <button class="btn btn-primary" type="submit" id="gCheck">Επιβεβαίωση</button>
+          <div class="row"><button type="button" id="gChange">Αλλαγή email</button><button type="button" class="again" id="gAgain">Ξαναστείλτε τον κωδικό</button></div>
+        </form>
+        <p class="gerr" id="gErr" role="alert"></p>
+        <p class="fine">Το email σας χρησιμοποιείται μόνο για το ραντεβού σας.</p>
+      </div>
+    </div>
   </div>
 </div>
 <script>
@@ -620,7 +663,8 @@ h1 .grad{background:linear-gradient(120deg,#8BE3FF 0%,var(--cyan) 28%,#7FA8FF 50
 const META_PIXEL_ID = '1294424308606812';                      /* put the Meta Pixel ID here when the ads go live */
 const BOOK_URL = 'https://advonmedia.zohobookings.eu/portal-embed#/264312000000038046';
 const LEAD_URL = '/api/lead';                  /* the CRM lead inbox → Leads tab, «From the ads» */
-const FORMSPREE_URL = 'https://formspree.io/f/xkopgoaj';   /* same endpoint as the form on advonmedia.com */
+/* Formspree is no longer used (20 Oct 2026): robots posted straight to its public address. The form goes only
+   to /api/lead, which checks it (stamp, timing, phone, content) and e-mails Angelo itself. */
 const WORK = [
  {"key":"allsmiles","name":"Άννα Στριγκόνη","niche":"Οδοντίατρος · All Smiles","url":"https://www.allsmiles.gr"},
  {"key":"plessa","name":"Μάρθα Πλέσσα","niche":"Ψυχολόγος · Ψυχοθεραπεύτρια","url":"https://marthaplessa-psychotherapy.gr"},
@@ -855,14 +899,65 @@ if (META_PIXEL_ID) {
   fbq('init', META_PIXEL_ID); fbq('track', 'PageView');
 }
 
-/* ---------- booking modal (Zoho loads only when opened) ---------- */
+/* ---------- booking modal (Zoho loads only when opened, and only after the e-mail code — 20 Oct 2026) ---------- */
 (function(){
   const m = document.getElementById('modal'), fr = document.getElementById('bk'), ld = document.getElementById('ld');
-  let loaded = false;
-  function open(){
-    if (!loaded) { fr.src = BOOK_URL; loaded = true; fr.addEventListener('load', () => { ld.style.display = 'none'; }, { once: true }); }
+  const gate = document.getElementById('gate'), s1 = document.getElementById('gStep1'), s2 = document.getElementById('gStep2');
+  const gEmail = document.getElementById('gEmail'), gCode = document.getElementById('gCode'), gErr = document.getElementById('gErr');
+  const gSend = document.getElementById('gSend'), gCheck = document.getElementById('gCheck'), gAgain = document.getElementById('gAgain');
+  const LS = 'advon-bk';
+  const readLS = () => { try { return JSON.parse(localStorage.getItem(LS) || 'null'); } catch(e){ return null; } };
+  const writeLS = (v) => { try { localStorage.setItem(LS, JSON.stringify(v)); } catch(e){} };
+  const call = async (body) => { const r = await fetch('/api/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); let j = {}; try { j = await r.json(); } catch(e){} return j; };
+  let loaded = false, ok = false, token = '', wait = 0, timer = 0, busy = false;
+
+  const err = (t) => { gErr.textContent = t || ''; gErr.style.display = t ? 'block' : 'none'; };
+  function loadCal(){
+    gate.hidden = true; ok = true;
+    if (!loaded) { ld.style.display = ''; fr.src = BOOK_URL; loaded = true; fr.addEventListener('load', () => { ld.style.display = 'none'; }, { once: true }); }
+  }
+  function showStep(n){ s1.hidden = n !== 1; s2.hidden = n !== 2; err(''); setTimeout(() => (n === 1 ? gEmail : gCode).focus(), 60); }
+  function tick(){ clearInterval(timer); gAgain.disabled = wait > 0; gAgain.textContent = wait > 0 ? 'Ξαναστείλτε σε ' + wait + '″' : 'Ξαναστείλτε τον κωδικό';
+    if (wait > 0) timer = setInterval(() => { wait--; gAgain.disabled = wait > 0; gAgain.textContent = wait > 0 ? 'Ξαναστείλτε σε ' + wait + '″' : 'Ξαναστείλτε τον κωδικό'; if (wait <= 0) clearInterval(timer); }, 1000); }
+
+  async function send(){
+    const v = gEmail.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return err('Ελέγξτε το email — χρειαζόμαστε μια έγκυρη διεύθυνση.');
+    if (busy) return; busy = true; gSend.disabled = true; gSend.textContent = 'Αποστολή…'; err('');
+    try {
+      const r = await call({ action: 'send', email: v, lang: 'el' });
+      if (r.ok) { token = r.token; gCode.value = ''; document.getElementById('gTo').textContent = v; showStep(2); wait = 30; tick(); }
+      else err(r.error === 'bad_email' ? 'Ελέγξτε το email — χρειαζόμαστε μια έγκυρη διεύθυνση.' : r.error === 'too_many' ? 'Πολλές προσπάθειες. Δοκιμάστε ξανά σε λίγα λεπτά.' : 'Δεν μπορέσαμε να στείλουμε τον κωδικό. Δοκιμάστε ξανά ή γράψτε μας στο angelos@advonmedia.com.');
+    } catch(e) { err('Δεν μπορέσαμε να στείλουμε τον κωδικό. Δοκιμάστε ξανά σε λίγο.'); }
+    busy = false; gSend.disabled = false; gSend.textContent = 'Συνέχεια';
+  }
+  async function check(){
+    const c = gCode.value.replace(/\D/g, '');
+    if (c.length !== 6 || busy) return; busy = true; gCheck.disabled = true; gCheck.textContent = 'Έλεγχος…'; err('');
+    try {
+      const r = await call({ action: 'check', token, code: c });
+      if (r.ok) { writeLS({ email: r.email, verified: r.verified }); loadCal(); }
+      else { err(r.error === 'expired' ? 'Ο κωδικός έληξε. Πατήστε «Ξαναστείλτε τον κωδικό».' : r.error === 'too_many' ? 'Πολλές προσπάθειες. Δοκιμάστε ξανά σε λίγα λεπτά.' : 'Ο κωδικός δεν είναι σωστός. Δοκιμάστε ξανά.'); gCode.value = ''; gCode.focus(); }
+    } catch(e) { err('Κάτι πήγε στραβά. Δοκιμάστε ξανά σε λίγο.'); }
+    busy = false; gCheck.disabled = false; gCheck.textContent = 'Επιβεβαίωση';
+  }
+  s1.addEventListener('submit', (e) => { e.preventDefault(); send(); });
+  s2.addEventListener('submit', (e) => { e.preventDefault(); check(); });
+  gCode.addEventListener('input', () => { gCode.value = gCode.value.replace(/\D/g, '').slice(0, 6); if (gCode.value.length === 6) check(); });
+  gAgain.addEventListener('click', send);
+  document.getElementById('gChange').addEventListener('click', () => showStep(1));
+
+  async function open(){
     m.classList.add('open'); document.body.style.overflow = 'hidden';
     track('Schedule', { content_name: 'dorean-call' });
+    if (ok) return loadCal();
+    const saved = readLS();
+    if (saved && saved.verified) {
+      ld.style.display = '';
+      try { const r = await call({ action: 'known', verified: saved.verified }); if (r.ok) return loadCal(); } catch(e){}
+      gEmail.value = saved.email || '';
+    }
+    ld.style.display = 'none'; gate.hidden = false; showStep(1);
   }
   function close(){ m.classList.remove('open'); document.body.style.overflow = ''; }
   document.querySelectorAll('[data-book]').forEach(b => b.addEventListener('click', open));
@@ -883,14 +978,17 @@ const UTM = (function(){
   return utm;
 })();
 
-/* ---------- lead form → Formspree (same endpoint as the site) + the CRM ---------- */
+/* ---------- lead form → /api/lead only (20 Oct 2026; robots are filtered there) ---------- */
 (function(){
   const form = document.getElementById('leadForm'), err = document.getElementById('err'), btn = document.getElementById('sendBtn');
   const fail = (msg) => { err.textContent = msg; err.style.display = 'block'; };
+  /* the page's stamp: proves the message came through this page and was not typed in under 3 seconds */
+  let stamp = '';
+  const getStamp = async () => { try { const r = await fetch(LEAD_URL + '?stamp=1', { cache: 'no-store' }); const j = await r.json(); if (j && j.stamp) stamp = j.stamp; } catch(e){} return stamp; };
+  getStamp();
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const fd = new FormData(form);
-    if (fd.get('website')) return;                                 // honeypot
     const name = String(fd.get('name') || '').trim();
     const email = String(fd.get('email') || '').trim();
     const phone = String(fd.get('phone') || '').trim();
@@ -903,30 +1001,17 @@ const UTM = (function(){
     if (!profession) return fail('Διαλέξτε την ειδικότητά σας.');
     btn.disabled = true; btn.textContent = 'Αποστολή…';
 
-    const utmLine = [UTM.utm_source, UTM.utm_medium, UTM.utm_campaign, UTM.utm_content].filter(Boolean).join(' / ');
-    /* 1. Formspree — the same inbox as the form on advonmedia.com */
-    const fsBody = {
-      name, email, phone, profession,
-      message: `Δωρεάν ιστοσελίδα — φόρμα διαφημίσεων (/dorean)${utmLine ? '\nUTM: ' + utmLine : ''}`,
-      _subject: `Νέο lead από τις διαφημίσεις: ${name} (${profession})`,
-    };
-    let fsOk = false;
-    try {
-      const r = await fetch(FORMSPREE_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(fsBody) });
-      fsOk = r.ok;
-    } catch(e){}
-
-    /* 2. the CRM lead inbox, so the lead shows up in the Leads tab with the 5-minute timer */
-    let crmOk = false, reason = '';
+    if (!stamp) { await getStamp(); await new Promise(r => setTimeout(r, 3300)); }
+    let ok = false, reason = '';
     try {
       const r = await fetch(LEAD_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
-        name, email, phone, profession, source: 'dorean', page: location.pathname + location.search,
+        name, email, phone, profession, website: fd.get('website') || '', stamp, source: 'dorean', page: location.pathname + location.search,
         utm_source: UTM.utm_source || '', utm_medium: UTM.utm_medium || '', utm_campaign: UTM.utm_campaign || '', utm_content: UTM.utm_content || '',
       }) });
-      crmOk = r.ok; if (!crmOk) { try { reason = (await r.json()).error || ''; } catch(e){} }
+      ok = r.ok; if (!ok) { try { reason = (await r.json()).error || ''; } catch(e){} }
     } catch(e){}
 
-    if (fsOk || crmOk) {
+    if (ok) {
       track('Lead', { content_name: 'dorean', content_category: profession });
       document.getElementById('formWrap').style.display = 'none';
       document.getElementById('doneName').textContent = name.split(' ')[0];
@@ -936,7 +1021,7 @@ const UTM = (function(){
     }
     btn.disabled = false; btn.textContent = 'Θέλω το δωρεάν δείγμα μου';
     fail(reason === 'invalid_phone'
-      ? 'Ελέγξτε το τηλέφωνο — χρειαζόμαστε 10 ψηφία, π.χ. 69X XXX XXXX.'
+      ? 'Ελέγξτε το τηλέφωνο — χρειαζόμαστε έναν σωστό αριθμό, π.χ. 69X XXX XXXX.'
       : 'Κάτι πήγε στραβά. Δοκιμάστε ξανά σε λίγο ή στείλτε μας email στο angelos@advonmedia.com.');
   });
 })();
