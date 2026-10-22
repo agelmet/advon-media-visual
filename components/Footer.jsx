@@ -6,6 +6,7 @@ import { NAV_SERVICES as services, IDENTITY } from '@/lib/nav';
 import { SocialRow } from '@/components/Socials';
 import { usePathname } from 'next/navigation';
 import { isLanding } from '@/lib/landing';
+import { openConsent } from '@/lib/consent';
 
 export default function Footer() {
   const { lang } = useLangStore();
@@ -93,6 +94,8 @@ export default function Footer() {
             <Link href="/privacy-policy" className="hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Πολιτική Απορρήτου' : 'Privacy Policy'}</Link>
             <span className="text-white/20">|</span>
             <Link href="/terms" className="hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Όροι Χρήσης' : 'Terms of Use'}</Link>
+            <span className="text-white/20">|</span>
+            <button type="button" onClick={openConsent} className="uppercase font-bold hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Ρυθμίσεις cookies' : 'Cookie settings'}</button>
           </div>
         </div>
       </div>

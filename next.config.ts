@@ -37,8 +37,14 @@ const SECURITY = [
   { key: 'Cross-Origin-Opener-Policy', value: 'same-origin-allow-popups' },
 ];
 
+// PREVIEW_BASE (only for the static drafts.advonmedia.com preview build, never on Netlify):
+// serve under a sub-path with plain image files.
+const PREVIEW_BASE = process.env.PREVIEW_BASE || '';
+
 const nextConfig = {
+  ...(PREVIEW_BASE ? { basePath: PREVIEW_BASE } : {}),
   images: {
+    ...(PREVIEW_BASE ? { unoptimized: true } : {}),
     remotePatterns: [
       { protocol: 'https', hostname: 'assets.cdn.filesafe.space' },
       { protocol: 'https', hostname: 'raw.githubusercontent.com' },

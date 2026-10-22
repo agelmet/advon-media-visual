@@ -7,7 +7,7 @@ import { SOCIALS, SocialIcon } from '@/components/Socials';
 import { metaTrack } from '@/components/Analytics';
 import BookingGate from '@/components/BookingGate';
 import { usePathname } from 'next/navigation';
-import { isLanding, readUtm } from '@/lib/landing';
+import { isLanding, readUtm, readNiche } from '@/lib/landing';
 
 // Zoho Bookings inline embed.
 //
@@ -37,7 +37,17 @@ export default function Contact() {
   // CRM lead inbox («From the ads», with the ad's UTM), Meta Lead on success.
   const landing = isLanding(usePathname() || '');
   const utmRef = useRef({});
-  useEffect(() => { if (landing) utmRef.current = readUtm(); }, [landing]);
+  const stampRef = useRef('');
+  const profRef = useRef(null);
+  useEffect(() => {
+    if (!landing) return;
+    utmRef.current = readUtm();
+    // the page's stamp: /api/lead files a form without it as spam (robot check, 20 Oct 2026)
+    fetch('/api/lead?stamp=1', { cache: 'no-store' }).then((r) => r.json()).then((j) => { if (j && j.stamp) stampRef.current = j.stamp; }).catch(() => {});
+    // the profession the ad spoke to («Ψυχολόγος;» → Ψυχολόγος) — one field less to type
+    const n = readNiche();
+    if (n && profRef.current && !profRef.current.value) profRef.current.value = n.prof;
+  }, [landing]);
   const bookedRef = useRef(false);
   // The calendar is a Zoho iframe: the page cannot see inside it, so the first click into it
   // (window loses focus to the iframe) is reported to Meta as «Schedule» — once per visit.
@@ -142,7 +152,7 @@ export default function Contact() {
       const r = await fetch('/api/lead', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name, phone, email, profession, message, source: 'istoselida', page: window.location.pathname + window.location.search,
+          name, phone, email, profession, message, stamp: stampRef.current, website: String(fd.get('_gotcha') || ''), source: 'istoselida', page: window.location.pathname + window.location.search,
           utm_source: utm.utm_source || '', utm_medium: utm.utm_medium || '', utm_campaign: utm.utm_campaign || '', utm_content: utm.utm_content || '',
         }),
       });
@@ -255,7 +265,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <label htmlFor="cf-prof" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">Ειδικότητα</label>
-                    <input id="cf-prof" type="text" name="profession" required placeholder="π.χ. Ψυχολόγος" className={inputCls} />
+                    <input id="cf-prof" ref={profRef} type="text" name="profession" required placeholder="π.χ. Ψυχολόγος" autoComplete="organization-title" className={inputCls} />
                   </div>
                 </div>
               ) : (
@@ -341,7 +351,7 @@ export default function Contact() {
           <ScrollReveal delay={120} className="mt-12">
             <a
               href="https://advonmedia.com/"
-              className="btn-premium inline-flex items-center gap-3 px-8 py-4 border-2 border-electric-cyan/60 text-electric-cyan font-black text-sm md:text-base uppercase tracking-[0.1em] rounded-xl hover:bg-electric-cyan hover:text-[#050a0e] transition-all duration-300"
+              className="btn-premium inline-flex items-center gap-3 px-8 py-4 border-2 border-electric-cyan/60 text-electric-cyan font-black text-sm md:text-base uppercase tracking-[0.1em] rounded-xl hover:bg-electric-cyan hover:text-[#050608] transition-all duration-300"
             >
               Δείτε όλες τις υπηρεσίες μας
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>

@@ -10,6 +10,7 @@ import ScrollProgress from '@/components/ScrollProgress';
 import Spotlight from '@/components/Spotlight';
 import Analytics from '@/components/Analytics';
 import Motion from '@/components/Motion';
+import CookieConsent from '@/components/CookieConsent';
 import { displayFont, bodyFont } from '@/lib/fonts';
 
 export const metadata = {
@@ -30,7 +31,7 @@ export const metadata = {
   },
 };
 
-const MV_BOOT = `(function(){var d=document.documentElement;try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;d.classList.add('mv-js');if(!document.hidden&&!sessionStorage.getItem('advon-intro')){sessionStorage.setItem('advon-intro','1');d.classList.add('mv-intro');setTimeout(function(){d.classList.remove('mv-intro')},2600)}}catch(e){}setTimeout(function(){if(!window.__mvOn){var n=document.querySelectorAll('[data-io],main h2');for(var i=0;i<n.length;i++)n[i].classList.add('in')}},6000)})();`;
+const MV_BOOT = `(function(){var d=document.documentElement;try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;d.classList.add('mv-js');if(!document.hidden&&location.pathname.indexOf('/istoselida')<0&&!sessionStorage.getItem('advon-intro')){sessionStorage.setItem('advon-intro','1');d.classList.add('mv-intro');setTimeout(function(){d.classList.remove('mv-intro')},2600)}}catch(e){}setTimeout(function(){if(!window.__mvOn){var n=document.querySelectorAll('[data-io],main h2');for(var i=0;i<n.length;i++)n[i].classList.add('in')}},6000)})();`;
 
 export default function RootLayout({ children }) {
   return (
@@ -59,6 +60,8 @@ export default function RootLayout({ children }) {
         <DeferredWidget />
         {/* Google Analytics 4 — loads after paint; visit /?me=1 once to exclude your own browser. */}
         <Analytics />
+        {/* Cookie box — GA + Meta Pixel only after «Αποδοχή» (GDPR, 22 Oct 2026) */}
+        <CookieConsent />
       </body>
     </html>
   );
