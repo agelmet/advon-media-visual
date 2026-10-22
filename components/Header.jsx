@@ -3,12 +3,16 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLangStore } from '@/store/langStore';
+import { usePathname } from 'next/navigation';
 import { NAV_SERVICES as services } from '@/lib/nav';
+import { isLanding } from '@/lib/landing';
 
 export default function Header() {
   const { lang, toggleLang } = useLangStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  // Ads landing page: no menu, one «book a call» button (lib/landing.js).
+  const landing = isLanding(usePathname() || '');
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -35,7 +39,7 @@ export default function Header() {
     >
       <div className="max-w-7xl mx-auto px-6 h-28 pt-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3">
+        <Link href={landing ? '/istoselida' : '/'} className="flex items-center gap-3">
           <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
             {/* Animated outer ring */}
             <div
@@ -85,7 +89,26 @@ export default function Header() {
           </div>
         </Link>
 
+        {landing && (
+          <div className="flex items-center gap-5">
+            <span className="hidden lg:inline-flex items-center gap-2 text-xs font-bold tracking-wide text-gray-400">
+              <span className="text-electric-cyan">220+</span> {lang === 'el' ? 'ιστοσελίδες' : 'websites'}
+              <span className="text-white/20">·</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-[#FBBC05]" aria-hidden="true"><path d="M12 2.5l2.9 5.88 6.49.94-4.7 4.58 1.11 6.46L12 17.3l-5.8 3.06 1.11-6.46-4.7-4.58 6.49-.94L12 2.5z"/></svg>
+              <span className="text-electric-cyan">125+</span> {lang === 'el' ? 'κριτικές στο Google' : 'Google reviews'}
+            </span>
+            <a
+              href="#contact"
+              className="btn-premium inline-flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 rounded-xl bg-electric-cyan text-[#050a0e] text-[0.7rem] md:text-xs font-black uppercase tracking-[0.1em] hover:bg-white transition-all duration-300 shadow-[0_0_24px_rgba(71,200,245,0.35)] whitespace-nowrap"
+            >
+              {lang === 'el' ? 'Δωρεάν ραντεβού' : 'Free call'}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+        )}
+
         {/* Desktop Nav */}
+        {!landing && (<>
         <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
 
           <Link href="/" className="text-electric-cyan hover:text-white transition-colors relative group py-2">
@@ -161,10 +184,11 @@ export default function Header() {
             )}
           </button>
         </div>
+        </>)}
       </div>
 
       {/* Mobile Menu */}
-      <div
+      {!landing && <div
         className={`md:hidden bg-[#050608]/97 backdrop-blur-xl border-b border-electric-cyan/15 transition-all duration-400 ${isMobileMenuOpen ? 'max-h-[calc(100vh-7rem)] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0 overflow-hidden'}`}
       >
         <nav className="flex flex-col p-6 gap-4 text-lg font-medium text-electric-cyan">
@@ -183,7 +207,7 @@ export default function Header() {
           <Link href="/blog"                    onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">Blog</Link>
           <Link href="#contact"                 onClick={() => setIsMobileMenuOpen(false)} className="text-electric-cyan font-black tracking-wide">{lang === 'el' ? 'Επικοινωνία' : 'Contact'}</Link>
         </nav>
-      </div>
+      </div>}
     </header>
   );
 }

@@ -1,11 +1,13 @@
 // components/Contact.jsx
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLangStore } from '@/store/langStore';
 import ScrollReveal from '@/components/ScrollReveal';
 import { SOCIALS, SocialIcon } from '@/components/Socials';
 import { metaTrack } from '@/components/Analytics';
 import BookingGate from '@/components/BookingGate';
+import { usePathname } from 'next/navigation';
+import { isLanding, readUtm, readNiche } from '@/lib/landing';
 
 // Zoho Bookings inline embed.
 //
@@ -31,6 +33,36 @@ export default function Contact() {
   // The booking calendar opens only after the visitor confirmed their e-mail with a code (BookingGate, 20 Oct 2026).
   const [bkEmail, setBkEmail] = useState('');
 
+  // Ads landing page (/istoselida): shorter form with «ειδικότητα», sent to Formspree AND the
+  // CRM lead inbox («From the ads», with the ad's UTM), Meta Lead on success.
+  const landing = isLanding(usePathname() || '');
+  const utmRef = useRef({});
+  const stampRef = useRef('');
+  const profRef = useRef(null);
+  useEffect(() => {
+    if (!landing) return;
+    utmRef.current = readUtm();
+    // the page's stamp: /api/lead files a form without it as spam (robot check, 20 Oct 2026)
+    fetch('/api/lead?stamp=1', { cache: 'no-store' }).then((r) => r.json()).then((j) => { if (j && j.stamp) stampRef.current = j.stamp; }).catch(() => {});
+    // the profession the ad spoke to («Ψυχολόγος;» → Ψυχολόγος) — one field less to type
+    const n = readNiche();
+    if (n && profRef.current && !profRef.current.value) profRef.current.value = n.prof;
+  }, [landing]);
+  const bookedRef = useRef(false);
+  // The calendar is a Zoho iframe: the page cannot see inside it, so the first click into it
+  // (window loses focus to the iframe) is reported to Meta as «Schedule» — once per visit.
+  useEffect(() => {
+    if (!landing) return;
+    const onBlur = () => {
+      const a = document.activeElement;
+      if (!bookedRef.current && a && a.tagName === 'IFRAME' && a.closest('#' + ZOHO_PARENT_ID)) {
+        bookedRef.current = true;
+        metaTrack('Schedule', { content_name: 'istoselida-calendar' });
+      }
+    };
+    window.addEventListener('blur', onBlur);
+    return () => window.removeEventListener('blur', onBlur);
+  }, [landing]);
 
   // Calendar injection.
   //
@@ -90,6 +122,52 @@ export default function Contact() {
     };
   }, [lang, wantZoho, bkEmail]); // re-render the widget if the language changes
 
+  const handleLandingSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const fd = new FormData(form);
+    if (fd.get('_gotcha')) return;
+    const name = String(fd.get('name') || '').trim();
+    const phone = String(fd.get('phone') || '').trim();
+    const email = String(fd.get('email') || '').trim();
+    const profession = String(fd.get('profession') || '').trim();
+    const message = String(fd.get('message') || '').trim();
+    if (phone.replace(/\D/g, '').length < 10) { setStatus('Ελέγξτε το τηλέφωνο — χρειαζόμαστε 10 ψηφία, π.χ. 69X XXX XXXX.'); return; }
+    setStatus('Αποστολή...');
+    const utm = utmRef.current || {};
+    const utmLine = [utm.utm_source, utm.utm_medium, utm.utm_campaign, utm.utm_content].filter(Boolean).join(' / ');
+    let fsOk = false, crmOk = false;
+    try {
+      const r = await fetch('https://formspree.io/f/xkopgoaj', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          name, phone, email, profession,
+          message: `Δωρεάν ιστοσελίδα — φόρμα διαφημίσεων (/istoselida)${message ? '\n' + message : ''}${utmLine ? '\nUTM: ' + utmLine : ''}`,
+          _subject: `Νέο lead από τις διαφημίσεις: ${name}${profession ? ' (' + profession + ')' : ''}`,
+        }),
+      });
+      fsOk = r.ok;
+    } catch {}
+    try {
+      const r = await fetch('/api/lead', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name, phone, email, profession, message, stamp: stampRef.current, website: String(fd.get('_gotcha') || ''), source: 'istoselida', page: window.location.pathname + window.location.search,
+          utm_source: utm.utm_source || '', utm_medium: utm.utm_medium || '', utm_campaign: utm.utm_campaign || '', utm_content: utm.utm_content || '',
+        }),
+      });
+      crmOk = r.ok;
+    } catch {}
+    if (fsOk || crmOk) {
+      setSent(true);
+      setStatus(`Ευχαριστούμε${name ? ', ' + name.split(' ')[0] : ''}! Τα λάβαμε — θα σας καλέσουμε σήμερα (ή την επόμενη εργάσιμη) για να δούμε τη σελίδα σας.`);
+      metaTrack('Lead', { content_name: 'istoselida', content_category: profession });
+      form.reset();
+    } else {
+      setStatus('Κάτι πήγε στραβά. Δοκιμάστε ξανά σε λίγο ή στείλτε μας email στο angelos@advonmedia.com.');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus(lang === 'el' ? 'Αποστολή...' : 'Sending...');
@@ -140,13 +218,15 @@ export default function Contact() {
       <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
         <ScrollReveal>
         <span className="text-electric-cyan text-xs font-black tracking-[0.4em] uppercase mb-4 block drop-shadow-[0_0_15px_rgba(71,200,245,0.6)]">
-          {lang === 'el' ? 'ΕΠΙΚΟΙΝΩΝΙΑ' : 'CONTACT'}
+          {landing ? 'ΔΩΡΕΑΝ ΡΑΝΤΕΒΟΥ' : lang === 'el' ? 'ΕΠΙΚΟΙΝΩΝΙΑ' : 'CONTACT'}
         </span>
         <h2 className="text-4xl md:text-6xl font-black font-display mb-5 text-white">
-          {lang === 'el' ? 'Ας Συνεργαστούμε' : "Let's Collaborate"}
+          {landing ? 'Ας ξεκινήσουμε τη σελίδα σας' : lang === 'el' ? 'Ας Συνεργαστούμε' : "Let's Collaborate"}
         </h2>
         <p className="text-gray-400 max-w-2xl mx-auto mb-14 leading-relaxed">
-          {lang === 'el'
+          {landing
+            ? 'Κλείστε μια δωρεάν 15λεπτη κλήση στο ημερολόγιο ή αφήστε μας τα στοιχεία σας και σας καλούμε εμείς. Χωρίς καμία δέσμευση — και χωρίς προκαταβολή.'
+            : lang === 'el'
             ? 'Στείλτε μας δύο λόγια ή κλείστε απευθείας μια δωρεάν 15λεπτη κλήση — ό,τι σας βολεύει. Απαντάμε την ίδια μέρα.'
             : 'Send us a few words or book a free 15-minute call directly — whichever suits you. We reply the same day.'}
         </p>
@@ -163,10 +243,10 @@ export default function Contact() {
               <span className="w-10 h-10 rounded-xl bg-electric-cyan/10 border border-electric-cyan/20 text-electric-cyan flex items-center justify-center shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               </span>
-              <h3 className="text-2xl md:text-3xl font-black text-white font-display">{lang === 'el' ? 'Εκδήλωση Ενδιαφέροντος' : 'Express Interest'}</h3>
+              <h3 className="text-2xl md:text-3xl font-black text-white font-display">{landing ? 'Σας καλούμε εμείς' : lang === 'el' ? 'Εκδήλωση Ενδιαφέροντος' : 'Express Interest'}</h3>
             </div>
-            <p className="text-gray-400 mb-8">{lang === 'el' ? 'Συμπληρώστε τη φόρμα και θα επικοινωνήσουμε μαζί σας μέσω email ή τηλεφώνου εντός της ίδιας ημέρας.' : 'Fill out the form and we will contact you via email or phone within the same day.'}</p>
-            <form action="https://formspree.io/f/xkopgoaj" method="POST" onSubmit={handleSubmit} className="space-y-5 flex-grow flex flex-col">
+            <p className="text-gray-400 mb-8">{landing ? 'Αφήστε όνομα, τηλέφωνο και ειδικότητα — σας καλούμε την ίδια μέρα για να δούμε τι θέλετε στη σελίδα σας.' : lang === 'el' ? 'Συμπληρώστε τη φόρμα και θα επικοινωνήσουμε μαζί σας μέσω email ή τηλεφώνου εντός της ίδιας ημέρας.' : 'Fill out the form and we will contact you via email or phone within the same day.'}</p>
+            <form action="https://formspree.io/f/xkopgoaj" method="POST" onSubmit={landing ? handleLandingSubmit : handleSubmit} className="space-y-5 flex-grow flex flex-col">
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="cf-name" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Όνομα / Επωνυμία' : 'Name / Company'}</label>
@@ -177,13 +257,26 @@ export default function Contact() {
                   <input id="cf-phone" type="tel" name="phone" required autoComplete="tel" className={inputCls} />
                 </div>
               </div>
-              <div>
-                <label htmlFor="cf-email" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">Email</label>
-                <input id="cf-email" type="email" name="email" required autoComplete="email" className={inputCls} />
-              </div>
+              {landing ? (
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <div>
+                    <label htmlFor="cf-email" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">Email</label>
+                    <input id="cf-email" type="email" name="email" required autoComplete="email" inputMode="email" className={inputCls} />
+                  </div>
+                  <div>
+                    <label htmlFor="cf-prof" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">Ειδικότητα</label>
+                    <input id="cf-prof" ref={profRef} type="text" name="profession" required placeholder="π.χ. Ψυχολόγος" autoComplete="organization-title" className={inputCls} />
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <label htmlFor="cf-email" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">Email</label>
+                  <input id="cf-email" type="email" name="email" required autoComplete="email" className={inputCls} />
+                </div>
+              )}
               <div className="flex-grow flex flex-col">
-                <label htmlFor="cf-message" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Μήνυμα / Υπηρεσία που σας ενδιαφέρει' : 'Message / Service of Interest'}</label>
-                <textarea id="cf-message" name="message" rows="5" required className={`${inputCls} flex-grow min-h-[150px] resize-none`}></textarea>
+                <label htmlFor="cf-message" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{landing ? 'Μήνυμα (προαιρετικό)' : lang === 'el' ? 'Μήνυμα / Υπηρεσία που σας ενδιαφέρει' : 'Message / Service of Interest'}</label>
+                <textarea id="cf-message" name="message" rows={landing ? 4 : 5} required={!landing} placeholder={landing ? 'π.χ. μια ιστοσελίδα που σας αρέσει, ή πότε να σας καλέσουμε' : undefined} className={`${inputCls} flex-grow ${landing ? 'min-h-[120px]' : 'min-h-[150px]'} resize-none`}></textarea>
               </div>
               <input type="text" name="_gotcha" tabIndex="-1" autoComplete="off" className="hidden" aria-hidden="true" />
               <div className="mt-auto pt-1">
@@ -192,7 +285,7 @@ export default function Contact() {
                   disabled={sent}
                   className="btn-premium w-full py-4 bg-electric-cyan text-[#050608] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-[0_0_24px_rgba(71,200,245,0.35)] hover:shadow-[0_0_44px_rgba(255,255,255,0.5)] disabled:opacity-70 disabled:cursor-default"
                 >
-                  {sent ? (lang === 'el' ? 'Εστάλη ✓' : 'Sent ✓') : (lang === 'el' ? 'Αποστολή' : 'Send')}
+                  {sent ? (lang === 'el' ? 'Εστάλη ✓' : 'Sent ✓') : landing ? 'Θέλω τη δωρεάν σελίδα μου' : (lang === 'el' ? 'Αποστολή' : 'Send')}
                 </button>
                 {status && <p className="mt-4 text-center text-electric-cyan font-bold text-sm">{status}</p>}
                 <p className="mt-4 text-center text-[11px] text-gray-500 leading-relaxed">
@@ -212,7 +305,7 @@ export default function Contact() {
                <span className="w-10 h-10 rounded-xl bg-electric-cyan/10 border border-electric-cyan/20 text-electric-cyan flex items-center justify-center shrink-0">
                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                </span>
-               <h3 className="text-2xl md:text-3xl font-black text-white font-display">{lang === 'el' ? 'Κλείστε Ραντεβού' : 'Book a Call'}</h3>
+               <h3 className="text-2xl md:text-3xl font-black text-white font-display">{landing ? 'Κλείστε ραντεβού μόνοι σας' : lang === 'el' ? 'Κλείστε Ραντεβού' : 'Book a Call'}</h3>
              </div>
              <p className="text-gray-400 mb-8">{lang === 'el' ? 'Επιλέξτε την ημέρα και ώρα που σας εξυπηρετεί για μια δωρεάν 15λεπτη συμβουλευτική κλήση.' : 'Choose the day and time that suits you for a free 15-minute consultation call.'}</p>
              {/* Same reasoning as the old Trafft box: keep a FIXED minimum height rather than
@@ -252,6 +345,20 @@ export default function Contact() {
             </ScrollReveal>
           ))}
         </div>
+
+        {/* Ads landing: a way back to the full site with every service (Angelo, 11 Oct 2026) */}
+        {landing && (
+          <ScrollReveal delay={120} className="mt-12">
+            <a
+              href="https://advonmedia.com/"
+              className="btn-premium inline-flex items-center gap-3 px-8 py-4 border-2 border-electric-cyan/60 text-electric-cyan font-black text-sm md:text-base uppercase tracking-[0.1em] rounded-xl hover:bg-electric-cyan hover:text-[#050608] transition-all duration-300"
+            >
+              Δείτε όλες τις υπηρεσίες μας
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <p className="mt-3 text-gray-500 text-sm">Online ραντεβού, κριτικές Google, AI βοηθός, social media και άλλα, στο advonmedia.com</p>
+          </ScrollReveal>
+        )}
       </div>
     </section>
   );
