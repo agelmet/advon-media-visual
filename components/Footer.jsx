@@ -4,9 +4,13 @@ import Link from 'next/link';
 import { useLangStore } from '@/store/langStore';
 import { NAV_SERVICES as services, IDENTITY } from '@/lib/nav';
 import { SocialRow } from '@/components/Socials';
+import { usePathname } from 'next/navigation';
+import { isLanding } from '@/lib/landing';
 
 export default function Footer() {
   const { lang } = useLangStore();
+  // Ads landing page: brand + socials + legal only — no links away to the other services.
+  const landing = isLanding(usePathname() || '');
 
   const siteLinks = [
     { href: '/', el: 'Αρχική', en: 'Home' },
@@ -25,10 +29,10 @@ export default function Footer() {
         style={{ background: 'radial-gradient(circle, rgba(71,200,245,0.07) 0%, rgba(71,200,245,0.03) 35%, transparent 70%)', animation: 'auroraFloat3 26s ease-in-out infinite' }} />
 
       <div className="max-w-7xl mx-auto px-6 py-14 relative">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-center sm:text-left">
+        <div className={landing ? 'flex justify-center text-center' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-center sm:text-left'}>
           {/* Brand */}
-          <div className="flex flex-col items-center sm:items-start gap-4">
-            <Link href="/" aria-label="Advon Media — Αρχική" className="group inline-flex items-center gap-3">
+          <div className={landing ? 'flex flex-col items-center gap-4' : 'flex flex-col items-center sm:items-start gap-4'}>
+            <Link href={landing ? '/istoselida' : '/'} aria-label="Advon Media — Αρχική" className="group inline-flex items-center gap-3">
               <span className="w-14 h-14 rounded-full bg-white p-1.5 flex items-center justify-center shadow-[0_0_0_2px_rgba(71,200,245,0.35),0_0_24px_rgba(71,200,245,0.25)] group-hover:shadow-[0_0_0_2px_rgba(71,200,245,0.7),0_0_34px_rgba(71,200,245,0.45)] transition-shadow duration-300 shrink-0">
                 <img src="/img/advon-logo-116.webp" srcSet="/img/advon-logo-116.webp 1x, /img/advon-logo-232.webp 2x" alt="Advon Media" width="116" height="116" className="w-full h-full object-contain" loading="lazy" decoding="async" />
               </span>
@@ -40,6 +44,7 @@ export default function Footer() {
             <SocialRow className="mt-1" />
           </div>
 
+          {!landing && (<>
           {/* Services column */}
           <div className="lg:col-span-2">
             <h4 className="text-white text-xs font-black uppercase tracking-[0.2em] mb-4">
@@ -76,6 +81,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
+          </>)}
         </div>
       </div>
 
