@@ -107,6 +107,12 @@ export default async (req) => {
   const settings = await readChatJson(conf, 'settings.json', {});
   const clientAuto = !!(settings && settings.clientAuto === true);
   report.clientAuto = clientAuto;
+  // REPLY-ONLY MODE (Angelo, 23 Oct 2026): {"clientReplyMail": true} → every message WE write in the chat is e-mailed to
+  // the client (even when they already saw it on the page) — and nothing else: no reminders, no automatic «Λάβαμε»,
+  // no outbox client mails. clientAuto (everything) still wins if both are set.
+  const replyMail = clientAuto || !!(settings && settings.clientReplyMail === true);
+  const mailSeen = replyMail && !clientAuto;      // reply-only: e-mail it whether or not they opened the page
+  report.replyMail = replyMail;
   const patch = new Map();      // slug → fields to merge
   const upd = (t, f) => { Object.assign(t, f); patch.set(t.slug, { ...(patch.get(t.slug) || {}), ...f }); };
   const log = (t, text) => upd(t, { log: (t.log || []).concat([{ at: nowIso(), by: 'system', text }]).slice(-30) });
@@ -152,9 +158,9 @@ export default async (req) => {
     }
 
     // 2. Angelo/Claude → client e-mail (if they already opened the page and saw it, there is nothing to send)
-    if (t.lastFrom !== 'client' && !(t.unreadClient || 0) && (t.clientNotifiedAt || '') < (t.lastAt || '')) upd(t, { clientNotifiedAt: t.lastAt });
-    if (t.lastFrom !== 'client' && (t.unreadClient || 0) > 0 && emailOk(t.email) && (t.clientNotifiedAt || '') < (t.lastAt || '') && now - lastAt > GRACE) {
-      if (!clientAuto) upd(t, { clientNotifiedAt: t.lastAt });      // switch off: marked as handled, so nothing piles up for later
+    if (!mailSeen && t.lastFrom !== 'client' && !(t.unreadClient || 0) && (t.clientNotifiedAt || '') < (t.lastAt || '')) upd(t, { clientNotifiedAt: t.lastAt });
+    if (t.lastFrom !== 'client' && (mailSeen || (t.unreadClient || 0) > 0) && emailOk(t.email) && (t.clientNotifiedAt || '') < (t.lastAt || '') && now - lastAt > GRACE) {
+      if (!replyMail) upd(t, { clientNotifiedAt: t.lastAt });      // switch off: marked as handled, so nothing piles up for later
       else if (!canMail) report.skipped.push(`${t.slug}: client e-mail (no RESEND_API_KEY)`);
       else if (now - lastAt > 7 * DAY) upd(t, { clientNotifiedAt: t.lastAt });
       else {

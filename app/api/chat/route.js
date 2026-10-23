@@ -41,7 +41,7 @@ import { crmCors, crmPreflight } from '@/lib/crmcors';
 
 import { ghReady, ghConf, commit as ghCommit, createBlob } from '@/lib/ghdata';
 import { demoSeed, demoReply } from '@/lib/chatdemo';
-import { readTemplates, readTemplatesAll } from '@/lib/chatcore';
+import { readTemplates, readTemplatesAll, readChatJson } from '@/lib/chatcore';
 import { DIR, INDEX_PATH, SITE_URL, STAGES, normStage, currentHead, forgetHead, getIndex as coreIndex, getMessages as coreMessages, readChatBuffer, headNow, mailConf, sendTelegram, telegramDiag, sendEmail, clientWroteNote, approvalNote, agentNote, newMessageMail, reminderMail } from '@/lib/chatcore';
 
 export const runtime = 'nodejs';
@@ -274,7 +274,9 @@ async function __GET(req) {
     }
     if (q('h') && q('h') === (await current(c))) return json({ ok: true, same: true, head: headNow() });
     const idx = await getIndex(c);
-    return json({ ok: true, threads: idx, head: headNow(), notify: { email: !!process.env.RESEND_API_KEY, telegram: !!(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) }, onlineSlugs: [...online.entries()].filter(([, at]) => Date.now() - at < 60 * 1000).map(([s]) => s) });
+    // which client e-mails are on (chats/settings.json): 'auto' = everything, 'reply' = only our messages, 'off' = none
+    let clientMail = 'off'; try { const st = await readChatJson(c, 'settings.json', {}); clientMail = st && st.clientAuto === true ? 'auto' : st && st.clientReplyMail === true ? 'reply' : 'off'; } catch {}
+    return json({ ok: true, threads: idx, head: headNow(), clientMail, notify: { email: !!process.env.RESEND_API_KEY, telegram: !!(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) }, onlineSlugs: [...online.entries()].filter(([, at]) => Date.now() - at < 60 * 1000).map(([s]) => s) });
   } catch (e) {
     return json({ error: e.message || 'read failed' }, 502);
   }
