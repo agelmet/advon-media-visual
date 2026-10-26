@@ -73,7 +73,7 @@ const T = {
       { b: 'Ειλικρίνεια από την αρχή.', t: 'Αν ο δωρεάν έλεγχος δείξει ότι δεν αξίζει στην περιοχή σας, σας το λέμε — και δεν ξεκινάμε.' },
     ],
     bandLabel: 'Δωρεάν έλεγχος περιοχής', bandTitle: 'Αξίζει για εσάς; Ας το δούμε δωρεάν.', bandLead: 'Στείλτε μας την ειδικότητα και την περιοχή σας. Σε 2 εργάσιμες σας λέμε πόσοι σας αναζητούν και τι κόστος να περιμένετε — χωρίς καμία υποχρέωση.', bandCta: 'Θέλω τον δωρεάν έλεγχο',
-    trust: ['220+ ιστοσελίδες επαγγελματιών', '125+ κριτικές στο Google, όλες 5 αστέρων', '20 θέσεις με τιμή ιδρυτικού πελάτη'],
+    trust: ['220+ ιστοσελίδες επαγγελματιών', '130+ κριτικές στο Google, όλες 5 αστέρων', '20 θέσεις με τιμή ιδρυτικού πελάτη'],
   },
   en: {
     label: 'Google Ads', h1: 'First on Google, the moment they search for you.',
@@ -136,7 +136,7 @@ const T = {
       { b: 'Honesty from the start.', t: 'If the free check shows it is not worth it in your area, we tell you — and we do not start.' },
     ],
     bandLabel: 'Free area check', bandTitle: 'Is it worth it for you? Let’s see for free.', bandLead: 'Send us your specialty and your area. Within 2 working days we tell you how many people search for you and what cost to expect — no obligation.', bandCta: 'I want the free check',
-    trust: ['220+ websites for professionals', '125+ Google reviews, all 5 stars', '20 places at the founder price'],
+    trust: ['220+ websites for professionals', '130+ Google reviews, all 5 stars', '20 places at the founder price'],
   },
 };
 

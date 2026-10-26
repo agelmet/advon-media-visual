@@ -154,7 +154,7 @@ export default function LandingClient() {
               className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-electric-cyan/8 border border-electric-cyan/25 hover:bg-electric-cyan/16 hover:border-electric-cyan/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-cyan/70 transition-all duration-300"
             >
               {star('w-4 h-4 text-[#FBBC05] shrink-0')}
-              5,0 · 125+ κριτικές στο Google
+              5,0 · 130+ κριτικές στο Google
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 shrink-0 opacity-70 group-hover:opacity-100 group-hover:translate-y-0.5 transition-all duration-300" aria-hidden="true"><path d="M12 5v14"/><path d="m5 12 7 7 7-7"/></svg>
             </a>
           </p>

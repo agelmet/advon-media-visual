@@ -53,7 +53,7 @@ export default function Stats() {
     { end: 3,   suffix: '+', labelEl: 'ΧΡΟΝΙΑ ΕΜΠΕΙΡΙΑΣ', labelEn: 'YEARS EXPERIENCE' },
     { end: 220, suffix: '+', labelEl: 'ΙΣΤΟΣΕΛΙΔΕΣ',       labelEn: 'WEBSITES' },
     { end: 100, suffix: '%', labelEl: 'ΕΠΙΤΥΧΙΑ',          labelEn: 'SUCCESS' },
-    { end: 125, suffix: '+', labelEl: 'ΑΞΙΟΛΟΓΗΣΕΙΣ',      labelEn: 'REVIEWS', accent: true, google: true },
+    { end: 130, suffix: '+', labelEl: 'ΑΞΙΟΛΟΓΗΣΕΙΣ',      labelEn: 'REVIEWS', accent: true, google: true },
   ];
 
   return (
@@ -77,7 +77,7 @@ export default function Stats() {
           return (
           <Tile
             key={labelEn}
-            {...(google ? { href: '#reviews', 'aria-label': lang === 'el' ? '125+ αξιολογήσεις 5 αστέρων στο Google' : '125+ five-star Google reviews' } : {})}
+            {...(google ? { href: '#reviews', 'aria-label': lang === 'el' ? '130+ αξιολογήσεις 5 αστέρων στο Google' : '130+ five-star Google reviews' } : {})}
             className={`stat-tile group card-sweep glass-panel rounded-3xl px-3 md:px-4 py-8 md:py-10 flex flex-col items-center justify-start h-full ${google ? 'stat-google-tile' : ''} ${isVisible ? 'stat-tile-in' : ''} ${settled ? 'stat-settled' : ''}`}
             style={{ '--srd': `${i * 110}ms` }}
           >

@@ -296,7 +296,7 @@ export function ProofStrip() {
   const { lang } = useLangStore();
   const stats = [
     { num: '220+', el: 'ΙΣΤΟΣΕΛΙΔΕΣ ΓΙΑ ΕΛΛΗΝΙΚΕΣ ΕΠΙΧΕΙΡΗΣΕΙΣ', en: 'WEBSITES FOR GREEK BUSINESSES' },
-    { num: '125+', el: 'ΚΡΙΤΙΚΕΣ 5★ ΣΤΟ GOOGLE', en: '5★ REVIEWS ON GOOGLE' },
+    { num: '130+', el: 'ΚΡΙΤΙΚΕΣ 5★ ΣΤΟ GOOGLE', en: '5★ REVIEWS ON GOOGLE' },
   ];
   return (
     <div className="border-y border-electric-cyan/10 bg-[#0b0c10]/50 backdrop-blur-sm py-12 relative overflow-hidden">

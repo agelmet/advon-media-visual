@@ -95,7 +95,7 @@ export default function Header() {
               <span className="text-electric-cyan">220+</span> {lang === 'el' ? 'ιστοσελίδες' : 'websites'}
               <span className="text-white/20">·</span>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-[#FBBC05]" aria-hidden="true"><path d="M12 2.5l2.9 5.88 6.49.94-4.7 4.58 1.11 6.46L12 17.3l-5.8 3.06 1.11-6.46-4.7-4.58 6.49-.94L12 2.5z"/></svg>
-              <span className="text-electric-cyan">125+</span> {lang === 'el' ? 'κριτικές στο Google' : 'Google reviews'}
+              <span className="text-electric-cyan">130+</span> {lang === 'el' ? 'κριτικές στο Google' : 'Google reviews'}
             </span>
             <a
               href="#contact"

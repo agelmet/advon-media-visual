@@ -79,7 +79,7 @@ const T = {
     ph2: { bar: 'Αιτήματα', who: 'Advon Media', what: 'ζήτησε πρόσβαση συνεργάτη στη Σελίδα σας', perm: 'Δικαιώματα που ζητούνται', permV: 'Περιεχόμενο · Στατιστικά', no: 'Απόρριψη', yes: 'Έγκριση', what2: 'ζήτησε πρόσβαση στον λογαριασμό Instagram σας' },
     chat: [{ t: 'Σας στείλαμε το αίτημα. Πατήστε «Έγκριση» και πείτε μας.' }, { t: 'Έγινε!', me: true }, { t: 'Τέλεια. Σε 5 εργάσιμες θα δείτε όλο τον πρώτο μήνα έτοιμο.' }],
     bandLabel: 'Ξεκινήστε', bandTitle: 'Δείτε τον πρώτο σας μήνα έτοιμο.', bandLead: 'Τρία λεπτά από εσάς. Τα υπόλοιπα, από εμάς.', bandCta: 'Ξεκινάμε',
-    trust: ['220+ ιστοσελίδες επαγγελματιών', '125+ κριτικές στο Google, όλες 5 αστέρων', '0 κωδικοί'],
+    trust: ['220+ ιστοσελίδες επαγγελματιών', '130+ κριτικές στο Google, όλες 5 αστέρων', '0 κωδικοί'],
   },
   en: {
     label: 'Social Media · Instagram & Facebook',
@@ -147,7 +147,7 @@ const T = {
     ph2: { bar: 'Requests', who: 'Advon Media', what: 'requested partner access to your Page', perm: 'Permissions requested', permV: 'Content · Insights', no: 'Decline', yes: 'Approve', what2: 'requested access to your Instagram account' },
     chat: [{ t: 'We sent the request. Press “Approve” and tell us.' }, { t: 'Done!', me: true }, { t: 'Perfect. In 5 working days you will see the whole first month ready.' }],
     bandLabel: 'Start', bandTitle: 'See your first month ready.', bandLead: 'Three minutes from you. The rest, from us.', bandCta: 'Let’s start',
-    trust: ['220+ websites for professionals', '125+ Google reviews, all 5 stars', '0 passwords'],
+    trust: ['220+ websites for professionals', '130+ Google reviews, all 5 stars', '0 passwords'],
   },
 };
 
