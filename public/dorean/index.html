@@ -663,8 +663,7 @@ h1 .grad{background:linear-gradient(120deg,#8BE3FF 0%,var(--cyan) 28%,#7FA8FF 50
 const META_PIXEL_ID = '1294424308606812';                      /* put the Meta Pixel ID here when the ads go live */
 const BOOK_URL = 'https://advonmedia.zohobookings.eu/portal-embed#/264312000000038046';
 const LEAD_URL = '/api/lead';                  /* the CRM lead inbox → Leads tab, «From the ads» */
-/* Formspree is no longer used (20 Oct 2026): robots posted straight to its public address. The form goes only
-   to /api/lead, which checks it (stamp, timing, phone, content) and e-mails Angelo itself. */
+const FORMSPREE_URL = 'https://formspree.io/f/xkopgoaj';   /* same endpoint as the form on advonmedia.com */
 const WORK = [
  {"key":"allsmiles","name":"Άννα Στριγκόνη","niche":"Οδοντίατρος · All Smiles","url":"https://www.allsmiles.gr"},
  {"key":"plessa","name":"Μάρθα Πλέσσα","niche":"Ψυχολόγος · Ψυχοθεραπεύτρια","url":"https://marthaplessa-psychotherapy.gr"},
@@ -978,17 +977,17 @@ const UTM = (function(){
   return utm;
 })();
 
-/* ---------- lead form → /api/lead only (20 Oct 2026; robots are filtered there) ---------- */
+/* ---------- lead form → Formspree (same endpoint as the site) + the CRM ---------- */
 (function(){
   const form = document.getElementById('leadForm'), err = document.getElementById('err'), btn = document.getElementById('sendBtn');
   const fail = (msg) => { err.textContent = msg; err.style.display = 'block'; };
-  /* the page's stamp: proves the message came through this page and was not typed in under 3 seconds */
+  /* the page's stamp for the CRM copy (20 Oct 2026): /api/lead files messages without it as spam */
   let stamp = '';
-  const getStamp = async () => { try { const r = await fetch(LEAD_URL + '?stamp=1', { cache: 'no-store' }); const j = await r.json(); if (j && j.stamp) stamp = j.stamp; } catch(e){} return stamp; };
-  getStamp();
+  fetch(LEAD_URL + '?stamp=1', { cache: 'no-store' }).then(r => r.json()).then(j => { if (j && j.stamp) stamp = j.stamp; }).catch(() => {});
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const fd = new FormData(form);
+    if (fd.get('website')) return;                                 // honeypot
     const name = String(fd.get('name') || '').trim();
     const email = String(fd.get('email') || '').trim();
     const phone = String(fd.get('phone') || '').trim();
@@ -1001,17 +1000,30 @@ const UTM = (function(){
     if (!profession) return fail('Διαλέξτε την ειδικότητά σας.');
     btn.disabled = true; btn.textContent = 'Αποστολή…';
 
-    if (!stamp) { await getStamp(); await new Promise(r => setTimeout(r, 3300)); }
-    let ok = false, reason = '';
+    const utmLine = [UTM.utm_source, UTM.utm_medium, UTM.utm_campaign, UTM.utm_content].filter(Boolean).join(' / ');
+    /* 1. Formspree — the same inbox as the form on advonmedia.com */
+    const fsBody = {
+      name, email, phone, profession,
+      message: `Δωρεάν ιστοσελίδα — φόρμα διαφημίσεων (/dorean)${utmLine ? '\nUTM: ' + utmLine : ''}`,
+      _subject: `Νέο lead από τις διαφημίσεις: ${name} (${profession})`,
+    };
+    let fsOk = false;
     try {
-      const r = await fetch(LEAD_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
-        name, email, phone, profession, website: fd.get('website') || '', stamp, source: 'dorean', page: location.pathname + location.search,
-        utm_source: UTM.utm_source || '', utm_medium: UTM.utm_medium || '', utm_campaign: UTM.utm_campaign || '', utm_content: UTM.utm_content || '',
-      }) });
-      ok = r.ok; if (!ok) { try { reason = (await r.json()).error || ''; } catch(e){} }
+      const r = await fetch(FORMSPREE_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(fsBody) });
+      fsOk = r.ok;
     } catch(e){}
 
-    if (ok) {
+    /* 2. the CRM lead inbox, so the lead shows up in the Leads tab with the 5-minute timer */
+    let crmOk = false, reason = '';
+    try {
+      const r = await fetch(LEAD_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+        name, email, phone, profession, stamp, source: 'dorean', page: location.pathname + location.search,
+        utm_source: UTM.utm_source || '', utm_medium: UTM.utm_medium || '', utm_campaign: UTM.utm_campaign || '', utm_content: UTM.utm_content || '',
+      }) });
+      crmOk = r.ok; if (!crmOk) { try { reason = (await r.json()).error || ''; } catch(e){} }
+    } catch(e){}
+
+    if (fsOk || crmOk) {
       track('Lead', { content_name: 'dorean', content_category: profession });
       document.getElementById('formWrap').style.display = 'none';
       document.getElementById('doneName').textContent = name.split(' ')[0];
@@ -1021,7 +1033,7 @@ const UTM = (function(){
     }
     btn.disabled = false; btn.textContent = 'Θέλω το δωρεάν δείγμα μου';
     fail(reason === 'invalid_phone'
-      ? 'Ελέγξτε το τηλέφωνο — χρειαζόμαστε έναν σωστό αριθμό, π.χ. 69X XXX XXXX.'
+      ? 'Ελέγξτε το τηλέφωνο — χρειαζόμαστε 10 ψηφία, π.χ. 69X XXX XXXX.'
       : 'Κάτι πήγε στραβά. Δοκιμάστε ξανά σε λίγο ή στείλτε μας email στο angelos@advonmedia.com.');
   });
 })();

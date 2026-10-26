@@ -1,7 +1,7 @@
 // components/Analytics.jsx
 // Google Analytics 4 for advonmedia.com.
 //
-// - Loads only after the page has fully painted (window `load` + idle), so it
+// - Loads only with the visitor's consent (cookie box) and after the page has fully painted (window `load` + idle), so it
 //   never touches LCP / the performance budget.
 // - Counts every page change of the app router (Next only fires the first one).
 // - Self-exclusion: open https://advonmedia.com/?me=1 once in a browser and that
@@ -11,6 +11,7 @@
 'use client';
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { getConsent } from '@/lib/consent';
 
 export const GA_ID = 'G-2JJP554SVE';
 // Meta Pixel (Events Manager → «Advon Media's pixel», business ad account 1212936993186625).
@@ -76,10 +77,15 @@ export default function Analytics() {
       document.head.appendChild(s);
     };
 
+    // GDPR (22 Oct 2026): nothing loads until the visitor presses «Αποδοχή» in the cookie box
+    // (components/CookieConsent.jsx). A visitor who accepted before gets it after paint as before.
+    const onChoice = (e) => { if (e.detail === 'yes') load(); };
+    window.addEventListener('advon-consent', onChoice);
+    if (getConsent() !== 'yes') return () => window.removeEventListener('advon-consent', onChoice);
     const idle = () => (window.requestIdleCallback ? window.requestIdleCallback(load, { timeout: 4000 }) : setTimeout(load, 1500));
     if (document.readyState === 'complete') idle();
     else window.addEventListener('load', idle, { once: true });
-    return () => window.removeEventListener('load', idle);
+    return () => { window.removeEventListener('load', idle); window.removeEventListener('advon-consent', onChoice); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

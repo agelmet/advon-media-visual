@@ -37,7 +37,7 @@ const GROWTH_LIST = [
   { el: 'Προτεραιότητα στις αλλαγές', en: 'Priority on change requests' },
 ];
 
-export default function KataskeviPricing() {
+export default function KataskeviPricing({ infra = true }) {
   const { lang } = useLangStore();
   const [billingAnnual, setBillingAnnual] = useState(true);
 
