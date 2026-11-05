@@ -40,7 +40,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-6 h-28 pt-4 flex items-center justify-between">
         {/* Logo */}
         <Link href={landing ? '/istoselida' : '/'} className="flex items-center gap-3">
-          <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="hd-logo" style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
             {/* Animated outer ring */}
             <div
               className="logo-glow-ring"

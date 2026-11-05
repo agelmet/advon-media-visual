@@ -22,7 +22,8 @@ export default function CookieConsent() {
     if (priv) return;
     if (getConsent() === null) {
       // a beat after the first paint, so the hero lands first
-      const t = setTimeout(() => setOpen(true), 900);
+      // (after the once-per-session opening, 3.4 s, so the box never sits on top of it)
+      const t = setTimeout(() => setOpen(true), document.documentElement.classList.contains('mv-intro') ? 3400 : 900);
       return () => clearTimeout(t);
     }
   }, [priv]);
