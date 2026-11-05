@@ -1063,6 +1063,7 @@ html.mvi-dock #mv-intro .mvi-l { color: #111318; }
 html.mv-intro .hd-logo { opacity: 0; animation: mviIn .4s ease 2.22s forwards; }
 /* the hero waits for the opening, then rises */
 html.mv-intro .reveal-item.delay-1 { animation-delay: 1.85s; }
+html.mv-intro .reveal-item.delay-3 { animation-delay: 2.15s; }
 html.mv-intro .reveal-item.delay-4 { animation-delay: 2.3s; }
 html.mv-intro .reveal-item.delay-5 { animation-delay: 2.45s; }
 html.mv-intro .reveal-item.delay-6 { animation-delay: 2.6s; }
