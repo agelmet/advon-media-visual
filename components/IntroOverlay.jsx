@@ -77,7 +77,7 @@ export default function IntroOverlay() {
             </defs>
             <g className="sl sl3" style={{ '--sd': '.25s' }}>
               <g className="fl">
-                <polygon points="65,94 130,125 65,156 0,125 35,125 65,139.3 95,125 65,110.7" fill="url(#mvTop)" fillRule="evenodd"/>
+                <path d="M65,94 L130,125 L65,156 L0,125 Z M65,110.7 L95,125 L65,139.3 L35,125 Z" fill="url(#mvTop)" fillRule="evenodd"/>
                 <polygon points="0,125 65,156 65,188 0,157" fill="url(#mvSideL)"/>
                 <polygon points="65,156 130,125 130,157 65,188" fill="url(#mvSideR)"/>
                 <polygon points="35,125 65,110.7 65,125 50,132.15" fill="#8ad2f0"/>
@@ -89,7 +89,7 @@ export default function IntroOverlay() {
             </g>
             <g className="sl sl2" style={{ '--sd': '.43s' }}>
               <g className="fl">
-                <polygon points="65,47 130,78 65,109 0,78 35,78 65,92.3 95,78 65,63.7" fill="url(#mvTop)" fillRule="evenodd"/>
+                <path d="M65,47 L130,78 L65,109 L0,78 Z M65,63.7 L95,78 L65,92.3 L35,78 Z" fill="url(#mvTop)" fillRule="evenodd"/>
                 <polygon points="0,78 65,109 65,141 0,110" fill="url(#mvSideL)"/>
                 <polygon points="65,109 130,78 130,110 65,141" fill="url(#mvSideR)"/>
                 <polygon points="35,78 65,63.7 65,78 50,85.15" fill="#8ad2f0"/>
@@ -102,7 +102,7 @@ export default function IntroOverlay() {
             
             <g className="sl sl1" style={{ '--sd': '.61s' }}>
               <g className="fl">
-                <polygon points="65,0 130,31 65,62 0,31 35,31 65,45.3 95,31 65,16.7" fill="url(#mvTop)" fillRule="evenodd"/>
+                <path d="M65,0 L130,31 L65,62 L0,31 Z M65,16.7 L95,31 L65,45.3 L35,31 Z" fill="url(#mvTop)" fillRule="evenodd"/>
                 <polygon points="0,31 65,62 65,94 0,63" fill="url(#mvSideL)"/>
                 <polygon points="65,62 130,31 130,63 65,94" fill="url(#mvSideR)"/>
                 <polygon points="35,31 65,16.7 65,31 50,38.15" fill="#8ad2f0"/>
