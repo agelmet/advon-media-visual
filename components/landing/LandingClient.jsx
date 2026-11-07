@@ -146,7 +146,7 @@ export default function LandingClient() {
           </p>
 
           <p className="lp-proof reveal-item delay-5 text-electric-cyan/90 text-sm md:text-base font-bold tracking-wide mb-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
-            <span>220+ ιστοσελίδες online</span>
+            <span>250+ ιστοσελίδες online</span>
             <span className="text-electric-cyan/40 hidden sm:inline" aria-hidden="true">·</span>
             <a
               href="#reviews"
@@ -448,6 +448,13 @@ const LANDING_FAQS = [
     },
   },
   {
+    q: { el: 'Πόσες σελίδες μπορεί να έχει η ιστοσελίδα μου;', en: 'How many pages can my website have?' },
+    a: {
+      el: 'Όσες χρειάζεστε: μία ή δεκάδες — μια σελίδα για κάθε υπηρεσία σας, για την ομάδα, για τον χώρο σας. Δεν χρεώνουμε ανά σελίδα. Μπορείτε να μας τα αφήσετε όλα ή να μας στείλετε κάθε λεπτομέρεια για το πώς τη φαντάζεστε — φτιάχνουμε ό,τι σχεδιάσετε.',
+      en: 'As many as you need: one or dozens — a page for each of your services, your team, your space. We do not charge per page. You can leave everything to us or send us every detail of how you picture it — we build whatever you design.',
+    },
+  },
+  {
     q: { el: 'Χρειάζομαι τεχνικές γνώσεις;', en: 'Do I need technical knowledge?' },
     a: {
       el: 'Όχι. Αναλαμβάνουμε τα πάντα: σχεδιασμό, κατασκευή, domain, φιλοξενία, ασφάλεια και συντήρηση. Εσείς στέλνετε το υλικό σας και εγκρίνετε το αποτέλεσμα — τίποτα τεχνικό δεν περνάει από εσάς.',
@@ -462,3 +469,4 @@ const LANDING_FAQS = [
     },
   },
 ];
+
