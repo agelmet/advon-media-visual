@@ -245,7 +245,7 @@ export default function Contact() {
               </span>
               <h3 className="text-2xl md:text-3xl font-black text-white font-display">{landing ? 'Σας καλούμε εμείς' : lang === 'el' ? 'Εκδήλωση Ενδιαφέροντος' : 'Express Interest'}</h3>
             </div>
-            <p className="text-gray-400 mb-8">{landing ? 'Αφήστε όνομα, τηλέφωνο και ειδικότητα — σας καλούμε την ίδια μέρα για να δούμε τι θέλετε στη σελίδα σας.' : lang === 'el' ? 'Συμπληρώστε τη φόρμα και θα επικοινωνήσουμε μαζί σας μέσω email ή τηλεφώνου εντός της ίδιας ημέρας.' : 'Fill out the form and we will contact you via email or phone within the same day.'}</p>
+            <p className="text-gray-400 mb-8">{landing ? 'Αφήστε όνομα, τηλέφωνο και τι δουλειά κάνετε — σας καλούμε την ίδια μέρα για να δούμε τι θέλετε στη σελίδα σας.' : lang === 'el' ? 'Συμπληρώστε τη φόρμα και θα επικοινωνήσουμε μαζί σας μέσω email ή τηλεφώνου εντός της ίδιας ημέρας.' : 'Fill out the form and we will contact you via email or phone within the same day.'}</p>
             <form action="https://formspree.io/f/xkopgoaj" method="POST" onSubmit={landing ? handleLandingSubmit : handleSubmit} className="space-y-5 flex-grow flex flex-col">
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
@@ -264,8 +264,8 @@ export default function Contact() {
                     <input id="cf-email" type="email" name="email" required autoComplete="email" inputMode="email" className={inputCls} />
                   </div>
                   <div>
-                    <label htmlFor="cf-prof" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">Ειδικότητα</label>
-                    <input id="cf-prof" ref={profRef} type="text" name="profession" required placeholder="π.χ. Ψυχολόγος" autoComplete="organization-title" className={inputCls} />
+                    <label htmlFor="cf-prof" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">Επάγγελμα / επιχείρηση</label>
+                    <input id="cf-prof" ref={profRef} type="text" name="profession" required placeholder="π.χ. Ψυχολόγος, κομμωτήριο, λογιστής" autoComplete="organization-title" className={inputCls} />
                   </div>
                 </div>
               ) : (
@@ -363,3 +363,4 @@ export default function Contact() {
     </section>
   );
 }
+
