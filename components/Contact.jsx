@@ -289,7 +289,9 @@ export default function Contact() {
                 </button>
                 {status && <p className="mt-4 text-center text-electric-cyan font-bold text-sm">{status}</p>}
                 <p className="mt-4 text-center text-[11px] text-gray-500 leading-relaxed">
-                  {lang === 'el'
+                  {landing ? (
+                    <>Τα στοιχεία σας χρησιμοποιούνται για να σας απαντήσουμε και, κρυπτογραφημένα, για να μετράμε τις διαφημίσεις μας στη Meta. <a href="/privacy-policy" className="underline hover:text-gray-300">Πολιτική απορρήτου</a></>
+                  ) : lang === 'el'
                     ? 'Τα στοιχεία σας χρησιμοποιούνται μόνο για να σας απαντήσουμε.'
                     : 'Your details are used only to reply to you.'}
                 </p>
@@ -363,3 +365,4 @@ export default function Contact() {
     </section>
   );
 }
+
