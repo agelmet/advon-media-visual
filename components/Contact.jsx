@@ -32,6 +32,15 @@ export default function Contact() {
   const [sent, setSent] = useState(false);
   // The booking calendar opens only after the visitor confirmed their e-mail with a code (BookingGate, 20 Oct 2026).
   const [bkEmail, setBkEmail] = useState('');
+  // Ads page: confirming the e-mail to open the calendar counts as a lead for Meta (pixel + server, one event id).
+  const calTrack = () => {
+    const c = clickRef.current || readClickId();
+    return { fbclid: (c && c.id) || '', fbclid_ts: (c && c.ts) || 0, page: window.location.pathname, event_id: `cal-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}` };
+  };
+  const onBkVerified = (email, eventId) => {
+    setBkEmail(email);
+    if (landing && eventId) metaTrack('Lead', { content_name: 'istoselida-calendar' }, { eventID: eventId });
+  };
 
   // Ads landing page (/istoselida): shorter form with «ειδικότητα», sent to Formspree AND the
   // CRM lead inbox («From the ads», with the ad's UTM), Meta Lead on success.
@@ -327,7 +336,7 @@ export default function Contact() {
                   className="absolute inset-0 w-full h-full [&_iframe]:!w-full [&_iframe]:!h-full [&_iframe]:!border-0"
                 >
                 </div>
-                {!bkEmail && <BookingGate lang={lang} onVerified={setBkEmail} />}
+                {!bkEmail && <BookingGate lang={lang} onVerified={onBkVerified} trackFields={landing ? calTrack : undefined} />}
              </div>
           </div>
           </ScrollReveal>
