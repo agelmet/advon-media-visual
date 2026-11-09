@@ -50,7 +50,7 @@ async function call(body) {
   return { status: r.status, ...j };
 }
 
-export default function BookingGate({ lang = 'el', onVerified }) {
+export default function BookingGate({ lang = 'el', onVerified, trackFields }) {
   const t = T[lang === 'en' ? 'en' : 'el'];
   const [phase, setPhase] = useState('boot');      // boot → email → code
   const [email, setEmail] = useState('');
@@ -62,7 +62,7 @@ export default function BookingGate({ lang = 'el', onVerified }) {
   const codeRef = useRef(null);
   const doneRef = useRef(false);
 
-  const finish = (e) => { if (doneRef.current) return; doneRef.current = true; onVerified && onVerified(e); };
+  const finish = (e, eventId) => { if (doneRef.current) return; doneRef.current = true; onVerified && onVerified(e, eventId); };
 
   // A visitor who confirmed in the last 30 days goes straight to the calendar.
   useEffect(() => {
@@ -101,8 +101,9 @@ export default function BookingGate({ lang = 'el', onVerified }) {
     if (c.length !== 6 || busy) return;
     setBusy(true); setErr('');
     try {
-      const r = await call({ action: 'check', token, code: c });
-      if (r.ok) { writeLS({ email: r.email, verified: r.verified }); finish(r.email); return; }
+      const extra = trackFields ? trackFields() : {};
+      const r = await call({ action: 'check', token, code: c, ...extra });
+      if (r.ok) { writeLS({ email: r.email, verified: r.verified }); finish(r.email, extra.event_id); return; }
       setErr(r.error === 'expired' ? t.errExpired : r.error === 'too_many' ? t.errMany : t.errWrong);
       setCode('');
     } catch { setErr(t.errSend); }
