@@ -55,6 +55,9 @@ export default function PrivacyPolicy() {
               <h2 className="text-xl font-bold text-electric-cyan pt-4">Cookies & Στατιστικά</h2>
               <p>Χρησιμοποιούμε το Google Analytics για να καταλαβαίνουμε, σε συγκεντρωτική μορφή, πώς χρησιμοποιείται η ιστοσελίδα μας (π.χ. ποιες σελίδες διαβάζονται). Χρησιμοποιούμε επίσης το Meta Pixel (Meta Platforms Ireland), ώστε να μετράμε τα αποτελέσματα των διαφημίσεών μας στο Facebook και στο Instagram: καταγράφει ποιες σελίδες επισκεφθήκατε και αν στείλατε τη φόρμα επικοινωνίας ή ανοίξατε το ημερολόγιο ραντεβού, χωρίς να μας δίνει το όνομά σας. Μπορείτε να αποκλείσετε ή να διαγράψετε τα cookies από τις ρυθμίσεις του browser σας· η ιστοσελίδα θα συνεχίσει να λειτουργεί κανονικά.</p>
 
+              <h2 className="text-xl font-bold text-electric-cyan pt-4">Αιτήματα που έρχονται από τις διαφημίσεις μας</h2>
+              <p>Όταν στέλνετε τη φόρμα μας αφού πατήσατε μια διαφήμισή μας στο Facebook ή στο Instagram, μπορεί να στείλουμε στη Meta Platforms Ireland το email, το τηλέφωνο, το όνομα και τη χώρα σας, σε κρυπτογραφημένη μορφή (hash), μαζί με την ημερομηνία του αιτήματος. Η Meta τα χρησιμοποιεί για να αντιστοιχίσει το αίτημα με τη διαφήμιση που είδατε, ώστε να μετράμε ποιες διαφημίσεις μας λειτουργούν. Αυτό μπορεί να γίνει και όταν δεν έχετε αποδεχτεί τα cookies. Δεν φτιάχνουμε με αυτά τα στοιχεία λίστες κοινού για διαφημίσεις. Νομική βάση είναι το έννομο συμφέρον μας να μετράμε την απόδοση των διαφημίσεών μας (άρθρο 6 παρ. 1στ GDPR). Μπορείτε να αντιταχθείτε οποιαδήποτε στιγμή με email στο <a href="mailto:angelos@advonmedia.com" className="text-electric-cyan hover:underline">angelos@advonmedia.com</a>, και δεν θα στείλουμε ξανά τα στοιχεία σας στη Meta.</p>
+
               <h2 className="text-xl font-bold text-electric-cyan pt-4">Υλικό και μηνύματα πελατών</h2>
               <p>Τα μηνύματα, τα αρχεία και οι φωτογραφίες που μας στέλνουν οι πελάτες μας (μέσω email, της σελίδας επικοινωνίας έργου ή άλλων μέσων) χρησιμοποιούνται μόνο για την κατασκευή και τη συντήρηση της ιστοσελίδας τους και φυλάσσονται όσο διαρκεί η συνεργασία και όσο απαιτεί ο νόμος (π.χ. φορολογικές υποχρεώσεις).</p>
 
@@ -70,7 +73,7 @@ export default function PrivacyPolicy() {
               <h2 className="text-xl font-bold text-electric-cyan pt-4">Αλλαγές στην Πολιτική</h2>
               <p>Ενδέχεται να ανανεώνουμε την παρούσα πολιτική περιστασιακά. Σας προτείνουμε να την ελέγχετε τακτικά.</p>
               <p>Εάν θεωρείτε ότι η επεξεργασία των δεδομένων σας παραβιάζει τον GDPR, έχετε δικαίωμα να υποβάλετε καταγγελία στην Αρχή Προστασίας Δεδομένων Προσωπικού Χαρακτήρα (<a href="https://www.dpa.gr" target="_blank" rel="noopener noreferrer" className="text-electric-cyan hover:underline">www.dpa.gr</a>).</p>
-              <p>Τελευταία ενημέρωση: 4 Οκτωβρίου 2026.</p>
+              <p>Τελευταία ενημέρωση: 9 Νοεμβρίου 2026.</p>
             </div>
           ) : (
             <div className="space-y-6 text-gray-300 leading-relaxed">
@@ -112,6 +115,9 @@ export default function PrivacyPolicy() {
               <h2 className="text-xl font-bold text-electric-cyan pt-4">Cookies & Statistics</h2>
               <p>We use Google Analytics to understand, in aggregate, how our website is used (e.g. which pages are read). We also use the Meta Pixel (Meta Platforms Ireland) to measure the results of our ads on Facebook and Instagram: it records which pages you visited and whether you sent the contact form or opened the booking calendar, without giving us your name. You can block or delete cookies in your browser settings; the website will keep working normally.</p>
 
+              <h2 className="text-xl font-bold text-electric-cyan pt-4">Requests that come from our ads</h2>
+              <p>When you send our form after clicking one of our ads on Facebook or Instagram, we may send Meta Platforms Ireland your email, phone number, name and country in encrypted (hashed) form, together with the date of the request. Meta uses them to match the request to the ad you saw, so that we can measure which of our ads work. This can happen even if you have not accepted cookies. We do not build advertising audiences from these details. The legal basis is our legitimate interest in measuring how our ads perform (Article 6(1)(f) GDPR). You can object at any time by email to <a href="mailto:angelos@advonmedia.com" className="text-electric-cyan hover:underline">angelos@advonmedia.com</a>, and we will not send your details to Meta again.</p>
+
               <h2 className="text-xl font-bold text-electric-cyan pt-4">Client material and messages</h2>
               <p>Messages, files and photos that our clients send us (by email, through the project chat page or otherwise) are used only to build and maintain their website and are kept for as long as the cooperation lasts and as long as the law requires (e.g. tax obligations).</p>
 
@@ -127,7 +133,7 @@ export default function PrivacyPolicy() {
               <h2 className="text-xl font-bold text-electric-cyan pt-4">Changes to this Policy</h2>
               <p>We may update this policy occasionally. We recommend checking it regularly.</p>
               <p>If you believe that the processing of your data breaches the GDPR, you have the right to lodge a complaint with the Hellenic Data Protection Authority (<a href="https://www.dpa.gr" target="_blank" rel="noopener noreferrer" className="text-electric-cyan hover:underline">www.dpa.gr</a>).</p>
-              <p>Last updated: 4 October 2026.</p>
+              <p>Last updated: 9 November 2026.</p>
             </div>
           )}
         </div>
