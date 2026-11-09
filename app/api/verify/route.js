@@ -16,6 +16,7 @@
 import { newCode, checkCode, makeVerified, checkVerified, normEmail, emailShapeOk, tooMany, clientIp, antispamReady } from '@/lib/antispam';
 import { mailConf, sendEmail } from '@/lib/chatcore';
 import { ghConf, ghReady, mutateJson } from '@/lib/ghdata';
+import { sendMetaLead } from '@/lib/metacapi';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -88,6 +89,9 @@ export async function POST(req) {
     const v = checkCode(b.token, b.code);
     if (!v.ok) return json({ ok: false, error: v.why === 'expired' ? 'expired' : 'wrong_code' }, 400);
     await remember(v.email);
+    // From the ads page (/istoselida, 9 Nov 2026): a visitor who confirmed the e-mail to open the booking
+    // calendar is reported to Meta as a lead (click id only — see lib/metacapi.js).
+    await sendMetaLead(req, b, 'istoselida-calendar').catch(() => false);
     return json({ ok: true, email: v.email, verified: makeVerified(v.email) });
   }
 
