@@ -18,8 +18,8 @@ export const GA_ID = 'G-2JJP554SVE';
 export const META_PIXEL_ID = '1294424308606812';
 
 // Safe wrapper: no-op until the pixel has loaded. Used by the contact form (Lead).
-export function metaTrack(ev, data) {
-  try { if (window.fbq) window.fbq('track', ev, data || {}); } catch {}
+export function metaTrack(ev, data, opts) {
+  try { if (window.fbq) window.fbq('track', ev, data || {}, opts || {}); } catch {}
 }
 const ME_KEY = 'advon_me';
 const PRIVATE = ['/crm', '/crm-demo', '/leads', '/api'];
