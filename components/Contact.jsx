@@ -7,7 +7,7 @@ import { SOCIALS, SocialIcon } from '@/components/Socials';
 import { metaTrack } from '@/components/Analytics';
 import BookingGate from '@/components/BookingGate';
 import { usePathname } from 'next/navigation';
-import { isLanding, readUtm, readNiche } from '@/lib/landing';
+import { isLanding, readUtm, readNiche, readClickId } from '@/lib/landing';
 
 // Zoho Bookings inline embed.
 //
@@ -37,11 +37,13 @@ export default function Contact() {
   // CRM lead inbox («From the ads», with the ad's UTM), Meta Lead on success.
   const landing = isLanding(usePathname() || '');
   const utmRef = useRef({});
+  const clickRef = useRef(null);
   const stampRef = useRef('');
   const profRef = useRef(null);
   useEffect(() => {
     if (!landing) return;
     utmRef.current = readUtm();
+    clickRef.current = readClickId();
     // the page's stamp: /api/lead files a form without it as spam (robot check, 20 Oct 2026)
     fetch('/api/lead?stamp=1', { cache: 'no-store' }).then((r) => r.json()).then((j) => { if (j && j.stamp) stampRef.current = j.stamp; }).catch(() => {});
     // the profession the ad spoke to («Ψυχολόγος;» → Ψυχολόγος) — one field less to type
@@ -135,6 +137,8 @@ export default function Contact() {
     if (phone.replace(/\D/g, '').length < 10) { setStatus('Ελέγξτε το τηλέφωνο — χρειαζόμαστε 10 ψηφία, π.χ. 69X XXX XXXX.'); return; }
     setStatus('Αποστολή...');
     const utm = utmRef.current || {};
+    const click = clickRef.current || readClickId();
+    const eventId = `lead-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
     const utmLine = [utm.utm_source, utm.utm_medium, utm.utm_campaign, utm.utm_content].filter(Boolean).join(' / ');
     let fsOk = false, crmOk = false;
     try {
@@ -154,6 +158,7 @@ export default function Contact() {
         body: JSON.stringify({
           name, phone, email, profession, message, stamp: stampRef.current, website: String(fd.get('_gotcha') || ''), source: 'istoselida', page: window.location.pathname + window.location.search,
           utm_source: utm.utm_source || '', utm_medium: utm.utm_medium || '', utm_campaign: utm.utm_campaign || '', utm_content: utm.utm_content || '',
+          fbclid: (click && click.id) || '', fbclid_ts: (click && click.ts) || 0, event_id: eventId,
         }),
       });
       crmOk = r.ok;
@@ -161,7 +166,7 @@ export default function Contact() {
     if (fsOk || crmOk) {
       setSent(true);
       setStatus(`Ευχαριστούμε${name ? ', ' + name.split(' ')[0] : ''}! Τα λάβαμε — θα σας καλέσουμε σήμερα (ή την επόμενη εργάσιμη) για να δούμε τη σελίδα σας.`);
-      metaTrack('Lead', { content_name: 'istoselida', content_category: profession });
+      metaTrack('Lead', { content_name: 'istoselida', content_category: profession }, { eventID: eventId });
       form.reset();
     } else {
       setStatus('Κάτι πήγε στραβά. Δοκιμάστε ξανά σε λίγο ή στείλτε μας email στο angelos@advonmedia.com.');
@@ -289,7 +294,9 @@ export default function Contact() {
                 </button>
                 {status && <p className="mt-4 text-center text-electric-cyan font-bold text-sm">{status}</p>}
                 <p className="mt-4 text-center text-[11px] text-gray-500 leading-relaxed">
-                  {lang === 'el'
+                  {landing ? (
+                    <>Τα στοιχεία σας χρησιμοποιούνται για να σας απαντήσουμε και για να μετράμε τις διαφημίσεις μας στη Meta. <a href="/privacy-policy" className="underline hover:text-gray-300">Πολιτική απορρήτου</a></>
+                  ) : lang === 'el'
                     ? 'Τα στοιχεία σας χρησιμοποιούνται μόνο για να σας απαντήσουμε.'
                     : 'Your details are used only to reply to you.'}
                 </p>
@@ -363,3 +370,4 @@ export default function Contact() {
     </section>
   );
 }
+

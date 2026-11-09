@@ -49,6 +49,7 @@ function cfg() {
     from: process.env.LEAD_FROM || 'Advon Leads <forms@advonmedia.com>',
     tgToken: process.env.TELEGRAM_BOT_TOKEN,
     tgChat: process.env.TELEGRAM_CHAT_ID,
+    capiToken: process.env.META_CAPI_TOKEN,
   };
 }
 const storageReady = (c) => !!(c.token && c.repo);
@@ -230,6 +231,45 @@ function buildLead(body) {
   };
 }
 
+// ---------- Meta Conversions API (9 Nov 2026) ----------
+// A lead that came from a Meta ad click (?fbclid=… on the landing page) is reported to Meta
+// from the server, so the ads count it even when the visitor refused cookies (the pixel then
+// never loads). Sent: the click id (as fbc), the browser type, the page, the time and an
+// event_id shared with the pixel's Lead (Meta counts them once). NEVER name, phone, e-mail or IP.
+// Needs META_CAPI_TOKEN (Events Manager → the pixel → Settings → Conversions API → Generate
+// access token) in the Netlify env; without it this does nothing.
+const META_PIXEL_ID = '1294424308606812';
+async function sendMetaCapi(c, req, body) {
+  const fbclid = clean(body.fbclid, 500);
+  if (!c.capiToken || !fbclid || !/^[A-Za-z0-9_-]{10,500}$/.test(fbclid)) return false;
+  const now = Date.now();
+  let ts = Number(body.fbclid_ts) || now;
+  if (ts > now || now - ts > 90 * 864e5) ts = now;
+  const page = clean(body.page, 200).split('?')[0] || '/istoselida';
+  const event = {
+    event_name: 'Lead',
+    event_time: Math.floor(now / 1000),
+    event_id: clean(body.event_id, 80) || undefined,
+    action_source: 'website',
+    event_source_url: `https://advonmedia.com${page.startsWith('/') ? page : '/' + page}`,
+    user_data: { fbc: `fb.1.${ts}.${fbclid}`, client_user_agent: clean(req.headers.get('user-agent'), 400) || undefined },
+    custom_data: { content_name: clean(body.source, 40) || 'istoselida' },
+  };
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), 4000);
+  try {
+    const res = await fetch(`https://graph.facebook.com/v24.0/${META_PIXEL_ID}/events?access_token=${encodeURIComponent(c.capiToken)}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data: [event] }), signal: ctl.signal,
+    });
+    if (!res.ok) console.error('[lead] meta capi', res.status, (await res.text()).slice(0, 300));
+    return res.ok;
+  } catch (e) {
+    console.error('[lead] meta capi failed', e?.message);
+    return false;
+  } finally { clearTimeout(t); }
+}
+
 // ---------- handlers ----------
 async function __POST(req) {
   const c = cfg();
@@ -262,7 +302,10 @@ async function __POST(req) {
   const invalid = validLead(lead);
   if (invalid) return json({ ok: false, error: `invalid_${invalid}` }, 400);
 
-  return deliver(c, lead);
+  const capi = sendMetaCapi(c, req, body).catch(() => false);
+  const res = await deliver(c, lead);
+  await capi;
+  return res;
 }
 
 async function deliver(c, lead) {
