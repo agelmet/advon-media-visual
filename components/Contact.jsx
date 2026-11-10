@@ -31,7 +31,6 @@ export default function Contact() {
   const [status, setStatus] = useState('');
   const [sent, setSent] = useState(false);
   // Ads page: after the form, the same card turns into «Βήμα 2 από 2» and the calendar opens without the e-mail code (10 Nov 2026)
-  const [leadName, setLeadName] = useState('');
   // The booking calendar opens only after the visitor confirmed their e-mail with a code (BookingGate, 20 Oct 2026).
   const [bkEmail, setBkEmail] = useState('');
   // Ads page: confirming the e-mail to open the calendar counts as a lead for Meta (pixel + server, one event id).
@@ -168,7 +167,6 @@ export default function Contact() {
     if (crmOk) {
       setSent(true);
       setStatus('');
-      setLeadName(name.split(' ')[0] || '');
       metaTrack('Lead', { content_name: 'istoselida', content_category: profession }, { eventID: eventId });
       form.reset();
       // step 2: the calendar opens at once — they just gave us their details, so no e-mail code
@@ -274,7 +272,7 @@ export default function Contact() {
                   <span className="w-7 h-7 rounded-full bg-[#0EC673] text-white flex items-center justify-center shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
                   </span>
-                  Λάβαμε τα στοιχεία σας{leadName ? `, ${leadName}` : ''}.
+                  Λάβαμε τα στοιχεία σας.
                 </p>
                 <h3 className="text-2xl md:text-3xl font-black text-white font-display mb-3 leading-tight">Βήμα 2 από 2: <span className="text-electric-cyan">διαλέξτε ώρα</span> για τη δωρεάν κλήση</h3>
                 <p className="text-gray-400 mb-6">Χωρίς δέσμευση και χωρίς προκαταβολή.</p>

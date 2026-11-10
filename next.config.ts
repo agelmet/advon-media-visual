@@ -18,11 +18,11 @@ const CSP = [
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob: https:",
   "media-src 'self' blob: https://drafts.advonmedia.com",
-  `connect-src 'self' https://advon-services.vercel.app https://formspree.io https://connect.facebook.net https://www.facebook.com https://api.github.com https://raw.githubusercontent.com https://drafts.advonmedia.com https://fonts.googleapis.com https://fonts.gstatic.com ${GCAL} ${ZOHO}`,
+  `connect-src 'self' https://advon-services.vercel.app https://connect.facebook.net https://www.facebook.com https://api.github.com https://raw.githubusercontent.com https://drafts.advonmedia.com https://fonts.googleapis.com https://fonts.gstatic.com ${GCAL} ${ZOHO}`,
   `frame-src 'self' https://www.facebook.com https://www.google.com https://maps.google.com https://advon-services.vercel.app ${GCAL} ${ZOHO}`,
   "frame-ancestors 'self'",
   "base-uri 'self'",
-  "form-action 'self' https://formspree.io",
+  "form-action 'self'",
   "object-src 'none'",
   'upgrade-insecure-requests',
 ].join('; ');
