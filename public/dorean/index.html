@@ -663,7 +663,6 @@ h1 .grad{background:linear-gradient(120deg,#8BE3FF 0%,var(--cyan) 28%,#7FA8FF 50
 const META_PIXEL_ID = '1294424308606812';                      /* put the Meta Pixel ID here when the ads go live */
 const BOOK_URL = 'https://advonmedia.zohobookings.eu/portal-embed#/264312000000038046';
 const LEAD_URL = '/api/lead';                  /* the CRM lead inbox → Leads tab, «From the ads» */
-const FORMSPREE_URL = 'https://formspree.io/f/xkopgoaj';   /* same endpoint as the form on advonmedia.com */
 const WORK = [
  {"key":"allsmiles","name":"Άννα Στριγκόνη","niche":"Οδοντίατρος · All Smiles","url":"https://www.allsmiles.gr"},
  {"key":"plessa","name":"Μάρθα Πλέσσα","niche":"Ψυχολόγος · Ψυχοθεραπεύτρια","url":"https://marthaplessa-psychotherapy.gr"},
@@ -1031,17 +1030,8 @@ const UTM = (function(){
     btn.disabled = true; btn.textContent = 'Αποστολή…';
 
     const utmLine = [UTM.utm_source, UTM.utm_medium, UTM.utm_campaign, UTM.utm_content].filter(Boolean).join(' / ');
-    /* 1. Formspree — the same inbox as the form on advonmedia.com */
-    const fsBody = {
-      name, email, phone, profession,
-      message: `Δωρεάν ιστοσελίδα — φόρμα διαφημίσεων (/dorean)${utmLine ? '\nUTM: ' + utmLine : ''}`,
-      _subject: `Νέο lead από τις διαφημίσεις: ${name} (${profession})`,
-    };
-    let fsOk = false;
-    try {
-      const r = await fetch(FORMSPREE_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(fsBody) });
-      fsOk = r.ok;
-    } catch(e){}
+    /* Formspree removed 10 Nov 2026 — the lead goes only to our own /api/lead (CRM + Telegram + e-mail) */
+    const fsOk = false;
 
     /* 2. the CRM lead inbox, so the lead shows up in the Leads tab with the 5-minute timer */
     let crmOk = false, reason = '';
