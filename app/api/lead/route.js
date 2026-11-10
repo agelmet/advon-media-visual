@@ -180,9 +180,11 @@ async function notifyEmail(c, l) {
 // Sent only to a real lead that passed every robot check and gave an e-mail; at most once per address
 // every 12 hours (a person who sends the form twice gets one e-mail). Never for a lead released from spam.
 const confirmed = new Map();
-async function sendConfirm(c, to, lang, base) {
+async function sendConfirm(c, to, lang, base, test = false) {
   if (!c.resendKey || !to) return false;
-  const { subject, html, text } = buildLeadConfirm({ lang, base });
+  const built = buildLeadConfirm({ lang, base });
+  const { html, text } = built;
+  const subject = test ? `${built.subject} (δοκιμή ${new Date().toLocaleTimeString('el-GR', { timeZone: 'Europe/Athens', hour: '2-digit', minute: '2-digit' })})` : built.subject;
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${c.resendKey}`, 'Content-Type': 'application/json' },
@@ -336,6 +338,15 @@ async function __GET(req) {
   const url = new URL(req.url);
   // Public: the stamp every form fetches when the page opens.
   if (url.searchParams.get('stamp') === '1') return json({ ok: true, stamp: makeStamp() });
+  // E-mail-only test (no lead, no CRM, no Telegram): /api/lead?testmail=1&k=<CHAT_AGENT_KEY>[&lang=en]
+  // Sends ONLY to Angelo's own inbox, with the time in the subject so Gmail never folds it into an earlier test.
+  if (url.searchParams.get('testmail') === '1') {
+    const k = url.searchParams.get('k') || '';
+    if (!k || (await sha256Hex(k)) !== '9bdf28e5bfba580df30a7b218900fa53dc3fba6e8a1317df8e8c2326080ac38a') return json({ ok: false, error: 'unauthorized' }, 401);
+    if (tooMany('testmail', 10, 3600e3)) return json({ ok: false, error: 'rate_limited' }, 429);
+    const ok = await sendConfirm(c, c.replyTo, url.searchParams.get('lang') === 'en' ? 'en' : 'el', siteBase(), true).catch(() => false);
+    return json({ ok, to: c.replyTo });
+  }
   // The confirmation e-mail as a page (no personal data in it): /api/lead?preview=1[&lang=en]
   if (url.searchParams.get('preview') === '1') {
     const { html } = buildLeadConfirm({ lang: url.searchParams.get('lang') === 'en' ? 'en' : 'el', base: siteBase(req) });
