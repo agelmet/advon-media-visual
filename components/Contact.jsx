@@ -30,6 +30,7 @@ export default function Contact() {
   const { lang } = useLangStore();
   const [status, setStatus] = useState('');
   const [sent, setSent] = useState(false);
+  // Ads page: after the form, the same card turns into «Βήμα 2 από 2» and the calendar opens without the e-mail code (10 Nov 2026)
   // The booking calendar opens only after the visitor confirmed their e-mail with a code (BookingGate, 20 Oct 2026).
   const [bkEmail, setBkEmail] = useState('');
   // Ads page: confirming the e-mail to open the calendar counts as a lead for Meta (pixel + server, one event id).
@@ -42,19 +43,20 @@ export default function Contact() {
     if (landing && eventId) metaTrack('Lead', { content_name: 'istoselida-calendar' }, { eventID: eventId });
   };
 
-  // Ads landing page (/istoselida): shorter form with «ειδικότητα», sent to Formspree AND the
-  // CRM lead inbox («From the ads», with the ad's UTM), Meta Lead on success.
+  // Both forms go ONLY to our own /api/lead (CRM lead inbox + Telegram + e-mail) — no Formspree (10 Nov 2026:
+  // its 50-a-month limit and its spam folder were hiding real leads). Ads landing page (/istoselida): shorter
+  // form with «ειδικότητα», the ad's UTM, Meta Lead on success.
   const landing = isLanding(usePathname() || '');
   const utmRef = useRef({});
   const clickRef = useRef(null);
   const stampRef = useRef('');
   const profRef = useRef(null);
   useEffect(() => {
+    // the page's stamp: /api/lead files a form without it as spam (robot check, 20 Oct 2026)
+    fetch('/api/lead?stamp=1', { cache: 'no-store' }).then((r) => r.json()).then((j) => { if (j && j.stamp) stampRef.current = j.stamp; }).catch(() => {});
     if (!landing) return;
     utmRef.current = readUtm();
     clickRef.current = readClickId();
-    // the page's stamp: /api/lead files a form without it as spam (robot check, 20 Oct 2026)
-    fetch('/api/lead?stamp=1', { cache: 'no-store' }).then((r) => r.json()).then((j) => { if (j && j.stamp) stampRef.current = j.stamp; }).catch(() => {});
     // the profession the ad spoke to («Ψυχολόγος;» → Ψυχολόγος) — one field less to type
     const n = readNiche();
     if (n && profRef.current && !profRef.current.value) profRef.current.value = n.prof;
@@ -149,18 +151,7 @@ export default function Contact() {
     const click = clickRef.current || readClickId();
     const eventId = `lead-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
     const utmLine = [utm.utm_source, utm.utm_medium, utm.utm_campaign, utm.utm_content].filter(Boolean).join(' / ');
-    let fsOk = false, crmOk = false;
-    try {
-      const r = await fetch('https://formspree.io/f/xkopgoaj', {
-        method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          name, phone, email, profession,
-          message: `Δωρεάν ιστοσελίδα — φόρμα διαφημίσεων (/istoselida)${message ? '\n' + message : ''}${utmLine ? '\nUTM: ' + utmLine : ''}`,
-          _subject: `Νέο lead από τις διαφημίσεις: ${name}${profession ? ' (' + profession + ')' : ''}`,
-        }),
-      });
-      fsOk = r.ok;
-    } catch {}
+    let crmOk = false, reason = '';
     try {
       const r = await fetch('/api/lead', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -171,12 +162,19 @@ export default function Contact() {
         }),
       });
       crmOk = r.ok;
+      if (!crmOk) { try { reason = (await r.json()).error || ''; } catch {} }
     } catch {}
-    if (fsOk || crmOk) {
+    if (crmOk) {
       setSent(true);
-      setStatus(`Ευχαριστούμε${name ? ', ' + name.split(' ')[0] : ''}! Τα λάβαμε — θα σας καλέσουμε σήμερα (ή την επόμενη εργάσιμη) για να δούμε τη σελίδα σας.`);
+      setStatus('');
       metaTrack('Lead', { content_name: 'istoselida', content_category: profession }, { eventID: eventId });
       form.reset();
+      // step 2: the calendar opens at once — they just gave us their details, so no e-mail code
+      setWantZoho(true);
+      setBkEmail(email || 'lead');
+      setTimeout(() => { const el = document.getElementById('lead-step2'); if (el) { try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch {} } }, 120);
+    } else if (reason === 'invalid_phone') {
+      setStatus('Ελέγξτε το τηλέφωνο — χρειαζόμαστε 10 ψηφία, π.χ. 69X XXX XXXX.');
     } else {
       setStatus('Κάτι πήγε στραβά. Δοκιμάστε ξανά σε λίγο ή στείλτε μας email στο angelos@advonmedia.com.');
     }
@@ -184,21 +182,47 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus(lang === 'el' ? 'Αποστολή...' : 'Sending...');
     const form = e.target;
+    const fd = new FormData(form);
+    if (fd.get('_gotcha')) return;
+    const el = lang === 'el';
+    const problem = el ? 'Ωχ! Υπήρξε ένα πρόβλημα. Στείλτε μας email στο angelos@advonmedia.com.' : 'Oops! There was a problem. Email us at angelos@advonmedia.com.';
+    setStatus(el ? 'Αποστολή...' : 'Sending...');
     try {
-      const response = await fetch(form.action, { method: form.method, body: new FormData(form), headers: { 'Accept': 'application/json' }});
+      const response = await fetch('/api/lead', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: String(fd.get('name') || '').trim(), phone: String(fd.get('phone') || '').trim(), email: String(fd.get('email') || '').trim(),
+          message: String(fd.get('message') || '').trim(), stamp: stampRef.current, website: '', source: 'site', page: window.location.pathname,
+        }),
+      });
       if (response.ok) {
-        setStatus(lang === 'el' ? 'Ευχαριστούμε! Το μήνυμά σας εστάλη επιτυχώς — θα επικοινωνήσουμε μαζί σας εντός της ημέρας.' : 'Thank you! Your message has been sent — we will contact you within the day.');
+        setStatus('');
         setSent(true);
         metaTrack('Lead', { content_name: 'contact-form' });
         form.reset();
+        // step 2: the calendar opens at once — they just gave us their details, so no e-mail code
+        setWantZoho(true);
+        setBkEmail(String(fd.get('email') || '').trim() || 'lead');
+        setTimeout(() => { const s2 = document.getElementById('lead-step2'); if (s2) { try { s2.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch {} } }, 120);
       } else {
-        setStatus(lang === 'el' ? 'Ωχ! Υπήρξε ένα πρόβλημα. Στείλτε μας email στο angelos@advonmedia.com.' : 'Oops! There was a problem. Email us at angelos@advonmedia.com.');
+        let reason = ''; try { reason = (await response.json()).error || ''; } catch {}
+        setStatus(reason === 'invalid_phone' ? (el ? 'Ελέγξτε το τηλέφωνο — χρειαζόμαστε έναν έγκυρο αριθμό.' : 'Please check the phone number.') : problem);
       }
     } catch (err) {
-      setStatus(lang === 'el' ? 'Ωχ! Υπήρξε ένα πρόβλημα. Στείλτε μας email στο angelos@advonmedia.com.' : 'Oops! There was a problem. Email us at angelos@advonmedia.com.');
+      setStatus(problem);
     }
+  };
+
+  // «Βήμα 2 από 2» texts (10 Nov 2026) — the ads page is Greek only, the main site follows the language switch
+  const S2 = lang === 'en' && !landing ? {
+    got: 'We received your details.', h1: 'Step 2 of 2:', h2: 'pick a time', h3: 'for the free call', sub: 'No commitment and no upfront payment.', next: 'What happens next',
+    steps: ['Pick a day and time in the calendar. You get an email right away with the Google Meet link, and a reminder 1 hour before.', 'You talk with Angelos for 15 minutes: what you do, what the site should show, what material we need.', 'If we go ahead, you see the first draft of your website within 5–10 days.'],
+    below: 'The calendar is right below ↓', later: "Not a good time right now? You don't need to do anything — we will call you within 24 hours.",
+  } : {
+    got: 'Λάβαμε τα στοιχεία σας.', h1: 'Βήμα 2 από 2:', h2: 'διαλέξτε ώρα', h3: 'για τη δωρεάν κλήση', sub: 'Χωρίς δέσμευση και χωρίς προκαταβολή.', next: 'Τι γίνεται μετά',
+    steps: ['Διαλέγετε μέρα και ώρα στο ημερολόγιο. Σας έρχεται αμέσως email με το link του Google Meet και υπενθύμιση 1 ώρα πριν.', 'Μιλάτε 15 λεπτά με τον Άγγελο: τι κάνετε, τι θέλετε να δείχνει η σελίδα, τι υλικό χρειαζόμαστε.', 'Αν προχωρήσουμε, σε 5–10 ημέρες βλέπετε το πρώτο σχέδιο της ιστοσελίδας σας.'],
+    below: 'Το ημερολόγιο είναι ακριβώς από κάτω ↓', later: 'Δεν σας βολεύει τώρα; Δεν χρειάζεται να κάνετε τίποτα — θα σας καλέσουμε εμείς εντός 24 ωρών.',
   };
 
   const tiles = [
@@ -253,6 +277,35 @@ export default function Contact() {
           {/* Form */}
           <ScrollReveal direction="left" className="h-full w-full">
           <div className="glass-panel contact-card p-8 md:p-10 rounded-3xl text-left h-full flex flex-col">
+            {sent ? (
+              <div id="lead-step2" className="flex flex-col h-full scroll-mt-24">
+                <div className="flex gap-1.5 mb-5" aria-hidden="true">
+                  <span className="h-1.5 flex-1 rounded-full bg-electric-cyan" />
+                  <span className="h-1.5 flex-1 rounded-full bg-electric-cyan/25 overflow-hidden"><span className="block h-full w-1/2 rounded-full bg-electric-cyan" /></span>
+                </div>
+                <p className="flex items-center gap-2.5 text-sm font-bold text-electric-cyan mb-4" role="status">
+                  <span className="w-7 h-7 rounded-full bg-[#0EC673] text-white flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+                  </span>
+                  {S2.got}
+                </p>
+                <h3 className="text-2xl md:text-3xl font-black text-white font-display mb-3 leading-tight">{S2.h1} <span className="text-electric-cyan">{S2.h2}</span> {S2.h3}</h3>
+                <p className="text-gray-400 mb-6">{S2.sub}</p>
+                <div className="rounded-2xl border border-electric-cyan/20 bg-electric-cyan/[0.06] p-5 mb-6">
+                  <p className="text-[11px] font-black tracking-[0.14em] uppercase text-electric-cyan mb-3">{S2.next}</p>
+                  <ol className="space-y-3">
+                    {S2.steps.map((t, i) => (
+                      <li key={i} className="flex gap-3 text-sm leading-relaxed text-gray-200">
+                        <span className="w-5 h-5 mt-0.5 rounded-full bg-electric-cyan/20 text-electric-cyan text-[11px] font-black flex items-center justify-center shrink-0">{i + 1}</span>
+                        <span>{t}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+                <p className="lg:hidden text-center text-electric-cyan font-bold text-sm mb-4">{S2.below}</p>
+                <p className="mt-auto text-sm text-gray-400 leading-relaxed">{S2.later}</p>
+              </div>
+            ) : (<>
             <div className="flex items-center gap-3 mb-4">
               <span className="w-10 h-10 rounded-xl bg-electric-cyan/10 border border-electric-cyan/20 text-electric-cyan flex items-center justify-center shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -260,7 +313,7 @@ export default function Contact() {
               <h3 className="text-2xl md:text-3xl font-black text-white font-display">{landing ? 'Σας καλούμε εμείς' : lang === 'el' ? 'Εκδήλωση Ενδιαφέροντος' : 'Express Interest'}</h3>
             </div>
             <p className="text-gray-400 mb-8">{landing ? 'Αφήστε όνομα, τηλέφωνο και ειδικότητα — σας καλούμε την ίδια μέρα για να δούμε τι θέλετε στη σελίδα σας.' : lang === 'el' ? 'Συμπληρώστε τη φόρμα και θα επικοινωνήσουμε μαζί σας μέσω email ή τηλεφώνου εντός της ίδιας ημέρας.' : 'Fill out the form and we will contact you via email or phone within the same day.'}</p>
-            <form action="https://formspree.io/f/xkopgoaj" method="POST" onSubmit={landing ? handleLandingSubmit : handleSubmit} className="space-y-5 flex-grow flex flex-col">
+            <form action="/api/lead" method="POST" onSubmit={landing ? handleLandingSubmit : handleSubmit} className="space-y-5 flex-grow flex flex-col">
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="cf-name" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Όνομα / Επωνυμία' : 'Name / Company'}</label>
@@ -311,17 +364,18 @@ export default function Contact() {
                 </p>
               </div>
             </form>
+            </>)}
           </div>
           </ScrollReveal>
 
           {/* Zoho Bookings Calendar */}
           <ScrollReveal direction="right" delay={100} className="h-full w-full">
-          <div className="glass-panel contact-card p-8 md:p-10 rounded-3xl text-left flex flex-col h-full overflow-hidden">
+          <div className={`glass-panel contact-card p-8 md:p-10 rounded-3xl text-left flex flex-col h-full overflow-hidden ${sent ? 'ring-2 ring-electric-cyan/60' : ''}`}>
              <div className="flex items-center gap-3 mb-4">
                <span className="w-10 h-10 rounded-xl bg-electric-cyan/10 border border-electric-cyan/20 text-electric-cyan flex items-center justify-center shrink-0">
                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                </span>
-               <h3 className="text-2xl md:text-3xl font-black text-white font-display">{landing ? 'Κλείστε ραντεβού μόνοι σας' : lang === 'el' ? 'Κλείστε Ραντεβού' : 'Book a Call'}</h3>
+               <h3 className="text-2xl md:text-3xl font-black text-white font-display">{sent ? (lang === 'en' && !landing ? 'Pick a day and time' : 'Διαλέξτε μέρα και ώρα') : landing ? 'Κλείστε ραντεβού μόνοι σας' : lang === 'el' ? 'Κλείστε Ραντεβού' : 'Book a Call'}</h3>
              </div>
              <p className="text-gray-400 mb-8">{lang === 'el' ? 'Επιλέξτε την ημέρα και ώρα που σας εξυπηρετεί για μια δωρεάν 15λεπτη συμβουλευτική κλήση.' : 'Choose the day and time that suits you for a free 15-minute consultation call.'}</p>
              {/* Same reasoning as the old Trafft box: keep a FIXED minimum height rather than
