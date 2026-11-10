@@ -193,7 +193,7 @@ export default function Contact() {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: String(fd.get('name') || '').trim(), phone: String(fd.get('phone') || '').trim(), email: String(fd.get('email') || '').trim(),
-          message: String(fd.get('message') || '').trim(), stamp: stampRef.current, website: '', source: 'site', page: window.location.pathname,
+          message: String(fd.get('message') || '').trim(), stamp: stampRef.current, website: '', source: 'site', page: window.location.pathname, lang,
         }),
       });
       if (response.ok) {

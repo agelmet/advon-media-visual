@@ -19,6 +19,7 @@ import { commit as ghCommit, mutateJson } from '@/lib/ghdata';
 import { crmCors, crmPreflight } from '@/lib/crmcors';
 import { makeStamp, checkStamp, contentVerdict, phoneVerdict, tooMany, clientIp } from '@/lib/antispam';
 import { sendMetaLead } from '@/lib/metacapi';
+import { buildLeadConfirm } from '@/lib/leadconfirm';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -50,6 +51,10 @@ function cfg() {
     from: process.env.LEAD_FROM || 'Advon Leads <forms@advonmedia.com>',
     tgToken: process.env.TELEGRAM_BOT_TOKEN,
     tgChat: process.env.TELEGRAM_CHAT_ID,
+    // the confirmation e-mail to the person who filled in the form (10 Nov 2026) — replies go to Angelo's inbox
+    confirmFrom: process.env.LEAD_CONFIRM_FROM || 'Άγγελος – Advon Media <forms@advonmedia.com>',
+    replyTo: process.env.LEAD_REPLY_TO || 'advonmd@gmail.com',
+    confirmOff: process.env.LEAD_CONFIRM_OFF === '1',
   };
 }
 const storageReady = (c) => !!(c.token && c.repo);
@@ -171,6 +176,32 @@ async function notifyEmail(c, l) {
   return res.ok;
 }
 
+// ---------- confirmation e-mail to the person (10 Nov 2026) ----------
+// Sent only to a real lead that passed every robot check and gave an e-mail; at most once per address
+// every 12 hours (a person who sends the form twice gets one e-mail). Never for a lead released from spam.
+const confirmed = new Map();
+async function sendConfirm(c, to, lang, base) {
+  if (!c.resendKey || !to) return false;
+  const { subject, html, text } = buildLeadConfirm({ lang, base });
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${c.resendKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from: c.confirmFrom, to: [to], reply_to: c.replyTo, subject, html, text }),
+  });
+  if (!res.ok) console.error('[lead] confirm failed', res.status, (await res.text()).slice(0, 300));
+  return res.ok;
+}
+async function confirmLead(c, l, base) {
+  if (c.confirmOff || !l.email) return false;
+  const key = l.email.toLowerCase();
+  const now = Date.now();
+  if (now - (confirmed.get(key) || 0) < 12 * 3600e3) return false;
+  confirmed.set(key, now);
+  if (confirmed.size > 5000) confirmed.clear();
+  return sendConfirm(c, l.email, l.lang, base);
+}
+const siteBase = (req) => { try { const u = new URL(req.url); return /(^|\.)advonmedia\.com$/.test(u.hostname) ? 'https://advonmedia.com' : u.origin; } catch { return 'https://advonmedia.com'; } };
+
 async function notifyTelegram(c, l) {
   if (!c.tgToken || !c.tgChat) return false;
   const res = await fetch(`https://api.telegram.org/bot${c.tgToken}/sendMessage`, {
@@ -225,6 +256,7 @@ function buildLead(body) {
       utm_campaign: clean(body.utm_campaign, 120),
       utm_content: clean(body.utm_content, 120),
       page: clean(body.page, 200),
+      lang: clean(body.lang, 5) === 'en' ? 'en' : 'el',
       createdAt: new Date().toISOString(),
     },
     phoneOk: pv.ok,
@@ -264,13 +296,13 @@ async function __POST(req) {
   if (invalid) return json({ ok: false, error: `invalid_${invalid}` }, 400);
 
   const capi = sendMetaLead(req, body).catch(() => false);
-  const res = await deliver(c, lead);
+  const res = await deliver(c, lead, siteBase(req));
   await capi;
   return res;
 }
 
-async function deliver(c, lead) {
-  const results = { stored: false, email: false, telegram: false };
+async function deliver(c, lead, confirmBase) {
+  const results = { stored: false, email: false, telegram: false, confirm: false };
   if (storageReady(c)) {
     try {
       await storeLead(c, lead);
@@ -285,6 +317,10 @@ async function deliver(c, lead) {
   ]);
   results.email = email;
   results.telegram = telegram;
+  // the person's own confirmation — only once the lead really reached us (confirmBase is absent for «Not spam»)
+  if (confirmBase && (results.stored || results.email || results.telegram)) {
+    results.confirm = await confirmLead(c, lead, confirmBase).catch((e) => { console.error('[lead] confirm failed', e?.message); return false; });
+  }
 
   if (!results.stored && !results.email && !results.telegram) {
     console.error('[lead] no delivery channel configured or all failed', lead.id);
@@ -298,6 +334,18 @@ async function __GET(req) {
   const url = new URL(req.url);
   // Public: the stamp every form fetches when the page opens.
   if (url.searchParams.get('stamp') === '1') return json({ ok: true, stamp: makeStamp() });
+  // The confirmation e-mail as a page (no personal data in it): /api/lead?preview=1[&lang=en]
+  if (url.searchParams.get('preview') === '1') {
+    const { html } = buildLeadConfirm({ lang: url.searchParams.get('lang') === 'en' ? 'en' : 'el', base: siteBase(req) });
+    return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
+  }
+  // Test send — ONLY on a test copy (branch URL, never advonmedia.com) and ONLY to Angelo's own inbox.
+  if (url.searchParams.get('testmail') === '1') {
+    if (/(^|\.)advonmedia\.com$/.test(url.hostname)) return json({ ok: false, error: 'not_here' }, 404);
+    if (tooMany('testmail', 5, 3600e3)) return json({ ok: false, error: 'rate_limited' }, 429);
+    const ok = await sendConfirm(c, c.replyTo, url.searchParams.get('lang') === 'en' ? 'en' : 'el', url.origin).catch(() => false);
+    return json({ ok, to: c.replyTo });
+  }
   if (!(await authorized(req, c))) return json({ ok: false, error: 'unauthorized' }, 401);
   if (url.searchParams.get('spam') === '1') {
     if (!storageReady(c)) return json({ ok: false, error: 'not_configured', spam: [] }, 503);
