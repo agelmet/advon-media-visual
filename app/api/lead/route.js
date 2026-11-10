@@ -200,7 +200,9 @@ async function confirmLead(c, l, base) {
   if (confirmed.size > 5000) confirmed.clear();
   return sendConfirm(c, l.email, l.lang, base);
 }
-const siteBase = (req) => { try { const u = new URL(req.url); return /(^|\.)advonmedia\.com$/.test(u.hostname) ? 'https://advonmedia.com' : u.origin; } catch { return 'https://advonmedia.com'; } };
+// On Netlify the function sees the deploy's own address in req.url (…--advonmediaa.netlify.app), not the domain,
+// so the e-mail's pictures always point at advonmedia.com — they are part of every published version.
+const siteBase = () => 'https://advonmedia.com';
 
 async function notifyTelegram(c, l) {
   if (!c.tgToken || !c.tgChat) return false;
@@ -338,13 +340,6 @@ async function __GET(req) {
   if (url.searchParams.get('preview') === '1') {
     const { html } = buildLeadConfirm({ lang: url.searchParams.get('lang') === 'en' ? 'en' : 'el', base: siteBase(req) });
     return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
-  }
-  // Test send — ONLY on a test copy (branch URL, never advonmedia.com) and ONLY to Angelo's own inbox.
-  if (url.searchParams.get('testmail') === '1') {
-    if (/(^|\.)advonmedia\.com$/.test(url.hostname)) return json({ ok: false, error: 'not_here' }, 404);
-    if (tooMany('testmail', 5, 3600e3)) return json({ ok: false, error: 'rate_limited' }, 429);
-    const ok = await sendConfirm(c, c.replyTo, url.searchParams.get('lang') === 'en' ? 'en' : 'el', url.origin).catch(() => false);
-    return json({ ok, to: c.replyTo });
   }
   if (!(await authorized(req, c))) return json({ ok: false, error: 'unauthorized' }, 401);
   if (url.searchParams.get('spam') === '1') {
