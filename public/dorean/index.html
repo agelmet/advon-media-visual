@@ -598,9 +598,10 @@ h1 .grad{background:linear-gradient(120deg,#8BE3FF 0%,var(--cyan) 28%,#7FA8FF 50
         </div>
         <div class="done" id="done">
           <div class="ok"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
-          <h3>Το λάβαμε, <span id="doneName"></span>!</h3>
-          <p>Θα σας καλέσουμε το συντομότερο — συνήθως μέσα στην ίδια μέρα, τις εργάσιμες ώρες. Αν βιάζεστε, κλείστε τώρα την ώρα που σας βολεύει:</p>
-          <button class="btn btn-primary" data-book style="margin-top:18px">Κλείστε τη δωρεάν κλήση σας</button>
+          <h3>Λάβαμε τα στοιχεία σας<span id="doneName" hidden></span>.</h3>
+          <p><b>Βήμα 2 από 2:</b> διαλέξτε μέρα και ώρα για τη δωρεάν 15λεπτη κλήση. Σας έρχεται αμέσως email με το link του Google Meet και υπενθύμιση 1 ώρα πριν. Χωρίς δέσμευση και χωρίς προκαταβολή.</p>
+          <button class="btn btn-primary" data-book style="margin-top:18px">Διαλέξτε ώρα</button>
+          <p style="margin-top:14px;font-size:14px;opacity:.75">Δεν σας βολεύει τώρα; Δεν χρειάζεται να κάνετε τίποτα — θα σας καλέσουμε εμείς εντός 24 ωρών.</p>
         </div>
       </div>
     </div>
@@ -978,7 +979,7 @@ if (META_PIXEL_ID) {
   async function open(){
     m.classList.add('open'); document.body.style.overflow = 'hidden';
     track('Schedule', { content_name: 'dorean-call' });
-    if (ok) return loadCal();
+    if (ok || window.__advonLead) return loadCal();
     const saved = readLS();
     if (saved && saved.verified) {
       ld.style.display = '';
@@ -1048,6 +1049,8 @@ const UTM = (function(){
       document.getElementById('formWrap').style.display = 'none';
       document.getElementById('doneName').textContent = name.split(' ')[0];
       document.getElementById('done').style.display = 'block';
+      window.__advonLead = true;   /* they just gave us their details — the calendar opens without the e-mail code */
+      setTimeout(() => { const b = document.querySelector('#done [data-book]'); if (b) b.click(); }, 700);
       try { window.scrollTo({ top: document.getElementById('forma').offsetTop - 40, behavior: 'smooth' }); } catch(e){}
       return;
     }
