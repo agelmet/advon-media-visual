@@ -217,11 +217,11 @@ export default function Contact() {
   // «Βήμα 2 από 2» texts (10 Nov 2026) — the ads page is Greek only, the main site follows the language switch
   const S2 = lang === 'en' && !landing ? {
     got: 'We received your details.', h1: 'Step 2 of 2:', h2: 'pick a time', h3: 'for the free call', sub: 'No commitment and no upfront payment.', next: 'What happens next',
-    steps: ['Pick a day and time in the calendar. You get an email right away with the Google Meet link, and a reminder 1 hour before.', 'You talk with Angelos for 15 minutes: what you do, what the site should show, what material we need.', 'If we go ahead, you see the first draft of your website within 5–10 days.'],
+    steps: ['Pick a day and time in the calendar. You get an email right away with the Google Meet link, and a reminder 1 hour before.', 'You talk with Angelos for 15 minutes: what you do, what the site should show, what material we need.', 'If we go ahead, you see the first draft of your website within 1–5 days.'],
     below: 'The calendar is right below ↓', later: "Not a good time right now? You don't need to do anything — we will call you within 24 hours.",
   } : {
     got: 'Λάβαμε τα στοιχεία σας.', h1: 'Βήμα 2 από 2:', h2: 'διαλέξτε ώρα', h3: 'για τη δωρεάν κλήση', sub: 'Χωρίς δέσμευση και χωρίς προκαταβολή.', next: 'Τι γίνεται μετά',
-    steps: ['Διαλέγετε μέρα και ώρα στο ημερολόγιο. Σας έρχεται αμέσως email με το link του Google Meet και υπενθύμιση 1 ώρα πριν.', 'Μιλάτε 15 λεπτά με τον Άγγελο: τι κάνετε, τι θέλετε να δείχνει η σελίδα, τι υλικό χρειαζόμαστε.', 'Αν προχωρήσουμε, σε 5–10 ημέρες βλέπετε το πρώτο σχέδιο της ιστοσελίδας σας.'],
+    steps: ['Διαλέγετε μέρα και ώρα στο ημερολόγιο. Σας έρχεται αμέσως email με το link του Google Meet και υπενθύμιση 1 ώρα πριν.', 'Μιλάτε 15 λεπτά με τον Άγγελο: τι κάνετε, τι θέλετε να δείχνει η σελίδα, τι υλικό χρειαζόμαστε.', 'Αν προχωρήσουμε, σε 1–5 ημέρες βλέπετε το πρώτο σχέδιο της ιστοσελίδας σας.'],
     below: 'Το ημερολόγιο είναι ακριβώς από κάτω ↓', later: 'Δεν σας βολεύει τώρα; Δεν χρειάζεται να κάνετε τίποτα — θα σας καλέσουμε εμείς εντός 24 ωρών.',
   };
 
