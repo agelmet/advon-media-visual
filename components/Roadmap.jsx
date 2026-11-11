@@ -11,8 +11,8 @@ import ScrollReveal from '@/components/ScrollReveal';
 import { services } from '@/lib/services';
 
 const WHEN = {
-  el: ['Ημέρα 1', '4–10 ημέρες', 'Όσες χρειαστούν', '1–2 ημέρες'],
-  en: ['Day 1', '4–10 days', 'As many as needed', '1–2 days'],
+  el: ['Ημέρα 1', '1–5 ημέρες', 'Όσες χρειαστούν', '1–2 ημέρες'],
+  en: ['Day 1', '1–5 days', 'As many as needed', '1–2 days'],
 };
 
 export default function Roadmap() {

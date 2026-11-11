@@ -186,7 +186,7 @@ export default function LandingClient() {
           </div>
 
           <ul className="reveal-item delay-6 mt-9 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-gray-400 text-xs md:text-sm font-semibold tracking-wide">
-            {['Κατασκευή 0€', 'Χωρίς προκαταβολή', 'Πρώτο σχέδιο σε 4–10 ημέρες', 'Απεριόριστες αλλαγές πριν βγει online'].map((t) => (
+            {['Κατασκευή 0€', 'Χωρίς προκαταβολή', 'Πρώτο σχέδιο σε 1–5 ημέρες', 'Απεριόριστες αλλαγές πριν βγει online'].map((t) => (
               <li key={t} className="inline-flex items-center gap-1.5">{check('w-3.5 h-3.5 text-electric-cyan')}{t}</li>
             ))}
           </ul>
@@ -429,8 +429,8 @@ const LANDING_FAQS = [
   {
     q: { el: 'Πόσο γρήγορα θα είναι έτοιμη;', en: 'How fast will it be ready?' },
     a: {
-      el: 'Μόλις λάβουμε το υλικό σας, το πρώτο σχέδιο είναι έτοιμο σε 4–10 ημέρες. Μετά κάνουμε μαζί όσες αλλαγές θέλετε, και μόλις την εγκρίνετε βγαίνει online σε 1–2 ημέρες.',
-      en: 'Once we have your material, the first design is ready in 4–10 days. Then we make as many changes as you want together, and once you approve it, it goes live in 1–2 days.',
+      el: 'Μόλις λάβουμε το υλικό σας, το πρώτο σχέδιο είναι έτοιμο σε 1–5 ημέρες. Μετά κάνουμε μαζί όσες αλλαγές θέλετε, και μόλις την εγκρίνετε βγαίνει online σε 1–2 ημέρες.',
+      en: 'Once we have your material, the first design is ready in 1–5 days. Then we make as many changes as you want together, and once you approve it, it goes live in 1–2 days.',
     },
   },
   {
