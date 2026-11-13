@@ -105,7 +105,19 @@ async function storeLead(c, lead) {
     const leads = Array.isArray(inbox.data) ? inbox.data : [];
     const p = pool.data && typeof pool.data === 'object' ? pool.data : { updated: null, leads: [] };
     if (!Array.isArray(p.leads)) p.leads = [];
-    if (!p.leads.some((l) => l.key === poolLead.key)) { p.leads.push(poolLead); p.updated = new Date().toISOString(); }
+    const old = p.leads.find((l) => l.key === poolLead.key);
+    if (!old) { p.leads.push(poolLead); p.updated = new Date().toISOString(); }
+    else {
+      // 13 Nov 2026: the same phone sends the form AGAIN (Φλουρου 11/11 → 13/11). Record the send in again[] so the CRM brings
+      // the person back as «New · call them» today. A double-click (≤ 20 min after the last send) is ignored.
+      const prev = [old.at, ...(Array.isArray(old.again) ? old.again : [])].map((x) => Date.parse(x) || 0);
+      if (Date.parse(lead.createdAt) - Math.max(...prev) > 20 * 60 * 1000) {
+        old.again = [...(Array.isArray(old.again) ? old.again : []), lead.createdAt].slice(-10);
+        if (poolLead.spec && !old.spec) old.spec = poolLead.spec;
+        if (lead.message && !String(old.note || '').includes(lead.message)) old.note = [old.note, lead.message].filter(Boolean).join(' · ');
+        p.updated = new Date().toISOString();
+      }
+    }
     return [
       { path: INBOX_PATH, content: JSON.stringify([...leads, lead].slice(-MAX_LEADS), null, 1) },
       { path: POOL_PATH, content: JSON.stringify(p) },
