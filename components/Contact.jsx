@@ -51,6 +51,9 @@ export default function Contact() {
   const clickRef = useRef(null);
   const stampRef = useRef('');
   const profRef = useRef(null);
+  // «Τι χρειάζεστε;» on the ads page (15 Nov 2026): one tap, so the call starts from what they want
+  const NEEDS = ['Νέα ιστοσελίδα', 'Ανανέωση ιστοσελίδας', 'Ιστοσελίδα καταλύματος', 'Eshop', 'Διαφημίσεις / Google', 'Δεν είμαι σίγουρος/η'];
+  const [need, setNeed] = useState('');
   useEffect(() => {
     // the page's stamp: /api/lead files a form without it as spam (robot check, 20 Oct 2026)
     fetch('/api/lead?stamp=1', { cache: 'no-store' }).then((r) => r.json()).then((j) => { if (j && j.stamp) stampRef.current = j.stamp; }).catch(() => {});
@@ -60,6 +63,8 @@ export default function Contact() {
     // the profession the ad spoke to («Ψυχολόγος;» → Ψυχολόγος) — one field less to type
     const n = readNiche();
     if (n && profRef.current && !profRef.current.value) profRef.current.value = n.prof;
+    const uc = String((utmRef.current && utmRef.current.utm_content) || '').toLowerCase();
+    if (/katalym|villa|rental|accomm/.test(uc)) setNeed('Ιστοσελίδα καταλύματος');
   }, [landing]);
   const bookedRef = useRef(false);
   // The calendar is a Zoho iframe: the page cannot see inside it, so the first click into it
@@ -156,7 +161,7 @@ export default function Contact() {
       const r = await fetch('/api/lead', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name, phone, email, profession, message, stamp: stampRef.current, website: String(fd.get('_gotcha') || ''), source: 'istoselida', page: window.location.pathname + window.location.search,
+          name, phone, email, profession, need, message, stamp: stampRef.current, website: String(fd.get('_gotcha') || ''), source: 'istoselida', page: window.location.pathname + window.location.search,
           utm_source: utm.utm_source || '', utm_medium: utm.utm_medium || '', utm_campaign: utm.utm_campaign || '', utm_content: utm.utm_content || '',
           fbclid: (click && click.id) || '', fbclid_ts: (click && click.ts) || 0, event_id: eventId,
         }),
@@ -167,8 +172,9 @@ export default function Contact() {
     if (crmOk) {
       setSent(true);
       setStatus('');
-      metaTrack('Lead', { content_name: 'istoselida', content_category: profession }, { eventID: eventId });
+      metaTrack('Lead', { content_name: 'istoselida', content_category: profession, need }, { eventID: eventId });
       form.reset();
+      setNeed('');
       // step 2: the calendar opens at once — they just gave us their details, so no e-mail code
       setWantZoho(true);
       setBkEmail(email || 'lead');
@@ -340,6 +346,19 @@ export default function Contact() {
                   <label htmlFor="cf-email" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">Email</label>
                   <input id="cf-email" type="email" name="email" required autoComplete="email" className={inputCls} />
                 </div>
+              )}
+              {landing && (
+                <fieldset>
+                  <legend className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">Τι χρειάζεστε;</legend>
+                  <div className="flex flex-wrap gap-2">
+                    {NEEDS.map((n) => (
+                      <label key={n} className={`cursor-pointer select-none rounded-full border px-3.5 py-2 text-sm font-bold transition-colors min-h-[40px] inline-flex items-center ${need === n ? 'bg-electric-cyan text-[#050608] border-electric-cyan' : 'border-white/15 text-gray-300 hover:border-electric-cyan/60'}`}>
+                        <input type="radio" name="need" value={n} checked={need === n} onChange={() => setNeed(n)} className="sr-only" />
+                        {n}
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
               )}
               <div className="flex-grow flex flex-col">
                 <label htmlFor="cf-message" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{landing ? 'Μήνυμα (προαιρετικό)' : lang === 'el' ? 'Μήνυμα / Υπηρεσία που σας ενδιαφέρει' : 'Message / Service of Interest'}</label>

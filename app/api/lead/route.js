@@ -96,7 +96,7 @@ async function storeLead(c, lead) {
   const poolLead = {
     key: `ad:${digits}`, name: lead.name, spec: lead.profession || '', phone: digits, city: '', addr: '',
     reviews: 0, score: null, url: '', added: lead.createdAt.slice(0, 10), src: 'ads', list: 'ads',
-    note: [lead.source === 'site' ? 'Φόρμα advonmedia.com' : '', lead.message, lead.email, [lead.utm_source, lead.utm_campaign, lead.utm_content].filter(Boolean).join(' / ')].filter(Boolean).join(' · '),
+    note: [lead.source === 'site' ? 'Φόρμα advonmedia.com' : '', lead.need ? `Θέλει: ${lead.need}` : '', lead.message, lead.email, [lead.utm_source, lead.utm_campaign, lead.utm_content].filter(Boolean).join(' / ')].filter(Boolean).join(' · '),
     at: lead.createdAt,
   };
   await ghCommit(c, `lead: ${lead.name} (${lead.source})`, async (ctx) => {
@@ -149,6 +149,7 @@ function leadText(l) {
     `Νέο lead — ${l.source}`,
     `Όνομα: ${l.name}`,
     l.profession ? `Επάγγελμα: ${l.profession}` : '',
+    l.need ? `Χρειάζεται: ${l.need}` : '',
     `Τηλέφωνο: ${l.phone}`,
     l.email ? `Email: ${l.email}` : '',
     l.message ? `Μήνυμα: ${l.message}` : '',
@@ -234,6 +235,7 @@ async function fileSpam(c, req, body, reason) {
     email: clean(body.email, 160),
     phone: clean(body.phone, 40),
     profession: clean(body.profession, 120),
+    need: clean(body.need, 80),
     message: clean(body.message, 600),
     page: clean(body.page, 200),
     ip,
@@ -251,6 +253,7 @@ function buildLead(body) {
       id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
       name: clean(body.name, 120),
       profession: clean(body.profession, 120),
+      need: clean(body.need, 80),
       phone: pv.e164 || normalisePhone(clean(body.phone, 40)),
       email: clean(body.email, 160).toLowerCase(),
       message: clean(body.message, 2000),
