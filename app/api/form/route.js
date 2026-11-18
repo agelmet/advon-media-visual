@@ -71,14 +71,17 @@ function mail(site, f) {
   const when = f.at.toLocaleString('el-GR', { timeZone: 'Europe/Athens', dateStyle: 'medium', timeStyle: 'short' });
   const subject = `${what} — ${f.name || (el ? 'Επισκέπτης' : 'Visitor')}${f.phone ? ` (${f.phone})` : ''}`;
   const rows = f.answers.map((a, i) => `${i + 1}. ${a.q}\n   → ${a.a}`).join('\n');
+  const isOrder = f.kind === 'order';
+  const LA = isOrder ? 'Παραγγελία' : 'Απαντήσεις';
+  const LR = isOrder ? 'Σύνολο παραγγελίας' : 'Αποτέλεσμα που είδε ο επισκέπτης';
   const text = [
     `${what}`, '',
     f.name ? `Όνομα: ${f.name}` : '',
     f.phone ? `Τηλέφωνο: ${f.phone}` : '',
     f.email ? `Email: ${f.email}` : '',
     '',
-    rows ? `Απαντήσεις:\n${rows}` : '',
-    f.result ? `\nΑποτέλεσμα που είδε ο επισκέπτης: ${f.result}${f.resultText ? ` — ${f.resultText}` : ''}` : '',
+    rows ? `${LA}:\n${rows}` : '',
+    f.result ? `\n${LR}: ${f.result}${f.resultText ? ` — ${f.resultText}` : ''}` : '',
     f.message ? `\nΜήνυμα:\n${f.message}` : '',
     '',
     `Ώρα: ${when}`,
@@ -97,8 +100,8 @@ function mail(site, f) {
 <tr><td style="padding:22px 26px 6px"><table role="presentation" cellpadding="0" cellspacing="0">
 ${f.name ? tr('Όνομα', esc(f.name)) : ''}${f.phone ? tr('Τηλέφωνο', `<a href="tel:${esc(f.phone.replace(/[^\d+]/g, ''))}" style="color:#007d89;font-weight:600">${esc(f.phone)}</a>`) : ''}${f.email ? tr('Email', `<a href="mailto:${esc(f.email)}" style="color:#007d89">${esc(f.email)}</a>`) : ''}${tr('Ώρα', esc(when))}
 </table></td></tr>
-${f.result ? `<tr><td style="padding:10px 26px"><div style="background:#e9f6f7;border-left:4px solid #00a3b1;border-radius:8px;padding:12px 16px"><div style="font-size:12px;color:#5b6b73;text-transform:uppercase;letter-spacing:.1em">Αποτέλεσμα που είδε ο επισκέπτης</div><div style="font-size:16px;font-weight:600;color:#0e5878;margin-top:4px">${esc(f.result)}</div></div></td></tr>` : ''}
-${qa ? `<tr><td style="padding:6px 26px 10px"><div style="font-size:12px;color:#5b6b73;text-transform:uppercase;letter-spacing:.1em;margin:8px 0 2px">Απαντήσεις</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0">${qa}</table></td></tr>` : ''}
+${f.result ? `<tr><td style="padding:10px 26px"><div style="background:#e9f6f7;border-left:4px solid #00a3b1;border-radius:8px;padding:12px 16px"><div style="font-size:12px;color:#5b6b73;text-transform:uppercase;letter-spacing:.1em">${LR}</div><div style="font-size:16px;font-weight:600;color:#0e5878;margin-top:4px">${esc(f.result)}</div></div></td></tr>` : ''}
+${qa ? `<tr><td style="padding:6px 26px 10px"><div style="font-size:12px;color:#5b6b73;text-transform:uppercase;letter-spacing:.1em;margin:8px 0 2px">${LA}</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0">${qa}</table></td></tr>` : ''}
 ${f.message ? `<tr><td style="padding:6px 26px 10px"><div style="font-size:12px;color:#5b6b73;text-transform:uppercase;letter-spacing:.1em">Μήνυμα</div><div style="font-size:15px;color:#0f2430;white-space:pre-wrap;margin-top:6px">${esc(f.message)}</div></td></tr>` : ''}
 <tr><td style="padding:14px 26px 24px;font-size:13px;color:#5b6b73">${f.email ? 'Πατήστε «Απάντηση» για να απαντήσετε απευθείας στον επισκέπτη.' : 'Ο επισκέπτης δεν άφησε e-mail — επικοινωνήστε τηλεφωνικά.'}</td></tr>
 <tr><td style="padding:14px 26px;background:#f4f8f8;font-size:12px;color:#8a989e">Στάλθηκε από τη φόρμα της ιστοσελίδας σας · <a href="https://advonmedia.com" style="color:#8a989e">Advon Media</a></td></tr>
