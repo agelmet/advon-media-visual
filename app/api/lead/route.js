@@ -144,19 +144,53 @@ function limited(ip) {
 }
 
 // ---------- notifications ----------
+// 20 Nov 2026 (Angelo): a celebration on top, the person and how to reach them in big clear lines,
+// where they came from in plain words, the long page address with tracking codes left out.
+const tgEsc = (x) => String(x || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+function leadParts(l) {
+  const src = (l.utm_source || '').toLowerCase();
+  const from = src === 'meta' || src === 'facebook' || src === 'instagram' || src === 'fb' || src === 'ig'
+    ? `διαφήμιση Meta (Facebook/Instagram)${l.utm_content ? ' · ' + l.utm_content : ''}`
+    : src === 'google' ? `Google${l.utm_content ? ' · ' + l.utm_content : ''}`
+    : src ? `${l.utm_source}${l.utm_content ? ' · ' + l.utm_content : ''}`
+    : 'απευθείας από την ιστοσελίδα';
+  const page = l.page ? String(l.page).split('?')[0] : (l.source ? '/' + l.source : '');
+  const when = new Date(l.createdAt).toLocaleString('el-GR', { timeZone: 'Europe/Athens', weekday: 'short', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' });
+  return { from, page, when };
+}
 function leadText(l) {
+  const { from, page, when } = leadParts(l);
   const lines = [
-    `Νέο lead — ${l.source}`,
-    `Όνομα: ${l.name}`,
-    l.profession ? `Επάγγελμα: ${l.profession}` : '',
-    `Τηλέφωνο: ${l.phone}`,
-    l.email ? `Email: ${l.email}` : '',
-    l.message ? `Μήνυμα: ${l.message}` : '',
-    [l.utm_source, l.utm_medium, l.utm_campaign, l.utm_content].filter(Boolean).length ? `UTM: ${[l.utm_source, l.utm_medium, l.utm_campaign, l.utm_content].filter(Boolean).join(' / ')}` : '',
-    l.page ? `Σελίδα: ${l.page}` : '',
-    `Ώρα: ${new Date(l.createdAt).toLocaleString('el-GR', { timeZone: 'Europe/Athens' })}`,
-    '',
-    'Κάλεσε μέσα σε 5 λεπτά.',
+    '🎉🔥 ΝΕΟ LEAD! 🔥🎉',
+    '━━━━━━━━━━━━━━',
+    `👤 ${l.name}`,
+    l.profession ? `💼 ${l.profession}` : '',
+    `📞 ${l.phone}`,
+    l.email ? `✉️ ${l.email}` : '',
+    l.message ? `\n💬 «${l.message}»` : '',
+    '━━━━━━━━━━━━━━',
+    `📣 Από: ${from}`,
+    page ? `🌐 Σελίδα: ${page}` : '',
+    `🕒 ${when}`,
+    '\n⏰ ΚΑΛΕΣΕ ΤΩΡΑ — μέσα σε 5 λεπτά! 💪',
+  ];
+  return lines.filter((x) => x !== '').join('\n');
+}
+function leadHtml(l) {
+  const { from, page, when } = leadParts(l);
+  const lines = [
+    '🎉🔥 <b>ΝΕΟ LEAD!</b> 🔥🎉',
+    '━━━━━━━━━━━━━━',
+    `👤 <b>${tgEsc(l.name)}</b>`,
+    l.profession ? `💼 ${tgEsc(l.profession)}` : '',
+    `📞 <b>${tgEsc(l.phone)}</b>`, // Telegram makes the number tappable by itself (tel: links are refused)
+    l.email ? `✉️ ${tgEsc(l.email)}` : '',
+    l.message ? `\n💬 <i>«${tgEsc(l.message)}»</i>` : '',
+    '━━━━━━━━━━━━━━',
+    `📣 Από: ${tgEsc(from)}`,
+    page ? `🌐 Σελίδα: ${tgEsc(page)}` : '',
+    `🕒 ${tgEsc(when)}`,
+    '\n⏰ <b>ΚΑΛΕΣΕ ΤΩΡΑ — μέσα σε 5 λεπτά!</b> 💪',
   ];
   return lines.filter((x) => x !== '').join('\n');
 }
@@ -169,7 +203,7 @@ async function notifyEmail(c, l) {
     body: JSON.stringify({
       from: c.from,
       to: [c.notifyTo],
-      subject: `Νέο lead: ${l.name}${l.profession ? ' — ' + l.profession : ''} (${l.phone})`,
+      subject: `🎉 Νέο lead: ${l.name}${l.profession ? ' — ' + l.profession : ''} · ${l.phone}`,
       text: leadText(l),
     }),
   });
@@ -211,9 +245,17 @@ async function notifyTelegram(c, l) {
   const res = await fetch(`https://api.telegram.org/bot${c.tgToken}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: c.tgChat, text: leadHtml(l), parse_mode: 'HTML', disable_web_page_preview: true,
+      reply_markup: { inline_keyboard: [[{ text: '📋 Άνοιγμα στο CRM', url: 'https://crm.advonmedia.com/' }]] } }),
+  });
+  if (res.ok) return true;
+  // If Telegram refuses the markup, send the same message as plain text.
+  const res2 = await fetch(`https://api.telegram.org/bot${c.tgToken}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ chat_id: c.tgChat, text: leadText(l) }),
   });
-  return res.ok;
+  return res2.ok;
 }
 
 // ---------- robots (20 Oct 2026) ----------
