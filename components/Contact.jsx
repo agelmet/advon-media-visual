@@ -5,23 +5,15 @@ import { useLangStore } from '@/store/langStore';
 import ScrollReveal from '@/components/ScrollReveal';
 import { SOCIALS, SocialIcon } from '@/components/Socials';
 import { metaTrack } from '@/components/Analytics';
-import BookingGate from '@/components/BookingGate';
 import { usePathname } from 'next/navigation';
 import { isLanding, readUtm, readNiche, readClickId } from '@/lib/landing';
 
-// Zoho Bookings inline embed.
-//
-// Both values come from Zoho itself (Event Types > Website Meeting > Share >
-// Embed as Widget > Inline Embed), not from a copy-pasted blog snippet:
-//   - the script is Zoho's own embed CDN (nimbuspop.com is Zoho's, despite the name)
-//   - ZOHO_BOOKING_URL is the SERVICE-specific url, so visitors land straight on the
-//     calendar instead of first having to pick "Website Meeting" from a list of one.
-//     The account-wide url (.../portal-embed#/advonmedia) adds that pointless extra click.
-const ZOHO_EMBED_SCRIPT = 'https://bookings.nimbuspop.com/assets/embed.js';
-const ZOHO_BOOKING_URL =
-  'https://advonmedia.zohobookings.eu/portal-embed#/264312000000038046';
-const ZOHO_SCRIPT_ID = 'zoho-bookings-embed';
-const ZOHO_PARENT_ID = 'zoho-booking-inline';
+// Our own booking page (/rantevou, 20 Nov 2026 — replaces Zoho): shown here as a same-origin iframe in its
+// «embed» mode. After the form, the details go to it through sessionStorage + postMessage (never in the URL),
+// so the visitor only picks a day and a time. The iframe tells us its height and when a booking is made
+// (Meta «Schedule», plus «Lead» when nobody filled the form first — the same event ids go to the server).
+const CAL_ID = 'advon-booking';
+const PREFILL_KEY = 'advon_prefill';
 
 const inputCls =
   'w-full bg-[#050608]/60 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-electric-cyan focus:shadow-[0_0_0_3px_rgba(71,200,245,0.15),0_0_24px_rgba(71,200,245,0.18)] transition-all duration-300';
@@ -30,19 +22,9 @@ export default function Contact() {
   const { lang } = useLangStore();
   const [status, setStatus] = useState('');
   const [sent, setSent] = useState(false);
-  // Ads page: after the form, the same card turns into «Βήμα 2 από 2» and the calendar opens without the e-mail code (10 Nov 2026)
-  // The booking calendar opens only after the visitor confirmed their e-mail with a code (BookingGate, 20 Oct 2026).
-  const [bkEmail, setBkEmail] = useState('');
-  // Ads page: confirming the e-mail to open the calendar counts as a lead for Meta (pixel + server, one event id).
-  const calTrack = () => {
-    const c = clickRef.current || readClickId();
-    return { fbclid: (c && c.id) || '', fbclid_ts: (c && c.ts) || 0, page: window.location.pathname, event_id: `cal-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}` };
-  };
-  const onBkVerified = (email, eventId) => {
-    setBkEmail(email);
-    if (landing && eventId) metaTrack('Lead', { content_name: 'istoselida-calendar' }, { eventID: eventId });
-  };
-
+  // After the form the same card turns into «Βήμα 2 από 2» and the booking next to it already holds their details.
+  const calRef = useRef(null);
+  const [calH, setCalH] = useState(640);
   // Both forms go ONLY to our own /api/lead (CRM lead inbox + Telegram + e-mail) — no Formspree (10 Nov 2026:
   // its 50-a-month limit and its spam folder were hiding real leads). Ads landing page (/istoselida): shorter
   // form with «ειδικότητα», the ad's UTM, Meta Lead on success.
@@ -61,79 +43,53 @@ export default function Contact() {
     const n = readNiche();
     if (n && profRef.current && !profRef.current.value) profRef.current.value = n.prof;
   }, [landing]);
-  const bookedRef = useRef(false);
-  // The calendar is a Zoho iframe: the page cannot see inside it, so the first click into it
-  // (window loses focus to the iframe) is reported to Meta as «Schedule» — once per visit.
+  // The booking page loads when the contact section is about 900px from the screen (nothing to wait for on first paint).
+  const [wantCal, setWantCal] = useState(false);
   useEffect(() => {
-    if (!landing) return;
-    const onBlur = () => {
-      const a = document.activeElement;
-      if (!bookedRef.current && a && a.tagName === 'IFRAME' && a.closest('#' + ZOHO_PARENT_ID)) {
-        bookedRef.current = true;
-        metaTrack('Schedule', { content_name: 'istoselida-calendar' });
-      }
-    };
-    window.addEventListener('blur', onBlur);
-    return () => window.removeEventListener('blur', onBlur);
-  }, [landing]);
-
-  // Calendar injection.
-  //
-  // NOTE: Zoho's own snippet wraps the init in `window.onload = ...`. That is fine on a
-  // plain HTML page but silently does nothing here — this is a client component, so by
-  // the time it mounts the window load event has usually already fired and the handler
-  // never runs, leaving an empty box. We hook the script's own load event instead, and
-  // handle the case where the script is already in the DOM from a previous mount.
-  // The calendar is injected when the contact section is about 900px from the screen —
-  // on a first paint nobody can see it yet, so the page no longer waits for Zoho.
-  const [wantZoho, setWantZoho] = useState(false);
-  useEffect(() => {
-    if (wantZoho) return;
-    const el = document.getElementById(ZOHO_PARENT_ID);
-    if (!el || !('IntersectionObserver' in window)) { setWantZoho(true); return; }
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setWantZoho(true); io.disconnect(); } }, { rootMargin: '900px 0px' });
+    if (wantCal) return;
+    const el = document.getElementById(CAL_ID);
+    if (!el || !('IntersectionObserver' in window)) { setWantCal(true); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setWantCal(true); io.disconnect(); } }, { rootMargin: '900px 0px' });
     io.observe(el);
     return () => io.disconnect();
-  }, [wantZoho]);
+  }, [wantCal]);
 
+  const sendPrefill = () => {
+    let d = null;
+    try { d = JSON.parse(sessionStorage.getItem(PREFILL_KEY) || 'null'); } catch {}
+    const w = calRef.current && calRef.current.contentWindow;
+    if (d && w) { try { w.postMessage({ advon: 'rv', type: 'prefill', data: d }, window.location.origin); } catch {} }
+  };
   useEffect(() => {
-    if (!wantZoho || !bkEmail) return;
-    let cancelled = false;
-
-    const render = () => {
-      if (cancelled) return;
-      const parent = document.getElementById(ZOHO_PARENT_ID);
-      if (!parent || !window.Bookings) return;
-      parent.innerHTML = ''; // drop any iframe from a previous render
-      window.Bookings.inlineEmbed({
-        url: ZOHO_BOOKING_URL,
-        parent: `#${ZOHO_PARENT_ID}`,
-        height: '600px',
-      });
+    const onMsg = (e) => {
+      if (e.origin !== window.location.origin || !e.data || e.data.advon !== 'rv') return;
+      if (calRef.current && e.source !== calRef.current.contentWindow) return;
+      const m = e.data;
+      if (m.type === 'h' && m.h > 0) setCalH(Math.max(560, Math.min(2400, Math.ceil(m.h))));
+      else if (m.type === 'ready') sendPrefill();
+      else if (m.type === 'see' && calRef.current) {
+        // the booking asks to bring a part of it into view (after picking a day / a time): scroll the page, up or down only when needed
+        const top = calRef.current.getBoundingClientRect().top + (+m.y || 0);
+        const hd = document.querySelector('header'); const hb = hd ? hd.getBoundingClientRect().bottom : 0;
+        const head = Math.max(80, hb) + 20; // never under the site's fixed menu bar
+        const want = m.mid ? top - (window.innerHeight - (+m.h || 0)) / 2 : top - head;
+        if (top < head || top + Math.min(+m.h || 0, 200) > window.innerHeight * 0.85) window.scrollBy({ top: want, behavior: 'smooth' });
+      }
+      else if (m.type === 'booked') {
+        const cn = landing ? 'istoselida-calendar' : 'booking';
+        if (m.evS) metaTrack('Schedule', { content_name: cn }, { eventID: m.evS });
+        if (m.evL) metaTrack('Lead', { content_name: cn }, { eventID: m.evL });
+      }
     };
-
-    let script = document.getElementById(ZOHO_SCRIPT_ID);
-
-    if (window.Bookings) {
-      render();
-    } else if (script) {
-      script.addEventListener('load', render);
-    } else {
-      script = document.createElement('script');
-      script.id = ZOHO_SCRIPT_ID;
-      script.src = ZOHO_EMBED_SCRIPT;
-      script.async = true;
-      script.addEventListener('load', render);
-      document.body.appendChild(script);
-    }
-
-    return () => {
-      cancelled = true;
-      if (script) script.removeEventListener('load', render);
-      const parent = document.getElementById(ZOHO_PARENT_ID);
-      if (parent) parent.innerHTML = '';
-    };
-  }, [lang, wantZoho, bkEmail]); // re-render the widget if the language changes
+    window.addEventListener('message', onMsg);
+    return () => window.removeEventListener('message', onMsg);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [landing]);
+  const keepPrefill = (d) => {
+    try { sessionStorage.setItem(PREFILL_KEY, JSON.stringify({ ...d, ts: Date.now() })); } catch {}
+    setWantCal(true);
+    setTimeout(sendPrefill, 50);
+  };
 
   const handleLandingSubmit = async (e) => {
     e.preventDefault();
@@ -169,9 +125,8 @@ export default function Contact() {
       setStatus('');
       metaTrack('Lead', { content_name: 'istoselida', content_category: profession }, { eventID: eventId });
       form.reset();
-      // step 2: the calendar opens at once — they just gave us their details, so no e-mail code
-      setWantZoho(true);
-      setBkEmail(email || 'lead');
+      // step 2: the booking next to the form already holds their details — they only pick a time
+      keepPrefill({ name, phone, email, job: profession });
       setTimeout(() => { const el = document.getElementById('lead-step2'); if (el) { try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch {} } }, 120);
     } else if (reason === 'invalid_phone') {
       setStatus('Ελέγξτε το τηλέφωνο — χρειαζόμαστε 10 ψηφία, π.χ. 69X XXX XXXX.');
@@ -201,9 +156,8 @@ export default function Contact() {
         setSent(true);
         metaTrack('Lead', { content_name: 'contact-form' });
         form.reset();
-        // step 2: the calendar opens at once — they just gave us their details, so no e-mail code
-        setWantZoho(true);
-        setBkEmail(String(fd.get('email') || '').trim() || 'lead');
+        // step 2: the booking next to the form already holds their details — they only pick a time
+        keepPrefill({ name: String(fd.get('name') || '').trim(), phone: String(fd.get('phone') || '').trim(), email: String(fd.get('email') || '').trim() });
         setTimeout(() => { const s2 = document.getElementById('lead-step2'); if (s2) { try { s2.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch {} } }, 120);
       } else {
         let reason = ''; try { reason = (await response.json()).error || ''; } catch {}
@@ -217,11 +171,11 @@ export default function Contact() {
   // «Βήμα 2 από 2» texts (10 Nov 2026) — the ads page is Greek only, the main site follows the language switch
   const S2 = lang === 'en' && !landing ? {
     got: 'We received your details.', h1: 'Step 2 of 2:', h2: 'pick a time', h3: 'for the free call', sub: 'No commitment and no upfront payment.', next: 'What happens next',
-    steps: ['Pick a day and time in the calendar. You get an email right away with the Google Meet link, and a reminder 1 hour before.', 'You talk with Angelos for 15 minutes: what you do, what the site should show, what material we need.', 'If we go ahead, you see the first draft of your website within 5–10 days.'],
+    steps: ['Pick a day and time in the calendar. Your details are already filled in. You get a confirmation email right away and a reminder 1 hour before.', 'You talk with Angelos for 10–15 minutes, by phone or on Google Meet: what you do, what the site should show, what material we need.', 'If we go ahead, you see the first draft of your website within 1–5 days.'],
     below: 'The calendar is right below ↓', later: "Not a good time right now? You don't need to do anything — we will call you within 24 hours.",
   } : {
     got: 'Λάβαμε τα στοιχεία σας.', h1: 'Βήμα 2 από 2:', h2: 'διαλέξτε ώρα', h3: 'για τη δωρεάν κλήση', sub: 'Χωρίς δέσμευση και χωρίς προκαταβολή.', next: 'Τι γίνεται μετά',
-    steps: ['Διαλέγετε μέρα και ώρα στο ημερολόγιο. Σας έρχεται αμέσως email με το link του Google Meet και υπενθύμιση 1 ώρα πριν.', 'Μιλάτε 15 λεπτά με τον Άγγελο: τι κάνετε, τι θέλετε να δείχνει η σελίδα, τι υλικό χρειαζόμαστε.', 'Αν προχωρήσουμε, σε 5–10 ημέρες βλέπετε το πρώτο σχέδιο της ιστοσελίδας σας.'],
+    steps: ['Διαλέγετε μέρα και ώρα στο ημερολόγιο. Τα στοιχεία σας είναι ήδη συμπληρωμένα. Σας έρχεται αμέσως email επιβεβαίωσης και υπενθύμιση 1 ώρα πριν.', 'Μιλάτε 10–15 λεπτά με τον Άγγελο, τηλεφωνικά ή στο Google Meet: τι κάνετε, τι θέλετε να δείχνει η σελίδα, τι υλικό χρειαζόμαστε.', 'Αν προχωρήσουμε, σε 1–5 ημέρες βλέπετε το πρώτο σχέδιο της ιστοσελίδας σας.'],
     below: 'Το ημερολόγιο είναι ακριβώς από κάτω ↓', later: 'Δεν σας βολεύει τώρα; Δεν χρειάζεται να κάνετε τίποτα — θα σας καλέσουμε εμείς εντός 24 ωρών.',
   };
 
@@ -368,7 +322,7 @@ export default function Contact() {
           </div>
           </ScrollReveal>
 
-          {/* Zoho Bookings Calendar */}
+          {/* Booking (our own /rantevou page) */}
           <ScrollReveal direction="right" delay={100} className="h-full w-full">
           <div className={`glass-panel contact-card p-8 md:p-10 rounded-3xl text-left flex flex-col h-full overflow-hidden ${sent ? 'ring-2 ring-electric-cyan/60' : ''}`}>
              <div className="flex items-center gap-3 mb-4">
@@ -378,19 +332,20 @@ export default function Contact() {
                <h3 className="text-2xl md:text-3xl font-black text-white font-display">{sent ? (lang === 'en' && !landing ? 'Pick a day and time' : 'Διαλέξτε μέρα και ώρα') : landing ? 'Κλείστε ραντεβού μόνοι σας' : lang === 'el' ? 'Κλείστε Ραντεβού' : 'Book a Call'}</h3>
              </div>
              <p className="text-gray-400 mb-8">{lang === 'el' ? 'Επιλέξτε την ημέρα και ώρα που σας εξυπηρετεί για μια δωρεάν 15λεπτη συμβουλευτική κλήση.' : 'Choose the day and time that suits you for a free 15-minute consultation call.'}</p>
-             {/* Same reasoning as the old Trafft box: keep a FIXED minimum height rather than
-                 letting the widget grow to its full content height. Inside this clipped
-                 panel a tall iframe leaves nothing scrollable, so wheel/touch over the
-                 calendar does nothing. At a fixed height the iframe scrolls its own
-                 content natively. Zoho sets inline width/height on the iframe it injects,
-                 so the [&_iframe] rules force it to fill the box on every breakpoint. */}
-             <div className="w-full flex-grow rounded-xl bg-white relative min-h-[600px] overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
-                <div
-                  id={ZOHO_PARENT_ID}
-                  className="absolute inset-0 w-full h-full [&_iframe]:!w-full [&_iframe]:!h-full [&_iframe]:!border-0"
-                >
-                </div>
-                {!bkEmail && <BookingGate lang={lang} onVerified={onBkVerified} trackFields={landing ? calTrack : undefined} />}
+             {/* Our booking page in «embed» mode. It reports its own height, so the box always fits it:
+                 no inner scrollbar, nothing cut off, on every screen. */}
+             <div id={CAL_ID} className="w-full flex-grow rounded-xl bg-white relative overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)]" style={{ minHeight: calH }}>
+                {wantCal && (
+                  <iframe
+                    key={lang === 'en' && !landing ? 'en' : 'el'}
+                    ref={calRef}
+                    src={`/rantevou/?embed=1&fit=1${lang === 'en' && !landing ? '&lang=en' : ''}`}
+                    title={lang === 'en' && !landing ? 'Book a free intro call' : 'Κλείστε δωρεάν κλήση γνωριμίας'}
+                    onLoad={sendPrefill}
+                    className="block w-full border-0"
+                    style={{ height: calH }}
+                  />
+                )}
              </div>
           </div>
           </ScrollReveal>

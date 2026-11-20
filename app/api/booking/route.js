@@ -11,6 +11,7 @@
 import { ghConf, ghReady, commit, readAtHead } from '@/lib/ghdata';
 import { checkStamp, makeStamp, phoneVerdict, contentVerdict, emailShapeOk, tooMany, clientIp } from '@/lib/antispam';
 import { mailConf, sendTelegram, tgEsc } from '@/lib/chatcore';
+import { sendMetaEvent } from '@/lib/metacapi';
 import {
   BOOKING, gcalReady, freeSlots, isFree, createEvent, moveEvent, deleteEvent, newId, newRef, manageToken, readToken,
   publicBooking, sendBookingMail, sendOwnerMail, bookingStats, dayLabel, endTime, athensToDate, todayAthens,
@@ -146,6 +147,13 @@ export async function POST(req) {
     if (mail.ok) await saveBooking(conf, id, (cur) => cur && { ...cur, sent: { ...(cur.sent || {}), c: new Date().toISOString() } }, `Booking ${bk.ref}: confirmation sent`).catch(() => {});
     await sendOwnerMail('new', bk, { stats: bookingStats([...items.filter((x) => x.id !== id), bk]) });
     await tellAngelo(`📅 <b>NEW BOOKING</b> · ${tgEsc(dayLabel(bk.day))} ${bk.time}–${endTime(bk.time)}\n${who(bk)}${mail.ok ? '' : '\n⚠️ confirmation e-mail not sent (' + tgEsc(mail.why) + ')'}`, bk);
+    // Meta (server side, click id only — never name/phone/e-mail): «Schedule» for every booking from an ad click,
+    // plus «Lead» when nobody filled the form before (the booking IS the lead). Same event ids as the pixel.
+    const mb = { fbclid: body.fbclid, fbclid_ts: body.fbclid_ts, page: body.page || '/rantevou' };
+    await Promise.all([
+      body.ev_schedule ? sendMetaEvent(req, { ...mb, event_id: body.ev_schedule }, 'booking', 'Schedule').catch(() => false) : null,
+      body.ev_lead && f.src !== 'form' ? sendMetaEvent(req, { ...mb, event_id: body.ev_lead }, 'booking', 'Lead').catch(() => false) : null,
+    ]);
     return json({ ok: true, booking: publicBooking(bk), manage: manageToken(id), mail: mail.ok });
   }
 

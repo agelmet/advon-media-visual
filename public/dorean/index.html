@@ -635,34 +635,12 @@ h1 .grad{background:linear-gradient(120deg,#8BE3FF 0%,var(--cyan) 28%,#7FA8FF 50
     <header>Διαλέξτε μέρα και ώρα — η κλήση είναι δωρεάν <button class="x" id="mx" aria-label="Κλείσιμο">✕</button></header>
     <div class="ld" id="ld">Φορτώνει το ημερολόγιο…</div>
     <iframe id="bk" title="Κράτηση δωρεάν κλήσης" loading="lazy"></iframe>
-    <div class="gate" id="gate" hidden>
-      <div class="gi">
-        <div class="ic" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/></svg></div>
-        <h4>Δείτε τις διαθέσιμες ώρες</h4>
-        <form id="gStep1" novalidate>
-          <p>Γράψτε το email σας και θα σας στείλουμε έναν 6ψήφιο κωδικό — έτσι ξέρουμε ότι το ραντεβού το κλείνετε εσείς.</p>
-          <label for="gEmail" class="sr-only" style="position:absolute;left:-9999px">Το email σας</label>
-          <input id="gEmail" type="email" inputmode="email" autocomplete="email" placeholder="Το email σας">
-          <button class="btn btn-primary" type="submit" id="gSend">Συνέχεια</button>
-        </form>
-        <form id="gStep2" novalidate hidden>
-          <p>Στείλαμε τον κωδικό στο <b id="gTo"></b>.</p>
-          <p class="sm">Δεν τον βλέπετε; Κοιτάξτε και στα «Ανεπιθύμητα» ή στις «Προωθήσεις».</p>
-          <label for="gCode" style="position:absolute;left:-9999px">Κωδικός 6 ψηφίων</label>
-          <input id="gCode" class="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" placeholder="••••••">
-          <button class="btn btn-primary" type="submit" id="gCheck">Επιβεβαίωση</button>
-          <div class="row"><button type="button" id="gChange">Αλλαγή email</button><button type="button" class="again" id="gAgain">Ξαναστείλτε τον κωδικό</button></div>
-        </form>
-        <p class="gerr" id="gErr" role="alert"></p>
-        <p class="fine">Το email σας χρησιμοποιείται μόνο για το ραντεβού σας.</p>
-      </div>
-    </div>
   </div>
 </div>
 <script>
 /* ---------- settings ---------- */
 const META_PIXEL_ID = '1294424308606812';                      /* put the Meta Pixel ID here when the ads go live */
-const BOOK_URL = 'https://advonmedia.zohobookings.eu/portal-embed#/264312000000038046';
+const BOOK_URL = '/rantevou/?embed=1';        /* our own booking page (20 Nov 2026 — replaces Zoho) */
 const LEAD_URL = '/api/lead';                  /* the CRM lead inbox → Leads tab, «From the ads» */
 const WORK = [
  {"key":"allsmiles","name":"Άννα Στριγκόνη","niche":"Οδοντίατρος · All Smiles","url":"https://www.allsmiles.gr"},
@@ -928,66 +906,33 @@ if (META_PIXEL_ID) {
   fbq('init', META_PIXEL_ID); fbq('track', 'PageView');
 }
 
-/* ---------- booking modal (Zoho loads only when opened, and only after the e-mail code — 20 Oct 2026) ---------- */
+/* ---------- booking modal: our own /rantevou page in «embed» mode (20 Nov 2026 — replaces Zoho + the e-mail code) ----------
+   After the form, the details go to it through sessionStorage + postMessage (never in the URL), so the visitor only
+   picks a day and a time. It tells us when a booking is made: Meta «Schedule» (+ «Lead» if no form came first),
+   with the same event ids it sends to the server. */
 (function(){
+  try { const id = new URLSearchParams(location.search).get('fbclid'); if (id && /^[A-Za-z0-9_-]{10,500}$/.test(id)) sessionStorage.setItem('advon_fbclid', JSON.stringify({ id, ts: Date.now() })); } catch(e){}
   const m = document.getElementById('modal'), fr = document.getElementById('bk'), ld = document.getElementById('ld');
-  const gate = document.getElementById('gate'), s1 = document.getElementById('gStep1'), s2 = document.getElementById('gStep2');
-  const gEmail = document.getElementById('gEmail'), gCode = document.getElementById('gCode'), gErr = document.getElementById('gErr');
-  const gSend = document.getElementById('gSend'), gCheck = document.getElementById('gCheck'), gAgain = document.getElementById('gAgain');
-  const LS = 'advon-bk';
-  const readLS = () => { try { return JSON.parse(localStorage.getItem(LS) || 'null'); } catch(e){ return null; } };
-  const writeLS = (v) => { try { localStorage.setItem(LS, JSON.stringify(v)); } catch(e){} };
-  const call = async (body) => { const r = await fetch('/api/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); let j = {}; try { j = await r.json(); } catch(e){} return j; };
-  let loaded = false, ok = false, token = '', wait = 0, timer = 0, busy = false;
-
-  const err = (t) => { gErr.textContent = t || ''; gErr.style.display = t ? 'block' : 'none'; };
+  let loaded = false;
+  function sendPrefill(){
+    let d = null; try { d = JSON.parse(sessionStorage.getItem('advon_prefill') || 'null'); } catch(e){}
+    if (d && loaded && fr.contentWindow) { try { fr.contentWindow.postMessage({ advon: 'rv', type: 'prefill', data: d }, location.origin); } catch(e){} }
+  }
+  window.__advonPrefill = function(d){ try { sessionStorage.setItem('advon_prefill', JSON.stringify(Object.assign({}, d, { ts: Date.now() }))); } catch(e){} sendPrefill(); };
   function loadCal(){
-    gate.hidden = true; ok = true;
-    if (!loaded) { ld.style.display = ''; fr.src = BOOK_URL; loaded = true; fr.addEventListener('load', () => { ld.style.display = 'none'; }, { once: true }); }
+    if (loaded) return;
+    ld.style.display = ''; fr.src = BOOK_URL; loaded = true;
+    fr.addEventListener('load', () => { ld.style.display = 'none'; sendPrefill(); }, { once: true });
   }
-  function showStep(n){ s1.hidden = n !== 1; s2.hidden = n !== 2; err(''); setTimeout(() => (n === 1 ? gEmail : gCode).focus(), 60); }
-  function tick(){ clearInterval(timer); gAgain.disabled = wait > 0; gAgain.textContent = wait > 0 ? 'Ξαναστείλτε σε ' + wait + '″' : 'Ξαναστείλτε τον κωδικό';
-    if (wait > 0) timer = setInterval(() => { wait--; gAgain.disabled = wait > 0; gAgain.textContent = wait > 0 ? 'Ξαναστείλτε σε ' + wait + '″' : 'Ξαναστείλτε τον κωδικό'; if (wait <= 0) clearInterval(timer); }, 1000); }
-
-  async function send(){
-    const v = gEmail.value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return err('Ελέγξτε το email — χρειαζόμαστε μια έγκυρη διεύθυνση.');
-    if (busy) return; busy = true; gSend.disabled = true; gSend.textContent = 'Αποστολή…'; err('');
-    try {
-      const r = await call({ action: 'send', email: v, lang: 'el' });
-      if (r.ok) { token = r.token; gCode.value = ''; document.getElementById('gTo').textContent = v; showStep(2); wait = 30; tick(); }
-      else err(r.error === 'bad_email' ? 'Ελέγξτε το email — χρειαζόμαστε μια έγκυρη διεύθυνση.' : r.error === 'too_many' ? 'Πολλές προσπάθειες. Δοκιμάστε ξανά σε λίγα λεπτά.' : 'Δεν μπορέσαμε να στείλουμε τον κωδικό. Δοκιμάστε ξανά ή γράψτε μας στο angelos@advonmedia.com.');
-    } catch(e) { err('Δεν μπορέσαμε να στείλουμε τον κωδικό. Δοκιμάστε ξανά σε λίγο.'); }
-    busy = false; gSend.disabled = false; gSend.textContent = 'Συνέχεια';
-  }
-  async function check(){
-    const c = gCode.value.replace(/\D/g, '');
-    if (c.length !== 6 || busy) return; busy = true; gCheck.disabled = true; gCheck.textContent = 'Έλεγχος…'; err('');
-    try {
-      const r = await call({ action: 'check', token, code: c });
-      if (r.ok) { writeLS({ email: r.email, verified: r.verified }); loadCal(); }
-      else { err(r.error === 'expired' ? 'Ο κωδικός έληξε. Πατήστε «Ξαναστείλτε τον κωδικό».' : r.error === 'too_many' ? 'Πολλές προσπάθειες. Δοκιμάστε ξανά σε λίγα λεπτά.' : 'Ο κωδικός δεν είναι σωστός. Δοκιμάστε ξανά.'); gCode.value = ''; gCode.focus(); }
-    } catch(e) { err('Κάτι πήγε στραβά. Δοκιμάστε ξανά σε λίγο.'); }
-    busy = false; gCheck.disabled = false; gCheck.textContent = 'Επιβεβαίωση';
-  }
-  s1.addEventListener('submit', (e) => { e.preventDefault(); send(); });
-  s2.addEventListener('submit', (e) => { e.preventDefault(); check(); });
-  gCode.addEventListener('input', () => { gCode.value = gCode.value.replace(/\D/g, '').slice(0, 6); if (gCode.value.length === 6) check(); });
-  gAgain.addEventListener('click', send);
-  document.getElementById('gChange').addEventListener('click', () => showStep(1));
-
-  async function open(){
-    m.classList.add('open'); document.body.style.overflow = 'hidden';
-    track('Schedule', { content_name: 'dorean-call' });
-    if (ok || window.__advonLead) return loadCal();
-    const saved = readLS();
-    if (saved && saved.verified) {
-      ld.style.display = '';
-      try { const r = await call({ action: 'known', verified: saved.verified }); if (r.ok) return loadCal(); } catch(e){}
-      gEmail.value = saved.email || '';
+  addEventListener('message', (e) => {
+    if (e.origin !== location.origin || !e.data || e.data.advon !== 'rv' || e.source !== fr.contentWindow) return;
+    const x = e.data;
+    if (x.type === 'ready') sendPrefill();
+    else if (x.type === 'booked') {
+      try { if (window.fbq) { if (x.evS) fbq('track', 'Schedule', { content_name: 'dorean-call' }, { eventID: x.evS }); if (x.evL) fbq('track', 'Lead', { content_name: 'dorean-call' }, { eventID: x.evL }); } } catch(err){}
     }
-    ld.style.display = 'none'; gate.hidden = false; showStep(1);
-  }
+  });
+  function open(){ m.classList.add('open'); document.body.style.overflow = 'hidden'; loadCal(); }
   function close(){ m.classList.remove('open'); document.body.style.overflow = ''; }
   document.querySelectorAll('[data-book]').forEach(b => b.addEventListener('click', open));
   document.getElementById('mx').addEventListener('click', close);
@@ -1049,7 +994,7 @@ const UTM = (function(){
       document.getElementById('formWrap').style.display = 'none';
       document.getElementById('doneName').textContent = name.split(' ')[0];
       document.getElementById('done').style.display = 'block';
-      window.__advonLead = true;   /* they just gave us their details — the calendar opens without the e-mail code */
+      if (window.__advonPrefill) window.__advonPrefill({ name, phone, email, job: profession });   /* the booking already holds their details */
       setTimeout(() => { const b = document.querySelector('#done [data-book]'); if (b) b.click(); }, 700);
       try { window.scrollTo({ top: document.getElementById('forma').offsetTop - 40, behavior: 'smooth' }); } catch(e){}
       return;
