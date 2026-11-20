@@ -7,7 +7,8 @@
 // CRM Home card («Client reminders», /api/reminders); a reminder disappears when he ticks it done there.
 // Bookkeeping in the data repo: reminders/state.json {done:{uid:iso}, sent:{uid:'YYYY-MM-DD'}} — an open reminder
 // is repeated every morning until it is ticked, but never twice on the same day.
-// 20 Nov 2026: Angelo asked to stop the reminder E-MAIL — only the Telegram message is sent now.
+// 20 Nov 2026: Angelo asked to stop the reminder E-MAIL, then the Telegram message too — nothing is sent;
+// the reminders stay on the CRM Home card «Client reminders».
 // Manual run: GET https://advonmedia.com/.netlify/functions/reminders?key=<CHAT_AGENT_KEY or first 12 chars of CRM_AUTH_HASH>[&dry=1]
 
 import { ghConf, ghReady, commit as ghCommit, readAtHead } from '../../lib/ghdata.js';
@@ -28,7 +29,8 @@ export default async (req) => {
   const dry = url.searchParams.get('dry') === '1';
   const conf = ghConf();
   const mc = mailConf();
-  const canTg = !!(mc.tgToken && mc.tgChat), canMail = !!mc.resendKey && process.env.REMINDERS_EMAIL === '1'; // e-mail OFF (Angelo, 20 Nov 2026) — Telegram only; Netlify env REMINDERS_EMAIL=1 turns it back on
+  const canTg = !!(mc.tgToken && mc.tgChat) && process.env.REMINDERS_TELEGRAM === '1', // Telegram OFF too (Angelo, 20 Nov 2026) — env REMINDERS_TELEGRAM=1 turns it back on
+        canMail = !!mc.resendKey && process.env.REMINDERS_EMAIL === '1'; // e-mail OFF (Angelo, 20 Nov 2026) — Telegram only; Netlify env REMINDERS_EMAIL=1 turns it back on
   const report = { at: new Date().toISOString(), telegram: canTg, email: canMail, due: 0, sent: '', skipped: '' };
   let state = { done: {}, sent: {} };
   try { const r = ghReady(conf) ? await readAtHead(conf, STATE_PATH) : null; if (r && r.text) { const s = JSON.parse(r.text); if (s && typeof s === 'object') state = { done: s.done || {}, sent: s.sent || {} }; } } catch (e) { report.stateError = e.message; }
