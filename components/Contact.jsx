@@ -24,7 +24,7 @@ export default function Contact() {
   const [sent, setSent] = useState(false);
   // After the form the same card turns into «Βήμα 2 από 2» and the booking next to it already holds their details.
   const calRef = useRef(null);
-  const [calH, setCalH] = useState(640);
+  const [calH, setCalH] = useState(560);
   // Both forms go ONLY to our own /api/lead (CRM lead inbox + Telegram + e-mail) — no Formspree (10 Nov 2026:
   // its 50-a-month limit and its spam folder were hiding real leads). Ads landing page (/istoselida): shorter
   // form with «ειδικότητα», the ad's UTM, Meta Lead on success.
@@ -65,7 +65,7 @@ export default function Contact() {
       if (e.origin !== window.location.origin || !e.data || e.data.advon !== 'rv') return;
       if (calRef.current && e.source !== calRef.current.contentWindow) return;
       const m = e.data;
-      if (m.type === 'h' && m.h > 0) setCalH(Math.max(560, Math.min(2400, Math.ceil(m.h))));
+      if (m.type === 'h' && m.h > 0) setCalH(Math.max(420, Math.min(2400, Math.ceil(m.h))));
       else if (m.type === 'ready') sendPrefill();
       else if (m.type === 'see' && calRef.current) {
         // the booking asks to bring a part of it into view (after picking a day / a time): scroll the page, up or down only when needed
@@ -172,11 +172,11 @@ export default function Contact() {
   const S2 = lang === 'en' && !landing ? {
     got: 'We received your details.', h1: 'Step 2 of 2:', h2: 'pick a time', h3: 'for the free call', sub: 'No commitment and no upfront payment.', next: 'What happens next',
     steps: ['Pick a day and time in the calendar. Your details are already filled in. You get a confirmation email right away and a reminder 1 hour before.', 'You talk with Angelos for 10–15 minutes, by phone or on Google Meet: what you do, what the site should show, what material we need.', 'If we go ahead, you see the first draft of your website within 1–5 days.'],
-    below: 'The calendar is right below ↓', later: "Not a good time right now? You don't need to do anything — we will call you within 24 hours.",
+    below: 'The calendar is right below ↓', laterH: 'Not a good time to book right now?', later: "You don't need to do anything. We will call you within 24 hours on a working day. If you sent your details at the weekend or on a public holiday, we will call you on the next working day.",
   } : {
     got: 'Λάβαμε τα στοιχεία σας.', h1: 'Βήμα 2 από 2:', h2: 'διαλέξτε ώρα', h3: 'για τη δωρεάν κλήση', sub: 'Χωρίς δέσμευση και χωρίς προκαταβολή.', next: 'Τι γίνεται μετά',
     steps: ['Διαλέγετε μέρα και ώρα στο ημερολόγιο. Τα στοιχεία σας είναι ήδη συμπληρωμένα. Σας έρχεται αμέσως email επιβεβαίωσης και υπενθύμιση 1 ώρα πριν.', 'Μιλάτε 10–15 λεπτά με τον Άγγελο, τηλεφωνικά ή στο Google Meet: τι κάνετε, τι θέλετε να δείχνει η σελίδα, τι υλικό χρειαζόμαστε.', 'Αν προχωρήσουμε, σε 1–5 ημέρες βλέπετε το πρώτο σχέδιο της ιστοσελίδας σας.'],
-    below: 'Το ημερολόγιο είναι ακριβώς από κάτω ↓', later: 'Δεν σας βολεύει τώρα; Δεν χρειάζεται να κάνετε τίποτα — θα σας καλέσουμε εμείς εντός 24 ωρών.',
+    below: 'Το ημερολόγιο είναι ακριβώς από κάτω ↓', laterH: 'Δεν σας βολεύει να κλείσετε ώρα τώρα;', later: 'Δεν χρειάζεται να κάνετε τίποτα. Θα σας καλέσουμε εμείς μέσα σε 24 ώρες, σε εργάσιμη ημέρα. Αν μας στείλατε τα στοιχεία σας Σαββατοκύριακο ή αργία, θα σας καλέσουμε την αμέσως επόμενη εργάσιμη.',
   };
 
   const tiles = [
@@ -257,7 +257,15 @@ export default function Contact() {
                   </ol>
                 </div>
                 <p className="lg:hidden text-center text-electric-cyan font-bold text-sm mb-4">{S2.below}</p>
-                <p className="mt-auto text-sm text-gray-400 leading-relaxed">{S2.later}</p>
+                <div className="flex gap-4 rounded-2xl border border-[#0EC673]/35 bg-[#0EC673]/[0.08] p-5">
+                  <span className="w-10 h-10 rounded-xl bg-[#0EC673]/15 text-[#3EE39A] flex items-center justify-center shrink-0" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  </span>
+                  <div>
+                    <p className="font-black text-white text-base leading-snug mb-1.5">{S2.laterH}</p>
+                    <p className="text-sm text-gray-200 leading-relaxed">{S2.later}</p>
+                  </div>
+                </div>
               </div>
             ) : (<>
             <div className="flex items-center gap-3 mb-4">
