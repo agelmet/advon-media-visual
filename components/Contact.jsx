@@ -148,16 +148,16 @@ export default function Contact() {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: String(fd.get('name') || '').trim(), phone: String(fd.get('phone') || '').trim(), email: String(fd.get('email') || '').trim(),
-          message: String(fd.get('message') || '').trim(), stamp: stampRef.current, website: '', source: 'site', page: window.location.pathname, lang,
+          profession: String(fd.get('profession') || '').trim(), message: String(fd.get('message') || '').trim(), stamp: stampRef.current, website: '', source: 'site', page: window.location.pathname, lang,
         }),
       });
       if (response.ok) {
         setStatus('');
         setSent(true);
-        metaTrack('Lead', { content_name: 'contact-form' });
+        metaTrack('Lead', { content_name: 'contact-form', content_category: String(fd.get('profession') || '').trim() });
         form.reset();
         // step 2: the booking next to the form already holds their details — they only pick a time
-        keepPrefill({ name: String(fd.get('name') || '').trim(), phone: String(fd.get('phone') || '').trim(), email: String(fd.get('email') || '').trim() });
+        keepPrefill({ name: String(fd.get('name') || '').trim(), phone: String(fd.get('phone') || '').trim(), email: String(fd.get('email') || '').trim(), job: String(fd.get('profession') || '').trim() });
         setTimeout(() => { const s2 = document.getElementById('lead-step2'); if (s2) { try { s2.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch {} } }, 120);
       } else {
         let reason = ''; try { reason = (await response.json()).error || ''; } catch {}
@@ -171,11 +171,11 @@ export default function Contact() {
   // «Βήμα 2 από 2» texts (10 Nov 2026) — the ads page is Greek only, the main site follows the language switch
   const S2 = lang === 'en' && !landing ? {
     got: 'We received your details.', h1: 'Step 2 of 2:', h2: 'pick a time', h3: 'for the free call', sub: 'No commitment and no upfront payment.', next: 'What happens next',
-    steps: ['Pick a day and time in the calendar. Your details are already filled in. You get a confirmation email right away and a reminder 1 hour before.', 'You talk with Angelos for 10–15 minutes, by phone or on Google Meet: what you do, what the site should show, what material we need.', 'If we go ahead, you see the first draft of your website within 1–5 days.'],
+    steps: ['Pick a day and time in the calendar. Your details are already filled in. You get a confirmation email right away and a reminder 1 hour before.', 'You talk with Angelos for 10–15 minutes, by phone or on Google Meet: what you do, what the site should show, what material we need.', 'If we go ahead, you see the first draft of your website within 2–7 days.'],
     below: 'The calendar is right below ↓', laterH: 'Not a good time to book right now?', later: "You don't need to do anything. We will call you within 24 hours on a working day. If you sent your details at the weekend or on a public holiday, we will call you on the next working day.",
   } : {
     got: 'Λάβαμε τα στοιχεία σας.', h1: 'Βήμα 2 από 2:', h2: 'διαλέξτε ώρα', h3: 'για τη δωρεάν κλήση', sub: 'Χωρίς δέσμευση και χωρίς προκαταβολή.', next: 'Τι γίνεται μετά',
-    steps: ['Διαλέγετε μέρα και ώρα στο ημερολόγιο. Τα στοιχεία σας είναι ήδη συμπληρωμένα. Σας έρχεται αμέσως email επιβεβαίωσης και υπενθύμιση 1 ώρα πριν.', 'Μιλάτε 10–15 λεπτά με τον Άγγελο, τηλεφωνικά ή στο Google Meet: τι κάνετε, τι θέλετε να δείχνει η σελίδα, τι υλικό χρειαζόμαστε.', 'Αν προχωρήσουμε, σε 1–5 ημέρες βλέπετε το πρώτο σχέδιο της ιστοσελίδας σας.'],
+    steps: ['Διαλέγετε μέρα και ώρα στο ημερολόγιο. Τα στοιχεία σας είναι ήδη συμπληρωμένα. Σας έρχεται αμέσως email επιβεβαίωσης και υπενθύμιση 1 ώρα πριν.', 'Μιλάτε 10–15 λεπτά με τον Άγγελο, τηλεφωνικά ή στο Google Meet: τι κάνετε, τι θέλετε να δείχνει η σελίδα, τι υλικό χρειαζόμαστε.', 'Αν προχωρήσουμε, σε 2–7 ημέρες βλέπετε το πρώτο σχέδιο της ιστοσελίδας σας.'],
     below: 'Το ημερολόγιο είναι ακριβώς από κάτω ↓', laterH: 'Δεν σας βολεύει να κλείσετε ώρα τώρα;', later: 'Δεν χρειάζεται να κάνετε τίποτα. Θα σας καλέσουμε εμείς μέσα σε 24 ώρες, σε εργάσιμη ημέρα. Αν μας στείλατε τα στοιχεία σας Σαββατοκύριακο ή αργία, θα σας καλέσουμε την αμέσως επόμενη εργάσιμη.',
   };
 
@@ -272,40 +272,33 @@ export default function Contact() {
               <span className="w-10 h-10 rounded-xl bg-electric-cyan/10 border border-electric-cyan/20 text-electric-cyan flex items-center justify-center shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               </span>
-              <h3 className="text-2xl md:text-3xl font-black text-white font-display">{landing ? 'Σας καλούμε εμείς' : lang === 'el' ? 'Εκδήλωση Ενδιαφέροντος' : 'Express Interest'}</h3>
+              <h3 className="text-2xl md:text-3xl font-black text-white font-display">{(lang === 'en' && !landing) ? 'We call you' : 'Σας καλούμε εμείς'}</h3>
             </div>
-            <p className="text-gray-400 mb-8">{landing ? 'Αφήστε όνομα, τηλέφωνο και ειδικότητα — σας καλούμε την ίδια μέρα για να δούμε τι θέλετε στη σελίδα σας.' : lang === 'el' ? 'Συμπληρώστε τη φόρμα και θα επικοινωνήσουμε μαζί σας μέσω email ή τηλεφώνου εντός της ίδιας ημέρας.' : 'Fill out the form and we will contact you via email or phone within the same day.'}</p>
+            <p className="text-gray-400 mb-8">{(lang === 'en' && !landing) ? 'Leave your name, phone and specialty — we call you the same day to see what you want on your website.' : 'Αφήστε όνομα, τηλέφωνο και ειδικότητα — σας καλούμε την ίδια μέρα για να δούμε τι θέλετε στη σελίδα σας.'}</p>
             <form action="/api/lead" method="POST" onSubmit={landing ? handleLandingSubmit : handleSubmit} className="space-y-5 flex-grow flex flex-col">
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
-                  <label htmlFor="cf-name" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Όνομα / Επωνυμία' : 'Name / Company'}</label>
+                  <label htmlFor="cf-name" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{(lang === 'en' && !landing) ? 'Name / Company' : 'Όνομα / Επωνυμία'}</label>
                   <input id="cf-name" type="text" name="name" required autoComplete="name" className={inputCls} />
                 </div>
                 <div>
-                  <label htmlFor="cf-phone" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{lang === 'el' ? 'Τηλέφωνο' : 'Phone Number'}</label>
+                  <label htmlFor="cf-phone" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{(lang === 'en' && !landing) ? 'Phone' : 'Τηλέφωνο'}</label>
                   <input id="cf-phone" type="tel" name="phone" required autoComplete="tel" className={inputCls} />
                 </div>
               </div>
-              {landing ? (
-                <div className="grid sm:grid-cols-2 gap-5">
-                  <div>
-                    <label htmlFor="cf-email" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">Email</label>
-                    <input id="cf-email" type="email" name="email" required autoComplete="email" inputMode="email" className={inputCls} />
-                  </div>
-                  <div>
-                    <label htmlFor="cf-prof" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">Ειδικότητα</label>
-                    <input id="cf-prof" ref={profRef} type="text" name="profession" required placeholder="π.χ. Ψυχολόγος" autoComplete="organization-title" className={inputCls} />
-                  </div>
-                </div>
-              ) : (
+              <div className="grid sm:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="cf-email" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">Email</label>
-                  <input id="cf-email" type="email" name="email" required autoComplete="email" className={inputCls} />
+                  <input id="cf-email" type="email" name="email" required autoComplete="email" inputMode="email" className={inputCls} />
                 </div>
-              )}
+                <div>
+                  <label htmlFor="cf-prof" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{(lang === 'en' && !landing) ? 'Specialty' : 'Ειδικότητα'}</label>
+                  <input id="cf-prof" ref={profRef} type="text" name="profession" required placeholder={(lang === 'en' && !landing) ? 'e.g. Psychologist' : 'π.χ. Ψυχολόγος'} autoComplete="organization-title" className={inputCls} />
+                </div>
+              </div>
               <div className="flex-grow flex flex-col">
-                <label htmlFor="cf-message" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{landing ? 'Μήνυμα (προαιρετικό)' : lang === 'el' ? 'Μήνυμα / Υπηρεσία που σας ενδιαφέρει' : 'Message / Service of Interest'}</label>
-                <textarea id="cf-message" name="message" rows={landing ? 4 : 5} required={!landing} placeholder={landing ? 'π.χ. μια ιστοσελίδα που σας αρέσει, ή πότε να σας καλέσουμε' : undefined} className={`${inputCls} flex-grow ${landing ? 'min-h-[120px]' : 'min-h-[150px]'} resize-none`}></textarea>
+                <label htmlFor="cf-message" className="block text-xs font-bold text-electric-cyan mb-2 uppercase tracking-wider">{(lang === 'en' && !landing) ? 'Message (optional)' : 'Μήνυμα (προαιρετικό)'}</label>
+                <textarea id="cf-message" name="message" rows={4} placeholder={(lang === 'en' && !landing) ? 'e.g. a website you like, or when to call you' : 'π.χ. μια ιστοσελίδα που σας αρέσει, ή πότε να σας καλέσουμε'} className={`${inputCls} flex-grow min-h-[120px] resize-none`}></textarea>
               </div>
               <input type="text" name="_gotcha" tabIndex="-1" autoComplete="off" className="hidden" aria-hidden="true" />
               <div className="mt-auto pt-1">
@@ -337,7 +330,7 @@ export default function Contact() {
              <h3 className="sr-only">{lang === 'en' && !landing ? 'Book a free intro call' : 'Κλείστε δωρεάν κλήση γνωριμίας'}</h3>
              {/* Our booking page in «embed» mode. It reports its own height, so the box always fits it:
                  no inner scrollbar, nothing cut off, on every screen. */}
-             <div id={CAL_ID} className="w-full flex-grow rounded-[20px] bg-white relative overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)]" style={{ minHeight: calH }}>
+             <div id={CAL_ID} className="w-full flex-grow rounded-[20px] bg-[#0A0F16] relative overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)]" style={{ minHeight: calH }}>
                 {wantCal && (
                   <iframe
                     key={lang === 'en' && !landing ? 'en' : 'el'}
