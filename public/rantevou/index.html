@@ -231,6 +231,21 @@ form{display:grid;gap:16px;max-width:560px}
   .lead{display:block;font-size:14.5px}
   .trust{display:grid;margin-top:0;padding-top:14px}
 }
+
+.seg .sg{display:flex;flex-direction:column;gap:2px;line-height:1.25}
+.seg .sg small{font-size:12.5px;font-weight:500;color:var(--ink-3)}
+.seg label:has(input:checked) .sg small{color:var(--bl-2);opacity:.8}
+.note .ns{display:block;margin-top:4px;font-size:12px;color:var(--ink-3)}
+.av{width:36px;height:36px;font-size:14px}
+.host{gap:10px}.host small{font-size:11.5px}.host b{font-size:14px}
+.trust>span{flex-wrap:wrap;row-gap:6px}
+.trust .rvt b{margin-right:2px}
+@media (max-width:900px){
+  .lang button{min-height:38px;min-width:108px;padding:6px 12px;font-size:13.5px}
+  .lang .flag{width:20px;height:13px}
+  .top .lang{transition:transform .25s ease}
+  .top.stuck .lang{transform:scale(.84);transform-origin:top center;box-shadow:0 6px 18px rgba(14,22,33,.16)}
+}
 </style>
 </head>
 <body>
@@ -251,18 +266,18 @@ form{display:grid;gap:16px;max-width:560px}
       <a class="logo" href="https://advonmedia.com" aria-label="Advon Media"><img src="img/advon-logo.webp" width="235" height="125" alt="Advon Media"></a>
       <div class="host">
         <span class="av" aria-hidden="true">Α</span>
-        <div><small data-t="with">Με τον</small><b data-t="name">Άγγελο Μ.</b></div>
+        <div><small data-t="with">Με τον ιδρυτή της εταιρείας</small><b data-t="name">Άγγελο Μ.</b></div>
       </div>
       <h1 data-t="title">Δωρεάν κλήση γνωριμίας</h1>
       <ul class="meta">
         <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-t="dur">Περίπου 10–15 λεπτά, όποιον τρόπο κι αν διαλέξετε</span></li>
-        <li><svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.5l5-3v9l-5-3"/></svg><span data-t="how">Τηλέφωνο ή βιντεοκλήση με δική μας παρουσίαση</span></li>
+        <li><svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.5l5-3v9l-5-3"/></svg><span data-t="how">Τηλέφωνο ή βιντεοκλήση στο Google Meet</span></li>
         <li><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><span data-t="free">Χωρίς χρέωση και χωρίς δέσμευση</span></li>
       </ul>
       <p class="lead" data-t="lead">Γνωριζόμαστε, μας λέτε τι κάνετε και τι θα θέλατε. Σας εξηγούμε πώς δουλεύουμε και σε πόσες μέρες θα δείτε την πρώτη εικόνα της ιστοσελίδας σας.</p>
       <div class="trust">
         <span><b>250+</b><span data-t="sites">ιστοσελίδες online</span></span>
-        <span><span class="rv"><svg class="gg" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span class="stars" aria-hidden="true">★★★★★</span></span><b>135+</b><span data-t="revs">κριτικές στο Google</span></span>
+        <span><span class="rv"><svg class="gg" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span class="stars" aria-hidden="true">★★★★★</span></span><span class="rvt"><b>140+</b> <span data-t="revs">κριτικές στο Google, όλες 5 αστέρων</span></span></span>
       </div>
     </aside>
 
@@ -326,12 +341,12 @@ form{display:grid;gap:16px;max-width:560px}
           <div class="f">
             <label id="lHow" data-t="lHow">Πώς να τα πούμε;</label>
             <div class="seg" role="radiogroup" aria-labelledby="lHow">
-              <label><input type="radio" name="how" value="meet" checked><svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.5l5-3v9l-5-3"/></svg><span data-t="meet">Βιντεοκλήση με δική μας παρουσίαση</span></label>
-              <label><input type="radio" name="how" value="tel"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><span data-t="tel">Σας καλούμε στο κινητό</span></label>
+              <label><input type="radio" name="how" value="meet" checked><svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.5l5-3v9l-5-3"/></svg><span class="sg"><span data-t="meet">Google Meet · Βιντεοκλήση</span><small data-t="meetS">Περιλαμβάνει σύντομη παρουσίαση</small></span></label>
+              <label><input type="radio" name="how" value="tel"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg><span class="sg"><span data-t="tel">Σας καλούμε στο κινητό</span><small data-t="telS">Τα συζητάμε όλα αναλυτικά τηλεφωνικώς</small></span></label>
             </div>
           </div>
           <div class="f"><label for="msg"><span data-t="lMsg">Κάτι που θέλετε να ξέρουμε;</span> <em data-t="opt">(προαιρετικό)</em></label><textarea id="msg" data-ph="phMsg" placeholder="π.χ. έχω ήδη ιστοσελίδα και θέλω καινούργια"></textarea></div>
-          <div class="note"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1112 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 004 0"/></svg><span data-t="note">Θα σας στείλουμε email επιβεβαίωσης τώρα και μία υπενθύμιση 1 ώρα πριν.</span></div>
+          <div class="note"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1112 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 004 0"/></svg><span><span data-t="note">Θα σας στείλουμε email επιβεβαίωσης τώρα και μία υπενθύμιση 1 ώρα πριν.</span><small class="ns" data-t="noteS">Αν δεν το βρείτε στα εισερχόμενα, κοιτάξτε και στα «Ανεπιθύμητα» (Spam).</small></span></div>
           <p class="ferr" id="formErr" role="alert" hidden></p>
           <div><button class="btn" type="submit" id="submit"><span data-t="book">Κλείσιμο ραντεβού</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
           <p class="priv" data-t="priv">Τα στοιχεία σας χρησιμοποιούνται μόνο για αυτό το ραντεβού. <a href="https://advonmedia.com/privacy-policy" target="_blank" rel="noopener">Πολιτική απορρήτου</a></p>
@@ -367,22 +382,22 @@ form{display:grid;gap:16px;max-width:560px}
 <script>
 (function(){
 var T={
- el:{with:'Με τον',name:'Άγγελο Μ.',title:'Δωρεάν κλήση γνωριμίας',dur:'Περίπου 10–15 λεπτά, όποιον τρόπο κι αν διαλέξετε',how:'Τηλέφωνο ή βιντεοκλήση με δική μας παρουσίαση',free:'Χωρίς χρέωση και χωρίς δέσμευση',lead:'Γνωριζόμαστε, μας λέτε τι κάνετε και τι θα θέλατε. Σας εξηγούμε πώς δουλεύουμε και σε πόσες μέρες θα δείτε την πρώτη εικόνα της ιστοσελίδας σας.',sites:'ιστοσελίδες online',revs:'κριτικές στο Google',pickH:'Διαλέξτε ημέρα και ώρα',moveH:'Διαλέξτε τη νέα ώρα',tz:'Ώρα Ελλάδας (Αθήνα)',back:'Αλλαγή ώρας',formH:'Τα στοιχεία σας',lName:'Ονοματεπώνυμο',lPhone:'Κινητό τηλέφωνο',lMail:'Email',lJob:'Επάγγελμα ή επιχείρηση',opt:'(προαιρετικό)',phJob:'π.χ. ψυχολόγος, κομμωτήριο',lHow:'Πώς να τα πούμε;',meet:'Βιντεοκλήση με δική μας παρουσίαση',tel:'Σας καλούμε στο κινητό',lMsg:'Κάτι που θέλετε να ξέρουμε;',phMsg:'π.χ. έχω ήδη ιστοσελίδα και θέλω καινούργια',note:'Θα σας στείλουμε email επιβεβαίωσης τώρα και μία υπενθύμιση 1 ώρα πριν.',book:'Κλείσιμο ραντεβού',priv:'Τα στοιχεία σας χρησιμοποιούνται μόνο για αυτό το ραντεβού. <a href="/privacy-policy" target="_blank" rel="noopener">Πολιτική απορρήτου</a>',eName:'Γράψτε το όνομά σας.',ePhone:'Γράψτε ένα σωστό τηλέφωνο, π.χ. 694 123 4567.',eMail:'Γράψτε ένα σωστό email — εκεί στέλνουμε την επιβεβαίωση.',doneH:'Το ραντεβού σας κλείστηκε!',doneP:'Σας στείλαμε email επιβεβαίωσης με όλες τις λεπτομέρειες.',doneP2:'Το ραντεβού κλείστηκε. Αν δεν δείτε το email σε λίγα λεπτά, κοιτάξτε και στα «Ανεπιθύμητα».',r0:'Email επιβεβαίωσης — τώρα',r1:'Υπενθύμιση — 1 ώρα πριν',r2:'Υπενθύμιση — 1 ώρα πριν',gcal:'Google Calendar',ics:'Apple / Outlook',change:'Θέλετε άλλη ώρα;',changeB:'Αλλαγή ή ακύρωση',privL:'Πολιτική απορρήτου',
+ el:{with:'Με τον ιδρυτή της εταιρείας',name:'Άγγελο Μ.',title:'Δωρεάν κλήση γνωριμίας',dur:'Περίπου 10–15 λεπτά, όποιον τρόπο κι αν διαλέξετε',how:'Τηλέφωνο ή βιντεοκλήση στο Google Meet',free:'Χωρίς χρέωση και χωρίς δέσμευση',meetS:'Περιλαμβάνει σύντομη παρουσίαση',telS:'Τα συζητάμε όλα αναλυτικά τηλεφωνικώς',noteS:'Αν δεν το βρείτε στα εισερχόμενα, κοιτάξτε και στα «Ανεπιθύμητα» (Spam).',lead:'Γνωριζόμαστε, μας λέτε τι κάνετε και τι θα θέλατε. Σας εξηγούμε πώς δουλεύουμε και σε πόσες μέρες θα δείτε την πρώτη εικόνα της ιστοσελίδας σας.',sites:'ιστοσελίδες online',revs:'κριτικές στο Google, όλες 5 αστέρων',pickH:'Διαλέξτε ημέρα και ώρα',moveH:'Διαλέξτε τη νέα ώρα',tz:'Ώρα Ελλάδας (Αθήνα)',back:'Αλλαγή ώρας',formH:'Τα στοιχεία σας',lName:'Ονοματεπώνυμο',lPhone:'Κινητό τηλέφωνο',lMail:'Email',lJob:'Επάγγελμα ή επιχείρηση',opt:'(προαιρετικό)',phJob:'π.χ. ψυχολόγος, κομμωτήριο',lHow:'Πώς να τα πούμε;',meet:'Google Meet · Βιντεοκλήση',tel:'Σας καλούμε στο κινητό',lMsg:'Κάτι που θέλετε να ξέρουμε;',phMsg:'π.χ. έχω ήδη ιστοσελίδα και θέλω καινούργια',note:'Θα σας στείλουμε email επιβεβαίωσης τώρα και μία υπενθύμιση 1 ώρα πριν.',book:'Κλείσιμο ραντεβού',priv:'Τα στοιχεία σας χρησιμοποιούνται μόνο για αυτό το ραντεβού. <a href="/privacy-policy" target="_blank" rel="noopener">Πολιτική απορρήτου</a>',eName:'Γράψτε το όνομά σας.',ePhone:'Γράψτε ένα σωστό τηλέφωνο, π.χ. 694 123 4567.',eMail:'Γράψτε ένα σωστό email — εκεί στέλνουμε την επιβεβαίωση.',doneH:'Το ραντεβού σας κλείστηκε!',doneP:'Σας στείλαμε email επιβεβαίωσης με όλες τις λεπτομέρειες.',doneP2:'Το ραντεβού κλείστηκε. Αν δεν δείτε το email σε λίγα λεπτά, κοιτάξτε και στα «Ανεπιθύμητα».',r0:'Email επιβεβαίωσης — τώρα',r1:'Υπενθύμιση — 1 ώρα πριν',r2:'Υπενθύμιση — 1 ώρα πριν',gcal:'Google Calendar',ics:'Apple / Outlook',change:'Θέλετε άλλη ώρα;',changeB:'Αλλαγή ή ακύρωση',privL:'Πολιτική απορρήτου',
   loading:'Φορτώνουμε τις ελεύθερες ώρες…',loadErr:'Δεν μπορέσαμε να φορτώσουμε τις ώρες. Ανανεώστε τη σελίδα ή καλέστε μας.',noDays:'Δεν υπάρχουν ελεύθερες ώρες αυτόν τον μήνα.',
   mgH:'Το ραντεβού σας',mgMove:'Αλλαγή ώρας',mgCancel:'Ακύρωση ραντεβού',mgSure:'Σίγουρα θέλετε να ακυρώσετε το ραντεβού;',mgYes:'Ναι, ακύρωση',mgNo:'Όχι, το κρατάω',newBk:'Κλείστε νέο ραντεβού',mgOk:'Ισχύει ✓',mgX:'Το ραντεβού ακυρώθηκε.',mgPast:'Το ραντεβού αυτό έχει περάσει.',mgMoved:'Η νέα ώρα κλείστηκε ✓ Σας στείλαμε email.',mgCancelled:'Ακυρώθηκε. Σας στείλαμε email.',mgBad:'Ο σύνδεσμος δεν ισχύει. Κλείστε ένα νέο ραντεβού.',
   testRem:'Στείλε μου την υπενθύμιση τώρα (δοκιμή)',testOk:'Στάλθηκαν — κοιτάξτε το email σας.',testNo:'Δεν στάλθηκαν: ',
   errTaken:'Μόλις κλείστηκε αυτή η ώρα. Διαλέξτε μια άλλη.',errAlready:'Έχετε ήδη ραντεβού: ',errPhone:'Γράψτε ένα σωστό τηλέφωνο, π.χ. 694 123 4567.',errMail:'Γράψτε ένα σωστό email.',errName:'Γράψτε το όνομά σας.',errSlow:'Πολλές προσπάθειες. Δοκιμάστε ξανά σε λίγο.',errGen:'Κάτι πήγε στραβά. Δοκιμάστε ξανά ή καλέστε μας.',errNet:'Χωρίς σύνδεση. Ελέγξτε το ίντερνετ και ξαναδοκιμάστε.',
   months:['Ιανουάριος','Φεβρουάριος','Μάρτιος','Απρίλιος','Μάιος','Ιούνιος','Ιούλιος','Αύγουστος','Σεπτέμβριος','Οκτώβριος','Νοέμβριος','Δεκέμβριος'],
   dow:['Δε','Τρ','Τε','Πε','Πα','Σα','Κυ'],loc:'el-GR',none:'Δεν υπάρχουν ελεύθερες ώρες αυτή τη μέρα.',next:'Συνέχεια',moveTo:'Μεταφορά εδώ',
-  prev:'Προηγούμενος μήνας',nextM:'Επόμενος μήνας',meetL:'Βιντεοκλήση με παρουσίαση — ο σύνδεσμος είναι στο email',telL:'Σας καλούμε στο',calT:'Κλήση γνωριμίας με την Advon Media',calD:'Δωρεάν κλήση γνωριμίας (περίπου 10–15 λεπτά) με τον Άγγελο της Advon Media.',hostN:'Άγγελος Μ.',title2:'Κλείστε δωρεάν κλήση γνωριμίας | Advon Media'},
- en:{with:'With',name:'Angelo M.',title:'Free intro call',dur:'About 10–15 minutes, whichever way you choose',how:'Phone or a video call with our own presentation',free:'Free and no commitment',lead:'We get to know each other: you tell us what you do and what you would like. We explain how we work and in how many days you will see the first version of your website.',sites:'websites online',revs:'Google reviews',pickH:'Choose a day and time',moveH:'Choose the new time',tz:'Greece time (Athens)',back:'Change time',formH:'Your details',lName:'Full name',lPhone:'Mobile phone',lMail:'Email',lJob:'Profession or business',opt:'(optional)',phJob:'e.g. psychologist, hair salon',lHow:'How should we talk?',meet:'Video call with our own presentation',tel:'We call your mobile',lMsg:'Anything we should know?',phMsg:'e.g. I already have a website and want a new one',note:'We send a confirmation email now and one reminder 1 hour before.',book:'Book the call',priv:'Your details are used only for this appointment. <a href="/privacy-policy" target="_blank" rel="noopener">Privacy policy</a>',eName:'Please write your name.',ePhone:'Please write a valid phone, e.g. 694 123 4567.',eMail:'Please write a valid email — we send the confirmation there.',doneH:'Your call is booked!',doneP:'We sent you a confirmation email with all the details.',doneP2:'Your call is booked. If the email does not arrive in a few minutes, check your spam folder.',r0:'Confirmation email — now',r1:'Reminder — 1 hour before',r2:'Reminder — 1 hour before',gcal:'Google Calendar',ics:'Apple / Outlook',change:'Need another time?',changeB:'Change or cancel',privL:'Privacy policy',
+  prev:'Προηγούμενος μήνας',nextM:'Επόμενος μήνας',meetL:'Google Meet · Βιντεοκλήση — ο σύνδεσμος είναι στο email',telL:'Σας καλούμε στο',calT:'Κλήση γνωριμίας με την Advon Media',calD:'Δωρεάν κλήση γνωριμίας (περίπου 10–15 λεπτά) με τον Άγγελο της Advon Media.',hostN:'Άγγελος Μ.',title2:'Κλείστε δωρεάν κλήση γνωριμίας | Advon Media'},
+ en:{with:'With the founder of the company',name:'Angelo M.',title:'Free intro call',dur:'About 10–15 minutes, whichever way you choose',how:'Phone or a video call on Google Meet',free:'Free and no commitment',meetS:'Includes a short presentation',telS:'We go through everything in detail by phone',noteS:'If you can’t find it in your inbox, please also check your Spam folder.',lead:'We get to know each other: you tell us what you do and what you would like. We explain how we work and in how many days you will see the first version of your website.',sites:'websites online',revs:'Google reviews, all 5 stars',pickH:'Choose a day and time',moveH:'Choose the new time',tz:'Greece time (Athens)',back:'Change time',formH:'Your details',lName:'Full name',lPhone:'Mobile phone',lMail:'Email',lJob:'Profession or business',opt:'(optional)',phJob:'e.g. psychologist, hair salon',lHow:'How should we talk?',meet:'Google Meet · Video call',tel:'We call your mobile',lMsg:'Anything we should know?',phMsg:'e.g. I already have a website and want a new one',note:'We send a confirmation email now and one reminder 1 hour before.',book:'Book the call',priv:'Your details are used only for this appointment. <a href="/privacy-policy" target="_blank" rel="noopener">Privacy policy</a>',eName:'Please write your name.',ePhone:'Please write a valid phone, e.g. 694 123 4567.',eMail:'Please write a valid email — we send the confirmation there.',doneH:'Your call is booked!',doneP:'We sent you a confirmation email with all the details.',doneP2:'Your call is booked. If the email does not arrive in a few minutes, check your spam folder.',r0:'Confirmation email — now',r1:'Reminder — 1 hour before',r2:'Reminder — 1 hour before',gcal:'Google Calendar',ics:'Apple / Outlook',change:'Need another time?',changeB:'Change or cancel',privL:'Privacy policy',
   loading:'Loading free times…',loadErr:'We could not load the times. Refresh the page or call us.',noDays:'No free times this month.',
   mgH:'Your call',mgMove:'Change time',mgCancel:'Cancel the call',mgSure:'Are you sure you want to cancel?',mgYes:'Yes, cancel',mgNo:'No, keep it',newBk:'Book a new call',mgOk:'Confirmed ✓',mgX:'This call was cancelled.',mgPast:'This call is in the past.',mgMoved:'New time booked ✓ We sent you an email.',mgCancelled:'Cancelled. We sent you an email.',mgBad:'This link is not valid. Book a new call.',
   testRem:'Send me the reminder now (test)',testOk:'Sent — check your email.',testNo:'Not sent: ',
   errTaken:'That time was just taken. Please choose another.',errAlready:'You already have a call: ',errPhone:'Please write a valid phone.',errMail:'Please write a valid email.',errName:'Please write your name.',errSlow:'Too many tries. Please try again shortly.',errGen:'Something went wrong. Try again or call us.',errNet:'No connection. Check your internet and try again.',
   months:['January','February','March','April','May','June','July','August','September','October','November','December'],
   dow:['Mo','Tu','We','Th','Fr','Sa','Su'],loc:'en-GB',none:'No free times on this day.',next:'Next',moveTo:'Move here',
-  prev:'Previous month',nextM:'Next month',meetL:'Video call with presentation — the link is in the email',telL:'We call you on',calT:'Intro call with Advon Media',calD:'Free intro call (about 10–15 minutes) with Angelo from Advon Media.',hostN:'Angelo M.',title2:'Book a free intro call | Advon Media'}
+  prev:'Previous month',nextM:'Next month',meetL:'Google Meet · Video call — the link is in the email',telL:'We call you on',calT:'Intro call with Advon Media',calD:'Free intro call (about 10–15 minutes) with Angelo from Advon Media.',hostN:'Angelo M.',title2:'Book a free intro call | Advon Media'}
 };
 var Q=new URLSearchParams(location.search);
 var L=Q.get('lang')==='en'?'en':'el',$=function(s){return document.getElementById(s)};
@@ -503,6 +518,8 @@ document.querySelectorAll('[data-lang]').forEach(function(b){b.onclick=function(
 
 if(TEST){$('testBar').hidden=false;document.querySelectorAll('.test-only').forEach(function(n){n.hidden=false})}
 if(L!=='el')lang(L);
+(function(){var t=document.querySelector('.top');if(!t)return;var f=function(){t.classList.toggle('stuck',scrollY>40)};addEventListener('scroll',f,{passive:true});f()})();
+
 drawCal();getStamp();
 if(BKTOK){openManage()}else{loadSlots()}
 })();
