@@ -324,6 +324,9 @@ export default function HomeClient() {
                         )}
                         <div className="mb-7 flex-grow">
                           <PitchQuote compact>{service.pitch[lang]}</PitchQuote>
+                          {service.prereq && (
+                            <p className="mt-4 text-sm leading-relaxed text-gray-300 border-l-2 border-electric-cyan/60 pl-3"><b className="text-white">{service.prereq.card[lang].split(':')[0]}:</b>{service.prereq.card[lang].slice(service.prereq.card[lang].indexOf(':') + 1)}</p>
+                          )}
                         </div>
                         <Link
                           href={`/${service.slug}`}
