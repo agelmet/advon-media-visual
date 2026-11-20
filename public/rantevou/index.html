@@ -476,7 +476,7 @@ var T={
 };
 var Q=new URLSearchParams(location.search);
 var L=Q.get('lang')==='en'?'en':'el',$=function(s){return document.getElementById(s)};
-var TEST=!/(^|\.)advonmedia\.com$/.test(location.hostname);
+var TEST=/[?&]test=1/.test(location.search);
 var API='/api/booking';
 var SLOTS=null,slotErr=false,STAMP='',MODE='book',BK=null,BKTOK=Q.get('b')||'';
 var view=null,selD=null,selT=null;
