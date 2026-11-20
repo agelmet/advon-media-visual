@@ -55,8 +55,8 @@ export default function CookieConsent() {
       </div>
       <p className="cc-text">
         {el
-          ? 'Χρησιμοποιούμε cookies για στατιστικά (Google Analytics) και για τη μέτρηση των διαφημίσεών μας (Meta), μόνο αν συμφωνείτε.'
-          : 'We use cookies for statistics (Google Analytics) and to measure our ads (Meta), only if you agree.'}{' '}
+          ? 'Χρησιμοποιούμε cookies για στατιστικά και για τη μέτρηση των διαφημίσεών μας, μόνο αν συμφωνείτε.'
+          : 'We use cookies for statistics and to measure our ads, only if you agree.'}{' '}
         <Link href="/privacy-policy" className="cc-link">{el ? 'Πολιτική cookies' : 'Cookie policy'}</Link>
       </p>
       <div className="cc-btns">

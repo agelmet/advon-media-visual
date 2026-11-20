@@ -18,6 +18,13 @@ const T = {
     cta1: 'Δωρεάν έλεγχος περιοχής', cta2: 'Πώς ξεκινάμε',
     q: 'ψυχολόγος περιστέρι', sp: 'Χορηγούμενο', adName: 'Ελένη Παπαδοπούλου', adT: 'Ψυχολόγος στο Περιστέρι — Κλείστε Ραντεβού', adD: 'Ατομική ψυχοθεραπεία ενηλίκων, δια ζώσης και online. Δείτε το γραφείο και τις κριτικές.', ex: ['Κλήση', 'Υπηρεσίες', 'Κριτικές', 'Ραντεβού'], org: 'Ψυχολόγοι στο Περιστέρι — Κατάλογος',
     heroCap: 'Παράδειγμα. Πρώτη θέση, με το κουμπί κλήσης δίπλα στο όνομά σας.',
+    whyLabel: 'Προϋπόθεση', whyTitle: 'Πρώτα η ιστοσελίδα. Μετά οι διαφημίσεις.', whyLead: 'Για να ξεκινήσουμε διαφημίσεις, έχουμε ως προϋπόθεση να έχουμε κατασκευάσει πρώτα εμείς την ιστοσελίδα σας. Για τρεις βασικούς λόγους:',
+    why: [
+      ['Μια σελίδα που σας κάνει να σας επιλέξουν', 'Η ιστοσελίδα πρέπει να είναι εξαιρετικά επαγγελματική και σύγχρονη, ώστε να ξέρουμε ότι έχουμε κάνει ό,τι περνάει από το χέρι μας πριν επενδύσετε έστω και 1€ σε διαφημίσεις. Η διαφήμιση φέρνει τον κόσμο στη σελίδα· η σελίδα είναι αυτή που θα τον κάνει να σας εμπιστευτεί και να σας επιλέξει.'],
+      ['SEO και εύκολο ραντεβού', 'Πλήρως βελτιστοποιημένη για το SEO, ώστε να βγαίνετε και οργανικά στη Google, και χτισμένη με τα σωστά κουμπιά και σημεία επικοινωνίας, ώστε ο επισκέπτης να κλείνει εύκολα ραντεβού και να μη χάνεται μέσα στη σελίδα.'],
+      ['Πλήρης έλεγχος και μέτρηση', 'Έχουμε τον πλήρη έλεγχο, ώστε να μετράμε από πού έρχονται οι επισκέπτες, τι πατάνε και πόσοι επικοινωνούν — και με βάση αυτά να βελτιώνουμε συνεχώς τις διαφημίσεις, ώστε να πιάνει τόπο κάθε ευρώ που επενδύετε.'],
+    ],
+    whyFree: 'Την κατασκευή της ιστοσελίδας την κάνουμε εντελώς δωρεάν (0€). Πληρώνετε μόνο τη φιλοξενία και το domain, 130€ + ΦΠΑ τον χρόνο — και αν έχετε ήδη domain, το κρατάμε.', whyCta: 'Δείτε τη δωρεάν ιστοσελίδα',
     wLabel: 'Γιατί Google', wTitle: 'Δεν πείθουμε κανέναν. Του δείχνουμε πού να πάει.',
     cLabel: 'Κόστος', cTitle: 'Ξεκινάτε με 0€.', cLead: 'Δύο ξεχωριστά ποσά, ξεκάθαρα: η δική μας διαχείριση, και η διαφήμιση που πληρώνετε απευθείας στη Google.',
     p1: ['Διαχείριση από την Advon Media', '59€', '/μήνα + ΦΠΑ', 'Από τον 2ο μήνα · κανονική τιμή 79€ · μένει ίδια όσο συνεργαζόμαστε', ['Στήσιμο λογαριασμού και καμπάνιας: 0€ (αξία 250€)', 'Μέτρηση κλήσεων στην ιστοσελίδα σας: 0€ (αξία 120€)', 'Πρώτος μήνας διαχείρισης: 0€', 'Έλεγχος και βελτίωση κάθε εβδομάδα', 'Απεριόριστες αλλαγές: νέα υπηρεσία, άλλες ώρες, διακοπές', 'Μηνιαία γραπτή αναφορά σε απλά ελληνικά'], 'Τιμή ιδρυτικού πελάτη · 20 θέσεις'],
@@ -81,6 +88,13 @@ const T = {
     cta1: 'Free area check', cta2: 'How we start',
     q: 'psychologist peristeri', sp: 'Sponsored', adName: 'Eleni Papadopoulou', adT: 'Psychologist in Peristeri — Book an Appointment', adD: 'Individual psychotherapy for adults, in person and online. See the office and the reviews.', ex: ['Call', 'Services', 'Reviews', 'Booking'], org: 'Psychologists in Peristeri — Directory',
     heroCap: 'Example. First position, with the call button next to your name.',
+    whyLabel: 'Requirement', whyTitle: 'Website first. Then the ads.', whyLead: 'Before we start advertising, we require that we have built your website first. For three main reasons:',
+    why: [
+      ['A page that makes them choose you', 'The website has to be truly professional and modern, so we know we have done everything we can before you invest even €1 in ads. The ad brings people to the page; the page is what makes them trust you and choose you.'],
+      ['SEO and easy booking', 'Fully optimised for SEO, so you also appear organically on Google, and built with the right buttons and contact points, so the visitor books easily and never gets lost on the page.'],
+      ['Full control and measurement', 'We have full control, so we measure where visitors come from, what they tap and how many get in touch — and use that to keep improving the ads, so every euro you invest pays off.'],
+    ],
+    whyFree: 'We build the website completely free (€0). You only pay hosting and the domain, €130 + VAT a year — and if you already have a domain, we keep it.', whyCta: 'See the free website',
     wLabel: 'Why Google', wTitle: 'We convince nobody. We show them where to go.',
     cLabel: 'Cost', cTitle: 'You start with €0.', cLead: 'Two separate amounts, clearly: our management, and the advertising you pay directly to Google.',
     p1: ['Management by Advon Media', '€59', '/month + VAT', 'From the 2nd month · regular price €79 · stays the same as long as we work together', ['Account and campaign setup: €0 (worth €250)', 'Call measurement on your website: €0 (worth €120)', 'First month of management: €0', 'A check and improvement every week', 'Unlimited changes: new service, other hours, holidays', 'Monthly written report in plain language'], 'Founder price · 20 places'],
@@ -201,6 +215,12 @@ export default function GoogleAdsClient({ service }) {
             </ScrollReveal>
             <ScrollReveal delay={120}>
               <p className="text-gray-300 text-lg leading-relaxed max-w-xl">{service.pitch[lang]}</p>
+              {service.prereq && (
+                <a href="#proypothesi" className="mt-5 flex items-start gap-3 max-w-xl rounded-xl border border-electric-cyan/30 bg-electric-cyan/[0.06] px-4 py-3 text-[0.95rem] leading-relaxed text-gray-200 hover:border-electric-cyan/60 transition-colors">
+                  <span className="text-electric-cyan font-black shrink-0" aria-hidden="true">!</span>
+                  <span><b className="text-white">{service.prereq.page[lang].split(':')[0]}:</b>{service.prereq.page[lang].slice(service.prereq.page[lang].indexOf(':') + 1)} <span className="text-electric-cyan" aria-hidden="true">↓</span></span>
+                </a>
+              )}
               <Chips items={t.chips} />
               <div className="flex flex-wrap gap-3">
                 <a href="#elegxos" className="btn-premium inline-flex items-center gap-2 px-8 py-4 bg-electric-cyan text-[#050608] font-black text-sm uppercase tracking-[0.1em] rounded-xl hover:bg-white transition-colors" style={{ boxShadow: '0 0 30px rgba(71,200,245,0.35)' }}>{t.cta1}</a>
@@ -209,6 +229,32 @@ export default function GoogleAdsClient({ service }) {
             </ScrollReveal>
           </div>
           <ScrollReveal delay={160} direction="scale"><GoogleMock t={t} /></ScrollReveal>
+        </div>
+      </section>
+
+      {/* ─── PREREQUISITE: website first ─── */}
+      <section id="proypothesi" className="py-20 scroll-mt-24">
+        <div className="max-w-6xl mx-auto px-6">
+          <Head center label={t.whyLabel} title={t.whyTitle} lead={t.whyLead} />
+          <div className="grid md:grid-cols-3 gap-5 mt-12">
+            {t.why.map(([h, b], i) => (
+              <ScrollReveal key={h} delay={i * 90} direction="deal" className="h-full" style={{ '--rz': `${(i - 1) * 1.5}deg` }}>
+                <TiltCard className="h-full">
+                  <div className="glass-panel card-sweep rounded-2xl p-6 h-full">
+                    <span className="section-label !mb-3">{`0${i + 1}`}</span>
+                    <h3 className="text-white font-bold text-lg mb-2">{h}</h3>
+                    <p className="text-gray-400 text-sm leading-relaxed">{b}</p>
+                  </div>
+                </TiltCard>
+              </ScrollReveal>
+            ))}
+          </div>
+          <ScrollReveal direction="scale" delay={120} className="mt-6">
+            <div className="glass-panel rounded-2xl p-6 md:p-7 flex flex-col md:flex-row md:items-center gap-5 justify-between border border-electric-cyan/25">
+              <p className="text-gray-200 leading-relaxed max-w-3xl">{t.whyFree}</p>
+              <Link href="/kataskevi-istoselidas" className="btn-premium shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/20 text-white font-black text-sm uppercase tracking-[0.1em] rounded-xl hover:bg-white hover:text-[#050608] transition-colors">{t.whyCta}</Link>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 

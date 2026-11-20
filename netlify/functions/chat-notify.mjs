@@ -175,8 +175,9 @@ export default async (req) => {
       }
     }
 
-    // 3a. quiet for 3+ days and NO e-mail on the card → nothing can remind the client, so Angelo is told once (he nudges on Viber)
-    if (polite && canTg && t.lastFrom !== 'client' && t.stage !== 'live' && !emailOk(t.email) && now - lastAt >= REMIND_AFTER && (t.quietPingAt || '') < (t.lastAt || '')) {
+    // 3a. OFF (Angelo, 20 Nov 2026: «turn off these alerts») — env CHAT_QUIET_ALERTS=1 turns it back on.
+    // quiet for 3+ days and NO e-mail on the card → nothing can remind the client, so Angelo is told once (he nudges on Viber)
+    if (process.env.CHAT_QUIET_ALERTS === '1' && polite && canTg && t.lastFrom !== 'client' && t.stage !== 'live' && !emailOk(t.email) && now - lastAt >= REMIND_AFTER && (t.quietPingAt || '') < (t.lastAt || '')) {
       if (dry) { report.sent.push(`[dry] quiet-no-email ${t.slug}`); }
       else {
         const a = await toAngelo(quietNote(t, Math.floor((now - lastAt) / DAY)), false);
