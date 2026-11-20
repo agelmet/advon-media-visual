@@ -1,4 +1,5 @@
 // netlify/functions/booking-reminders.mjs — reminder e-mails for calls booked on /rantevou (20 Nov 2026).
+// Test link (branch deploy): https://booking--advonmediaa.netlify.app/rantevou/
 //
 // Every 10 minutes: reads bookings/online.json (data repo), and for each confirmed call still ahead sends
 //   • the day-before reminder ~24 h before (only when the call was booked more than ~26 h ahead), and
