@@ -254,6 +254,57 @@ form{display:grid;gap:16px;max-width:560px}
 .grv .stars{font-size:16px;letter-spacing:1.5px;color:#FBBC05}
 .grv .gc{color:#8AB4F8;font-weight:600}
 .grv:hover .gc{text-decoration:underline}
+
+/* loading calendar: a soft wave runs across the days */
+.days.loading .day{animation:wave 1.6s ease-in-out infinite;animation-delay:calc(var(--i,0)*80ms)}
+@keyframes wave{0%,60%,100%{background:transparent;transform:none}25%{background:#DCEBFB;color:var(--bl);transform:scale(.9)}}
+.days.reveal .day.on{animation:dayIn .45s var(--ease) backwards;animation-delay:calc(var(--i,0)*35ms)}
+@keyframes dayIn{from{opacity:0;transform:scale(.6)}60%{transform:scale(1.08)}to{opacity:1;transform:none}}
+.loadmsg{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--bl-2)}
+.ldi{display:inline-flex;gap:4px}.ldi i{width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,var(--bl),var(--cy));animation:ldb .9s ease-in-out infinite}
+.ldi i:nth-child(2){animation-delay:.15s}.ldi i:nth-child(3){animation-delay:.3s}
+@keyframes ldb{0%,80%,100%{transform:translateY(0);opacity:.45}40%{transform:translateY(-6px);opacity:1}}
+/* sending overlay */
+.sending[hidden]{display:none}
+.sending{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;background:#fff;border-radius:inherit;animation:fadeIn .25s ease both}
+@keyframes fadeIn{from{opacity:0}}
+.env{width:170px;height:128px;margin-bottom:10px}.env svg{width:100%;height:100%;overflow:visible}
+.env .eb{fill:#DCEBFB;stroke:url(#eg);stroke-width:4.5}
+.env .lt{fill:#fff;stroke:#BFD9F4;stroke-width:2.5;animation:letter 2.4s ease-in-out infinite}
+.env .ll{stroke:#BFD9F4;stroke-width:4;stroke-linecap:round;fill:none;animation:letter 2.4s ease-in-out infinite}
+.env .ef{fill:none;stroke:url(#eg);stroke-width:4;stroke-linejoin:round}
+.env .fl{fill:#D3E6FB;stroke:url(#eg);stroke-width:4;stroke-linejoin:round;transform-origin:80px 44px;animation:flap 2.4s ease-in-out infinite}
+.env .fly{animation:fly 2.4s cubic-bezier(.5,0,.2,1) infinite}
+.env .trail circle{fill:var(--cy);opacity:0;animation:trail 2.4s ease-in-out infinite}
+@keyframes letter{0%,15%{transform:translateY(-14px)}40%,100%{transform:translateY(22px)}}
+@keyframes flap{0%,40%{transform:scaleY(-1)}55%,100%{transform:scaleY(1)}}
+@keyframes fly{0%,60%{transform:none;opacity:1}85%{transform:translate(70px,-26px) rotate(-8deg) scale(.7);opacity:0}86%{transform:translate(-40px,10px) scale(.7);opacity:0}100%{transform:none;opacity:1}}
+@keyframes trail{0%,62%{opacity:0;transform:none}75%{opacity:.9;transform:translateX(40px)}86%,100%{opacity:0;transform:translateX(70px)}}
+.sending h3{font-size:20px;font-weight:800;letter-spacing:-.01em;margin-bottom:16px}
+.steps{list-style:none;padding:0;margin:0 0 16px;display:grid;gap:10px;text-align:left}
+.steps li{display:flex;align-items:center;gap:10px;font-size:14.5px;font-weight:600;color:#9AA5B4;transition:color .3s}
+.steps li i{position:relative;flex:none;width:22px;height:22px;border-radius:50%;border:2px solid #D3DCE7;transition:all .3s}
+.steps li.on{color:var(--ink)}.steps li.on i{border-color:var(--bl);border-right-color:transparent;animation:spin .8s linear infinite}
+.steps li.ok{color:var(--ink)}.steps li.ok i{border-color:#16A34A;background:#16A34A;animation:pop .35s var(--ease)}
+.steps li.ok i::after{content:"";position:absolute;left:6px;top:2px;width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes pop{50%{transform:scale(1.25)}}
+.sn{font-size:13px;color:var(--ink-3)}
+.sending.fin .env{animation:pop .4s var(--ease)}
+/* success */
+.ck circle{fill:#E6F8EE;stroke:#16A34A}.ck path{stroke:#16A34A}
+.ck{filter:drop-shadow(0 10px 24px rgba(22,163,74,.35));animation:ckPop .6s var(--ease) .1s backwards}
+@keyframes ckPop{from{transform:scale(.4);opacity:0}70%{transform:scale(1.1)}}
+.okb{display:inline-block;margin:-6px 0 10px;padding:5px 12px;border-radius:999px;background:linear-gradient(135deg,#16A34A,#22C55E);color:#fff;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 8px 18px -8px rgba(22,163,74,.7)}
+.done h2 em{font-style:normal;color:#16A34A}
+.done{position:relative}
+.cf{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:5}
+.cf i{position:absolute;width:7px;height:12px;border-radius:2px;opacity:0;animation:cf 1.6s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes cf{0%{opacity:1;transform:translate(0,0) rotate(0)}70%{opacity:1}100%{opacity:0;transform:translate(var(--x),calc(var(--y) + 140px)) rotate(var(--r))}}
+@media (prefers-reduced-motion:reduce){.env *{animation:none!important}}
+
+.sum b{color:var(--bl-2)}
+.sum div:nth-child(2) span,.sum div:nth-child(3) span{color:var(--bl-2);font-weight:700}
+@media (max-width:900px){.sending{position:fixed;inset:0;z-index:60;border-radius:0}}
 </style>
 </head>
 <body>
@@ -321,7 +372,7 @@ form{display:grid;gap:16px;max-width:560px}
             </div>
             <div class="dow" id="dow"></div>
             <div class="days" id="days" role="grid"></div>
-            <p class="loadmsg" id="calMsg" data-t="loading">Φορτώνουμε τις ελεύθερες ώρες…</p>
+            <p class="loadmsg" id="calMsg"><span class="ldi" aria-hidden="true"><i></i><i></i><i></i></span>Φορτώνουμε τις ελεύθερες ώρες…</p>
             <div class="tz"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9S14.5 18.4 12 21c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z"/></svg><span data-t="tz">Ώρα Ελλάδας (Αθήνα)</span></div>
           </div>
           <div class="slots" id="slots" hidden>
@@ -361,11 +412,27 @@ form{display:grid;gap:16px;max-width:560px}
         </form>
       </div>
 
+
+      <div class="sending" id="sending" role="status" aria-live="polite" hidden>
+        <div class="env" aria-hidden="true">
+          <svg viewBox="0 0 160 120"><defs><linearGradient id="eg" x1="0" x2="1"><stop offset="0" stop-color="#1C6FD8"/><stop offset="1" stop-color="#47C8F5"/></linearGradient></defs>
+            <g class="fly"><rect class="eb" x="20" y="38" width="120" height="74" rx="10"/><rect class="lt" x="34" y="20" width="92" height="64" rx="6"/><path class="ll" d="M46 38h50M46 50h68M46 62h40"/>
+            <path class="ef" d="M20 46l60 40 60-40"/><path class="fl" d="M20 44 L80 4 L140 44"/></g>
+            <g class="trail"><circle cx="8" cy="75" r="3"/><circle cx="-6" cy="75" r="2.4"/><circle cx="-18" cy="75" r="1.8"/></g></svg>
+        </div>
+        <h3 data-t="sendH">Κλείνουμε το ραντεβού σας…</h3>
+        <ol class="steps">
+          <li><i></i><span data-t="st1">Κρατάμε την ώρα σας</span></li>
+          <li><i></i><span data-t="st2">Το προσθέτουμε στο ημερολόγιο</span></li>
+          <li><i></i><span data-t="st3">Σας στέλνουμε το email επιβεβαίωσης</span></li>
+        </ol>
+        <p class="sn" data-t="sendN">Χρειάζεται λίγα δευτερόλεπτα — μην κλείσετε τη σελίδα.</p>
+      </div>
       <!-- step 3 -->
       <div class="view" id="v3" hidden>
         <div class="done">
           <svg class="ck" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="39"/><path d="M27 43l10 10 20-21"/></svg>
-          <h2 data-t="doneH">Το ραντεβού σας κλείστηκε!</h2>
+          <div class="okb" data-t="okB">Επιβεβαιώθηκε</div><h2 data-t="doneH">Το ραντεβού σας κλείστηκε <em>επιτυχώς!</em></h2>
           <p data-t="doneP">Σας στείλαμε email επιβεβαίωσης με όλες τις λεπτομέρειες.</p>
           <div class="sum" id="sum"></div>
           <div class="rem">
@@ -390,22 +457,22 @@ form{display:grid;gap:16px;max-width:560px}
 <script>
 (function(){
 var T={
- el:{with:'Με τον ιδρυτή της εταιρείας',name:'Άγγελο Μ.',title:'Δωρεάν κλήση γνωριμίας',dur:'Περίπου 10–15 λεπτά, όποιον τρόπο κι αν διαλέξετε',how:'Τηλέφωνο ή βιντεοκλήση στο Google Meet',free:'Χωρίς χρέωση και χωρίς δέσμευση',meetS:'Περιλαμβάνει σύντομη παρουσίαση',telS:'Τα συζητάμε όλα αναλυτικά τηλεφωνικώς',noteS:'Αν δεν το βρείτε στα εισερχόμενα, κοιτάξτε και στα «Ανεπιθύμητα» (Spam).',lead:'Γνωριζόμαστε, μας λέτε τι κάνετε και τι θα θέλατε. Σας εξηγούμε πώς δουλεύουμε και σε πόσες μέρες θα δείτε την πρώτη εικόνα της ιστοσελίδας σας.',sites:'ιστοσελίδες online',revs:'κριτικές',pickH:'Διαλέξτε ημέρα και ώρα',moveH:'Διαλέξτε τη νέα ώρα',tz:'Ώρα Ελλάδας (Αθήνα)',back:'Αλλαγή ώρας',formH:'Τα στοιχεία σας',lName:'Ονοματεπώνυμο',lPhone:'Κινητό τηλέφωνο',lMail:'Email',lJob:'Επάγγελμα ή επιχείρηση',opt:'(προαιρετικό)',phJob:'π.χ. ψυχολόγος, κομμωτήριο',lHow:'Πώς να τα πούμε;',meet:'Google Meet · Βιντεοκλήση',tel:'Σας καλούμε στο κινητό',lMsg:'Κάτι που θέλετε να ξέρουμε;',phMsg:'π.χ. έχω ήδη ιστοσελίδα και θέλω καινούργια',note:'Θα σας στείλουμε email επιβεβαίωσης τώρα και μία υπενθύμιση 1 ώρα πριν.',book:'Κλείσιμο ραντεβού',priv:'Τα στοιχεία σας χρησιμοποιούνται μόνο για αυτό το ραντεβού. <a href="/privacy-policy" target="_blank" rel="noopener">Πολιτική απορρήτου</a>',eName:'Γράψτε το όνομά σας.',ePhone:'Γράψτε ένα σωστό τηλέφωνο, π.χ. 694 123 4567.',eMail:'Γράψτε ένα σωστό email — εκεί στέλνουμε την επιβεβαίωση.',doneH:'Το ραντεβού σας κλείστηκε!',doneP:'Σας στείλαμε email επιβεβαίωσης με όλες τις λεπτομέρειες.',doneP2:'Το ραντεβού κλείστηκε. Αν δεν δείτε το email σε λίγα λεπτά, κοιτάξτε και στα «Ανεπιθύμητα».',r0:'Email επιβεβαίωσης — τώρα',r1:'Υπενθύμιση — 1 ώρα πριν',r2:'Υπενθύμιση — 1 ώρα πριν',gcal:'Google Calendar',ics:'Apple / Outlook',change:'Θέλετε άλλη ώρα;',changeB:'Αλλαγή ή ακύρωση',privL:'Πολιτική απορρήτου',
+ el:{sendH:'Κλείνουμε το ραντεβού σας…',st1:'Κρατάμε την ώρα σας',st2:'Το προσθέτουμε στο ημερολόγιο',st3:'Σας στέλνουμε το email επιβεβαίωσης',sendN:'Χρειάζεται λίγα δευτερόλεπτα — μην κλείσετε τη σελίδα.',okB:'Επιβεβαιώθηκε',with:'Με τον ιδρυτή της εταιρείας',name:'Άγγελο Μ.',title:'Δωρεάν κλήση γνωριμίας',dur:'Περίπου 10–15 λεπτά, όποιον τρόπο κι αν διαλέξετε',how:'Τηλέφωνο ή βιντεοκλήση στο Google Meet',free:'Χωρίς χρέωση και χωρίς δέσμευση',meetS:'Περιλαμβάνει σύντομη παρουσίαση',telS:'Τα συζητάμε όλα αναλυτικά τηλεφωνικώς',noteS:'Αν δεν το βρείτε στα εισερχόμενα, κοιτάξτε και στα «Ανεπιθύμητα» (Spam).',lead:'Γνωριζόμαστε, μας λέτε τι κάνετε και τι θα θέλατε. Σας εξηγούμε πώς δουλεύουμε και σε πόσες μέρες θα δείτε την πρώτη εικόνα της ιστοσελίδας σας.',sites:'ιστοσελίδες online',revs:'κριτικές',pickH:'Διαλέξτε ημέρα και ώρα',moveH:'Διαλέξτε τη νέα ώρα',tz:'Ώρα Ελλάδας (Αθήνα)',back:'Αλλαγή ώρας',formH:'Τα στοιχεία σας',lName:'Ονοματεπώνυμο',lPhone:'Κινητό τηλέφωνο',lMail:'Email',lJob:'Επάγγελμα ή επιχείρηση',opt:'(προαιρετικό)',phJob:'π.χ. ψυχολόγος, κομμωτήριο',lHow:'Πώς να τα πούμε;',meet:'Google Meet · Βιντεοκλήση',tel:'Σας καλούμε στο κινητό',lMsg:'Κάτι που θέλετε να ξέρουμε;',phMsg:'π.χ. έχω ήδη ιστοσελίδα και θέλω καινούργια',note:'Θα σας στείλουμε email επιβεβαίωσης τώρα και μία υπενθύμιση 1 ώρα πριν.',book:'Κλείσιμο ραντεβού',priv:'Τα στοιχεία σας χρησιμοποιούνται μόνο για αυτό το ραντεβού. <a href="/privacy-policy" target="_blank" rel="noopener">Πολιτική απορρήτου</a>',eName:'Γράψτε το όνομά σας.',ePhone:'Γράψτε ένα σωστό τηλέφωνο, π.χ. 694 123 4567.',eMail:'Γράψτε ένα σωστό email — εκεί στέλνουμε την επιβεβαίωση.',doneH:'Το ραντεβού σας κλείστηκε <em>επιτυχώς!</em>',doneP:'Σας στείλαμε email επιβεβαίωσης με όλες τις λεπτομέρειες.',doneP2:'Το ραντεβού κλείστηκε. Αν δεν δείτε το email σε λίγα λεπτά, κοιτάξτε και στα «Ανεπιθύμητα».',r0:'Email επιβεβαίωσης — τώρα',r1:'Υπενθύμιση — 1 ώρα πριν',r2:'Υπενθύμιση — 1 ώρα πριν',gcal:'Google Calendar',ics:'Apple / Outlook',change:'Θέλετε άλλη ώρα;',changeB:'Αλλαγή ή ακύρωση',privL:'Πολιτική απορρήτου',
   loading:'Φορτώνουμε τις ελεύθερες ώρες…',loadErr:'Δεν μπορέσαμε να φορτώσουμε τις ώρες. Ανανεώστε τη σελίδα ή καλέστε μας.',noDays:'Δεν υπάρχουν ελεύθερες ώρες αυτόν τον μήνα.',
   mgH:'Το ραντεβού σας',mgMove:'Αλλαγή ώρας',mgCancel:'Ακύρωση ραντεβού',mgSure:'Σίγουρα θέλετε να ακυρώσετε το ραντεβού;',mgYes:'Ναι, ακύρωση',mgNo:'Όχι, το κρατάω',newBk:'Κλείστε νέο ραντεβού',mgOk:'Ισχύει ✓',mgX:'Το ραντεβού ακυρώθηκε.',mgPast:'Το ραντεβού αυτό έχει περάσει.',mgMoved:'Η νέα ώρα κλείστηκε ✓ Σας στείλαμε email.',mgCancelled:'Ακυρώθηκε. Σας στείλαμε email.',mgBad:'Ο σύνδεσμος δεν ισχύει. Κλείστε ένα νέο ραντεβού.',
   testRem:'Στείλε μου την υπενθύμιση τώρα (δοκιμή)',testOk:'Στάλθηκαν — κοιτάξτε το email σας.',testNo:'Δεν στάλθηκαν: ',
   errTaken:'Μόλις κλείστηκε αυτή η ώρα. Διαλέξτε μια άλλη.',errAlready:'Έχετε ήδη ραντεβού: ',errPhone:'Γράψτε ένα σωστό τηλέφωνο, π.χ. 694 123 4567.',errMail:'Γράψτε ένα σωστό email.',errName:'Γράψτε το όνομά σας.',errSlow:'Πολλές προσπάθειες. Δοκιμάστε ξανά σε λίγο.',errGen:'Κάτι πήγε στραβά. Δοκιμάστε ξανά ή καλέστε μας.',errNet:'Χωρίς σύνδεση. Ελέγξτε το ίντερνετ και ξαναδοκιμάστε.',
   months:['Ιανουάριος','Φεβρουάριος','Μάρτιος','Απρίλιος','Μάιος','Ιούνιος','Ιούλιος','Αύγουστος','Σεπτέμβριος','Οκτώβριος','Νοέμβριος','Δεκέμβριος'],
   dow:['Δε','Τρ','Τε','Πε','Πα','Σα','Κυ'],loc:'el-GR',none:'Δεν υπάρχουν ελεύθερες ώρες αυτή τη μέρα.',next:'Συνέχεια',moveTo:'Μεταφορά εδώ',
-  prev:'Προηγούμενος μήνας',nextM:'Επόμενος μήνας',meetL:'Google Meet · Βιντεοκλήση — ο σύνδεσμος είναι στο email',telL:'Σας καλούμε στο',calT:'Κλήση γνωριμίας με την Advon Media',calD:'Δωρεάν κλήση γνωριμίας (περίπου 10–15 λεπτά) με τον Άγγελο της Advon Media.',hostN:'Άγγελος Μ.',title2:'Κλείστε δωρεάν κλήση γνωριμίας | Advon Media'},
- en:{with:'With the founder of the company',name:'Angelo M.',title:'Free intro call',dur:'About 10–15 minutes, whichever way you choose',how:'Phone or a video call on Google Meet',free:'Free and no commitment',meetS:'Includes a short presentation',telS:'We go through everything in detail by phone',noteS:'If you can’t find it in your inbox, please also check your Spam folder.',lead:'We get to know each other: you tell us what you do and what you would like. We explain how we work and in how many days you will see the first version of your website.',sites:'websites online',revs:'reviews',pickH:'Choose a day and time',moveH:'Choose the new time',tz:'Greece time (Athens)',back:'Change time',formH:'Your details',lName:'Full name',lPhone:'Mobile phone',lMail:'Email',lJob:'Profession or business',opt:'(optional)',phJob:'e.g. psychologist, hair salon',lHow:'How should we talk?',meet:'Google Meet · Video call',tel:'We call your mobile',lMsg:'Anything we should know?',phMsg:'e.g. I already have a website and want a new one',note:'We send a confirmation email now and one reminder 1 hour before.',book:'Book the call',priv:'Your details are used only for this appointment. <a href="/privacy-policy" target="_blank" rel="noopener">Privacy policy</a>',eName:'Please write your name.',ePhone:'Please write a valid phone, e.g. 694 123 4567.',eMail:'Please write a valid email — we send the confirmation there.',doneH:'Your call is booked!',doneP:'We sent you a confirmation email with all the details.',doneP2:'Your call is booked. If the email does not arrive in a few minutes, check your spam folder.',r0:'Confirmation email — now',r1:'Reminder — 1 hour before',r2:'Reminder — 1 hour before',gcal:'Google Calendar',ics:'Apple / Outlook',change:'Need another time?',changeB:'Change or cancel',privL:'Privacy policy',
+  prev:'Προηγούμενος μήνας',nextM:'Επόμενος μήνας',meetL:'Google Meet · Βιντεοκλήση — ο σύνδεσμος είναι στο email',telL:'Σας καλούμε στο',calT:'Κλήση γνωριμίας με την Advon Media',calD:'Δωρεάν κλήση γνωριμίας (περίπου 10–15 λεπτά) με τον Άγγελο της Advon Media.',hostN:'Άγγελος Μ.',hostR:'Ιδρυτής της Advon Media',title2:'Κλείστε δωρεάν κλήση γνωριμίας | Advon Media'},
+ en:{sendH:'Booking your call…',st1:'Holding your time',st2:'Adding it to the calendar',st3:'Sending your confirmation email',sendN:'It takes a few seconds — please keep this page open.',okB:'Confirmed',with:'With the founder of the company',name:'Angelo M.',title:'Free intro call',dur:'About 10–15 minutes, whichever way you choose',how:'Phone or a video call on Google Meet',free:'Free and no commitment',meetS:'Includes a short presentation',telS:'We go through everything in detail by phone',noteS:'If you can’t find it in your inbox, please also check your Spam folder.',lead:'We get to know each other: you tell us what you do and what you would like. We explain how we work and in how many days you will see the first version of your website.',sites:'websites online',revs:'reviews',pickH:'Choose a day and time',moveH:'Choose the new time',tz:'Greece time (Athens)',back:'Change time',formH:'Your details',lName:'Full name',lPhone:'Mobile phone',lMail:'Email',lJob:'Profession or business',opt:'(optional)',phJob:'e.g. psychologist, hair salon',lHow:'How should we talk?',meet:'Google Meet · Video call',tel:'We call your mobile',lMsg:'Anything we should know?',phMsg:'e.g. I already have a website and want a new one',note:'We send a confirmation email now and one reminder 1 hour before.',book:'Book the call',priv:'Your details are used only for this appointment. <a href="/privacy-policy" target="_blank" rel="noopener">Privacy policy</a>',eName:'Please write your name.',ePhone:'Please write a valid phone, e.g. 694 123 4567.',eMail:'Please write a valid email — we send the confirmation there.',doneH:'Your call is <em>successfully</em> booked!',doneP:'We sent you a confirmation email with all the details.',doneP2:'Your call is booked. If the email does not arrive in a few minutes, check your spam folder.',r0:'Confirmation email — now',r1:'Reminder — 1 hour before',r2:'Reminder — 1 hour before',gcal:'Google Calendar',ics:'Apple / Outlook',change:'Need another time?',changeB:'Change or cancel',privL:'Privacy policy',
   loading:'Loading free times…',loadErr:'We could not load the times. Refresh the page or call us.',noDays:'No free times this month.',
   mgH:'Your call',mgMove:'Change time',mgCancel:'Cancel the call',mgSure:'Are you sure you want to cancel?',mgYes:'Yes, cancel',mgNo:'No, keep it',newBk:'Book a new call',mgOk:'Confirmed ✓',mgX:'This call was cancelled.',mgPast:'This call is in the past.',mgMoved:'New time booked ✓ We sent you an email.',mgCancelled:'Cancelled. We sent you an email.',mgBad:'This link is not valid. Book a new call.',
   testRem:'Send me the reminder now (test)',testOk:'Sent — check your email.',testNo:'Not sent: ',
   errTaken:'That time was just taken. Please choose another.',errAlready:'You already have a call: ',errPhone:'Please write a valid phone.',errMail:'Please write a valid email.',errName:'Please write your name.',errSlow:'Too many tries. Please try again shortly.',errGen:'Something went wrong. Try again or call us.',errNet:'No connection. Check your internet and try again.',
   months:['January','February','March','April','May','June','July','August','September','October','November','December'],
   dow:['Mo','Tu','We','Th','Fr','Sa','Su'],loc:'en-GB',none:'No free times on this day.',next:'Next',moveTo:'Move here',
-  prev:'Previous month',nextM:'Next month',meetL:'Google Meet · Video call — the link is in the email',telL:'We call you on',calT:'Intro call with Advon Media',calD:'Free intro call (about 10–15 minutes) with Angelo from Advon Media.',hostN:'Angelo M.',title2:'Book a free intro call | Advon Media'}
+  prev:'Previous month',nextM:'Next month',meetL:'Google Meet · Video call — the link is in the email',telL:'We call you on',calT:'Intro call with Advon Media',calD:'Free intro call (about 10–15 minutes) with Angelo from Advon Media.',hostN:'Angelo M.',hostR:'Founder of Advon Media',title2:'Book a free intro call | Advon Media'}
 };
 var Q=new URLSearchParams(location.search);
 var L=Q.get('lang')==='en'?'en':'el',$=function(s){return document.getElementById(s)};
@@ -434,11 +501,11 @@ function drawCal(){
   var first=(view.getDay()+6)%7,dim=new Date(view.getFullYear(),view.getMonth()+1,0).getDate(),h='',any=false;
   for(var i=0;i<first;i++)h+='<span></span>';
   for(var n=1;n<=dim;n++){var d=new Date(view.getFullYear(),view.getMonth(),n),ok=slotsOf(d).length>0,sel=selD&&+d===+selD;if(ok)any=true;
-    var c='day'+(ok?' on':'')+(+d===+today?' today':'')+(sel?' sel':'');
-    h+=ok?'<button type="button" class="'+c+'" data-d="'+n+'" aria-label="'+fmtDay(d,{weekday:'long',day:'numeric',month:'long'})+'"'+(sel?' aria-pressed="true"':'')+'>'+n+'</button>':'<span class="'+c+'" aria-hidden="true">'+n+'</span>'}
-  $('days').innerHTML=h;$('days').classList.toggle('loading',!SLOTS&&!slotErr);
+    var c='day'+(ok?' on':'')+(+d===+today?' today':'')+(sel?' sel':'');var wi=' style="--i:'+(((first+n-1)%7)+Math.floor((first+n-1)/7))+'"';
+    h+=ok?'<button type="button" class="'+c+'" data-d="'+n+'"'+wi+' aria-label="'+fmtDay(d,{weekday:'long',day:'numeric',month:'long'})+'"'+(sel?' aria-pressed="true"':'')+'>'+n+'</button>':'<span class="'+c+'"'+wi+' aria-hidden="true">'+n+'</span>'}
+  var dz=$('days'),wasL=dz.classList.contains('loading');dz.innerHTML=h;dz.classList.toggle('loading',!SLOTS&&!slotErr);if(wasL&&SLOTS){dz.classList.add('reveal');setTimeout(function(){dz.classList.remove('reveal')},1400)}
   var m=$('calMsg');m.classList.toggle('err',slotErr);
-  if(slotErr){m.hidden=false;m.textContent=tt.loadErr}else if(!SLOTS){m.hidden=false;m.textContent=tt.loading}else if(!any){m.hidden=false;m.textContent=tt.noDays}else m.hidden=true;
+  if(slotErr){m.hidden=false;m.textContent=tt.loadErr}else if(!SLOTS){m.hidden=false;m.innerHTML='<span class="ldi" aria-hidden="true"><i></i><i></i><i></i></span>'+tt.loading}else if(!any){m.hidden=false;m.textContent=tt.noDays}else m.hidden=true;
   var ld=lastDay();
   $('prev').disabled=view<=new Date(today.getFullYear(),today.getMonth(),1);
   $('next').disabled=!ld||new Date(view.getFullYear(),view.getMonth()+1,1)>ld;
@@ -473,29 +540,40 @@ function errText(j){var tt=t();return ({taken:tt.errTaken,bad_phone:tt.errPhone,
 function formErr(msg){var e=$('formErr');e.innerHTML=msg;e.hidden=false;e.scrollIntoView({behavior:'smooth',block:'center'})}
 
 $('form').addEventListener('submit',function(e){e.preventDefault();if(!valid())return;
-  var b=$('submit');if(b.classList.contains('busy'))return;b.classList.add('busy');$('formErr').hidden=true;
+  var b=$('submit');if(b.classList.contains('busy'))return;b.classList.add('busy');$('formErr').hidden=true;sendOn();
   api('POST','',{action:'book',day:iso(selD),time:selT,name:$('name').value,phone:$('phone').value,email:$('mail').value,job:$('job').value,msg:$('msg').value,how:document.querySelector('[name=how]:checked').value,lang:L,stamp:STAMP,website:$('website').value})
   .then(function(j){b.classList.remove('busy');
-    if(j.ok&&j.booking){BK=j.booking;BKTOK=j.manage;done(j.mail!==false);return}
-    if(j.ok&&!j.booking){done(true,true);return}
+    if(j.ok&&j.booking){BK=j.booking;BKTOK=j.manage;sendOff(true,function(){done(j.mail!==false)});return}
+    if(j.ok&&!j.booking){sendOff(true,function(){done(true,true)});return}
+    sendOff(false);
     if(j.code==='taken'){formErr(t().errTaken);selT=null;loadSlots();setTimeout(function(){show(1)},1600);return}
     if(j.code==='already'&&j.booking){var x=j.booking;formErr(t().errAlready+'<b>'+fmtDay(dOf(x.day),{weekday:'long',day:'numeric',month:'long'})+', '+x.time+'</b> · <a href="?b='+j.manage+(L==='en'?'&lang=en':'')+'">'+t().changeB+'</a>');return}
     if(j.code==='robot'){getStamp();formErr(t().errGen);return}
     formErr(errText(j))})
-  .catch(function(){b.classList.remove('busy');formErr(t().errNet)})});
+  .catch(function(){b.classList.remove('busy');sendOff(false);formErr(t().errNet)})});
 
 function sumHtml(x){var tt=t(),d=dOf(x.day);
-  return '<div>'+I.cal+'<b>'+fmtDay(d,{weekday:'long',day:'numeric',month:'long',year:'numeric'})+'</b></div><div>'+I.clk+'<span>'+x.time+' – '+(x.end||endT(x.time))+' · '+tt.tz+'</span></div><div>'+(x.how==='tel'?I.tel+'<span>'+tt.telL+' '+esc(x.phone)+'</span>':I.vid+'<span>'+(x.meet?'<a href="'+esc(x.meet)+'" target="_blank" rel="noopener">'+esc(x.meet.replace('https://',''))+'</a>':tt.meetL)+'</span>')+'</div><div>'+I.usr+'<span>'+tt.hostN+' · Advon Media</span></div>'}
+  return '<div>'+I.cal+'<b>'+fmtDay(d,{weekday:'long',day:'numeric',month:'long',year:'numeric'})+'</b></div><div>'+I.clk+'<span>'+x.time+' – '+(x.end||endT(x.time))+' · '+tt.tz+'</span></div><div>'+(x.how==='tel'?I.tel+'<span>'+tt.telL+' '+esc(x.phone)+'</span>':I.vid+'<span>'+(x.meet?'<a href="'+esc(x.meet)+'" target="_blank" rel="noopener">'+esc(x.meet.replace('https://',''))+'</a>':tt.meetL)+'</span>')+'</div><div>'+I.usr+'<span>'+tt.hostN+' · '+tt.hostR+'</span></div>'}
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function stamp(x,add){var p=x.time.split(':'),dd=dOf(x.day),y=new Date(dd.getFullYear(),dd.getMonth(),dd.getDate(),+p[0],+p[1]+(add||0));return y.getFullYear()+pad(y.getMonth()+1)+pad(y.getDate())+'T'+pad(y.getHours())+pad(y.getMinutes())+'00'}
 function addLinks(x){var tt=t(),s=stamp(x),en=stamp(x,15),det=x.how==='tel'?tt.telL+' '+x.phone:(x.meet?'Google Meet: '+x.meet:tt.calD);
   $('gcal').href='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(tt.calT)+'&dates='+s+'/'+en+'&ctz=Europe/Athens&details='+encodeURIComponent(det);
   var ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Advon Media//Booking//EL','BEGIN:VEVENT','UID:'+(x.ref||Date.now())+'@advonmedia.com','DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z','DTSTART;TZID=Europe/Athens:'+s,'DTEND;TZID=Europe/Athens:'+en,'SUMMARY:'+tt.calT,'DESCRIPTION:'+det,x.meet?'URL:'+x.meet:'','END:VEVENT','END:VCALENDAR'].filter(Boolean).join('\r\n');
   $('ics').href='data:text/calendar;charset=utf-8,'+encodeURIComponent(ics)}
+
+var sendT=[],sendAt=0;
+function sendOn(){var o=$('sending'),home=innerWidth<=900?document.body:document.querySelector('.main');if(o.parentNode!==home)home.appendChild(o);o.className='sending';o.hidden=false;sendAt=Date.now();var li=o.querySelectorAll('.steps li');li.forEach(function(x){x.className=''});li[0].className='on';
+  sendT.forEach(clearTimeout);sendT=[setTimeout(function(){li[0].className='ok';li[1].className='on'},1100),setTimeout(function(){li[1].className='ok';li[2].className='on'},2300)]}
+function sendOff(ok,cb){var o=$('sending');sendT.forEach(clearTimeout);if(!ok){o.hidden=true;return}
+  var wait=Math.max(0,1500-(Date.now()-sendAt));setTimeout(function(){o.querySelectorAll('.steps li').forEach(function(x){x.className='ok'});o.classList.add('fin');setTimeout(function(){o.hidden=true;cb&&cb()},650)},wait)}
+function confetti(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;var host=document.querySelector('.done'),ck=host.querySelector('.ck'),r=ck.getBoundingClientRect(),hr=host.getBoundingClientRect(),cx=r.left-hr.left+r.width/2,cy=r.top-hr.top+r.height/2,
+  C=['#1C6FD8','#47C8F5','#16A34A','#22C55E','#FBBC05','#FF6B9A','#8B5CF6'],w=document.createElement('div');w.className='cf';host.appendChild(w);
+  for(var i=0;i<70;i++){var e=document.createElement('i'),a=Math.random()*Math.PI*2,d=90+Math.random()*190;e.style.cssText='left:'+cx+'px;top:'+cy+'px;background:'+C[i%C.length]+';--x:'+(Math.cos(a)*d).toFixed(0)+'px;--y:'+(Math.sin(a)*d-60).toFixed(0)+'px;--r:'+(Math.random()*720-360).toFixed(0)+'deg;animation-delay:'+(Math.random()*.15).toFixed(2)+'s;'+(i%3?'':'border-radius:50%;width:8px;height:8px');w.appendChild(e)}
+  setTimeout(function(){w.remove()},2200)}
 function done(mailed,robot){var tt=t();
   if(robot||!BK){$('sum').innerHTML='';show(3);return}
   $('sum').innerHTML=sumHtml(BK);$('v3').querySelector('[data-t=doneP]').textContent=mailed?tt.doneP:tt.doneP2;
-  addLinks(BK);$('manageLink').href='?b='+BKTOK+(L==='en'?'&lang=en':'');show(3)}
+  addLinks(BK);$('manageLink').href='?b='+BKTOK+(L==='en'?'&lang=en':'');show(3);setTimeout(confetti,350)}
 
 /* ---------- manage (link in the e-mails) ---------- */
 function mgDraw(msg){var tt=t(),x=BK;$('mgSum').innerHTML=sumHtml(x);
