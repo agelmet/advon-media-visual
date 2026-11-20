@@ -13,7 +13,7 @@ import { checkStamp, makeStamp, phoneVerdict, contentVerdict, emailShapeOk, tooM
 import { mailConf, sendTelegram, tgEsc } from '@/lib/chatcore';
 import {
   BOOKING, gcalReady, freeSlots, isFree, createEvent, moveEvent, deleteEvent, newId, newRef, manageToken, readToken,
-  publicBooking, sendBookingMail, dayLabel, endTime, athensToDate, todayAthens,
+  publicBooking, sendBookingMail, sendOwnerMail, bookingStats, dayLabel, endTime, athensToDate, todayAthens,
 } from '@/lib/booking';
 
 export const runtime = 'nodejs';
@@ -113,6 +113,7 @@ export async function POST(req) {
       day: String(body.day || ''), time: String(body.time || ''),
       name: clean(body.name, 80), phone: clean(body.phone, 30), email: clean(body.email, 160).toLowerCase(),
       job: clean(body.job, 80), msg: clean(body.msg, 600), how: body.how === 'tel' ? 'tel' : 'meet', lang: body.lang === 'en' ? 'en' : 'el',
+      src: ['meta', 'google', 'form'].includes(body.src) ? body.src : '',
     };
     if (!validDay(f.day) || !validTime(f.time)) return json({ ok: false, code: 'bad_time' }, 400);
     if (f.name.length < 2) return json({ ok: false, code: 'bad_name' }, 400);
@@ -143,6 +144,7 @@ export async function POST(req) {
     }
     const mail = await sendBookingMail('c', bk, base);
     if (mail.ok) await saveBooking(conf, id, (cur) => cur && { ...cur, sent: { ...(cur.sent || {}), c: new Date().toISOString() } }, `Booking ${bk.ref}: confirmation sent`).catch(() => {});
+    await sendOwnerMail('new', bk, { stats: bookingStats([...items.filter((x) => x.id !== id), bk]) });
     await tellAngelo(`📅 <b>NEW BOOKING</b> · ${tgEsc(dayLabel(bk.day))} ${bk.time}–${endTime(bk.time)}\n${who(bk)}${mail.ok ? '' : '\n⚠️ confirmation e-mail not sent (' + tgEsc(mail.why) + ')'}`, bk);
     return json({ ok: true, booking: publicBooking(bk), manage: manageToken(id), mail: mail.ok });
   }
@@ -157,6 +159,7 @@ export async function POST(req) {
     try { await deleteEvent(bk); } catch (e) { console.error('[booking] delete', e.message); return json({ ok: false, code: 'calendar_error' }, 502); }
     const next = await saveBooking(conf, bk.id, (cur) => cur && { ...cur, status: 'cancelled', cancelledAt: new Date().toISOString() }, `Booking ${bk.ref} cancelled`);
     await sendBookingMail('x', next, base);
+    await sendOwnerMail('cancelled', next);
     await tellAngelo(`❌ <b>BOOKING CANCELLED</b> by the client · ${tgEsc(dayLabel(bk.day))} ${bk.time}\n${who(bk)}`, bk);
     return json({ ok: true, booking: publicBooking(next) });
   }
@@ -171,6 +174,7 @@ export async function POST(req) {
     try { await moveEvent(moved); } catch (e) { console.error('[booking] move', e.message); return json({ ok: false, code: 'calendar_error' }, 502); }
     const next = await saveBooking(conf, bk.id, (cur) => cur && { ...cur, day, time, movedAt: new Date().toISOString(), moves: [...(cur.moves || []), old], sent: { c: (cur.sent || {}).c } }, `Booking ${bk.ref} moved to ${day} ${time}`);
     await sendBookingMail('m', next, base);
+    await sendOwnerMail('moved', next, { old });
     await tellAngelo(`🔁 <b>BOOKING MOVED</b> by the client\n${tgEsc(dayLabel(old.day))} ${old.time} → <b>${tgEsc(dayLabel(day))} ${time}</b>\n${who(next)}`, next);
     return json({ ok: true, booking: publicBooking(next) });
   }
