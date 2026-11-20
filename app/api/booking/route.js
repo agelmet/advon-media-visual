@@ -177,9 +177,8 @@ export async function POST(req) {
 
   if (action === 'test') {
     if (isProd() && !OWN.test(bk.email)) return json({ ok: false, code: 'not_allowed' }, 403);
-    const a = await sendBookingMail('r24', bk, base);
     const b = await sendBookingMail('r1', bk, base);
-    return json({ ok: a.ok && b.ok, r24: a, r1: b });
+    return json({ ok: b.ok, r1: b });
   }
 
   return json({ ok: false, code: 'bad_action' }, 400);
