@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- booking v6 · 20 Nov 2026 · embed compact -->
+<!-- booking v7 · 20 Nov 2026 · embed with the info band -->
 <html lang="el">
 <head>
 <meta charset="utf-8">
@@ -353,7 +353,7 @@ form{display:grid;gap:16px;max-width:560px}
 #form.pf .row2,#form.pf .f-msg{display:none}
 /* ---------- embed (inside advonmedia.com and /dorean) ---------- */
 html.emb,html.emb body{background:#fff;min-height:0}
-html.emb .bg,html.emb .top,html.emb .info,html.emb .foot,html.emb .demo{display:none!important}
+html.emb .bg,html.emb .top,html.emb .foot,html.emb .demo{display:none!important}
 html.emb .wrap{max-width:none;margin:0;padding:0}
 html.emb .card{display:block;box-shadow:none;border-radius:0;background:#fff;min-height:0}
 html.emb .main{padding:22px 20px 24px}
@@ -378,6 +378,52 @@ html.emb .slot .go{display:none}
 html.emb .slgo{display:flex;width:100%;justify-content:center;margin-top:14px}
 html.emb .slgo[hidden]{display:none}
 @media (max-width:420px){html.emb .slist{grid-template-columns:repeat(3,minmax(0,1fr))}html.emb .day{width:40px;height:40px}}
+
+/* time zone, the way the big booking tools show it: a small label, then «🌐 Ώρα Ελλάδας (16:18)» */
+.tz{display:block;margin-top:20px;padding-top:14px;border-top:1px solid var(--line-2)}
+.tz small{display:block;font-size:12px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.tzv{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-2);font-weight:500}
+.tzv svg{width:16px;height:16px;stroke:var(--ink-3);fill:none;stroke-width:1.8;flex:none}
+.tzt{margin-left:-3px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.tzt b{font-weight:600}
+/* embed: the dark info panel becomes a band on top of the calendar */
+html.emb .info{display:grid!important;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"logo host" "title title" "meta meta" "lead lead" "trust trust";align-items:center;gap:14px 18px;padding:22px 22px 18px}
+html.emb .info .logo{grid-area:logo;padding:8px 12px;border-radius:12px}
+html.emb .info .logo img{height:32px}
+html.emb .info .host{grid-area:host;justify-self:end}
+html.emb .info h1{grid-area:title;font-size:24px;margin-top:4px}
+html.emb .info .meta{grid-area:meta;gap:9px}
+html.emb .info .meta li{font-size:14px}
+html.emb .info .lead{grid-area:lead;display:block;font-size:14px;line-height:1.55}
+html.emb .info .trust{grid-area:trust;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;margin-top:2px;padding-top:14px}
+html.emb .info .trust>span{gap:6px}
+html.emb .info .grv{font-size:14px}
+html.emb .info .grv .stars{font-size:14px}
+@media (min-width:540px){
+  html.emb .info{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"logo host" "title title" "meta lead" "trust trust";align-items:start;gap:16px 26px;padding:24px 26px 20px}
+  html.emb .info .logo,html.emb .info .host{align-self:center}
+  html.emb .info .lead{padding-left:22px;border-left:1px solid rgba(255,255,255,.12)}
+}
+html.emb .info .logo{justify-self:start}
+@media (max-width:400px){
+  html.emb .info{grid-template-columns:auto minmax(0,1fr);gap:12px 12px;padding:18px 16px 16px}
+  html.emb .info .logo{padding:7px 10px}html.emb .info .logo img{height:26px}
+  html.emb .info .host{gap:8px}html.emb .info .host .av{width:34px;height:34px;font-size:14px}
+  html.emb .info .host small{font-size:10.5px;line-height:1.25}html.emb .info .host b{font-size:13px}
+  html.emb .info h1{font-size:21px}
+  html.emb .info .meta li,html.emb .info .lead{font-size:13.5px}
+  html.emb .info .trust{justify-content:flex-start}
+}
+
+/* embed on a computer: calendar | times side by side (the first free day is already open), so nothing grows downwards */
+@media (min-width:540px){
+  html.emb .main{padding:22px 24px 22px}
+  html.emb .pick.has-day{grid-template-columns:minmax(0,1fr) 184px;gap:22px}
+  html.emb .slots h3{font-size:14px;margin:6px 0 12px;line-height:1.35}
+  html.emb .slist{grid-template-columns:repeat(2,minmax(0,1fr));max-height:318px}
+  html.emb .slgo{margin-top:12px;min-height:48px;padding:0 12px;font-size:14.5px;gap:8px}
+  html.emb .day{width:42px;height:42px}
+}
 </style>
 </head>
 <body>
@@ -447,7 +493,7 @@ html.emb .slgo[hidden]{display:none}
             <div class="dow" id="dow"></div>
             <div class="days" id="days" role="grid"></div>
             <p class="loadmsg" id="calMsg"><span class="ldi" aria-hidden="true"><i></i><i></i><i></i></span>Φορτώνουμε τις ελεύθερες ώρες…</p>
-            <div class="tz"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9S14.5 18.4 12 21c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z"/></svg><span data-t="tz">Ώρα Ελλάδας (Αθήνα)</span><span class="now" aria-live="off"><i aria-hidden="true"></i><span data-t="nowL">τώρα</span> <b id="nowT"></b></span></div>
+            <div class="tz"><small data-t="tzL">Ζώνη ώρας</small><span class="tzv"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9S14.5 18.4 12 21c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z"/></svg><span data-t="tzN">Ώρα Ελλάδας</span><span class="tzt" aria-live="off">(<b id="nowT"></b>)</span></span></div>
           </div>
           <div class="slots" id="slots" hidden>
             <h3 id="slH"></h3>
@@ -534,7 +580,7 @@ html.emb .slgo[hidden]{display:none}
 <script>
 (function(){
 var T={
- el:{whoL:'Κλείνεται για',whoEdit:'Αλλαγή στοιχείων',pflT:'Λάβαμε τα στοιχεία σας{n}. Μένει μόνο να διαλέξετε ώρα.',hold:'Κρατήσαμε αυτή την ώρα αποκλειστικά για εσάς, καθώς οι διαθέσιμες ώρες μας είναι περιορισμένες. Σας παρακαλούμε, αν αλλάξει κάτι, να ανανεώσετε έγκαιρα την κράτησή σας με ένα κλικ από το email σας.',mvH:'Αλλάζουμε την ώρα σας…',mv1:'Ελευθερώνουμε την παλιά ώρα',mv2:'Κρατάμε τη νέα ώρα',mv3:'Σας στέλνουμε email με τη νέα ώρα',cxH:'Ακυρώνουμε το ραντεβού σας…',cx1:'Ακυρώνουμε την κράτηση',cx2:'Ελευθερώνουμε την ώρα στο ημερολόγιο',cx3:'Σας στέλνουμε email ακύρωσης',mgLoad:'Φορτώνουμε το ραντεβού σας…',nowL:'τώρα',sendH:'Κλείνουμε το ραντεβού σας…',st1:'Κρατάμε την ώρα σας',st2:'Το προσθέτουμε στο ημερολόγιο',st3:'Σας στέλνουμε το email επιβεβαίωσης',sendN:'Χρειάζεται λίγα δευτερόλεπτα — μην κλείσετε τη σελίδα.',okB:'ΕΠΙΒΕΒΑΙΩΘΗΚΕ',with:'Με τον ιδρυτή της εταιρείας',name:'Άγγελο Μ.',title:'Δωρεάν κλήση γνωριμίας',dur:'Περίπου 10–15 λεπτά, όποιον τρόπο κι αν διαλέξετε',how:'Τηλέφωνο ή βιντεοκλήση στο Google Meet',free:'Χωρίς χρέωση και χωρίς δέσμευση',meetS:'Περιλαμβάνει σύντομη παρουσίαση',telS:'Τα συζητάμε όλα αναλυτικά τηλεφωνικώς',noteS:'Αν δεν το βρείτε στα εισερχόμενα, κοιτάξτε και στα «Ανεπιθύμητα» (Spam).',lead:'Γνωριζόμαστε, μας λέτε τι κάνετε και τι θα θέλατε. Σας εξηγούμε πώς δουλεύουμε και σε πόσες μέρες θα δείτε την πρώτη εικόνα της ιστοσελίδας σας.',sites:'ιστοσελίδες online',revs:'κριτικές',pickH:'Διαλέξτε ημέρα και ώρα',moveH:'Διαλέξτε τη νέα ώρα',tz:'Ώρα Ελλάδας (Αθήνα)',back:'Αλλαγή ώρας',formH:'Τα στοιχεία σας',lName:'Ονοματεπώνυμο',lPhone:'Κινητό τηλέφωνο',lMail:'Email',lJob:'Επάγγελμα ή επιχείρηση',opt:'(προαιρετικό)',phJob:'π.χ. ψυχολόγος, κομμωτήριο',lHow:'Πώς να τα πούμε;',meet:'Google Meet · Βιντεοκλήση',tel:'Σας καλούμε στο κινητό',lMsg:'Κάτι που θέλετε να ξέρουμε;',phMsg:'π.χ. έχω ήδη ιστοσελίδα και θέλω καινούργια',note:'Θα σας στείλουμε email επιβεβαίωσης τώρα και μία υπενθύμιση 1 ώρα πριν.',book:'Κλείσιμο ραντεβού',priv:'Τα στοιχεία σας χρησιμοποιούνται μόνο για αυτό το ραντεβού. <a href="/privacy-policy" target="_blank" rel="noopener">Πολιτική απορρήτου</a>',eName:'Γράψτε το όνομά σας.',ePhone:'Γράψτε ένα σωστό τηλέφωνο, π.χ. 694 123 4567.',eMail:'Γράψτε ένα σωστό email — εκεί στέλνουμε την επιβεβαίωση.',doneH:'Το ραντεβού σας κλείστηκε <em>επιτυχώς!</em>',doneP:'Σας στείλαμε email επιβεβαίωσης με όλες τις λεπτομέρειες.',doneP2:'Το ραντεβού κλείστηκε. Αν δεν δείτε το email σε λίγα λεπτά, κοιτάξτε και στα «Ανεπιθύμητα».',r0:'Email επιβεβαίωσης — τώρα',r1:'Υπενθύμιση — 1 ώρα πριν',r2:'Υπενθύμιση — 1 ώρα πριν',gcal:'Google Calendar',ics:'Apple / Outlook',change:'Θέλετε άλλη ώρα;',changeB:'Αλλαγή ή ακύρωση',privL:'Πολιτική απορρήτου',
+ el:{whoL:'Κλείνεται για',whoEdit:'Αλλαγή στοιχείων',pflT:'Λάβαμε τα στοιχεία σας. Μένει μόνο να διαλέξετε μέρα και ώρα.',tzL:'Ζώνη ώρας',tzN:'Ώρα Ελλάδας',hold:'Κρατήσαμε αυτή την ώρα αποκλειστικά για εσάς, καθώς οι διαθέσιμες ώρες μας είναι περιορισμένες. Σας παρακαλούμε, αν αλλάξει κάτι, να ανανεώσετε έγκαιρα την κράτησή σας με ένα κλικ από το email σας.',mvH:'Αλλάζουμε την ώρα σας…',mv1:'Ελευθερώνουμε την παλιά ώρα',mv2:'Κρατάμε τη νέα ώρα',mv3:'Σας στέλνουμε email με τη νέα ώρα',cxH:'Ακυρώνουμε το ραντεβού σας…',cx1:'Ακυρώνουμε την κράτηση',cx2:'Ελευθερώνουμε την ώρα στο ημερολόγιο',cx3:'Σας στέλνουμε email ακύρωσης',mgLoad:'Φορτώνουμε το ραντεβού σας…',nowL:'τώρα',sendH:'Κλείνουμε το ραντεβού σας…',st1:'Κρατάμε την ώρα σας',st2:'Το προσθέτουμε στο ημερολόγιο',st3:'Σας στέλνουμε το email επιβεβαίωσης',sendN:'Χρειάζεται λίγα δευτερόλεπτα — μην κλείσετε τη σελίδα.',okB:'ΕΠΙΒΕΒΑΙΩΘΗΚΕ',with:'Με τον ιδρυτή της εταιρείας',name:'Άγγελο Μ.',title:'Δωρεάν κλήση γνωριμίας',dur:'Περίπου 10–15 λεπτά, όποιον τρόπο κι αν διαλέξετε',how:'Τηλέφωνο ή βιντεοκλήση στο Google Meet',free:'Χωρίς χρέωση και χωρίς δέσμευση',meetS:'Περιλαμβάνει σύντομη παρουσίαση',telS:'Τα συζητάμε όλα αναλυτικά τηλεφωνικώς',noteS:'Αν δεν το βρείτε στα εισερχόμενα, κοιτάξτε και στα «Ανεπιθύμητα» (Spam).',lead:'Γνωριζόμαστε, μας λέτε τι κάνετε και τι θα θέλατε. Σας εξηγούμε πώς δουλεύουμε και σε πόσες μέρες θα δείτε την πρώτη εικόνα της ιστοσελίδας σας.',sites:'ιστοσελίδες online',revs:'κριτικές',pickH:'Διαλέξτε ημέρα και ώρα',moveH:'Διαλέξτε τη νέα ώρα',tz:'Ώρα Ελλάδας (Αθήνα)',back:'Αλλαγή ώρας',formH:'Τα στοιχεία σας',lName:'Ονοματεπώνυμο',lPhone:'Κινητό τηλέφωνο',lMail:'Email',lJob:'Επάγγελμα ή επιχείρηση',opt:'(προαιρετικό)',phJob:'π.χ. ψυχολόγος, κομμωτήριο',lHow:'Πώς να τα πούμε;',meet:'Google Meet · Βιντεοκλήση',tel:'Σας καλούμε στο κινητό',lMsg:'Κάτι που θέλετε να ξέρουμε;',phMsg:'π.χ. έχω ήδη ιστοσελίδα και θέλω καινούργια',note:'Θα σας στείλουμε email επιβεβαίωσης τώρα και μία υπενθύμιση 1 ώρα πριν.',book:'Κλείσιμο ραντεβού',priv:'Τα στοιχεία σας χρησιμοποιούνται μόνο για αυτό το ραντεβού. <a href="/privacy-policy" target="_blank" rel="noopener">Πολιτική απορρήτου</a>',eName:'Γράψτε το όνομά σας.',ePhone:'Γράψτε ένα σωστό τηλέφωνο, π.χ. 694 123 4567.',eMail:'Γράψτε ένα σωστό email — εκεί στέλνουμε την επιβεβαίωση.',doneH:'Το ραντεβού σας κλείστηκε <em>επιτυχώς!</em>',doneP:'Σας στείλαμε email επιβεβαίωσης με όλες τις λεπτομέρειες.',doneP2:'Το ραντεβού κλείστηκε. Αν δεν δείτε το email σε λίγα λεπτά, κοιτάξτε και στα «Ανεπιθύμητα».',r0:'Email επιβεβαίωσης — τώρα',r1:'Υπενθύμιση — 1 ώρα πριν',r2:'Υπενθύμιση — 1 ώρα πριν',gcal:'Google Calendar',ics:'Apple / Outlook',change:'Θέλετε άλλη ώρα;',changeB:'Αλλαγή ή ακύρωση',privL:'Πολιτική απορρήτου',
   loading:'Φορτώνουμε τις ελεύθερες ώρες…',loadErr:'Δεν μπορέσαμε να φορτώσουμε τις ώρες. Ανανεώστε τη σελίδα ή καλέστε μας.',noDays:'Δεν υπάρχουν ελεύθερες ώρες αυτόν τον μήνα.',
   mgH:'Το ραντεβού σας',mgMove:'Αλλαγή ώρας',mgCancel:'Ακύρωση ραντεβού',mgSure:'Σίγουρα θέλετε να ακυρώσετε το ραντεβού;',mgYes:'Ναι, ακύρωση',mgNo:'Όχι, το κρατάω',newBk:'Κλείστε νέο ραντεβού',mgOk:'Ισχύει ✓',mgX:'Το ραντεβού ακυρώθηκε.',mgPast:'Το ραντεβού αυτό έχει περάσει.',mgMoved:'Σας στείλαμε email με τη νέα ώρα.',mgMovedH:'Η νέα ώρα κλείστηκε <em>επιτυχώς!</em>',mgCancelled:'Σας στείλαμε email ακύρωσης. Όποτε θέλετε, κλείστε μια νέα ώρα.',mgCancelledH:'Το ραντεβού ακυρώθηκε',mgBad:'Ο σύνδεσμος δεν ισχύει. Κλείστε ένα νέο ραντεβού.',
   testRem:'Στείλε μου την υπενθύμιση τώρα (δοκιμή)',testOk:'Στάλθηκαν — κοιτάξτε το email σας.',testNo:'Δεν στάλθηκαν: ',
@@ -542,7 +588,7 @@ var T={
   months:['Ιανουάριος','Φεβρουάριος','Μάρτιος','Απρίλιος','Μάιος','Ιούνιος','Ιούλιος','Αύγουστος','Σεπτέμβριος','Οκτώβριος','Νοέμβριος','Δεκέμβριος'],
   dow:['Δε','Τρ','Τε','Πε','Πα','Σα','Κυ'],loc:'el-GR',none:'Δεν υπάρχουν ελεύθερες ώρες αυτή τη μέρα.',next:'Συνέχεια',moveTo:'Μεταφορά εδώ',
   prev:'Προηγούμενος μήνας',nextM:'Επόμενος μήνας',meetL:'Google Meet · Βιντεοκλήση — ο σύνδεσμος είναι στο email',telL:'Σας καλούμε στο',calT:'Κλήση γνωριμίας με την Advon Media',calD:'Δωρεάν κλήση γνωριμίας (περίπου 10–15 λεπτά) με τον Άγγελο της Advon Media.',hostN:'Άγγελος Μ.',hostR:'Ιδρυτής της Advon Media',title2:'Κλείστε δωρεάν κλήση γνωριμίας | Advon Media'},
- en:{whoL:'Booking for',whoEdit:'Change details',pflT:'We have your details{n}. Just pick a time.',hold:'We have reserved this time just for you, as our available times are limited. If anything changes, please update your booking in good time with one click from your email.',mvH:'Changing your time…',mv1:'Releasing the old time',mv2:'Holding the new time',mv3:'Sending you an email with the new time',cxH:'Cancelling your call…',cx1:'Cancelling the booking',cx2:'Freeing the time in the calendar',cx3:'Sending you a cancellation email',mgLoad:'Loading your call…',nowL:'now',sendH:'Booking your call…',st1:'Holding your time',st2:'Adding it to the calendar',st3:'Sending your confirmation email',sendN:'It takes a few seconds — please keep this page open.',okB:'CONFIRMED',with:'With the founder of the company',name:'Angelo M.',title:'Free intro call',dur:'About 10–15 minutes, whichever way you choose',how:'Phone or a video call on Google Meet',free:'Free and no commitment',meetS:'Includes a short presentation',telS:'We go through everything in detail by phone',noteS:'If you can’t find it in your inbox, please also check your Spam folder.',lead:'We get to know each other: you tell us what you do and what you would like. We explain how we work and in how many days you will see the first version of your website.',sites:'websites online',revs:'reviews',pickH:'Choose a day and time',moveH:'Choose the new time',tz:'Greece time (Athens)',back:'Change time',formH:'Your details',lName:'Full name',lPhone:'Mobile phone',lMail:'Email',lJob:'Profession or business',opt:'(optional)',phJob:'e.g. psychologist, hair salon',lHow:'How should we talk?',meet:'Google Meet · Video call',tel:'We call your mobile',lMsg:'Anything we should know?',phMsg:'e.g. I already have a website and want a new one',note:'We send a confirmation email now and one reminder 1 hour before.',book:'Book the call',priv:'Your details are used only for this appointment. <a href="/privacy-policy" target="_blank" rel="noopener">Privacy policy</a>',eName:'Please write your name.',ePhone:'Please write a valid phone, e.g. 694 123 4567.',eMail:'Please write a valid email — we send the confirmation there.',doneH:'Your call is <em>successfully</em> booked!',doneP:'We sent you a confirmation email with all the details.',doneP2:'Your call is booked. If the email does not arrive in a few minutes, check your spam folder.',r0:'Confirmation email — now',r1:'Reminder — 1 hour before',r2:'Reminder — 1 hour before',gcal:'Google Calendar',ics:'Apple / Outlook',change:'Need another time?',changeB:'Change or cancel',privL:'Privacy policy',
+ en:{whoL:'Booking for',whoEdit:'Change details',pflT:'We have your details. Just pick a day and time.',tzL:'Time zone',tzN:'Greece time',hold:'We have reserved this time just for you, as our available times are limited. If anything changes, please update your booking in good time with one click from your email.',mvH:'Changing your time…',mv1:'Releasing the old time',mv2:'Holding the new time',mv3:'Sending you an email with the new time',cxH:'Cancelling your call…',cx1:'Cancelling the booking',cx2:'Freeing the time in the calendar',cx3:'Sending you a cancellation email',mgLoad:'Loading your call…',nowL:'now',sendH:'Booking your call…',st1:'Holding your time',st2:'Adding it to the calendar',st3:'Sending your confirmation email',sendN:'It takes a few seconds — please keep this page open.',okB:'CONFIRMED',with:'With the founder of the company',name:'Angelo M.',title:'Free intro call',dur:'About 10–15 minutes, whichever way you choose',how:'Phone or a video call on Google Meet',free:'Free and no commitment',meetS:'Includes a short presentation',telS:'We go through everything in detail by phone',noteS:'If you can’t find it in your inbox, please also check your Spam folder.',lead:'We get to know each other: you tell us what you do and what you would like. We explain how we work and in how many days you will see the first version of your website.',sites:'websites online',revs:'reviews',pickH:'Choose a day and time',moveH:'Choose the new time',tz:'Greece time (Athens)',back:'Change time',formH:'Your details',lName:'Full name',lPhone:'Mobile phone',lMail:'Email',lJob:'Profession or business',opt:'(optional)',phJob:'e.g. psychologist, hair salon',lHow:'How should we talk?',meet:'Google Meet · Video call',tel:'We call your mobile',lMsg:'Anything we should know?',phMsg:'e.g. I already have a website and want a new one',note:'We send a confirmation email now and one reminder 1 hour before.',book:'Book the call',priv:'Your details are used only for this appointment. <a href="/privacy-policy" target="_blank" rel="noopener">Privacy policy</a>',eName:'Please write your name.',ePhone:'Please write a valid phone, e.g. 694 123 4567.',eMail:'Please write a valid email — we send the confirmation there.',doneH:'Your call is <em>successfully</em> booked!',doneP:'We sent you a confirmation email with all the details.',doneP2:'Your call is booked. If the email does not arrive in a few minutes, check your spam folder.',r0:'Confirmation email — now',r1:'Reminder — 1 hour before',r2:'Reminder — 1 hour before',gcal:'Google Calendar',ics:'Apple / Outlook',change:'Need another time?',changeB:'Change or cancel',privL:'Privacy policy',
   loading:'Loading free times…',loadErr:'We could not load the times. Refresh the page or call us.',noDays:'No free times this month.',
   mgH:'Your call',mgMove:'Change time',mgCancel:'Cancel the call',mgSure:'Are you sure you want to cancel?',mgYes:'Yes, cancel',mgNo:'No, keep it',newBk:'Book a new call',mgOk:'Confirmed ✓',mgX:'This call was cancelled.',mgPast:'This call is in the past.',mgMoved:'We sent you an email with the new time.',mgMovedH:'Your new time is <em>booked!</em>',mgCancelled:'We sent you a cancellation email. Book a new time whenever you like.',mgCancelledH:'Your call was cancelled',mgBad:'This link is not valid. Book a new call.',
   testRem:'Send me the reminder now (test)',testOk:'Sent — check your email.',testNo:'Not sent: ',
@@ -566,7 +612,7 @@ function fmtDay(d,o){return d.toLocaleDateString(t().loc,o)}
 function endT(x){var p=x.split(':'),m=+p[0]*60+ +p[1]+15;return pad(Math.floor(m/60))+':'+pad(m%60)}
 
 function api(method,qs,body){return fetch(API+(qs||''),{method:method,headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined,cache:'no-store'}).then(function(r){return r.json().catch(function(){return {ok:false,code:'bad'}}).then(function(j){j._status=r.status;return j})})}
-function loadSlots(){SLOTS=null;slotErr=false;drawCal();return api('GET','?slots=1').then(function(j){if(!j.ok){slotErr=true;drawCal();return}SLOTS=j.slots;var f=firstFree();if(f&&!selD)view=new Date(f.getFullYear(),f.getMonth(),1);drawCal();drawSlots()}).catch(function(){slotErr=true;drawCal()})}
+function loadSlots(){SLOTS=null;slotErr=false;drawCal();return api('GET','?slots=1').then(function(j){if(!j.ok){slotErr=true;drawCal();return}SLOTS=j.slots;var f=firstFree();if(f&&!selD)view=new Date(f.getFullYear(),f.getMonth(),1);if(f&&!selD&&EMB&&innerWidth>=540)selD=f;drawCal();drawSlots()}).catch(function(){slotErr=true;drawCal()})}
 function firstFree(){if(!SLOTS)return null;var k=Object.keys(SLOTS).sort();for(var i=0;i<k.length;i++)if(SLOTS[k[i]].length)return dOf(k[i]);return null}
 function lastDay(){if(!SLOTS)return null;var k=Object.keys(SLOTS).sort();return k.length?dOf(k[k.length-1]):null}
 
@@ -691,7 +737,7 @@ function pfOk(d){if(!d||typeof d!=='object')return false;var ph=String(d.phone||
   return String(d.name||'').trim().length>=2&&/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(d.email||'').trim())&&(/^(69\d{8}|2\d{9})$/.test(p)||/^\+[1-9]\d{7,14}$/.test(ph))}
 function pfDraw(){var tt=t(),first=String(PF.name).trim().split(/\s+/)[0];
   $('whoN').textContent=PF.name;$('whoC').textContent=PF.phone+' · '+PF.email;
-  $('pflT').textContent=tt.pflT.replace('{n}',first?', '+first:'');}
+  $('pflT').textContent=tt.pflT;}
 function applyPf(d){if(!pfOk(d)||BKTOK)return;PF={name:String(d.name).trim().slice(0,80),phone:String(d.phone).trim().slice(0,30),email:String(d.email).trim().slice(0,160),job:String(d.job||'').trim().slice(0,80)};
   $('name').value=PF.name;$('phone').value=PF.phone;$('mail').value=PF.email;if(PF.job&&!$('job').value)$('job').value=PF.job;
   pfDraw();$('who').hidden=false;$('pfl').hidden=false;$('form').classList.add('pf');}

@@ -332,17 +332,12 @@ export default function Contact() {
 
           {/* Booking (our own /rantevou page) */}
           <ScrollReveal direction="right" delay={100} className="h-full w-full">
-          <div className={`glass-panel contact-card p-8 md:p-10 rounded-3xl text-left flex flex-col h-full overflow-hidden ${sent ? 'ring-2 ring-electric-cyan/60' : ''}`}>
-             <div className="flex items-center gap-3 mb-4">
-               <span className="w-10 h-10 rounded-xl bg-electric-cyan/10 border border-electric-cyan/20 text-electric-cyan flex items-center justify-center shrink-0">
-                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-               </span>
-               <h3 className="text-2xl md:text-3xl font-black text-white font-display">{sent ? (lang === 'en' && !landing ? 'Pick a day and time' : 'Διαλέξτε μέρα και ώρα') : landing ? 'Κλείστε ραντεβού μόνοι σας' : lang === 'el' ? 'Κλείστε Ραντεβού' : 'Book a Call'}</h3>
-             </div>
-             <p className="text-gray-400 mb-8">{lang === 'el' ? 'Επιλέξτε την ημέρα και ώρα που σας εξυπηρετεί για μια δωρεάν 15λεπτη συμβουλευτική κλήση.' : 'Choose the day and time that suits you for a free 15-minute consultation call.'}</p>
+          <div className={`glass-panel contact-card p-2.5 md:p-3 rounded-3xl text-left flex flex-col h-full overflow-hidden ${sent ? 'ring-2 ring-electric-cyan/60' : ''}`}>
+             {/* The booking card carries its own title, host and details (the dark band inside it) */}
+             <h3 className="sr-only">{lang === 'en' && !landing ? 'Book a free intro call' : 'Κλείστε δωρεάν κλήση γνωριμίας'}</h3>
              {/* Our booking page in «embed» mode. It reports its own height, so the box always fits it:
                  no inner scrollbar, nothing cut off, on every screen. */}
-             <div id={CAL_ID} className="w-full flex-grow rounded-xl bg-white relative overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)]" style={{ minHeight: calH }}>
+             <div id={CAL_ID} className="w-full flex-grow rounded-[20px] bg-white relative overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)]" style={{ minHeight: calH }}>
                 {wantCal && (
                   <iframe
                     key={lang === 'en' && !landing ? 'en' : 'el'}
