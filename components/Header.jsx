@@ -97,6 +97,13 @@ export default function Header() {
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-[#FBBC05]" aria-hidden="true"><path d="M12 2.5l2.9 5.88 6.49.94-4.7 4.58 1.11 6.46L12 17.3l-5.8 3.06 1.11-6.46-4.7-4.58 6.49-.94L12 2.5z"/></svg>
               <span className="text-electric-cyan">140+</span> {lang === 'el' ? 'κριτικές στο Google' : 'Google reviews'}
             </span>
+            {/* «Ξεκινάμε τώρα» — no-call start (21 Nov 2026) */}
+            <a
+              href="/ksekinima/"
+              className="hidden sm:inline-flex items-center gap-2 px-4 md:px-5 py-2.5 md:py-3 rounded-xl border border-electric-cyan/40 text-electric-cyan text-[0.7rem] md:text-xs font-black uppercase tracking-[0.1em] hover:bg-electric-cyan hover:text-[#050a0e] transition-all duration-300 whitespace-nowrap"
+            >
+              Ξεκινάμε τώρα
+            </a>
             <a
               href="#contact"
               className="btn-premium inline-flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 rounded-xl bg-electric-cyan text-[#050a0e] text-[0.7rem] md:text-xs font-black uppercase tracking-[0.1em] hover:bg-white transition-all duration-300 shadow-[0_0_24px_rgba(71,200,245,0.35)] whitespace-nowrap"
@@ -148,6 +155,14 @@ export default function Header() {
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-electric-cyan scale-x-0 group-hover:scale-x-100 transition-transform origin-right group-hover:origin-left duration-300" />
             </Link>
           ))}
+
+          <a
+            href="/ksekinima/"
+            className="btn-premium inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-electric-cyan text-xs font-black text-[#050608] hover:bg-white transition-all duration-300 shadow-[0_0_24px_rgba(71,200,245,0.35)] whitespace-nowrap"
+          >
+            {lang === 'el' ? 'Ξεκινάμε τώρα' : 'Start now'}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
 
           <Link
             href="#contact"
@@ -205,6 +220,7 @@ export default function Header() {
           <Link href="/#reviews"                onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Αξιολογήσεις' : 'Reviews'}</Link>
           <Link href="/faq"                     onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">FAQ</Link>
           <Link href="/blog"                    onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">Blog</Link>
+          <a href="/ksekinima/" className="text-electric-cyan font-black tracking-wide">{lang === 'el' ? 'Ξεκινάμε τώρα, χωρίς ραντεβού' : 'Start now, no call'}</a>
           <Link href="#contact"                 onClick={() => setIsMobileMenuOpen(false)} className="text-electric-cyan font-black tracking-wide">{lang === 'el' ? 'Επικοινωνία' : 'Contact'}</Link>
         </nav>
       </div>}
