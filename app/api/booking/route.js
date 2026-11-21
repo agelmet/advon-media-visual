@@ -22,7 +22,9 @@ export const dynamic = 'force-dynamic';
 
 const H = { 'Cache-Control': 'no-store', 'Content-Type': 'application/json; charset=utf-8' };
 const json = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: H });
-const isProd = () => process.env.CONTEXT === 'production';
+// CONTEXT exists only while Netlify BUILDS — the running function never sees it, so production thought it was a test
+// («(test deploy)» on every Telegram). The data branch tells: production writes to main, branch deploys to draft.
+const isProd = () => process.env.CONTEXT === 'production' || (process.env.CRM_GH_BRANCH || 'main') === 'main';
 const OWN = /^(advonmd|agelmet[a-z0-9]*)@gmail\.com$/i;
 
 function baseUrl(req) {

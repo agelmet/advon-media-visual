@@ -1,4 +1,5 @@
 import { crmCors, crmPreflight } from '@/lib/crmcors';
+import { ghConf, ghReady, readAtHead } from '@/lib/ghdata';
 // app/api/bookings/route.js
 //
 // Meetings booked online -> the Advon CRM.
@@ -193,6 +194,40 @@ function readBooking(ev) {
   };
 }
 
+
+/* ---------------- our own booking page (21 Nov 2026) ----------------
+   /rantevou saves every booking in the data repo (bookings/online.json) the moment it is made, while
+   Google's private iCal link can lag minutes to an hour behind the calendar. So the CRM also gets the
+   bookings straight from that file: same uid as the calendar event (<eventId>@google.com) → never twice.
+   • booked in the last 12 h and not yet in the iCal feed → added now;
+   • cancelled / moved on the page → the file wins over a stale iCal copy;
+   • older ones not in the feed are left out (Angelo may have deleted the event by hand). */
+const FRESH_MS = 12 * 3600 * 1000;
+async function ownBookings() {
+  const conf = ghConf();
+  if (!ghReady(conf)) return [];
+  const r = await readAtHead(conf, 'bookings/online.json');
+  let items = [];
+  try { const j = JSON.parse(r.text || '{}'); items = Array.isArray(j.items) ? j.items : []; } catch { items = []; }
+  return items.filter((b) => b && b.eventId && b.day && b.time).map((b) => ({
+    uid: `${b.eventId}@google.com`,
+    source: 'zoho',
+    name: b.name || b.email || '',
+    email: b.email || '',
+    phone: String(b.phone || '').replace(/\s+/g, ' ').trim(),
+    service: 'Free Website & Growth Consultation',
+    ref: b.ref || '',
+    day: b.day,
+    time: b.time,
+    endTime: '',
+    meet: b.meet || '',
+    status: b.status === 'cancelled' ? 'CANCELLED' : 'CONFIRMED',
+    created: b.created || '',
+    _changed: Date.parse(b.cancelledAt || b.movedAt || b.created || 0) || 0,
+    _fresh: (Date.now() - (Date.parse(b.created || 0) || 0)) < FRESH_MS,
+  }));
+}
+
 async function __GET(req) {
   const icsUrl = process.env.GCAL_ICS_URL;
   const authHash = process.env.CRM_AUTH_HASH;
@@ -218,16 +253,31 @@ async function __GET(req) {
     return json({ ok: false, code: 'calendar_bad', error: 'That link did not return a calendar' }, 502);
 
   const blocks = unfold(text).split('BEGIN:VEVENT').slice(1).map((b) => b.split('END:VEVENT')[0]);
+  const own = new Map();
+  try { for (const o of await ownBookings()) own.set(o.uid, o); } catch (e) { console.warn('[bookings] online.json', e && e.message); }
   const seen = new Set();
   const bookings = [];
   for (const b of blocks) {
     let bk = null;
     try { bk = readBooking(parseBlock(b)); } catch { bk = null; }
-    if (!bk || bk.status === 'CANCELLED') continue;
+    if (!bk) continue;
     const key = bk.uid || `${bk.day}|${bk.time}|${bk.name}`;
     if (seen.has(key)) continue;
     seen.add(key);
+    const o = bk.uid && own.get(bk.uid);
+    if (o) {
+      if (o.status === 'CANCELLED') continue;                       // cancelled on the page, the feed may not know yet
+      if (o.day !== bk.day || o.time !== bk.time) { bk.day = o.day; bk.time = o.time; bk.endTime = ''; }   // moved on the page
+    }
+    if (bk.status === 'CANCELLED') continue;
     bookings.push(bk);
+  }
+  // made on the page but not in the feed yet → straight in
+  for (const o of own.values()) {
+    if (seen.has(o.uid) || o.status === 'CANCELLED' || !o._fresh) continue;
+    seen.add(o.uid);
+    const { _changed, _fresh, ...clean } = o;
+    bookings.push(clean);
   }
 
   // A month back (so nothing already booked is missed) and a year forward.
