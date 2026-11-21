@@ -278,7 +278,7 @@ export default function Contact() {
             {(lang === 'el' || landing) && (
               <a href="/ksekinima/" className="group -mt-4 mb-7 flex items-center gap-3 rounded-2xl border border-electric-cyan/25 bg-electric-cyan/5 px-4 py-3 text-sm text-gray-300 hover:border-electric-cyan/60 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 shrink-0 text-electric-cyan" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
-                <span><b className="text-white">Είστε ήδη σίγουροι;</b> Ξεκινήστε τώρα, χωρίς ραντεβού και χωρίς προκαταβολή.</span>
+                <span><b className="text-white">Είστε ήδη σίγουροι;</b> Ξεκινήστε τώρα, χωρίς ραντεβού.</span>
                 <span className="ml-auto text-electric-cyan font-black transition-transform group-hover:translate-x-1">→</span>
               </a>
             )}
