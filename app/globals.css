@@ -1470,8 +1470,36 @@ html.light, html.light body { background-color: var(--paper); color: var(--ink);
 
 /* the night sky goes away; a soft warm daylight from above instead */
 html.light .rr-sky { background: var(--paper); }
-html.light .rr-sky > canvas, html.light .rr-vignette, html.light .grain { display: none; }
-html.light .rr-sky-light { background: radial-gradient(120% 60% at 50% -10%, rgba(71,200,245,.10) 0%, rgba(71,200,245,.03) 40%, transparent 66%), linear-gradient(180deg, #fbfaf7 0%, var(--paper) 50%, #f1efe9 100%); }
+html.light .rr-vignette, html.light .grain { display: none; }
+html.light .rr-sky-light { background:
+  radial-gradient(70% 55% at 50% -14%, rgba(255,255,255,1) 0%, rgba(255,255,255,.6) 30%, transparent 62%),
+  radial-gradient(130% 80% at 50% -20%, rgba(71,200,245,.24) 0%, rgba(71,200,245,.08) 42%, transparent 70%),
+  radial-gradient(60% 50% at 8% 108%, rgba(214,170,90,.12) 0%, transparent 70%),
+  radial-gradient(60% 50% at 94% 104%, rgba(71,200,245,.10) 0%, transparent 70%),
+  linear-gradient(180deg, #eef6fa 0%, #f6f6f2 38%, var(--paper) 62%, #f0eee8 100%); }
+/* day sky: light beams fanning from above the screen — transform/opacity only */
+.rr-beams { display: none; }
+html.light .rr-beams { display: block; overflow: hidden; }
+html.light .rr-beams i {
+  position: absolute; top: -14vh; left: 50%; width: var(--w); height: 165vh;
+  transform-origin: 50% 0; transform: translateX(-50%) rotate(var(--r));
+  background: linear-gradient(180deg, rgba(71,200,245,.40) 0%, rgba(71,200,245,.16) 34%, rgba(71,200,245,.04) 62%, transparent 82%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 35%, #000 65%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0%, #000 35%, #000 65%, transparent 100%);
+  opacity: var(--o); animation: rrBeam var(--d) ease-in-out infinite alternate; will-change: transform, opacity;
+}
+html.light .rr-beams i.w { background: linear-gradient(180deg, rgba(255,206,120,.42) 0%, rgba(255,228,180,.18) 36%, rgba(255,240,215,.04) 62%, transparent 82%); }
+html.light .rr-beams i:nth-of-type(even) { animation-delay: calc(var(--d) * -.5); }
+@keyframes rrBeam {
+  0%   { transform: translateX(-50%) rotate(var(--r)); opacity: var(--o); }
+  50%  { opacity: calc(var(--o) * .45); }
+  100% { transform: translateX(-50%) rotate(calc(var(--r) + 5deg)); opacity: var(--o); }
+}
+html.light .rr-sun { position: absolute; left: 50%; top: -34vh; width: 120vw; height: 70vh; transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(255,255,255,.95) 0%, rgba(232,247,253,.55) 38%, rgba(71,200,245,.10) 70%, transparent 100%);
+  animation: rrSun 9s ease-in-out infinite alternate; }
+@keyframes rrSun { to { transform: translateX(-50%) scale(1.06); opacity: .82; } }
+@media (prefers-reduced-motion: reduce) { html.light .rr-beams i, html.light .rr-sun { animation: none; } }
 html.light .rr-ceiling { background: radial-gradient(60% 46% at 50% 0%, rgba(71,200,245,.10) 0%, transparent 70%); }
 html.light .mv-amb::before { background: radial-gradient(closest-side, rgba(71,200,245,.07), transparent); }
 html.light .mv-amb::after { background: radial-gradient(closest-side, rgba(255,200,120,.08), transparent); }

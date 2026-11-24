@@ -9,12 +9,38 @@
 //     slow scroll parallax; the loop stops when the tab is hidden;
 //   • about half the stars of the old version (the look stays dense, the work per frame is
 //     roughly a tenth);
-//   • light mode (html.light) hides the whole layer — CSS — and the loop does not run;
+//   • light mode (html.light, 24 Nov 2026 — Angelo: «too boring, still beams and stars, even
+//     more impressive»): a day sky — slow light beams from above (CSS, .rr-beams) and the same
+//     stars repainted in ink-blue / cyan / gold, the brightest as four-point sparkles;
 //   • prefers-reduced-motion: one still frame.
 'use client';
 import { useEffect, useRef } from 'react';
 
 const TINTS = ['255,246,232', '255,255,255', '232,238,255']; // warm · white · cool fibres
+const TINTS_L = ['26,72,138', '10,138,190', '196,146,52'];     // light mode: ink blue · cyan · gold
+
+// a four-point sparkle (cross flare + soft core) — the brightest stars in light mode
+function makeSparkle(rgb, size) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  const r = size / 2;
+  const core = g.createRadialGradient(r, r, 0, r, r, r * 0.42);
+  core.addColorStop(0, `rgba(${rgb},1)`);
+  core.addColorStop(0.35, `rgba(${rgb},0.55)`);
+  core.addColorStop(1, `rgba(${rgb},0)`);
+  g.fillStyle = core;
+  g.fillRect(0, 0, size, size);
+  for (const [w, h] of [[r * 2, r * 0.09], [r * 0.09, r * 2]]) {
+    const lg = w > h ? g.createLinearGradient(0, r, size, r) : g.createLinearGradient(r, 0, r, size);
+    lg.addColorStop(0, `rgba(${rgb},0)`);
+    lg.addColorStop(0.5, `rgba(${rgb},0.9)`);
+    lg.addColorStop(1, `rgba(${rgb},0)`);
+    g.fillStyle = lg;
+    g.fillRect(r - w / 2, r - h / 2, w, h);
+  }
+  return c;
+}
 
 function makeGlow(rgb, size) {
   const c = document.createElement('canvas');
@@ -46,7 +72,10 @@ export default function Background() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const coarse = window.matchMedia('(pointer: coarse)').matches;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const glow = TINTS.map((t) => makeGlow(t, 32));
+    const glowD = TINTS.map((t) => makeGlow(t, 32));
+    const glowL = TINTS_L.map((t) => makeGlow(t, 32));
+    const spark = TINTS_L.map((t) => makeSparkle(t, 64));
+    let light = isLight(), glow = light ? glowL : glowD, tints = light ? TINTS_L : TINTS, dustN = 0;
 
     let W = 0, H = 0, stars = [], raf = 0, last = 0, running = false, shot = null;
     let nextShot = performance.now() + 6000 + Math.random() * 8000;
@@ -61,11 +90,11 @@ export default function Background() {
         buckets[t][Math.min(5, (b * 10 - 1.4) | 0)].push(Math.random() * W, Math.random() * H, 0.3 + Math.pow(Math.random(), 2.4) * 0.55);
       }
       for (let t = 0; t < 3; t++) {
-        dctx.fillStyle = `rgb(${TINTS[t]})`;
+        dctx.fillStyle = `rgb(${tints[t]})`;
         for (let k = 0; k < 6; k++) {
           const L = buckets[t][k];
           if (!L.length) continue;
-          dctx.globalAlpha = 0.16 + k * 0.08;
+          dctx.globalAlpha = light ? 0.12 + k * 0.07 : 0.16 + k * 0.08;
           dctx.beginPath();
           for (let j = 0; j < L.length; j += 3) { dctx.moveTo(L[j] + L[j + 2], L[j + 1]); dctx.arc(L[j], L[j + 1], L[j + 2], 0, 6.2832); }
           dctx.fill();
@@ -80,7 +109,8 @@ export default function Background() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       dctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const area = W * H;
-      paintDust(Math.floor(area / (coarse ? 1100 : 700)));      // static faint dust
+      dustN = Math.floor(area / (coarse ? 1100 : 700));
+      paintDust(dustN);                                          // static faint dust
       const n = Math.floor(area / (coarse ? 5200 : 3400));       // the stars that breathe
       stars = [];
       for (let i = 0; i < n; i++) {
@@ -110,8 +140,13 @@ export default function Background() {
         if (y > H + 4) continue;
         const a = reduced ? st.b : st.b * (0.55 + 0.45 * Math.sin(sec * st.w + st.p));
         ctx.globalAlpha = Math.max(0, Math.min(1, a));
-        const z = st.s * (st.big ? 9 : 5);
-        ctx.drawImage(glow[st.t], st.x - z / 2, y - z / 2, z, z);
+        if (light && st.big) {                                   // day sky: the bright ones sparkle
+          const z = st.s * 15 * (0.8 + 0.2 * Math.sin(sec * st.w * 0.7 + st.p));
+          ctx.drawImage(spark[st.t], st.x - z / 2, y - z / 2, z, z);
+        } else {
+          const z = st.s * (st.big ? 9 : 5);
+          ctx.drawImage(glow[st.t], st.x - z / 2, y - z / 2, z, z);
+        }
       }
       if (!reduced) drawShot(now);
       ctx.globalAlpha = 1;
@@ -124,13 +159,13 @@ export default function Background() {
         shot = { x: ltr ? W * (0.05 + Math.random() * 0.4) : W * (0.55 + Math.random() * 0.4), y: H * (0.05 + Math.random() * 0.35), vx: (ltr ? 1 : -1) * (4.8 + Math.random() * 2.4), vy: 1.6 + Math.random() * 1.3, life: 1 };
       }
       if (!shot) return;
-      const s = shot, len = 18;
+      const s = shot, len = 18, c = light ? '10,138,190' : '255,246,232';
       const g = ctx.createLinearGradient(s.x, s.y, s.x - s.vx * len, s.y - s.vy * len);
-      g.addColorStop(0, `rgba(255,246,232,${0.85 * s.life})`);
-      g.addColorStop(1, 'rgba(255,246,232,0)');
-      ctx.globalAlpha = 1; ctx.strokeStyle = g; ctx.lineWidth = 1.1; ctx.lineCap = 'round';
+      g.addColorStop(0, `rgba(${c},${0.85 * s.life})`);
+      g.addColorStop(1, `rgba(${c},0)`);
+      ctx.globalAlpha = 1; ctx.strokeStyle = g; ctx.lineWidth = light ? 1.4 : 1.1; ctx.lineCap = 'round';
       ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s.x - s.vx * len, s.y - s.vy * len); ctx.stroke();
-      ctx.globalAlpha = s.life; ctx.drawImage(glow[0], s.x - 5, s.y - 5, 10, 10);
+      ctx.globalAlpha = s.life; if (light) ctx.drawImage(spark[1], s.x - 9, s.y - 9, 18, 18); else ctx.drawImage(glow[0], s.x - 5, s.y - 5, 10, 10);
       s.x += s.vx; s.y += s.vy; s.life -= 0.011;
       if (s.life <= 0 || s.x < -60 || s.x > W + 60 || s.y > H + 60) { shot = null; nextShot = now + 12000 + Math.random() * 14000; }
     };
@@ -141,11 +176,14 @@ export default function Background() {
       last = now;
       draw(now);
     };
-    const start = () => { if (!running && !reduced && !document.hidden && !isLight()) { running = true; raf = requestAnimationFrame(frame); } };
+    const start = () => { if (!running && !reduced && !document.hidden) { running = true; raf = requestAnimationFrame(frame); } };
     const stop = () => { running = false; cancelAnimationFrame(raf); };
     const onVis = () => (document.hidden ? stop() : start());
     const onScroll = () => { scrollY = window.scrollY; if (reduced) draw(performance.now()); };
-    const onTheme = () => (isLight() ? stop() : start());
+    const onTheme = () => {                                      // repaint the same sky in the other palette
+      light = isLight(); glow = light ? glowL : glowD; tints = light ? TINTS_L : TINTS;
+      paintDust(dustN); draw(performance.now()); start();
+    };
 
     init();
     let t0 = 0;
@@ -171,6 +209,17 @@ export default function Background() {
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden rr-sky" aria-hidden="true">
       {/* the ceiling: deep black, a whisper of warm light from above, a dark vignette */}
       <div className="absolute inset-0 rr-sky-light" />
+      {/* light mode only: slow light beams from above + a soft sun (CSS shows them under html.light) */}
+      <div className="absolute inset-0 rr-beams">
+        <b className="rr-sun" />
+        <i style={{ '--r': '-34deg', '--w': '9vw', '--d': '19s', '--o': '.75' }} />
+        <i className="w" style={{ '--r': '-21deg', '--w': '5vw', '--d': '15s', '--o': '.9' }} />
+        <i style={{ '--r': '-9deg', '--w': '13vw', '--d': '23s', '--o': '.55' }} />
+        <i className="w" style={{ '--r': '4deg', '--w': '6vw', '--d': '17s', '--o': '.85' }} />
+        <i style={{ '--r': '16deg', '--w': '10vw', '--d': '21s', '--o': '.7' }} />
+        <i className="w" style={{ '--r': '28deg', '--w': '4.5vw', '--d': '14s', '--o': '.9' }} />
+        <i style={{ '--r': '39deg', '--w': '8vw', '--d': '25s', '--o': '.6' }} />
+      </div>
       <canvas ref={dustRef} className="absolute inset-0 w-full h-full" style={{ opacity: 0, transition: 'opacity 1.4s ease' }} />
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ opacity: 0, transition: 'opacity 1.4s ease' }} />
       <div className="absolute inset-0 rr-vignette" />
