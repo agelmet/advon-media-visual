@@ -6,6 +6,7 @@ import { useLangStore } from '@/store/langStore';
 import { usePathname } from 'next/navigation';
 import { NAV_SERVICES as services } from '@/lib/nav';
 import { isLanding } from '@/lib/landing';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Header() {
   const { lang, toggleLang } = useLangStore();
@@ -21,22 +22,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
-      style={{
-        background: scrolled
-          ? 'rgba(5,6,8,0.85)'
-          : 'transparent',
-        backdropFilter: scrolled ? 'blur(24px)' : 'blur(0px)',
-        WebkitBackdropFilter: scrolled ? 'blur(24px)' : 'blur(0px)',
-        borderBottom: scrolled
-          ? '1px solid rgba(71,200,245,0.12)'
-          : '1px solid transparent',
-        boxShadow: scrolled
-          ? '0 8px 32px rgba(0,0,0,0.4), 0 0 60px rgba(71,200,245,0.03)'
-          : 'none',
-      }}
-    >
+    <header className={`site-hd fixed top-0 left-0 right-0 z-50 ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="max-w-7xl mx-auto px-6 h-28 pt-4 flex items-center justify-between">
         {/* Logo */}
         <Link href={landing ? '/istoselida' : '/'} className="flex items-center gap-3">
@@ -162,10 +148,12 @@ export default function Header() {
           >
             {lang === 'el' ? '🇬🇧 EN' : '🇬🇷 EL'}
           </button>
+          <ThemeToggle />
         </nav>
 
         {/* Mobile controls */}
         <div className="md:hidden flex items-center gap-3">
+          <ThemeToggle />
           <button
             onClick={toggleLang}
             className="flex items-center gap-1 px-2 py-1 rounded-lg border border-electric-cyan/40 bg-electric-cyan/10 text-xs font-bold text-electric-cyan hover:bg-electric-cyan hover:text-[#050608] transition-all"

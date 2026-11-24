@@ -15,6 +15,7 @@ import { InstagramLine, FacebookLine, GoogleLine } from '@/components/BrandMarks
 
 const marqueeItems = [
   'Κατασκευή Ιστοσελίδων',
+  'Κατασκευή E-shop',
   'Social Media',
   'Google Ads',
   'Παρουσία στο Google',
@@ -198,8 +199,8 @@ export default function HomeClient() {
           {/* One-line services teaser */}
           <p className="reveal-item delay-6 text-gray-500 text-xs md:text-sm tracking-wide mt-8">
             {lang === 'el'
-              ? 'Social Media · Google Ads · Κριτικές Google · Online ραντεβού · AI βοηθός'
-              : 'Social Media · Google Ads · Google reviews · Online appointments · AI assistant'}
+              ? 'E-shop · Social Media · Google Ads · Κριτικές Google · Online ραντεβού · AI βοηθός'
+              : 'E-shop · Social Media · Google Ads · Google reviews · Online appointments · AI assistant'}
           </p>
 
           {/* Scroll indicator */}
@@ -250,14 +251,13 @@ export default function HomeClient() {
             </p>
           </ScrollReveal>
 
-          {/* Row one = the three services that go together (website · social · Google Ads),
-              each with its price; the other six below in two rows of three. */}
-          {[services.slice(0, 3), services.slice(3)].map((group, g) => (
-            <div key={g} className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch ${g ? 'mt-8' : ''}`}>
+          {/* Row one = the four main services (website · e-shop · social · Google Ads), each with
+              its price; the other six below in two rows of three. */}
+          {[services.slice(0, 4), services.slice(4)].map((group, g) => (
+            <div key={g} className={`grid grid-cols-1 md:grid-cols-2 ${g ? 'lg:grid-cols-3 gap-8' : 'xl:grid-cols-4 gap-6'} items-stretch ${g ? 'mt-8' : ''}`}>
               {group.map((service, i) => {
-                const idx = g * 3 + i;
                 const featured = g === 0;
-                const isNew = service.slug === 'diaxeirisi-social-media' || service.slug === 'google-ads';
+                const isNew = service.slug === 'kataskevi-eshop' || service.slug === 'diaxeirisi-social-media' || service.slug === 'google-ads';
                 const price = service.slug === 'kataskevi-istoselidas'
                   ? { v: lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE', n: lang === 'el' ? '(10.83€/μήνα hosting)' : '(10.83€/mo hosting)' }
                   : service.card.price ? { v: service.card.price[lang], n: service.card.priceNote[lang] } : null;
@@ -266,8 +266,8 @@ export default function HomeClient() {
                     key={service.slug}
                     delay={(i % 3) * 110}
                     direction={featured ? 'deal' : 'up'}
-                    style={featured ? { '--rz': `${(i - 1) * 2.5}deg` } : undefined}
-                    className={`h-full ${g === 1 && i === group.length - 1 ? 'md:col-span-2 lg:col-span-1' : ''}`}
+                    style={featured ? { '--rz': `${(i - 1.5) * 2}deg` } : undefined}
+                    className="h-full"
                   >
                     <TiltCard className="h-full">
                       <div className={`glass-panel service-card card-sweep rounded-3xl p-8 flex flex-col h-full group relative ${featured ? 'svc-featured' : ''}`}>
@@ -341,7 +341,7 @@ export default function HomeClient() {
                 );
               })}
               {g === 0 && (
-                <ScrollReveal delay={120} className="md:col-span-2 lg:col-span-3">
+                <ScrollReveal delay={120} className="md:col-span-2 xl:col-span-4">
                   <div className="glass-panel rounded-2xl px-6 py-5 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
                     {[
                       { el: ['Χωρίς κωδικούς', 'Δεν ζητάμε ποτέ password — μας δίνετε πρόσβαση συνεργάτη.'], en: ['No passwords', 'We never ask for a password — you give us partner access.'] },

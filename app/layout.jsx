@@ -4,7 +4,6 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Background from '@/components/Background';
 import Contact from '@/components/Contact';
-import CustomCursor from '@/components/CustomCursor';
 import DeferredWidget from '@/components/DeferredWidget';
 import ScrollProgress from '@/components/ScrollProgress';
 import Spotlight from '@/components/Spotlight';
@@ -32,6 +31,11 @@ export const metadata = {
   },
 };
 
+export const viewport = { themeColor: '#050608' };
+
+// Light / dark (24 Nov 2026): applied before the first paint so the page never flashes the other theme.
+const THEME_BOOT = `(function(){try{var t=localStorage.getItem('advon-theme');if(t==='light'){var d=document.documentElement;d.classList.add('light');d.style.colorScheme='light';var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#f6f5f1')}}catch(e){}})();`;
+
 const MV_BOOT = `(function(){var d=document.documentElement;try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;d.classList.add('mv-js');var force=/[?&]intro=1/.test(location.search);if(!document.hidden&&(force||!sessionStorage.getItem('advon-intro'))){sessionStorage.setItem('advon-intro','1');d.classList.add('mv-intro');setTimeout(function(){d.classList.remove('mv-intro','mvi-dock')},3000)}}catch(e){}setTimeout(function(){if(!window.__mvOn){var n=document.querySelectorAll('[data-io],main h2');for(var i=0;i<n.length;i++)n[i].classList.add('in')}},6000)})();`;
 
 // Ignition, step 2: at 1.1 s the lockup learns where the header logo is and glides into it.
@@ -42,10 +46,10 @@ export default function RootLayout({ children }) {
     <html lang="el" suppressHydrationWarning className={`scroll-smooth ${displayFont.variable} ${bodyFont.variable}`}>
       <body className="font-body antialiased relative min-h-screen flex flex-col">
         {/* Motion v4 boot: marks JS on <html> before first paint and decides the once-per-session opening */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <script dangerouslySetInnerHTML={{ __html: MV_BOOT }} />
         <IntroOverlay />
         <Background />
-        <CustomCursor />
         <ScrollProgress />
         <Spotlight />
         <Motion />

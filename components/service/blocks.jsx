@@ -52,6 +52,9 @@ export const ICONS = {
   instagram: (cls = 'w-7 h-7') => (
     <svg {...iconProps} className={cls}><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
   ),
+  bag: (cls = 'w-7 h-7') => (
+    <svg {...iconProps} className={cls}><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+  ),
   ads: (cls = 'w-7 h-7') => (
     <svg {...iconProps} className={cls}><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/><path d="M11 8v6"/></svg>
   ),
