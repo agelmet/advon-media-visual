@@ -129,7 +129,7 @@ const pick = (re, text) => { const m = text.match(re); return m ? m[1].trim() : 
 function readBooking(ev) {
   const summary = unescapeIcs(ev.SUMMARY && ev.SUMMARY.value);
   const desc = stripTags(unescapeIcs(ev.DESCRIPTION && ev.DESCRIPTION.value));
-  let name = '', email = '', phone = '', service = '', ref = '', source = '';
+  let name = '', email = '', phone = '', service = '', ref = '', source = '', how = '', job = '', msg = '';
 
   // 1. Zoho Bookings, synced into Google Calendar.
   //    "Customer Info / Name : X / Email : Y / Contact Number : Z / Booking ID : AD-000n"
@@ -140,6 +140,10 @@ function readBooking(ev) {
     phone = pick(/^\s*(?:Contact\s*Number|Phone)\s*:\s*(.+)$/im, desc);
     service = pick(/^\s*Service\s*Name\s*:\s*(.+)$/im, desc);
     ref = pick(/^\s*Booking\s*ID\s*:\s*(.+)$/im, desc);
+    // our own booking page (lib/booking.js eventBody) adds how, the business and the note (24 Nov 2026)
+    how = /Τρόπος:\s*τηλεφων/i.test(desc) ? 'tel' : (/Τρόπος:\s*Google\s*Meet/i.test(desc) ? 'meet' : '');
+    job = pick(/^\s*Επάγγελμα\s*\/\s*επιχείρηση\s*:\s*(.+)$/im, desc);
+    msg = pick(/^\s*Σημείωση\s*:\s*(.+)$/im, desc);
   }
   // 2. Google Calendar appointment schedule.
   //    "<b>Κράτηση από</b>\n<name>\n<email>" (or the English "Booked by").
@@ -189,6 +193,7 @@ function readBooking(ev) {
     time: start.allDay ? '' : start.time,
     endTime: end && !end.allDay ? end.time : '',
     meet: (pick(/(https:\/\/meet\.google\.com\/[a-z-]+)/i, desc) || ''),
+    how, job, msg,
     status: String((ev.STATUS && ev.STATUS.value) || 'CONFIRMED').toUpperCase(),
     created: String((ev.CREATED && ev.CREATED.value) || ''),
   };
@@ -221,6 +226,11 @@ async function ownBookings() {
     time: b.time,
     endTime: '',
     meet: b.meet || '',
+    how: b.how === 'tel' ? 'tel' : 'meet',
+    job: b.job || '',
+    msg: b.msg || '',
+    src: b.src || '',
+    lang: b.lang || '',
     status: b.status === 'cancelled' ? 'CANCELLED' : 'CONFIRMED',
     created: b.created || '',
     _changed: Date.parse(b.cancelledAt || b.movedAt || b.created || 0) || 0,
@@ -268,6 +278,8 @@ async function __GET(req) {
     if (o) {
       if (o.status === 'CANCELLED') continue;                       // cancelled on the page, the feed may not know yet
       if (o.day !== bk.day || o.time !== bk.time) { bk.day = o.day; bk.time = o.time; bk.endTime = ''; }   // moved on the page
+      // the page's own record is richer than the calendar text: how, business, message, where they came from, language
+      bk.how = o.how; bk.job = o.job || bk.job; bk.msg = o.msg || bk.msg; bk.src = o.src; bk.lang = o.lang; if (!bk.meet) bk.meet = o.meet;
     }
     if (bk.status === 'CANCELLED') continue;
     bookings.push(bk);
