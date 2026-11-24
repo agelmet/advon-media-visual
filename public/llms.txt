@@ -9,7 +9,7 @@
 - Google presence & reviews (NFC): https://advonmedia.com/google-reviews-nfc
 - Online appointments: https://advonmedia.com/online-rantevou
 - Website AI assistant: https://advonmedia.com/ai-voithos
-- Direct booking for tourism: https://advonmedia.com/direct-booking
+- Websites for holiday rentals (3 options: 0€ build + 130€/yr · + availability calendar 180€/yr · full booking system synced with Airbnb/Booking 100€ setup + 240€/yr): https://advonmedia.com/direct-booking
 - QR digital menu: https://advonmedia.com/psifiako-menou-qr
 - Custom small software: https://advonmedia.com/custom-logismiko
 - FAQ: https://advonmedia.com/faq · Blog: https://advonmedia.com/blog

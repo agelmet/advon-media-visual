@@ -1710,3 +1710,33 @@ html.light .hover\:text-gray-300:hover, html.light .group:hover .group-hover\:te
 html.light .hover\:border-white\/40:hover, html.light .hover\:border-white\/30:hover { border-color: rgba(18,21,26,.35); }
 html.light .cyber-divider { background: linear-gradient(90deg, transparent, rgba(10,127,176,.35) 30%, rgba(90,140,0,.3) 70%, transparent); }
 html.light [class*="shadow-[0_"][class*="rgba(0,0,0"] { box-shadow: 0 24px 60px -20px rgba(16,24,40,.28); }
+
+/* ═══ Home services v4 (24 Nov 2026): wide main rows, centred last row, «Έχετε κατάλυμα;» ═══ */
+.home-rest > .home-rest-item { width: 100%; }
+@media (min-width: 768px) { .home-rest > .home-rest-item { width: calc(50% - 1rem); } }
+@media (min-width: 1024px) { .home-rest > .home-rest-item { width: calc((100% - 4rem) / 3); } }
+.stay-link {
+  display: flex; align-items: center; gap: .6rem; width: 100%;
+  padding: .8rem 1rem; border-radius: .9rem; font-size: .84rem; line-height: 1.35;
+  color: #cfd8e0; border: 1px dashed rgba(71,200,245,.42); background: rgba(71,200,245,.06);
+  transition: background-color .3s ease, border-color .3s ease, color .3s ease;
+}
+.stay-link > svg:first-child { color: #47c8f5; flex-shrink: 0; }
+.stay-link b { color: #fff; font-weight: 800; }
+@media (hover: hover) { .stay-link:hover { background: rgba(71,200,245,.14); border-color: rgba(71,200,245,.8); } }
+html.light .stay-link { color: var(--ink-2); background: rgba(10,127,176,.06); border-color: rgba(10,127,176,.4); }
+html.light .stay-link > svg:first-child { color: var(--cy); }
+html.light .stay-link b { color: var(--ink); }
+.stay-band { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1.5rem; padding: 1.6rem 1.8rem; }
+@media (max-width: 767px) { .stay-band { grid-template-columns: 1fr; text-align: left; } }
+
+/* ═══ Accommodation page: the three options ═══ */
+.stay-pick { display: grid; gap: .8rem; }
+.stay-pick-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,.09); background: rgba(255,255,255,.03); }
+.stay-pick-row b { display: inline-flex; align-items: center; justify-content: center; min-width: 2rem; height: 2rem; padding: 0 .6rem; border-radius: 999px; background: #47c8f5; color: #050608; font-weight: 900; font-size: .8rem; white-space: nowrap; }
+.stay-pick-row span { color: #d4dbe2; font-size: 1rem; line-height: 1.45; }
+html.light .stay-pick-row { border-color: var(--line); background: #fff; }
+html.light .stay-pick-row span { color: var(--ink-2); }
+html.light .stay-pick-row b { background: var(--cy); color: #fff; }
+.stay-num { display: inline-flex; align-items: center; justify-content: center; width: 1.9rem; height: 1.9rem; border-radius: 999px; border: 1px solid rgba(71,200,245,.5); color: #47c8f5; font-weight: 900; font-size: .85rem; margin-bottom: .9rem; }
+html.light .stay-num { border-color: var(--cy); color: var(--cy); }

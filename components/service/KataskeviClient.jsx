@@ -14,6 +14,7 @@ import PitchQuote from '@/components/PitchQuote';
 import IncludesTech from '@/components/service/IncludesTech';
 import KataskeviPricing from '@/components/service/KataskeviPricing';
 import {
+  ICONS,
   StepsSection,
   ProofStrip,
   FaqSection,
@@ -193,6 +194,25 @@ export default function KataskeviClient() {
 
       {/* ─── HOSTING PRICING + INFRASTRUCTURE + EXTRAS (restored from history) ─── */}
       <KataskeviPricing />
+
+      {/* ─── «Έχετε κατάλυμα;» → the accommodation page (24 Nov 2026) ─── */}
+      <section className="pb-20">
+        <div className="max-w-5xl mx-auto px-6">
+          <ScrollReveal>
+            <Link href="/direct-booking" className="glass-panel card-sweep rounded-3xl stay-band group">
+              <span className="w-14 h-14 rounded-2xl bg-electric-cyan/10 border border-electric-cyan/25 flex items-center justify-center text-electric-cyan">{ICONS.building('w-7 h-7')}</span>
+              <span>
+                <b className="block text-white font-display font-black text-2xl mb-1">{lang === 'el' ? 'Έχετε κατάλυμα;' : 'Do you rent rooms or a villa?'}</b>
+                <span className="text-gray-400 leading-relaxed">{lang === 'el' ? 'Βίλα, ενοικιαζόμενα δωμάτια, Airbnb: δείτε τις 3 επιλογές για κρατήσεις κατευθείαν από την ιστοσελίδα σας — από 0€ κατασκευή και 130€ τον χρόνο.' : 'Villa, rooms to let, Airbnb: see the 3 options for bookings straight from your website — from €0 build and €130 a year.'}</span>
+              </span>
+              <span className="btn-premium inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-electric-cyan text-[#050608] font-black text-sm uppercase tracking-[0.08em] rounded-xl group-hover:bg-white transition-colors whitespace-nowrap">
+                {lang === 'el' ? 'Δείτε τις επιλογές' : 'See the options'}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </span>
+            </Link>
+          </ScrollReveal>
+        </div>
+      </section>
 
       <ProofStrip />
 

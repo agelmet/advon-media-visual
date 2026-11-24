@@ -251,12 +251,14 @@ export default function HomeClient() {
             </p>
           </ScrollReveal>
 
-          {/* Row one = the four main services (website · e-shop · social · Google Ads), each with
-              its price; the other six below in two rows of three. */}
-          {[services.slice(0, 4), services.slice(4)].map((group, g) => (
-            <div key={g} className={`grid grid-cols-1 md:grid-cols-2 ${g ? 'lg:grid-cols-3 gap-8' : 'xl:grid-cols-4 gap-6'} items-stretch ${g ? 'mt-8' : ''}`}>
+          {/* 24 Nov 2026 (Angelo: «too packed»): row one = website · e-shop, row two = Social Media ·
+              Google Ads (two wide cards each, with prices), then the promise strip, then the other
+              services three to a row with a short last row centred. Direct Booking is not a main
+              service any more — the website card links to it («Έχετε κατάλυμα;»). */}
+          {(() => { const main = services.filter((s) => !s.hideHome); return [main.slice(0, 2), main.slice(2, 4), main.slice(4)]; })().map((group, g) => (
+            <div key={g} className={g < 2 ? `grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch ${g ? 'mt-8' : ''}` : 'home-rest flex flex-wrap justify-center gap-8 mt-8'}>
               {group.map((service, i) => {
-                const featured = g === 0;
+                const featured = g < 2;
                 const isNew = service.slug === 'kataskevi-eshop' || service.slug === 'diaxeirisi-social-media' || service.slug === 'google-ads';
                 const price = service.slug === 'kataskevi-istoselidas'
                   ? { v: lang === 'el' ? 'ΔΩΡΕΑΝ' : 'FREE', n: lang === 'el' ? '(10.83€/μήνα hosting)' : '(10.83€/mo hosting)' }
@@ -266,8 +268,8 @@ export default function HomeClient() {
                     key={service.slug}
                     delay={(i % 3) * 110}
                     direction={featured ? 'deal' : 'up'}
-                    style={featured ? { '--rz': `${(i - 1.5) * 2}deg` } : undefined}
-                    className="h-full"
+                    style={featured ? { '--rz': `${(i - 0.5) * 2.5}deg` } : undefined}
+                    className={g < 2 ? 'h-full' : 'h-full home-rest-item'}
                   >
                     <TiltCard className="h-full">
                       <div className={`glass-panel service-card card-sweep rounded-3xl p-8 flex flex-col h-full group relative ${featured ? 'svc-featured' : ''}`}>
@@ -335,13 +337,20 @@ export default function HomeClient() {
                           {service.card.cta[lang]}
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                         </Link>
+                        {service.slug === 'kataskevi-istoselidas' && (
+                          <Link href="/direct-booking" className="stay-link mt-3">
+                            {ICONS.building('w-4 h-4')}
+                            <span><b>{lang === 'el' ? 'Έχετε κατάλυμα;' : 'Do you rent rooms or a villa?'}</b> {lang === 'el' ? 'Δείτε τις 3 επιλογές για κρατήσεις' : 'See the 3 booking options'}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 ml-auto shrink-0"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                          </Link>
+                        )}
                       </div>
                     </TiltCard>
                   </ScrollReveal>
                 );
               })}
-              {g === 0 && (
-                <ScrollReveal delay={120} className="md:col-span-2 xl:col-span-4">
+              {g === 1 && (
+                <ScrollReveal delay={120} className="md:col-span-2">
                   <div className="glass-panel rounded-2xl px-6 py-5 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
                     {[
                       { el: ['Χωρίς κωδικούς', 'Δεν ζητάμε ποτέ password — μας δίνετε πρόσβαση συνεργάτη.'], en: ['No passwords', 'We never ask for a password — you give us partner access.'] },
@@ -365,7 +374,7 @@ export default function HomeClient() {
             <div className="text-center mb-8">
               <span className="section-label">{lang === 'el' ? 'Ακόμη' : 'And More'}</span>
             </div>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className={`grid gap-6 ${extras.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-3'}`}>
               {extras.map((extra) => {
                 const icon =
                   extra.key === 'wedding' ? ICONS.heart('w-6 h-6')
