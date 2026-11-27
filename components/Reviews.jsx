@@ -10,8 +10,19 @@ import { GoogleStar, GoogleG } from '@/components/ReviewsGlyphs';
 /* The cards themselves (and the 70KB review list) live in their own chunk and are fetched
    only when the reviews are about 700px away from the screen. Same cards, same motion —
    the page just does not pay for them before anyone can see them. */
-const MarqueeColumns = dynamic(() => import('@/components/ReviewsColumns').then((m) => m.MarqueeColumns), { ssr: false, loading: () => null });
-const StaticGrid = dynamic(() => import('@/components/ReviewsColumns').then((m) => m.StaticGrid), { ssr: false, loading: () => null });
+const Spotlight = dynamic(() => import('@/components/ReviewsColumns').then((m) => m.Spotlight), { ssr: false, loading: () => <div className="rvs-ph" aria-hidden="true" /> });
+const OthersTitle = dynamic(() => import('@/components/ReviewsColumns').then((m) => function OthersTitle({ lang }) {
+  return (
+    <h3 className="rvs-others-t">
+      {lang === 'el' ? `Και ακόμη ${m.OTHER_COUNT} αξιολογήσεις πελατών μας` : `And ${m.OTHER_COUNT} more reviews from our clients`}
+    </h3>
+  );
+}), { ssr: false, loading: () => null });
+const Others = dynamic(() => import('@/components/ReviewsColumns').then((m) => function Others({ lang, columnCount, reduced }) {
+  return reduced
+    ? <m.StaticGrid lang={lang} reviews={m.OTHERS} />
+    : <m.MarqueeColumns lang={lang} columnCount={columnCount} reviews={m.OTHERS} />;
+}), { ssr: false, loading: () => null });
 
 /* How many columns for the current viewport (desktop 4 / tablet 2 / mobile 1). */
 function useColumnCount() {
@@ -107,15 +118,18 @@ export default function Reviews() {
           </div>
         </ScrollReveal>
 
-        {/* Reviews — vertical auto-scrolling columns (static grid if reduced-motion) */}
+        {/* 1 · each review next to the website we built for that person, changing every few seconds
+            2 · under it, the reviews whose website is not in the portfolio, as plain moving cards */}
         <ScrollReveal direction="fade" delay={60}>
           <div ref={nearRef}>
             {!near ? (
-              <div className="reviews-viewport" aria-hidden="true" />
-            ) : reducedMotion ? (
-              <StaticGrid lang={lang} />
+              <div className="rvs-ph" aria-hidden="true" />
             ) : (
-              <MarqueeColumns lang={lang} columnCount={columnCount} />
+              <>
+                <Spotlight lang={lang} reduced={reducedMotion} />
+                <OthersTitle lang={lang} />
+                <Others lang={lang} columnCount={columnCount} reduced={reducedMotion} />
+              </>
             )}
           </div>
 

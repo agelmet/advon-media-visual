@@ -2,8 +2,11 @@
 // Loaded on demand by Reviews.jsx only when the section is about to scroll into view, so the
 // home page's first paint no longer carries 220 cards of HTML and the 70KB review list.
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { googleReviews } from '@/lib/reviews';
+import { portfolioData } from '@/lib/data';
+import { REVIEW_SITE } from '@/lib/review-sites';
 import { GoogleStar, GoogleG } from '@/components/ReviewsGlyphs';
 
 const INITIAL_VISIBLE = 12;
@@ -90,16 +93,194 @@ function ReviewCard({ review, lang }) {
   );
 }
 
+/* ─── Review + the website we built for that person (27 Nov 2026) ───────────────────────────
+   PAIRS  = every review whose writer has a live site in the portfolio (lib/review-sites.js):
+            written reviews first (newest first), then the star-only ones.
+   OTHERS = every other review; they show as plain cards under the spotlight. */
+const SITE_BY_URL = new Map(portfolioData.map((p) => [p.url, p]));
+const PAIRS = (() => {
+  const all = googleReviews
+    .map((review) => ({ review, site: SITE_BY_URL.get(REVIEW_SITE[review.name]) }))
+    .filter((x) => x.site);
+  const written = all.filter((x) => x.review.text);
+  // two reviews of the same site never follow each other
+  for (let k = 1; k < written.length; k++) {
+    if (written[k].site === written[k - 1].site && k + 6 < written.length) {
+      const [moved] = written.splice(k, 1);
+      written.splice(k + 6, 0, moved);
+    }
+  }
+  return [...written, ...all.filter((x) => !x.review.text)];
+})();
+const PAIRED = new Set(PAIRS.map((x) => x.review));
+export const OTHERS = googleReviews.filter((r) => !PAIRED.has(r));
+export const PAIR_COUNT = PAIRS.length;
+export const OTHER_COUNT = OTHERS.length;
+
+const host = (url) => url.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
+const SLIDE_MS = 5000;
+
+export function Spotlight({ lang, reduced }) {
+  const el = lang === 'el';
+  const n = PAIRS.length;
+  const [i, setI] = useState(0);
+  const [prev, setPrev] = useState(null);
+  const [open, setOpen] = useState(false);       // «Περισσότερα» pressed: the text scrolls, the show waits
+  const [paused, setPaused] = useState(false);   // the visitor pressed pause
+  const [seen, setSeen] = useState(false);       // on screen
+  const [long, setLong] = useState(false);
+  const rootRef = useRef(null);
+  const railRef = useRef(null);
+  const textRef = useRef(null);
+
+  const go = useCallback((to) => {
+    setI((cur) => { const next = ((to % n) + n) % n; if (next !== cur) setPrev(cur); return next; });
+    setOpen(false);
+  }, [n]);
+
+  // only run while the spotlight is on screen
+  useEffect(() => {
+    const node = rootRef.current;
+    if (!node || !('IntersectionObserver' in window)) { setSeen(true); return; }
+    const io = new IntersectionObserver(([e]) => setSeen(e.isIntersecting), { threshold: 0.25 });
+    io.observe(node);
+    return () => io.disconnect();
+  }, []);
+
+  // is the review longer than its box?
+  useLayoutEffect(() => {
+    const t = textRef.current;
+    if (t) setLong(t.scrollHeight > t.clientHeight + 4);
+  }, [i, lang]);
+
+  // keep the active thumbnail in the middle of the strip (scrolls the strip only, never the page)
+  useEffect(() => {
+    const rail = railRef.current;
+    const cur = rail && rail.children[i];
+    if (!cur) return;
+    rail.scrollTo({ left: cur.offsetLeft - rail.clientWidth / 2 + cur.clientWidth / 2, behavior: reduced ? 'auto' : 'smooth' });
+  }, [i, reduced]);
+
+  const running = seen && !open && !paused && !reduced;
+  const { review, site } = PAIRS[i];
+  const before = prev != null ? PAIRS[prev] : null;
+  const after = PAIRS[(i + 1) % n];
+  const text = el ? review.text : review.textEn;
+  const siteName = el ? site.name : site.nameEn;
+  const sizes = '(max-width: 1023px) 92vw, 700px';
+
+  return (
+    <div ref={rootRef} className={`rvs ${running ? 'is-running' : ''}`}>
+      <div className="rvs-frame">
+        {/* the bar that fills = the time left; when it is full the next review comes */}
+        <span key={`bar-${i}`} className="rvs-bar" style={{ animationDuration: `${SLIDE_MS}ms` }} onAnimationEnd={() => go(i + 1)} aria-hidden="true" />
+
+        <div className="rvs-grid">
+          {/* the website */}
+          <a href={site.url} target="_blank" rel="noopener noreferrer" className="rvs-site group" aria-label={`${siteName} — ${host(site.url)}`}>
+            <span className="rvs-chrome" aria-hidden="true">
+              <i /><i /><i />
+              <b key={`h-${i}`} className="rvs-url">{host(site.url)}</b>
+              <em>Live</em>
+            </span>
+            <span className="rvs-shot">
+              {before && before.site !== site && (
+                <Image key={`o-${prev}`} src={before.site.image} alt="" fill sizes={sizes} className="rvs-img rvs-out" />
+              )}
+              <Image key={`c-${i}`} src={site.image} alt={siteName} fill sizes={sizes} className="rvs-img rvs-in" priority={false} />
+              {/* the next one is fetched quietly so the switch is instant */}
+              <Image key={`n-${(i + 1) % n}`} src={after.site.image} alt="" fill sizes={sizes} className="rvs-img rvs-next" aria-hidden="true" />
+              <span key={`cap-${i}`} className="rvs-cap">
+                <span className="rvs-cap-t">{siteName}</span>
+                <span className="rvs-cap-b">
+                  <span className="rvs-cap-l">{el ? 'Δείτε την ιστοσελίδα' : 'Visit the website'}</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg>
+                </span>
+              </span>
+            </span>
+          </a>
+
+          {/* the review, as it is on Google */}
+          <div className="rvs-review">
+            <div key={`r-${i}`} className="rvs-slide">
+              <div className="flex items-start justify-between gap-3 mb-4">
+                <div className="flex items-center gap-3 min-w-0">
+                  <Avatar review={review} />
+                  <div className="min-w-0">
+                    <h3 className="rvs-name text-[#202124] font-semibold text-base leading-tight">{review.name}</h3>
+                    <div className="rvs-stars flex gap-0.5 text-[#FBBC05] mt-1.5" aria-label={el ? 'Βαθμολογία 5 στα 5' : 'Rated 5 out of 5'}>
+                      {[1, 2, 3, 4, 5].map((s) => <GoogleStar key={s} className="w-[18px] h-[18px]" style={{ '--s': s }} />)}
+                    </div>
+                  </div>
+                </div>
+                <GoogleG className="w-6 h-6 shrink-0 mt-1" />
+              </div>
+
+              {text ? (
+                <div ref={textRef} className={`rvs-text ${open ? 'is-open' : ''} ${long && !open ? 'is-long' : ''}`} tabIndex={open ? 0 : undefined}>
+                  <p className="whitespace-pre-line">{text}</p>
+                </div>
+              ) : (
+                <div ref={textRef} className="rvs-text rvs-staronly">
+                  <div className="flex gap-1 text-[#FBBC05]">{[1, 2, 3, 4, 5].map((s) => <GoogleStar key={s} className="w-9 h-9" />)}</div>
+                  <p>{el ? 'Αξιολόγηση 5 αστέρων στη Google' : '5-star rating on Google'}</p>
+                </div>
+              )}
+
+              {(long || open) && (
+                <button type="button" onClick={() => setOpen((o) => !o)} className="rvs-more">
+                  {open ? (el ? 'Λιγότερα' : 'Less') : (el ? 'Περισσότερα' : 'More')}
+                </button>
+              )}
+            </div>
+
+            <div className="rvs-ctrl">
+              <span className="rvs-count" aria-live="off"><b>{String(i + 1).padStart(2, '0')}</b> / {n}</span>
+              <span className="rvs-btns">
+                <button type="button" onClick={() => go(i - 1)} aria-label={el ? 'Προηγούμενη αξιολόγηση' : 'Previous review'}>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+                </button>
+                {!reduced && (
+                  <button type="button" onClick={() => setPaused((v) => !v)} aria-label={paused ? (el ? 'Συνέχεια' : 'Play') : (el ? 'Παύση' : 'Pause')} aria-pressed={paused}>
+                    {paused
+                      ? <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z" /></svg>
+                      : <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="4" height="14" rx="1" /><rect x="13.5" y="5" width="4" height="14" rx="1" /></svg>}
+                  </button>
+                )}
+                <button type="button" onClick={() => go(i + 1)} aria-label={el ? 'Επόμενη αξιολόγηση' : 'Next review'}>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* every site in one strip: tap one to jump to its review */}
+      <div className="rvs-rail-wrap">
+        <div ref={railRef} className="rvs-rail" role="group" aria-label={el ? 'Όλες οι ιστοσελίδες με αξιολόγηση' : 'All websites with a review'}>
+          {PAIRS.map((x, k) => (
+            <button key={k} type="button" onClick={() => go(k)} className={`rvs-thumb ${k === i ? 'is-on' : ''}`}
+              aria-label={`${x.review.name} — ${host(x.site.url)}`} aria-current={k === i ? 'true' : undefined}>
+              <Image src={x.site.image} alt="" width={160} height={120} sizes="132px" loading="lazy" draggable={false} />
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* Static, non-moving fallback grid (prefers-reduced-motion). */
-export function StaticGrid({ lang }) {
+export function StaticGrid({ lang, reviews = googleReviews }) {
   const [visible, setVisible] = useState(INITIAL_VISIBLE);
-  const total = googleReviews.length;
+  const total = reviews.length;
   const remaining = total - visible;
 
   return (
     <>
       <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
-        {googleReviews.slice(0, visible).map((review) => (
+        {reviews.slice(0, visible).map((review) => (
           <ReviewCard key={review.name} review={review} lang={lang} />
         ))}
       </div>
@@ -119,10 +300,10 @@ export function StaticGrid({ lang }) {
 }
 
 /* Vertical auto-scrolling columns marquee. */
-export function MarqueeColumns({ lang, columnCount }) {
+export function MarqueeColumns({ lang, columnCount, reviews = googleReviews }) {
   // Distribute reviews evenly: review index % columnCount → column (index % 4 on desktop).
   const columns = Array.from({ length: columnCount }, () => []);
-  googleReviews.forEach((review, i) => columns[i % columnCount].push(review));
+  reviews.forEach((review, i) => columns[i % columnCount].push(review));
 
   return (
     <div
@@ -132,7 +313,8 @@ export function MarqueeColumns({ lang, columnCount }) {
       {columns.map((col, ci) => {
         // Columns 1 & 3 scroll up, 2 & 4 scroll down (adjacent columns opposite).
         const goingUp = ci % 2 === 0;
-        const duration = COLUMN_DURATIONS[ci % COLUMN_DURATIONS.length];
+        // the durations were tuned for 34 cards a column; fewer cards = a shorter loop at the same pace
+        const duration = Math.max(24, Math.round(COLUMN_DURATIONS[ci % COLUMN_DURATIONS.length] * col.length / 34));
         return (
           <div key={ci} className="min-w-0">
             <div
