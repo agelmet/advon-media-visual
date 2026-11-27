@@ -466,8 +466,8 @@ const LANDING_FAQS = [
   {
     q: { el: 'Μπορώ να αλλάξω πράγματα στη σελίδα αργότερα;', en: 'Can I change things later?' },
     a: {
-      el: 'Ναι. Μέχρι να βγει online, οι αλλαγές είναι απεριόριστες και χωρίς χρέωση. Μετά τη δημοσίευση, κάθε αίτημα αλλαγών κοστίζει 50€ — ένα αίτημα μπορεί να περιλαμβάνει όσες αλλαγές θέλετε, σε ένα μήνυμα — και ολοκληρώνεται εντός 3 εργάσιμων ημερών. Αν προτιμάτε να αλλάζετε μόνοι σας κείμενα και εικόνες, προσθέτουμε πίνακα διαχείρισης (180€ εφάπαξ).',
-      en: 'Yes. Until it goes live, changes are unlimited and free. After publishing, each change request costs 50€ — one request can include as many changes as you like, in one message — and is done within 3 working days. If you prefer to change texts and images yourself, we add an admin panel (180€ one-off).',
+      el: 'Ναι. Μέχρι να βγει online, οι αλλαγές είναι απεριόριστες και χωρίς χρέωση. Μετά τη δημοσίευση, κάθε αίτημα αλλαγών κοστίζει 50€ + ΦΠΑ — ένα αίτημα μπορεί να περιλαμβάνει όσες αλλαγές θέλετε, σε ένα μήνυμα — και ολοκληρώνεται εντός 3 εργάσιμων ημερών. Αν προτιμάτε να τις κάνετε μόνοι σας: μία ενότητα που επεξεργάζεστε εσείς (π.χ. άρθρα ή εκδηλώσεις) 70€ + ΦΠΑ εφάπαξ, ή πλήρης πίνακας διαχείρισης για όλη τη σελίδα 130€ + ΦΠΑ εφάπαξ.',
+      en: 'Yes. Until it goes live, changes are unlimited and free. After publishing, each change request costs €50 + VAT — one request can include as many changes as you like, in one message — and is done within 3 working days. If you prefer to make them yourself: one section you edit (e.g. articles or events) €70 + VAT one-off, or a full admin panel for the whole site €130 + VAT one-off.',
     },
   },
 ];

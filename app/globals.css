@@ -1825,7 +1825,6 @@ html.light .river-link { color: var(--cy); background: rgba(255,255,255,.8); bor
 .river-links .river-tile { display: block; cursor: pointer; transition: translate .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, border-color .35s ease; }
 .river-links .river-tile:focus-visible { outline: 2px solid #47c8f5; outline-offset: 3px; }
 @media (hover: hover) {
-  .river-links .river-plane:hover .river-row { animation-play-state: paused; }
   .river-links .river-tile:hover { translate: 0 -8px; border-color: rgba(71,200,245,.55); box-shadow: 0 30px 60px -24px rgba(0,0,0,.9), 0 0 0 1px rgba(71,200,245,.35), 0 0 28px rgba(71,200,245,.18); }
   html.light .river-links .river-tile:hover { border-color: rgba(10,127,176,.45); box-shadow: 0 30px 60px -24px rgba(16,24,40,.5), 0 0 0 1px rgba(10,127,176,.3); }
 }
@@ -1880,3 +1879,9 @@ html.light .save-field input[type=range] { accent-color: var(--cy); }
   .pitch-quote.mv-frost { padding-top: 2.1rem !important; }
   .pitch-quote.mv-frost > p { padding-left: .35rem; font-size: 1.08rem; }
 }
+
+/* «Αλλαγές στην ιστοσελίδα σας» (27 Nov 2026): the full admin panel card is the highlighted one */
+.chg-hot { background-image: linear-gradient(180deg, rgba(71,200,245,.09), transparent 45%); box-shadow: 0 0 0 1px rgba(71,200,245,.12), 0 30px 70px -40px rgba(71,200,245,.45); }
+html.light .chg-hot { background-image: linear-gradient(180deg, rgba(71,200,245,.10), transparent 45%); }
+html.light .chg-card ul, html.light .chg-card .border-white\/8 { border-color: var(--line); }
+@media (min-width: 768px) { .chg-text { min-height: calc(1.625em * 3); } }

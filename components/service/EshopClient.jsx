@@ -98,7 +98,7 @@ const T = {
 
     oLabel: 'The two options', oTitle: 'Same shop. You choose how the customer pays.',
     oLead: 'In both, we build the whole shop and upload your products. The only difference: whether the customer pays online by card, or later, when you call them.',
-    a: ['E-shop with orders by email', '€0', 'build', '€180 + VAT a year · hosting, domain and admin panel', [
+    a: ['E-shop with orders by email', '€0', 'build', '€240 + VAT a year · hosting, domain and admin panel', [
       'A complete shop: categories, photos, prices, cart',
       'The customer sends the order with one button — it lands in your email',
       'Payment on delivery, by bank transfer or in store — as you decide',
