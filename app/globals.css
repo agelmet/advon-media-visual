@@ -1740,3 +1740,11 @@ html.light .stay-pick-row span { color: var(--ink-2); }
 html.light .stay-pick-row b { background: var(--cy); color: #fff; }
 .stay-num { display: inline-flex; align-items: center; justify-content: center; width: 1.9rem; height: 1.9rem; border-radius: 999px; border: 1px solid rgba(71,200,245,.5); color: #47c8f5; font-weight: 900; font-size: .85rem; margin-bottom: .9rem; }
 html.light .stay-num { border-color: var(--cy); color: var(--cy); }
+
+/* ═══ 27 Nov 2026 — never blank on fast scroll: shorter entrances, «now» = no animation ═══ */
+.mv-js .sr.sr-visible { animation-duration: .7s; }
+.mv-js .sr.sr-deal.sr-visible { animation-duration: .8s; }
+.mv-js .sr.sr-fade.sr-visible { animation-duration: .55s; }
+.mv-now, .mv-now * { transition-duration: 0s !important; transition-delay: 0s !important; animation-delay: 0s !important; }
+.mv-now { animation: none !important; }
+.mv-js .mv-pf.in { animation-duration: .6s; animation-delay: calc(var(--d, 0) * 45ms); }

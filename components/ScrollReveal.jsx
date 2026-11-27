@@ -6,13 +6,17 @@
 //  • no will-change, and on animationend every class comes off (the last frame equals the
 //    resting card), so there is no repaint «snap» when it settles;
 //  • reduced motion: the classes come off at once and nothing is ever hidden.
+//  • 27 Nov 2026 (Angelo: «when scrolling fast the content is not loading fast»): the reveal
+//    starts a little BEFORE the card enters the screen, the entrance is shorter, and Motion.jsx
+//    sends `sr-now` when the page is flung past a card (or a card was jumped over by a link) —
+//    the card then simply appears, with no animation, so nothing is ever blank.
 'use client';
 import { useEffect, useRef, useState } from 'react';
 
 const DIRS = { up: 'sr-up', left: 'sr-left', right: 'sr-right', scale: 'sr-scale', fade: 'sr-fade', deal: 'sr-deal' };
 const ALL = ['sr', 'sr-visible', ...Object.values(DIRS)];
 
-export default function ScrollReveal({ children, className = '', delay = 0, direction = 'up', threshold = 0.12, once = true, style, id, as: Tag = 'div' }) {
+export default function ScrollReveal({ children, className = '', delay = 0, direction = 'up', threshold = 0.02, once = true, style, id, as: Tag = 'div' }) {
   const ref = useRef(null);
   const [settled, setSettled] = useState(false); // once landed, React renders it without the reveal classes
   const dir = DIRS[direction] || 'sr-up';
@@ -24,6 +28,8 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { done(); return; }
 
     let timer;
+    const now = () => { observer.disconnect(); clearTimeout(timer); el.removeEventListener('animationend', onEnd); done(); };
+    el.addEventListener('sr-now', now, { once: true });
     const onEnd = (e) => { if (e.target === el) { el.removeEventListener('animationend', onEnd); clearTimeout(timer); done(); } };
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -39,10 +45,10 @@ export default function ScrollReveal({ children, className = '', delay = 0, dire
           el.classList.remove('sr-visible');
         }
       },
-      { threshold, rootMargin: '0px 0px -6% 0px' }
+      { threshold, rootMargin: '0px 0px 12% 0px' }
     );
     observer.observe(el);
-    return () => { observer.disconnect(); clearTimeout(timer); el.removeEventListener('animationend', onEnd); };
+    return () => { observer.disconnect(); clearTimeout(timer); el.removeEventListener('animationend', onEnd); el.removeEventListener('sr-now', now); };
   }, [delay, threshold, once]);
 
   return (

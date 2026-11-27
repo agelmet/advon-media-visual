@@ -1,7 +1,7 @@
 // components/service/EshopClient.jsx
 // «Κατασκευή E-shop» (24 Nov 2026). Two ways, one shop:
 //   A · orders arrive by e-mail (cash on delivery / transfer), build 0€, 180€ + ΦΠΑ a year — recommended to start;
-//   B · card payments through the owner's own Stripe account, 250€ + ΦΠΑ build, 240€ + ΦΠΑ a year.
+//   B · card payments through the owner's own Stripe account, 350€ + ΦΠΑ build, 240€ + ΦΠΑ a year.
 // Signature: a drawn shop + the order e-mail the owner receives, which changes with the A/B switch.
 // Everything is CSS/SVG — no images, nothing loaded from outside.
 'use client';
@@ -33,7 +33,7 @@ const T = {
       'Πίνακας διαχείρισης: προσθέτετε προϊόντα και αλλάζετε τιμές μόνοι σας',
       'Καμία σύνδεση με τράπεζα, καμία προμήθεια ανά παραγγελία',
     ], 'Η πρότασή μας για αρχή'],
-    b: ['E-shop με πληρωμή με κάρτα', '250€', '+ ΦΠΑ κατασκευή, μία φορά', '240€ + ΦΠΑ τον χρόνο · συντήρηση, φιλοξενία, domain', [
+    b: ['E-shop με πληρωμή με κάρτα', '350€', '+ ΦΠΑ κατασκευή, μία φορά', '240€ + ΦΠΑ τον χρόνο · συντήρηση, φιλοξενία, domain', [
       'Όλα όσα έχει το πρώτο',
       'Ο πελάτης πληρώνει με κάρτα τη στιγμή της παραγγελίας',
       'Τα χρήματα πάνε απευθείας στον τραπεζικό σας λογαριασμό — εμείς δεν τα αγγίζουμε ποτέ',
@@ -63,7 +63,7 @@ const T = {
     cmpLabel: 'Ποιο σας ταιριάζει', cmpTitle: 'Οι δύο επιλογές, δίπλα δίπλα.',
     cmpHead: ['', 'Παραγγελία στο email', 'Πληρωμή με κάρτα'],
     cmp: [
-      ['Κατασκευή', '0€', '250€ + ΦΠΑ, μία φορά'],
+      ['Κατασκευή', '0€', '350€ + ΦΠΑ, μία φορά'],
       ['Κάθε χρόνο', '180€ + ΦΠΑ', '240€ + ΦΠΑ'],
       ['Πώς πληρώνει ο πελάτης', 'Αντικαταβολή, κατάθεση ή στο κατάστημα', 'Με κάρτα, τη στιγμή της παραγγελίας'],
       ['Προμήθεια ανά παραγγελία', 'Καμία', 'Περίπου 1,5% + 0,25€ (Stripe)'],
@@ -106,7 +106,7 @@ const T = {
       'Admin panel: you add products and change prices yourself',
       'No bank connection, no fee per order',
     ], 'What we recommend to start'],
-    b: ['E-shop with card payments', '€250', '+ VAT build, once', '€240 + VAT a year · maintenance, hosting, domain', [
+    b: ['E-shop with card payments', '€350', '+ VAT build, once', '€240 + VAT a year · maintenance, hosting, domain', [
       'Everything in the first one',
       'The customer pays by card when ordering',
       'The money goes straight to your bank account — we never touch it',
@@ -136,7 +136,7 @@ const T = {
     cmpLabel: 'Which suits you', cmpTitle: 'The two options, side by side.',
     cmpHead: ['', 'Order by email', 'Card payment'],
     cmp: [
-      ['Build', '€0', '€250 + VAT, once'],
+      ['Build', '€0', '€350 + VAT, once'],
       ['Every year', '€180 + VAT', '€240 + VAT'],
       ['How the customer pays', 'On delivery, by transfer or in store', 'By card, when ordering'],
       ['Fee per order', 'None', 'About 1.5% + €0.25 (Stripe)'],

@@ -1,5 +1,6 @@
 // components/Contact.jsx
 'use client';
+import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { useLangStore } from '@/store/langStore';
 import ScrollReveal from '@/components/ScrollReveal';
@@ -370,13 +371,13 @@ export default function Contact() {
         {/* Ads landing: a way back to the full site with every service (Angelo, 11 Oct 2026) */}
         {landing && (
           <ScrollReveal delay={120} className="mt-12">
-            <a
-              href="https://advonmedia.com/"
+            <Link
+              href="/#services"
               className="btn-premium inline-flex items-center gap-3 px-8 py-4 border-2 border-electric-cyan/60 text-electric-cyan font-black text-sm md:text-base uppercase tracking-[0.1em] rounded-xl hover:bg-electric-cyan hover:text-[#050608] transition-all duration-300"
             >
               Δείτε όλες τις υπηρεσίες μας
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
+            </Link>
             <p className="mt-3 text-gray-500 text-sm">Online ραντεβού, κριτικές Google, AI βοηθός, social media και άλλα, στο advonmedia.com</p>
           </ScrollReveal>
         )}
