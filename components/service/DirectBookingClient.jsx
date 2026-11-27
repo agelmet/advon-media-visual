@@ -7,6 +7,7 @@
 // diagram (option 3), the steps, the FAQ.
 'use client';
 
+import { useState } from 'react';
 import { useLangStore } from '@/store/langStore';
 import { getService } from '@/lib/services';
 import ScrollReveal from '@/components/ScrollReveal';
@@ -40,7 +41,7 @@ const T = {
         'Ο επισκέπτης διαλέγει ημερομηνίες και σας στέλνει αίτημα κράτησης στο e-mail σας',
         'Εσείς απαντάτε και επιβεβαιώνετε την κράτηση',
       ] },
-      { n: '3', tier: 'Πλήρες σύστημα κρατήσεων', price: '100€', note: '+ ΦΠΑ στήσιμο, μία φορά', sub: '240€ + ΦΠΑ τον χρόνο · φιλοξενία, domain και σύστημα κρατήσεων', cta: 'Θέλω πλήρες σύστημα', items: [
+      { n: '3', tier: 'Πλήρες σύστημα κρατήσεων', price: '100€', note: 'στήσιμο · εφάπαξ', sub: '240€ + ΦΠΑ τον χρόνο · φιλοξενία, domain και σύστημα κρατήσεων', cta: 'Θέλω πλήρες σύστημα', items: [
         'Όλα όσα έχει η επιλογή 1',
         'Ο επισκέπτης κλείνει μόνος του από την ιστοσελίδα σας, όπως στο Airbnb',
         'Ένα ημερολόγιο κοινό με Airbnb και Booking: μια ημερομηνία που κλείνει κάπου, κλείνει παντού',
@@ -78,7 +79,7 @@ const T = {
         'Guests pick dates and send a booking request to your e-mail',
         'You reply and confirm the booking',
       ] },
-      { n: '3', tier: 'Full booking system', price: '€100', note: '+ VAT setup, once', sub: '€240 + VAT a year · hosting, domain and booking system', cta: 'I want the full system', items: [
+      { n: '3', tier: 'Full booking system', price: '€100', note: 'setup · one-off', sub: '€240 + VAT a year · hosting, domain and booking system', cta: 'I want the full system', items: [
         'Everything in option 1',
         'Guests book on their own from your website, like on Airbnb',
         'One calendar shared with Airbnb and Booking: a date booked anywhere closes everywhere',
@@ -131,11 +132,17 @@ export default function DirectBookingClient() {
             >
               {service.h1[lang]}
             </h1>
+            <p className="save-tag font-display font-bold max-w-3xl mx-auto mb-5">
+              {lang === 'el'
+                ? <>Λίγες κρατήσεις τον χρόνο από τη δική σας ιστοσελίδα γλιτώνουν <em>εκατοντάδες — συχνά χιλιάδες — ευρώ</em> σε προμήθειες.</>
+                : <>A few bookings a year through your own website save you <em>hundreds — often thousands — of euros</em> in commission.</>}
+            </p>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">{service.sub[lang]}</p>
             <div className="flex flex-wrap justify-center gap-3 mt-8">
               <a href="#epiloges" className="btn-premium inline-flex items-center gap-2 px-8 py-4 bg-electric-cyan text-[#050608] font-black text-sm uppercase tracking-[0.1em] rounded-xl hover:bg-white transition-colors" style={{ boxShadow: '0 0 30px rgba(71,200,245,0.35)' }}>{t.cta1}</a>
               <a href="#contact" className="btn-premium btn-ghost inline-flex items-center gap-2 px-8 py-4 border border-white/20 text-white font-black text-sm uppercase tracking-[0.1em] rounded-xl hover:bg-white hover:text-[#050608] transition-colors">{t.cta2}</a>
             </div>
+            <SaveCalc lang={lang} />
           </ScrollReveal>
         </div>
       </section>
@@ -279,6 +286,49 @@ function SyncDiagram({ lang }) {
           </div>
         </div>
       </ScrollReveal>
+    </div>
+  );
+}
+
+/* ─── Savings calculator (27 Nov 2026): what stays with the owner when a guest books on the owner's
+   own site instead of a platform. Platforms keep ~15% (Booking.com ~15% on average; Airbnb 15.5%
+   host-only fee for EU listings since 13 Oct 2026) — checked 27 Nov 2026. Deliberately small. ─── */
+const RATE = 0.15;
+function SaveCalc({ lang }) {
+  const el = lang === 'el';
+  const [price, setPrice] = useState(200);
+  const [stays, setStays] = useState(6);
+  const [nights, setNights] = useState(6);
+  const fmt = (n) => Math.round(n).toLocaleString(el ? 'el-GR' : 'en-GB');
+  const income = price * stays * nights;
+  const saved = income * RATE;
+  const rows = [
+    { k: 'p', label: el ? 'Τιμή ανά βράδυ' : 'Price per night', val: `${fmt(price)}€`, v: price, set: setPrice, min: 40, max: 800, step: 10 },
+    { k: 's', label: el ? 'Απευθείας κρατήσεις τον χρόνο' : 'Direct bookings a year', val: fmt(stays), v: stays, set: setStays, min: 1, max: 40, step: 1 },
+    { k: 'n', label: el ? 'Βράδια ανά κράτηση' : 'Nights per booking', val: fmt(nights), v: nights, set: setNights, min: 1, max: 14, step: 1 },
+  ];
+  return (
+    <div className="save-calc glass-panel mt-8 text-left">
+      <div className="save-calc-grid">
+        {rows.map((r) => (
+          <label key={r.k} className="save-field">
+            <span className="save-lbl">{r.label}<b>{r.val}</b></span>
+            <input type="range" min={r.min} max={r.max} step={r.step} value={r.v}
+              onChange={(e) => r.set(+e.target.value)} aria-label={r.label} />
+          </label>
+        ))}
+      </div>
+      <div className="save-out">
+        <div>
+          <span className="save-out-lbl">{el ? 'Μένουν σε εσάς, κάθε χρόνο' : 'Stays with you, every year'}</span>
+          <span className="save-out-num" aria-live="polite">≈ {fmt(saved)}€</span>
+        </div>
+        <p className="save-note">
+          {el
+            ? <>Αυτό κρατάει η πλατφόρμα (~15%) από {fmt(income)}€ κρατήσεων. Πολλοί επισκέπτες σάς βρίσκουν στο Booking ή στο Airbnb και μετά ψάχνουν το όνομα του καταλύματος στο Google για καλύτερη τιμή. Η ιστοσελίδα κοστίζει από <b>130€ + ΦΠΑ τον χρόνο</b>.</>
+            : <>That is what the platform keeps (~15%) from €{fmt(income)} of bookings. Many guests find you on Booking or Airbnb and then search your property's name on Google for a better price. The website costs from <b>€130 + VAT a year</b>.</>}
+        </p>
+      </div>
     </div>
   );
 }

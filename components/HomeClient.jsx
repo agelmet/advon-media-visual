@@ -217,7 +217,7 @@ export default function HomeClient() {
       </section>
 
       {/* ─── THE RIVER — real client sites, moving ─── */}
-      <SiteRiver className="river-up-s">
+      <SiteRiver className="river-up-s" links>
         <Link href="/kataskevi-istoselidas#portfolio" className="river-link">
           {lang === 'el' ? 'Δείτε πάνω από 200 live σελίδες πελατών μας' : 'See over 200 live websites of our clients'}
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
