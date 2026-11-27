@@ -1885,3 +1885,8 @@ html.light .save-field input[type=range] { accent-color: var(--cy); }
 html.light .chg-hot { background-image: linear-gradient(180deg, rgba(71,200,245,.10), transparent 45%); }
 html.light .chg-card ul, html.light .chg-card .border-white\/8 { border-color: var(--line); }
 @media (min-width: 768px) { .chg-text { min-height: calc(1.625em * 3); } }
+/* light mode, phones/tablets: the «Η κατασκευή είναι πραγματικά δωρεάν» plate gets proper rounded corners and breathing room (27 Nov 2026) */
+@media (max-width: 1023px) {
+  html.light .kat-cover { border-radius: 1.25rem; padding: 1.6rem 1.25rem 1.5rem; border: 1px solid var(--line); margin-top: 1.25rem; }
+  html.light .kat-cover > p:first-child { margin-top: 0; }
+}
