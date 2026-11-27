@@ -225,7 +225,7 @@ export default function KataskeviClient() {
           <ScrollReveal className="text-center mb-14">
             <span className="section-label">{lang === 'el' ? 'Πορτφόλιο' : 'Portfolio'}</span>
             <h2 className="text-4xl md:text-5xl font-black font-display mb-3 text-white tracking-tight">
-              {lang === 'el' ? 'Δείτε μερικές από τις Δουλειές μας' : 'Check Out Some Of Our Work'}
+              {lang === 'el' ? 'Δείτε πάνω από 200 live δουλειές μας' : 'See over 200 of our live projects'}
             </h2>
             <div className="max-w-2xl mx-auto space-y-4">
               <p className="text-sm text-gray-500 leading-relaxed">

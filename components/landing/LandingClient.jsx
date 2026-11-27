@@ -17,6 +17,7 @@ import PitchQuote from '@/components/PitchQuote';
 import IncludesTech from '@/components/service/IncludesTech';
 import { StepsSection, FaqSection } from '@/components/service/blocks';
 import { portfolioData } from '@/lib/data';
+import SiteRiver from '@/components/SiteRiver';
 import { getService } from '@/lib/services';
 import { readNiche } from '@/lib/landing';
 
@@ -114,12 +115,12 @@ export default function LandingClient() {
 
         <div className="container max-w-7xl mx-auto px-6 text-center z-10 mv-hero-scrub">
           <div
-            className="reveal-item delay-1 inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-electric-cyan/50 bg-electric-cyan/8 mb-7 badge-scan"
+            className="reveal-item delay-1 inline-flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 max-w-full px-5 py-2.5 rounded-[1.6rem] border border-electric-cyan/50 bg-electric-cyan/8 mb-7 badge-scan"
             style={{ boxShadow: '0 0 30px rgba(71,200,245,0.2), inset 0 0 20px rgba(71,200,245,0.05)' }}
           >
             <span className="w-2 h-2 rounded-full bg-electric-cyan animate-pulse" style={{ boxShadow: '0 0 12px #47c8f5' }} />
-            <span className="text-[0.65rem] font-black tracking-[0.3em] text-white uppercase">ADVON MEDIA</span>
-            <span className="text-[0.65rem] font-semibold tracking-[0.15em] text-electric-cyan/80 uppercase">
+            <span className="text-[0.65rem] font-black tracking-[0.3em] text-white uppercase whitespace-nowrap">ADVON MEDIA</span>
+            <span className="text-[0.6rem] sm:text-[0.65rem] font-semibold tracking-[0.08em] sm:tracking-[0.15em] text-electric-cyan/80 uppercase whitespace-nowrap">
               — {niche ? niche.badge : 'Κατασκευή ιστοσελίδων'}
             </span>
           </div>
@@ -146,7 +147,7 @@ export default function LandingClient() {
           </p>
 
           <p className="lp-proof reveal-item delay-5 text-electric-cyan/90 text-sm md:text-base font-bold tracking-wide mb-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
-            <span>220+ ιστοσελίδες online</span>
+            <span>260+ ιστοσελίδες online</span>
             <span className="text-electric-cyan/40 hidden sm:inline" aria-hidden="true">·</span>
             <a
               href="#reviews"
@@ -192,6 +193,14 @@ export default function LandingClient() {
           </ul>
         </div>
       </section>
+
+      {/* ─── THE RIVER — real client sites, moving (27 Nov 2026) ─── */}
+      <SiteRiver className="river-up">
+        <a href="#portfolio" onClick={(e) => goTo(e, 'portfolio')} className="river-link">
+          Πραγματικές ιστοσελίδες πελατών μας — δείτε περισσότερες
+          {arrow('w-4 h-4')}
+        </a>
+      </SiteRiver>
 
       {/* ─── WHO WE BUILD FOR ─── */}
       <div className="overflow-hidden py-5 border-y border-electric-cyan/10 bg-[#050608]/60 relative mv-skew">

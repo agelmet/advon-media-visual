@@ -1748,3 +1748,66 @@ html.light .stay-num { border-color: var(--cy); color: var(--cy); }
 .mv-now, .mv-now * { transition-duration: 0s !important; transition-delay: 0s !important; animation-delay: 0s !important; }
 .mv-now { animation: none !important; }
 .mv-js .mv-pf.in { animation-duration: .6s; animation-delay: calc(var(--d, 0) * 45ms); }
+
+/* ═══ 27 Nov 2026 (round 2) — phones: content must not «vanish» while scrolling ═══
+   • the scrolled header is compact (72px, small logo, solid, short shadow) instead of a 112px
+     see-through band with a long dark shadow that swallowed the top fifth of the screen;
+   • the hero no longer fades out with the scroll (it is taller than the screen on phones);
+   • scroll-lit text starts readable, not at 20%. */
+.hd-bar { transition: height .3s ease, padding .3s ease; }
+@media (max-width: 767px) {
+  .site-hd.is-scrolled { background: rgba(5,6,8,.985); box-shadow: 0 1px 0 rgba(71,200,245,.10), 0 6px 14px -8px rgba(0,0,0,.55); }
+  html.light .site-hd.is-scrolled { background: rgba(250,249,246,.985); box-shadow: 0 1px 0 var(--line), 0 6px 14px -10px rgba(16,24,40,.25); }
+  .site-hd.is-scrolled .hd-bar { height: 4.5rem; padding-top: 0; }
+  .site-hd.is-scrolled .hd-logo-c { width: 54px; height: 54px; box-shadow: 0 0 12px rgba(71,200,245,.4) !important; }
+  .site-hd.is-scrolled .hd-logo > div:not(.hd-logo-c) { opacity: 0; }
+  .hd-logo > div:not(.hd-logo-c) { transition: opacity .3s ease; }
+  .mv-hero-scrub { transform: none !important; opacity: 1 !important; will-change: auto; }
+  .mv-js [data-lit] .mv-u { opacity: .62; }
+  [id] { scroll-margin-top: 5.5rem; }
+}
+
+/* ═══ «The river» — real client sites drifting under the hero (27 Nov 2026) ═══ */
+.river { position: relative; padding: 6px 0 34px; }
+.river-view { overflow: hidden; perspective: 1500px; padding: 26px 0 46px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%); }
+.river-plane { display: grid; gap: 20px; transform: rotateX(17deg) rotateZ(-2.2deg) scale(1.04); transform-origin: 50% 20%; }
+.river-row { display: flex; width: max-content; animation: riverL 80s linear infinite; will-change: transform; }
+.river-row.r { animation: riverR 96s linear infinite; }
+.river.off .river-row { animation-play-state: paused; }
+@keyframes riverL { to { transform: translate3d(-50%, 0, 0); } }
+@keyframes riverR { from { transform: translate3d(-50%, 0, 0); } to { transform: translate3d(0, 0, 0); } }
+.river-tile { flex: none; width: 300px; margin-right: 20px; border-radius: 14px; overflow: hidden; background: #0b0c10;
+  border: 1px solid rgba(255,255,255,.10); box-shadow: 0 26px 54px -20px rgba(0,0,0,.95), 0 0 0 1px rgba(71,200,245,.05); }
+.river-bar { height: 26px; display: flex; align-items: center; gap: 5px; padding: 0 11px; background: #13151b; border-bottom: 1px solid rgba(255,255,255,.07); }
+.river-bar i { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.17); }
+.river-bar span { margin-left: 8px; font-size: 10.5px; line-height: 1; color: #8c96a3; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.river-tile img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 0; }
+.river-cap { text-align: center; margin-top: -8px; position: relative; z-index: 1; }
+@media (max-width: 640px) {
+  .river-view { padding: 16px 0 30px; }
+  .river-plane { gap: 14px; transform: rotateX(14deg) rotateZ(-2deg) scale(1.06); }
+  .river-tile { width: 208px; margin-right: 14px; border-radius: 11px; }
+  .river-bar { height: 21px; } .river-bar span { font-size: 9px; }
+}
+html.light .river-tile { background: #fff; border-color: rgba(16,24,40,.10); box-shadow: 0 26px 50px -24px rgba(16,24,40,.45), 0 2px 6px -2px rgba(16,24,40,.08); }
+html.light .river-bar { background: #f3f2ee; border-bottom-color: rgba(16,24,40,.08); }
+html.light .river-bar i { background: rgba(16,24,40,.16); }
+html.light .river-bar span { color: #6b7280; }
+@media (prefers-reduced-motion: reduce) { .river-row, .river-row.r { animation: none; } }
+
+/* ═══ Polish (27 Nov 2026): balanced headings, steady figures, equal cards, clear focus ═══ */
+main h1, main h2, main h3 { text-wrap: balance; }
+main p { text-wrap: pretty; }
+.price-gradient, .svc-amt, .stat-tile, .esh-cmp td { font-variant-numeric: tabular-nums; }
+.home-rest > .home-rest-item { height: auto; align-self: stretch; }
+a:focus-visible, button:focus-visible { outline: 2px solid #47c8f5; outline-offset: 3px; border-radius: 6px; }
+html.light a:focus-visible, html.light button:focus-visible { outline-color: var(--cy); }
+.river-link { display: inline-flex; align-items: center; gap: .5rem; font-size: .82rem; font-weight: 800; letter-spacing: .04em; color: #47c8f5; padding: .55rem 1.1rem; border-radius: 999px; border: 1px solid rgba(71,200,245,.28); background: rgba(5,6,8,.6); transition: background-color .3s ease, border-color .3s ease, color .3s ease; }
+@media (hover: hover) { .river-link:hover { background: #47c8f5; color: #050608; border-color: #47c8f5; } }
+html.light .river-link { color: var(--cy); background: rgba(255,255,255,.8); border-color: rgba(10,127,176,.35); }
+@media (hover: hover) { html.light .river-link:hover { background: var(--cy); color: #fff; } }
+.river { z-index: 2; }
+.river-view { pointer-events: none; }
+@media (min-width: 768px) { .river.river-up { margin-top: -112px; } .river.river-up-s { margin-top: -44px; } }

@@ -11,6 +11,7 @@ import PitchQuote from '@/components/PitchQuote';
 import { services, extras, HOME_FAQS } from '@/lib/services';
 import { ICONS, FaqSection } from '@/components/service/blocks';
 import Roadmap from '@/components/Roadmap';
+import SiteRiver from '@/components/SiteRiver';
 import { InstagramLine, FacebookLine, GoogleLine } from '@/components/BrandMarks';
 
 const marqueeItems = [
@@ -21,9 +22,9 @@ const marqueeItems = [
   'Παρουσία στο Google',
   'Online Ραντεβού',
   'AI Βοηθός Ιστοσελίδας',
-  'Direct Booking',
+  'Ιστοσελίδες Καταλυμάτων',
   'Ψηφιακό Μενού QR',
-  'Custom Λογισμικό',
+  'AI Αυτοματισμός',
   'SEO Optimization',
 ];
 
@@ -145,7 +146,7 @@ export default function HomeClient() {
 
           {/* Proof line — the reviews half is a tappable jump down to the reviews section */}
           <p className="reveal-item delay-5 text-electric-cyan/90 text-sm md:text-base font-bold tracking-wide mb-12 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
-            <span>{lang === 'el' ? '220+ ιστοσελίδες' : '220+ websites'}</span>
+            <span>{lang === 'el' ? '260+ ιστοσελίδες' : '260+ websites'}</span>
             <span className="text-electric-cyan/40 hidden sm:inline" aria-hidden="true">·</span>
             <Link
               href="/#reviews"
@@ -214,6 +215,14 @@ export default function HomeClient() {
           </div>
         </div>
       </section>
+
+      {/* ─── THE RIVER — real client sites, moving ─── */}
+      <SiteRiver className="river-up-s">
+        <Link href="/kataskevi-istoselidas#portfolio" className="river-link">
+          {lang === 'el' ? 'Πραγματικές ιστοσελίδες πελατών μας — δείτε τες όλες' : 'Real websites of our clients — see them all'}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </Link>
+      </SiteRiver>
 
       {/* ─── MARQUEE TICKER ─── */}
       <div className="overflow-hidden py-5 border-y border-electric-cyan/10 bg-[#050608]/60 backdrop-blur-sm relative">
@@ -337,6 +346,20 @@ export default function HomeClient() {
                           {service.card.cta[lang]}
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                         </Link>
+                        {service.slug === 'kataskevi-eshop' && (
+                          <Link href="/kataskevi-eshop#epiloges" className="stay-link mt-3">
+                            {ICONS.bag('w-4 h-4')}
+                            <span><b>{lang === 'el' ? 'Με κάρτα ή χωρίς;' : 'With or without card payments?'}</b> {lang === 'el' ? 'Δείτε τις 2 επιλογές και τις τιμές' : 'See the 2 options and prices'}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 ml-auto shrink-0"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                          </Link>
+                        )}
+                        {service.slug === 'online-rantevou' && (
+                          <a href="/rantevou/" target="_blank" rel="noopener" className="stay-link mt-3">
+                            {ICONS.calendar('w-4 h-4')}
+                            <span><b>{lang === 'el' ? 'Δείτε τη δική μας ζωντανά' : 'See ours live'}</b> {lang === 'el' ? '— έτσι θα είναι και η δική σας' : '— yours will work the same way'}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 ml-auto shrink-0"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+                          </a>
+                        )}
                         {service.slug === 'kataskevi-istoselidas' && (
                           <Link href="/direct-booking" className="stay-link mt-3">
                             {ICONS.building('w-4 h-4')}

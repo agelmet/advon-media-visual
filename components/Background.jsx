@@ -11,35 +11,34 @@
 //     roughly a tenth);
 //   • light mode (html.light). 24 Nov 2026: slow light beams from above (CSS, .rr-beams).
 //     27 Nov 2026 — Angelo: «stars black, shining super nicely and cleanly, as wow as dark mode»:
-//     the stars are crisp INK-BLACK points; the brightest are clean eight-point stars that turn
-//     slowly and, every few seconds, «glint» (rays stretch, a cyan halo flashes); faint hairline
-//     constellations join nearby bright stars; the shooting star is an ink streak;
+//     the stars are INK-BLACK. v3 the same day («too big, not luxurious»): fine crisp points, one
+//     in ten with a hairline four-point flare that opens for a moment with a champagne breath;
+//     no shapes, no lines; the shooting star is a thin ink streak;
 //   • prefers-reduced-motion: one still frame.
 'use client';
 import { useEffect, useRef } from 'react';
 
 const TINTS = ['255,246,232', '255,255,255', '232,238,255']; // warm · white · cool fibres
-const TINTS_L = ['10,13,20', '30,38,54', '8,122,172'];        // light mode: ink black · graphite · a little cyan
+const TINTS_L = ['12,15,22', '38,44,58', '150,112,52'];        // light mode: ink black · graphite · a few champagne-gold
 
-// light mode: a clean eight-point star drawn as solid tapering rays (crisp, no blur)
+// light mode: a hairline four-point flare (two very thin tapering strokes, crisp)
 function makeStarL(rgb, size) {
   const c = document.createElement('canvas');
   c.width = c.height = size;
   const g = c.getContext('2d');
   const r = size / 2;
-  g.fillStyle = `rgb(${rgb})`;
-  const ray = (ang, len, w) => {
-    const ca = Math.cos(ang), sa = Math.sin(ang), cp = Math.cos(ang + Math.PI / 2), sp = Math.sin(ang + Math.PI / 2);
+  for (const horiz of [true, false]) {
+    const lg = horiz ? g.createLinearGradient(0, r, size, r) : g.createLinearGradient(r, 0, r, size);
+    lg.addColorStop(0, `rgba(${rgb},0)`);
+    lg.addColorStop(0.5, `rgba(${rgb},1)`);
+    lg.addColorStop(1, `rgba(${rgb},0)`);
+    g.fillStyle = lg;
     g.beginPath();
-    g.moveTo(r + cp * w, r + sp * w);
-    g.lineTo(r + ca * len, r + sa * len);
-    g.lineTo(r - cp * w, r - sp * w);
-    g.lineTo(r - ca * len * 0.08, r - sa * len * 0.08);
+    const w = r * 0.045;
+    if (horiz) { g.moveTo(0, r); g.lineTo(r, r - w); g.lineTo(size, r); g.lineTo(r, r + w); }
+    else { g.moveTo(r, 0); g.lineTo(r + w, r); g.lineTo(r, size); g.lineTo(r - w, r); }
     g.closePath(); g.fill();
-  };
-  for (let k = 0; k < 4; k++) ray(k * Math.PI / 2, r * 0.98, r * 0.06);           // long rays
-  for (let k = 0; k < 4; k++) ray(Math.PI / 4 + k * Math.PI / 2, r * 0.4, r * 0.04); // short diagonals
-  g.beginPath(); g.arc(r, r, r * 0.075, 0, 6.2832); g.fill();
+  }
   return c;
 }
 // light mode: a crisp small point (hard edge, tiny soft rim)
@@ -91,8 +90,7 @@ export default function Background() {
     const glowL = TINTS_L.map((t) => makeGlow(t, 32));
     const starL = TINTS_L.map((t) => makeStarL(t, 96));
     const dotL = TINTS_L.map((t) => makeDot(t, 16));
-    const halo = makeGlow('71,200,245', 64);
-    let links = [];                                              // light-mode constellation lines
+    const halo = makeGlow('200,164,96', 64);                    // champagne
     let light = isLight(), glow = light ? glowL : glowD, tints = light ? TINTS_L : TINTS, dustN = 0;
 
     let W = 0, H = 0, stars = [], raf = 0, last = 0, running = false, shot = null;
@@ -145,18 +143,6 @@ export default function Background() {
           big,
         });
       }
-      // constellations: join each bright star to its nearest bright neighbours (light mode only)
-      links = [];
-      const bigs = stars.map((st, i) => (st.big ? i : -1)).filter((i) => i >= 0);
-      const deg = new Map();
-      for (const i of bigs) {
-        const a = stars[i];
-        const near = bigs.filter((j) => j !== i).map((j) => [j, Math.hypot(stars[j].x - a.x, stars[j].y - a.y)])
-          .filter(([, d]) => d < Math.min(W, 1400) * 0.17).sort((p, q) => p[1] - q[1]).slice(0, 2);
-        for (const [j] of near) {
-          if (i < j && (deg.get(i) || 0) < 3 && (deg.get(j) || 0) < 3) { links.push([i, j]); deg.set(i, (deg.get(i) || 0) + 1); deg.set(j, (deg.get(j) || 0) + 1); }
-        }
-      }
       if (reduced) draw(performance.now());
     };
 
@@ -178,46 +164,33 @@ export default function Background() {
       ctx.globalAlpha = 1;
     };
 
-    // light mode: ink stars on paper — crisp points, turning eight-point stars that glint, hairline constellations
-    const ys = new Float32Array(4096);
+    // light mode (v3, 27 Nov 2026 — Angelo: «too big, not luxurious»): fine ink points on paper.
+    // Most stars are tiny crisp dots that breathe; one in ten carries a hairline four-point flare
+    // that is barely there at rest and opens for a moment when the star glints. No lines, no shapes.
     const drawLight = (sec, H2) => {
-      const n = Math.min(stars.length, ys.length);
-      for (let i = 0; i < n; i++) {
+      for (let i = 0; i < stars.length; i++) {
         const st = stars[i];
         let y = (st.y - scrollY * 0.05 * st.d) % H2; if (y < 0) y += H2;
-        ys[i] = y;
-      }
-      // hairline constellations (only when both ends are on screen and did not wrap apart)
-      ctx.lineWidth = 0.6; ctx.strokeStyle = 'rgb(20,28,42)';
-      for (const [i, j] of links) {
-        const y1 = ys[i], y2 = ys[j];
-        if (Math.abs(y1 - y2) > H * 0.4 || (y1 > H + 20 && y2 > H + 20)) continue;
-        ctx.globalAlpha = reduced ? 0.12 : 0.07 + 0.06 * (0.5 + 0.5 * Math.sin(sec * 0.4 + i));
-        ctx.beginPath(); ctx.moveTo(stars[i].x, y1); ctx.lineTo(stars[j].x, y2); ctx.stroke();
-      }
-      for (let i = 0; i < n; i++) {
-        const st = stars[i], y = ys[i];
-        if (y > H + 30) continue;
-        const tw = reduced ? 1 : 0.6 + 0.4 * Math.sin(sec * st.w + st.p);
+        if (y > H + 14) continue;
+        const tw = reduced ? 1 : 0.55 + 0.45 * Math.sin(sec * st.w + st.p);
         if (!st.big) {
-          ctx.globalAlpha = Math.min(1, st.b * tw);
-          const z = st.s * 3.4;
+          ctx.globalAlpha = Math.min(1, st.b * tw * 0.9);
+          const z = st.s * 2.3;
           ctx.drawImage(dotL[st.t], st.x - z / 2, y - z / 2, z, z);
           continue;
         }
-        // glint: a sharp pulse every few seconds, different per star
-        const gl = reduced ? 0 : Math.pow(Math.max(0, Math.sin(sec * 0.55 * st.w + st.p)), 14);
-        if (gl > 0.02) {                                         // the cyan halo that flashes behind it
-          const hz = st.s * 34 * (0.6 + gl);
-          ctx.globalAlpha = 0.55 * gl;
+        const gl = reduced ? 0.25 : Math.pow(Math.max(0, Math.sin(sec * 0.5 * st.w + st.p)), 10);
+        if (gl > 0.03) {                                         // a soft champagne breath behind the glint
+          const hz = st.s * 15 * (0.7 + gl);
+          ctx.globalAlpha = 0.34 * gl;
           ctx.drawImage(halo, st.x - hz / 2, y - hz / 2, hz, hz);
         }
-        const z = st.s * 17 * (0.85 + 0.15 * tw + 0.9 * gl);
-        const ang = (reduced ? st.p : st.p + sec * 0.12 * (st.w > 1 ? 1 : -1)) % 6.2832;
-        ctx.globalAlpha = 0.9;
-        ctx.save(); ctx.translate(st.x, y); ctx.rotate(ang);
-        ctx.drawImage(starL[st.t], -z / 2, -z / 2, z, z);
-        ctx.restore();
+        const z = st.s * (5.5 + 8.5 * gl);                       // hairline flare: ~7px at rest, ~15px at the glint
+        ctx.globalAlpha = 0.5 + 0.5 * gl;
+        ctx.drawImage(starL[st.t], st.x - z / 2, y - z / 2, z, z);
+        const d = st.s * 2.4;
+        ctx.globalAlpha = 0.95;
+        ctx.drawImage(dotL[st.t], st.x - d / 2, y - d / 2, d, d);
       }
     };
 
@@ -228,13 +201,13 @@ export default function Background() {
         shot = { x: ltr ? W * (0.05 + Math.random() * 0.4) : W * (0.55 + Math.random() * 0.4), y: H * (0.05 + Math.random() * 0.35), vx: (ltr ? 1 : -1) * (4.8 + Math.random() * 2.4), vy: 1.6 + Math.random() * 1.3, life: 1 };
       }
       if (!shot) return;
-      const s = shot, len = light ? 26 : 18, c = light ? '14,20,32' : '255,246,232';
+      const s = shot, len = light ? 22 : 18, c = light ? '14,20,32' : '255,246,232';
       const g = ctx.createLinearGradient(s.x, s.y, s.x - s.vx * len, s.y - s.vy * len);
       g.addColorStop(0, `rgba(${c},${0.85 * s.life})`);
       g.addColorStop(1, `rgba(${c},0)`);
-      ctx.globalAlpha = 1; ctx.strokeStyle = g; ctx.lineWidth = light ? 1.4 : 1.1; ctx.lineCap = 'round';
+      ctx.globalAlpha = 1; ctx.strokeStyle = g; ctx.lineWidth = light ? 0.9 : 1.1; ctx.lineCap = 'round';
       ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s.x - s.vx * len, s.y - s.vy * len); ctx.stroke();
-      ctx.globalAlpha = s.life; if (light) ctx.drawImage(starL[0], s.x - 11, s.y - 11, 22, 22); else ctx.drawImage(glow[0], s.x - 5, s.y - 5, 10, 10);
+      ctx.globalAlpha = s.life; if (light) ctx.drawImage(starL[0], s.x - 6, s.y - 6, 12, 12); else ctx.drawImage(glow[0], s.x - 5, s.y - 5, 10, 10);
       s.x += s.vx; s.y += s.vy; s.life -= 0.011;
       if (s.life <= 0 || s.x < -60 || s.x > W + 60 || s.y > H + 60) { shot = null; nextShot = now + 12000 + Math.random() * 14000; }
     };

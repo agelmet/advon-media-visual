@@ -84,7 +84,7 @@ const T = {
 
     bandLabel: 'Ας ξεκινήσουμε', bandTitle: 'Πείτε μας τι πουλάτε. Το κατάστημα το στήνουμε εμείς.',
     bandLead: 'Μια σύντομη δωρεάν κλήση αρκεί: τι προϊόντα έχετε, πώς στέλνετε, και ποια από τις δύο επιλογές σας ταιριάζει.',
-    bandCta: 'Θέλω e-shop', trust: ['0€ κατασκευή', '180€ + ΦΠΑ τον χρόνο', '220+ ιστοσελίδες', '140+ κριτικές 5★'],
+    bandCta: 'Θέλω e-shop', trust: ['0€ κατασκευή', '180€ + ΦΠΑ τον χρόνο', '260+ ιστοσελίδες', '140+ κριτικές 5★'],
   },
   en: {
     label: 'E-shop Creation',
@@ -157,7 +157,7 @@ const T = {
 
     bandLabel: 'Let’s start', bandTitle: 'Tell us what you sell. We build the shop.',
     bandLead: 'A short free call is enough: what products you have, how you ship, and which of the two options suits you.',
-    bandCta: 'I want an e-shop', trust: ['€0 build', '€180 + VAT a year', '220+ websites', '140+ 5★ reviews'],
+    bandCta: 'I want an e-shop', trust: ['€0 build', '€180 + VAT a year', '260+ websites', '140+ 5★ reviews'],
   },
 };
 

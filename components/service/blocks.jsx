@@ -298,7 +298,7 @@ export function IncludesSection({ service, icons, items }) {
 export function ProofStrip() {
   const { lang } = useLangStore();
   const stats = [
-    { num: '220+', el: 'ΙΣΤΟΣΕΛΙΔΕΣ ΓΙΑ ΕΛΛΗΝΙΚΕΣ ΕΠΙΧΕΙΡΗΣΕΙΣ', en: 'WEBSITES FOR GREEK BUSINESSES' },
+    { num: '260+', el: 'ΙΣΤΟΣΕΛΙΔΕΣ ΓΙΑ ΕΛΛΗΝΙΚΕΣ ΕΠΙΧΕΙΡΗΣΕΙΣ', en: 'WEBSITES FOR GREEK BUSINESSES' },
     { num: '140+', el: 'ΚΡΙΤΙΚΕΣ 5★ ΣΤΟ GOOGLE', en: '5★ REVIEWS ON GOOGLE' },
   ];
   return (
