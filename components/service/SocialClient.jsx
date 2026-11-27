@@ -20,7 +20,7 @@ const T = {
     cta1: 'Δείτε τα πακέτα', cta2: 'Πώς ξεκινάμε',
     heroCap: 'Παράδειγμα. Τα χρώματα, οι γραμματοσειρές και το λογότυπο έρχονται από την ιστοσελίδα σας.',
     srcLabel: 'Το περιεχόμενο', srcTitle: 'Δεν χρειάζεται να μας στείλετε τίποτα.',
-    srcLead: 'Έχουμε φτιάξει την ιστοσελίδα σας και πάνω από 220 ιστοσελίδες επαγγελματιών. Ξέρουμε τι ρωτάει ο κόσμος για τη δουλειά σας — και από πού θα έρθει κάθε post.',
+    srcLead: 'Έχουμε φτιάξει την ιστοσελίδα σας και πάνω από 260 ιστοσελίδες επαγγελματιών. Ξέρουμε τι ρωτάει ο κόσμος για τη δουλειά σας — και από πού θα έρθει κάθε post.',
     src: [
       ['Η ιστοσελίδα σας', 'Υπηρεσίες, κείμενα, φωτογραφίες, χρώματα και λογότυπο — η ταυτότητα υπάρχει ήδη.'],
       ['Οι αληθινές κριτικές σας', 'Από το Google και τις πλατφόρμες σας, αυτολεξεί. Ποτέ επινοημένες.'],
@@ -79,7 +79,7 @@ const T = {
     ph2: { bar: 'Αιτήματα', who: 'Advon Media', what: 'ζήτησε πρόσβαση συνεργάτη στη Σελίδα σας', perm: 'Δικαιώματα που ζητούνται', permV: 'Περιεχόμενο · Στατιστικά', no: 'Απόρριψη', yes: 'Έγκριση', what2: 'ζήτησε πρόσβαση στον λογαριασμό Instagram σας' },
     chat: [{ t: 'Σας στείλαμε το αίτημα. Πατήστε «Έγκριση» και πείτε μας.' }, { t: 'Έγινε!', me: true }, { t: 'Τέλεια. Σε 5 εργάσιμες θα δείτε όλο τον πρώτο μήνα έτοιμο.' }],
     bandLabel: 'Ξεκινήστε', bandTitle: 'Δείτε τον πρώτο σας μήνα έτοιμο.', bandLead: 'Τρία λεπτά από εσάς. Τα υπόλοιπα, από εμάς.', bandCta: 'Ξεκινάμε',
-    trust: ['220+ ιστοσελίδες επαγγελματιών', '140+ κριτικές στο Google, όλες 5 αστέρων', '0 κωδικοί'],
+    trust: ['260+ ιστοσελίδες επαγγελματιών', '140+ κριτικές στο Google, όλες 5 αστέρων', '0 κωδικοί'],
   },
   en: {
     label: 'Social Media · Instagram & Facebook',
@@ -88,7 +88,7 @@ const T = {
     cta1: 'See the packages', cta2: 'How we start',
     heroCap: 'Example. The colours, fonts and logo come from your website.',
     srcLabel: 'The content', srcTitle: 'You do not need to send us anything.',
-    srcLead: 'We built your website and over 220 websites for professionals. We know what people ask about your work — and where every post comes from.',
+    srcLead: 'We built your website and over 260 websites for professionals. We know what people ask about your work — and where every post comes from.',
     src: [
       ['Your website', 'Services, texts, photos, colours and logo — the identity already exists.'],
       ['Your real reviews', 'From Google and your platforms, word for word. Never invented.'],
@@ -147,7 +147,7 @@ const T = {
     ph2: { bar: 'Requests', who: 'Advon Media', what: 'requested partner access to your Page', perm: 'Permissions requested', permV: 'Content · Insights', no: 'Decline', yes: 'Approve', what2: 'requested access to your Instagram account' },
     chat: [{ t: 'We sent the request. Press “Approve” and tell us.' }, { t: 'Done!', me: true }, { t: 'Perfect. In 5 working days you will see the whole first month ready.' }],
     bandLabel: 'Start', bandTitle: 'See your first month ready.', bandLead: 'Three minutes from you. The rest, from us.', bandCta: 'Let’s start',
-    trust: ['220+ websites for professionals', '140+ Google reviews, all 5 stars', '0 passwords'],
+    trust: ['260+ websites for professionals', '140+ Google reviews, all 5 stars', '0 passwords'],
   },
 };
 

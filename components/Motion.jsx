@@ -88,7 +88,7 @@ export default function Motion() {
     /* ── in-view: headings, [data-io] ── */
     const io = new IntersectionObserver((es) => {
       es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    }, { rootMargin: '0px 0px 6% 0px', threshold: 0.01 });
 
     let lit = [], prog = [];
     const prime = () => {
@@ -112,7 +112,18 @@ export default function Motion() {
     };
 
     /* ── one scroll handler ── */
-    let raf = 0, lastY = window.scrollY, lastT = performance.now(), idle = 0;
+    let raf = 0, lastY = window.scrollY, lastT = performance.now(), idle = 0, lastScan = 0, lastFast = 0, trail = 0;
+    const scan = (fast) => {
+      lastScan = performance.now();
+      document.querySelectorAll('.sr, [data-io]:not(.in), h2[data-mvfx]:not(.in)').forEach((e) => {
+        const r = e.getBoundingClientRect();
+        if (r.top > vh * 1.02) return;
+        if (r.bottom < 0 || (fast && r.top < vh)) {
+          if (e.classList.contains('sr')) e.dispatchEvent(new Event('sr-now'));
+          else { e.classList.add('in', 'mv-now'); io.unobserve(e); }
+        }
+      });
+    };
     let vh = window.innerHeight;
     const tick = () => {
       raf = 0;
@@ -122,6 +133,12 @@ export default function Motion() {
       lastY = y; lastT = now;
       html.style.setProperty('--sv', v.toFixed(2));
       clearTimeout(idle); idle = setTimeout(() => html.style.setProperty('--sv', '0'), 140);
+      // fast scroll / jumps: anything already on screen or passed shows at once (never blank)
+      const fast = Math.abs(v) > 2.2;
+      if (fast) lastFast = now;
+      clearTimeout(trail);
+      if (now - lastScan > 90) scan(fast);
+      else trail = setTimeout(() => scan(performance.now() - lastFast < 400), 110);
       // statements: words light up between 88% and 40% of the screen
       for (const e of lit) {
         const r = e.getBoundingClientRect();

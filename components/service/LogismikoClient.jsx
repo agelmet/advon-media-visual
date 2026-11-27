@@ -1,5 +1,5 @@
 // components/service/LogismikoClient.jsx
-// «Custom Μικρό Λογισμικό» — signature elements: the chaos→order
+// «AI Αυτοματισμός Επιχείρησης» (was «Custom Μικρό Λογισμικό», 27 Nov 2026) — signature elements: the chaos→order
 // transformation (notebook / Excel / Viber converging into one clean app
 // window) and the half-the-time bars. Copy verbatim from lib/services.js.
 'use client';
@@ -60,8 +60,8 @@ export default function LogismikoClient() {
               {highlight(
                 service.pitch[lang],
                 lang === 'el'
-                  ? ['το πραγματικό σύστημα', 'τον δικό σας τρόπο δουλειάς']
-                  : ['the real system', 'the way you actually work']
+                  ? ['μπορεί να γίνεται μόνο του', 'πλήρως custom', 'ώρες εργασίας, χρόνο και χρήμα']
+                  : ['can happen on its own', 'fully custom', 'staff hours, time and money']
               )}
             </p>
           </ScrollReveal>
@@ -74,7 +74,7 @@ export default function LogismikoClient() {
                 className="btn-premium inline-flex items-center gap-3 px-9 py-4 bg-electric-cyan text-[#050608] font-black text-base rounded-xl hover:bg-white transition-all duration-300 hover:scale-105"
                 style={{ boxShadow: '0 0 30px rgba(71,200,245,0.4), 0 4px 20px rgba(0,0,0,0.4)' }}
               >
-                {lang === 'el' ? 'Δείτε το CRM που φτιάξαμε για εμάς' : 'See the CRM we built for ourselves'}
+                {lang === 'el' ? 'Δείτε το σύστημα που φτιάξαμε για εμάς' : 'See the system we built for ourselves'}
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
               </a>
               <span className="text-xs font-semibold tracking-wide text-gray-500">
@@ -113,7 +113,7 @@ export default function LogismikoClient() {
 
       <PainSection service={service} />
       <StepsSection service={service} />
-      <IncludesSection service={service} items={gridItems} icons={['layout', 'monitor', 'database']} />
+      <IncludesSection service={service} items={gridItems} icons={['sparkles', 'refresh', 'monitor']} />
 
       {/* ─── HALF THE TIME — the includes line as two bars ─── */}
       <section className="pb-24 relative overflow-hidden">

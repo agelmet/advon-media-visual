@@ -33,7 +33,7 @@ export default function Footer() {
         <div className={landing ? 'flex justify-center text-center' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-center sm:text-left'}>
           {/* Brand */}
           <div className={landing ? 'flex flex-col items-center gap-4' : 'flex flex-col items-center sm:items-start gap-4'}>
-            <Link href={landing ? '/istoselida' : '/'} aria-label="Advon Media — Αρχική" className="group inline-flex items-center gap-3">
+            <Link href="/" aria-label="Advon Media — Αρχική" className="group inline-flex items-center gap-3">
               <span className="w-14 h-14 rounded-full bg-white p-1.5 flex items-center justify-center shadow-[0_0_0_2px_rgba(71,200,245,0.35),0_0_24px_rgba(71,200,245,0.25)] group-hover:shadow-[0_0_0_2px_rgba(71,200,245,0.7),0_0_34px_rgba(71,200,245,0.45)] transition-shadow duration-300 shrink-0">
                 <img src="/img/advon-logo-116.webp" srcSet="/img/advon-logo-116.webp 1x, /img/advon-logo-232.webp 2x" alt="Advon Media" width="116" height="116" className="w-full h-full object-contain" loading="lazy" decoding="async" />
               </span>

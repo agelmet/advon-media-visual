@@ -59,6 +59,20 @@ export default function RantevouClient() {
                 </p>
               </ScrollReveal>
 
+              {/* Fully custom + the price, said plainly (27 Nov 2026) */}
+              <ScrollReveal delay={170}>
+                <div className="mt-8 flex flex-wrap items-center gap-3">
+                  <span className="inline-flex items-baseline gap-2 px-4 py-2.5 rounded-xl border border-electric-cyan/35 bg-electric-cyan/8">
+                    <b className="text-2xl font-black price-gradient">{lang === 'el' ? '5€' : '€5'}</b>
+                    <span className="text-sm text-gray-300">{lang === 'el' ? 'τον μήνα · για έναν επαγγελματία' : 'a month · for one professional'}</span>
+                  </span>
+                  <a href="/rantevou/" target="_blank" rel="noopener" className="stay-link !w-auto">
+                    <span><b>{lang === 'el' ? 'Πλήρως custom, φτιαγμένη από εμάς.' : 'Fully custom, built by us.'}</b> {lang === 'el' ? 'Δείτε τη δική μας ζωντανά' : 'See ours live'}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+                  </a>
+                </div>
+              </ScrollReveal>
+
               {/* Reminders — the #1 pain, stated up front */}
               <ScrollReveal delay={220}>
                 <div className="mt-8 inline-flex items-start gap-3 rounded-2xl border border-electric-cyan/30 bg-electric-cyan/6 px-5 py-4">

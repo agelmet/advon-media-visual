@@ -1,18 +1,50 @@
 // components/Header.jsx
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useLangStore } from '@/store/langStore';
 import { usePathname } from 'next/navigation';
 import { NAV_SERVICES as services } from '@/lib/nav';
 import { isLanding } from '@/lib/landing';
+import ThemeToggle, { paintTheme, storedTheme } from '@/components/ThemeToggle';
 
 export default function Header() {
   const { lang, toggleLang } = useLangStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   // Ads landing page: no menu, one «book a call» button (lib/landing.js).
-  const landing = isLanding(usePathname() || '');
+  const pathname = usePathname() || '';
+  const landing = isLanding(pathname);
+  // The logo always goes home (27 Nov 2026 — Angelo: «clicking the logo it immediately goes to
+  // home»; on /istoselida it used to point at /istoselida itself, so a click did nothing).
+  // Already on the home page → back to the top.
+  const onLogo = (e) => {
+    setIsMobileMenuOpen(false);
+    if (pathname === '/') {
+      e.preventDefault();
+      if (window.location.hash) window.history.replaceState(null, '', '/');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Every new page starts at the top (27 Nov 2026: going from /istoselida to the home page kept the
+  // old scroll position, so the visitor landed half-way down the home page). Back/forward keeps
+  // the browser's own scroll position.
+  // The ads page always opens dark (27 Nov 2026); every other page follows the visitor's own choice.
+  useEffect(() => { paintTheme(landing ? 'dark' : storedTheme()); }, [landing]);
+
+  useEffect(() => {
+    const onPop = () => { window.__advonPop = Date.now(); };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) { first.current = false; return; }
+    setIsMobileMenuOpen(false);
+    if (window.location.hash || Date.now() - (window.__advonPop || 0) < 1500) return;
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [pathname]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -21,25 +53,10 @@ export default function Header() {
   }, []);
 
   return (
-    <header
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
-      style={{
-        background: scrolled
-          ? 'rgba(5,6,8,0.85)'
-          : 'transparent',
-        backdropFilter: scrolled ? 'blur(24px)' : 'blur(0px)',
-        WebkitBackdropFilter: scrolled ? 'blur(24px)' : 'blur(0px)',
-        borderBottom: scrolled
-          ? '1px solid rgba(71,200,245,0.12)'
-          : '1px solid transparent',
-        boxShadow: scrolled
-          ? '0 8px 32px rgba(0,0,0,0.4), 0 0 60px rgba(71,200,245,0.03)'
-          : 'none',
-      }}
-    >
-      <div className="max-w-7xl mx-auto px-6 h-28 pt-4 flex items-center justify-between">
+    <header className={`site-hd fixed top-0 left-0 right-0 z-50 ${scrolled ? 'is-scrolled' : ''}`}>
+      <div className="hd-bar max-w-7xl mx-auto px-6 h-28 pt-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href={landing ? '/istoselida' : '/'} className="flex items-center gap-3">
+        <Link href="/" onClick={onLogo} prefetch aria-label={lang === 'el' ? 'Advon Media — αρχική σελίδα' : 'Advon Media — home'} className="flex items-center gap-3">
           <div className="hd-logo" style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
             {/* Animated outer ring */}
             <div
@@ -65,7 +82,7 @@ export default function Header() {
             />
             {/* Logo circle */}
             <div
-              className="transition-all duration-300 shrink-0 w-[104px] h-[104px] md:w-[116px] md:h-[116px]"
+              className="hd-logo-c transition-all duration-300 shrink-0 w-[104px] h-[104px] md:w-[116px] md:h-[116px]"
               style={{
                 borderRadius: '50%',
                 overflow: 'hidden',
@@ -92,7 +109,7 @@ export default function Header() {
         {landing && (
           <div className="flex items-center gap-5">
             <span className="hidden lg:inline-flex items-center gap-2 text-xs font-bold tracking-wide text-gray-400">
-              <span className="text-electric-cyan">220+</span> {lang === 'el' ? 'ιστοσελίδες' : 'websites'}
+              <span className="text-electric-cyan">260+</span> {lang === 'el' ? 'ιστοσελίδες' : 'websites'}
               <span className="text-white/20">·</span>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-[#FBBC05]" aria-hidden="true"><path d="M12 2.5l2.9 5.88 6.49.94-4.7 4.58 1.11 6.46L12 17.3l-5.8 3.06 1.11-6.46-4.7-4.58 6.49-.94L12 2.5z"/></svg>
               <span className="text-electric-cyan">140+</span> {lang === 'el' ? 'κριτικές στο Google' : 'Google reviews'}
@@ -111,7 +128,7 @@ export default function Header() {
         {!landing && (<>
         <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
 
-          <Link href="/" className="text-electric-cyan hover:text-white transition-colors relative group py-2">
+          <Link href="/" onClick={onLogo} className="text-electric-cyan hover:text-white transition-colors relative group py-2">
             {lang === 'el' ? 'Αρχική' : 'Home'}
             <span className="absolute bottom-0 left-0 w-full h-[2px] bg-electric-cyan scale-x-0 group-hover:scale-x-100 transition-transform origin-right group-hover:origin-left duration-300" />
           </Link>
@@ -162,10 +179,12 @@ export default function Header() {
           >
             {lang === 'el' ? '🇬🇧 EN' : '🇬🇷 EL'}
           </button>
+          <ThemeToggle />
         </nav>
 
         {/* Mobile controls */}
         <div className="md:hidden flex items-center gap-3">
+          <ThemeToggle />
           <button
             onClick={toggleLang}
             className="flex items-center gap-1 px-2 py-1 rounded-lg border border-electric-cyan/40 bg-electric-cyan/10 text-xs font-bold text-electric-cyan hover:bg-electric-cyan hover:text-[#050608] transition-all"
@@ -192,7 +211,7 @@ export default function Header() {
         className={`md:hidden bg-[#050608]/97 backdrop-blur-xl border-b border-electric-cyan/15 transition-all duration-400 ${isMobileMenuOpen ? 'max-h-[calc(100vh-7rem)] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0 overflow-hidden'}`}
       >
         <nav className="flex flex-col p-6 gap-4 text-lg font-medium text-electric-cyan">
-          <Link href="/"                        onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Αρχική' : 'Home'}</Link>
+          <Link href="/"                        onClick={onLogo} className="text-white hover:text-electric-cyan transition-colors">{lang === 'el' ? 'Αρχική' : 'Home'}</Link>
           <div className="pl-4 border-l border-electric-cyan/20 flex flex-col gap-3 my-1">
             <span className="text-xs text-gray-500 uppercase font-black tracking-widest">{lang === 'el' ? 'Υπηρεσίες' : 'Services'}</span>
             {services.map((service) => (

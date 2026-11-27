@@ -14,6 +14,7 @@ import PitchQuote from '@/components/PitchQuote';
 import IncludesTech from '@/components/service/IncludesTech';
 import KataskeviPricing from '@/components/service/KataskeviPricing';
 import {
+  ICONS,
   StepsSection,
   ProofStrip,
   FaqSection,
@@ -149,14 +150,14 @@ export default function KataskeviClient() {
       <section className="pb-24 pt-6 mv-amb alt">
         <div className="max-w-4xl lg:max-w-6xl mx-auto px-6">
           <ScrollReveal delay={60} direction="scale">
-            <div className="mv-frost relative overflow-hidden rounded-3xl p-8 md:p-12">
+            <div className="why-plate mv-frost relative overflow-hidden rounded-3xl p-8 md:p-12">
               <div className="relative z-10 space-y-6 lg:space-y-0 lg:grid lg:grid-cols-[1fr_1.08fr] lg:gap-0 why-cols">
                 <div className="why-col">
                   <h2 data-fx="mask" className="text-3xl md:text-4xl font-black text-white mb-7 lg:mb-6 font-display">
                     {lang === 'el' ? 'Γιατί είναι Δωρεάν;' : 'Why is it Free?'}
                   </h2>
                   <span className="why-num" aria-hidden="true">01</span>
-                  <p className="text-white text-lg md:text-xl lg:text-[1.22rem] leading-relaxed border-l-2 border-electric-cyan/70 pl-5 lg:border-l-0 lg:pl-0" data-lit>
+                  <p className="why-lead text-white text-lg md:text-xl lg:text-[1.22rem] leading-relaxed border-l-2 border-electric-cyan/70 pl-5 lg:border-l-0 lg:pl-0" data-lit>
                     {lang === 'el'
                       ? 'Στη σημερινή εποχή, δεν νοείται επιχείρηση ή επαγγελματίας χωρίς παρουσία στο διαδίκτυο. Μια δική σας ιστοσελίδα δεν είναι πολυτέλεια — είναι αναγκαιότητα: είναι ο χώρος όπου σας βρίσκουν όσοι σας αναζητούν και όπου παρουσιάζεστε όπως πραγματικά σας αξίζει — με το δικό σας περιεχόμενο, τα δικά σας λόγια, τη δική σας ταυτότητα.'
                       : "In today's world, no business or professional can afford to be invisible online. A website of your own isn't a luxury — it's a necessity: it's where people find you when they're looking for you, and where you present yourself the way you truly deserve — with your own content, your own words, your own identity."}
@@ -194,6 +195,25 @@ export default function KataskeviClient() {
       {/* ─── HOSTING PRICING + INFRASTRUCTURE + EXTRAS (restored from history) ─── */}
       <KataskeviPricing />
 
+      {/* ─── «Έχετε κατάλυμα;» → the accommodation page (24 Nov 2026) ─── */}
+      <section className="pb-20">
+        <div className="max-w-5xl mx-auto px-6">
+          <ScrollReveal>
+            <Link href="/direct-booking" className="glass-panel card-sweep rounded-3xl stay-band group">
+              <span className="w-14 h-14 rounded-2xl bg-electric-cyan/10 border border-electric-cyan/25 flex items-center justify-center text-electric-cyan">{ICONS.building('w-7 h-7')}</span>
+              <span>
+                <b className="block text-white font-display font-black text-2xl mb-1">{lang === 'el' ? 'Έχετε κατάλυμα;' : 'Do you rent rooms or a villa?'}</b>
+                <span className="text-gray-400 leading-relaxed">{lang === 'el' ? 'Βίλα, ενοικιαζόμενα δωμάτια, Airbnb: δείτε τις 3 επιλογές για κρατήσεις κατευθείαν από την ιστοσελίδα σας — από 0€ κατασκευή και 130€ τον χρόνο.' : 'Villa, rooms to let, Airbnb: see the 3 options for bookings straight from your website — from €0 build and €130 a year.'}</span>
+              </span>
+              <span className="btn-premium inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-electric-cyan text-[#050608] font-black text-sm uppercase tracking-[0.08em] rounded-xl group-hover:bg-white transition-colors whitespace-nowrap">
+                {lang === 'el' ? 'Δείτε τις επιλογές' : 'See the options'}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </span>
+            </Link>
+          </ScrollReveal>
+        </div>
+      </section>
+
       <ProofStrip />
 
       {/* ─── PORTFOLIO (kept) ─── */}
@@ -205,7 +225,7 @@ export default function KataskeviClient() {
           <ScrollReveal className="text-center mb-14">
             <span className="section-label">{lang === 'el' ? 'Πορτφόλιο' : 'Portfolio'}</span>
             <h2 className="text-4xl md:text-5xl font-black font-display mb-3 text-white tracking-tight">
-              {lang === 'el' ? 'Δείτε μερικές από τις Δουλειές μας' : 'Check Out Some Of Our Work'}
+              {lang === 'el' ? 'Δείτε πάνω από 200 live δουλειές μας' : 'See over 200 of our live projects'}
             </h2>
             <div className="max-w-2xl mx-auto space-y-4">
               <p className="text-sm text-gray-500 leading-relaxed">

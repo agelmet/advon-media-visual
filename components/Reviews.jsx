@@ -10,27 +10,7 @@ import { GoogleStar, GoogleG } from '@/components/ReviewsGlyphs';
 /* The cards themselves (and the 70KB review list) live in their own chunk and are fetched
    only when the reviews are about 700px away from the screen. Same cards, same motion —
    the page just does not pay for them before anyone can see them. */
-const MarqueeColumns = dynamic(() => import('@/components/ReviewsColumns').then((m) => m.MarqueeColumns), { ssr: false, loading: () => null });
-const StaticGrid = dynamic(() => import('@/components/ReviewsColumns').then((m) => m.StaticGrid), { ssr: false, loading: () => null });
-
-/* How many columns for the current viewport (desktop 4 / tablet 2 / mobile 1). */
-function useColumnCount() {
-  const [count, setCount] = useState(4);
-  useEffect(() => {
-    const mobile = window.matchMedia('(max-width: 767px)');
-    const tablet = window.matchMedia('(min-width: 768px) and (max-width: 1023px)');
-    const update = () => setCount(mobile.matches ? 1 : tablet.matches ? 2 : 4);
-    update();
-    mobile.addEventListener('change', update);
-    tablet.addEventListener('change', update);
-    return () => {
-      mobile.removeEventListener('change', update);
-      tablet.removeEventListener('change', update);
-    };
-  }, []);
-  return count;
-}
-
+const Spotlight = dynamic(() => import('@/components/ReviewsColumns').then((m) => m.Spotlight), { ssr: false, loading: () => <div className="rvs-ph" aria-hidden="true" /> });
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false);
   useEffect(() => {
@@ -61,7 +41,6 @@ function useNear(rootMargin = '700px 0px') {
 
 export default function Reviews() {
   const { lang } = useLangStore();
-  const columnCount = useColumnCount();
   const reducedMotion = useReducedMotion();
   const [nearRef, near] = useNear();
 
@@ -107,15 +86,14 @@ export default function Reviews() {
           </div>
         </ScrollReveal>
 
-        {/* Reviews — vertical auto-scrolling columns (static grid if reduced-motion) */}
+        {/* one show: each review next to the website we built for that person, changing every few seconds;
+            the reviews with no website in the portfolio come at the very end of the same show */}
         <ScrollReveal direction="fade" delay={60}>
           <div ref={nearRef}>
             {!near ? (
-              <div className="reviews-viewport" aria-hidden="true" />
-            ) : reducedMotion ? (
-              <StaticGrid lang={lang} />
+              <div className="rvs-ph" aria-hidden="true" />
             ) : (
-              <MarqueeColumns lang={lang} columnCount={columnCount} />
+              <Spotlight lang={lang} reduced={reducedMotion} />
             )}
           </div>
 

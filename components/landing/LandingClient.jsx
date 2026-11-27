@@ -17,6 +17,7 @@ import PitchQuote from '@/components/PitchQuote';
 import IncludesTech from '@/components/service/IncludesTech';
 import { StepsSection, FaqSection } from '@/components/service/blocks';
 import { portfolioData } from '@/lib/data';
+import SiteRiver from '@/components/SiteRiver';
 import { getService } from '@/lib/services';
 import { readNiche } from '@/lib/landing';
 
@@ -114,12 +115,12 @@ export default function LandingClient() {
 
         <div className="container max-w-7xl mx-auto px-6 text-center z-10 mv-hero-scrub">
           <div
-            className="reveal-item delay-1 inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-electric-cyan/50 bg-electric-cyan/8 mb-7 badge-scan"
+            className="reveal-item delay-1 inline-flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 max-w-full px-5 py-2.5 rounded-[1.6rem] border border-electric-cyan/50 bg-electric-cyan/8 mb-7 badge-scan"
             style={{ boxShadow: '0 0 30px rgba(71,200,245,0.2), inset 0 0 20px rgba(71,200,245,0.05)' }}
           >
             <span className="w-2 h-2 rounded-full bg-electric-cyan animate-pulse" style={{ boxShadow: '0 0 12px #47c8f5' }} />
-            <span className="text-[0.65rem] font-black tracking-[0.3em] text-white uppercase">ADVON MEDIA</span>
-            <span className="text-[0.65rem] font-semibold tracking-[0.15em] text-electric-cyan/80 uppercase">
+            <span className="text-[0.65rem] font-black tracking-[0.3em] text-white uppercase whitespace-nowrap">ADVON MEDIA</span>
+            <span className="text-[0.6rem] sm:text-[0.65rem] font-semibold tracking-[0.08em] sm:tracking-[0.15em] text-electric-cyan/80 uppercase whitespace-nowrap">
               — {niche ? niche.badge : 'Κατασκευή ιστοσελίδων'}
             </span>
           </div>
@@ -146,7 +147,7 @@ export default function LandingClient() {
           </p>
 
           <p className="lp-proof reveal-item delay-5 text-electric-cyan/90 text-sm md:text-base font-bold tracking-wide mb-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
-            <span>220+ ιστοσελίδες online</span>
+            <span>260+ ιστοσελίδες online</span>
             <span className="text-electric-cyan/40 hidden sm:inline" aria-hidden="true">·</span>
             <a
               href="#reviews"
@@ -192,6 +193,14 @@ export default function LandingClient() {
           </ul>
         </div>
       </section>
+
+      {/* ─── THE RIVER — real client sites, moving (27 Nov 2026) ─── */}
+      <SiteRiver className="river-up">
+        <a href="#portfolio" onClick={(e) => goTo(e, 'portfolio')} className="river-link">
+          Δείτε πάνω από 200 live σελίδες πελατών μας
+          {arrow('w-4 h-4')}
+        </a>
+      </SiteRiver>
 
       {/* ─── WHO WE BUILD FOR ─── */}
       <div className="overflow-hidden py-5 border-y border-electric-cyan/10 bg-[#050608]/60 relative mv-skew">
@@ -239,7 +248,7 @@ export default function LandingClient() {
           {/* desktop: what the 130€ covers | the pitch, side by side; phones: stacked */}
           <div className="mt-12 grid gap-6 lg:grid-cols-2 lg:items-stretch text-left">
             <ScrollReveal delay={160} direction="left" className="h-full">
-              <div className="mv-frost relative overflow-hidden rounded-3xl p-7 md:p-9 h-full">
+              <div className="incl-plate mv-frost relative overflow-hidden rounded-3xl p-7 md:p-9 h-full">
                 <div className="relative z-10">
                   <p className="text-xs font-black tracking-[0.22em] uppercase text-electric-cyan mb-2">Τι περιλαμβάνουν τα 130€</p>
                   <p className="text-gray-300 text-[15px] leading-relaxed mb-5">
@@ -270,12 +279,12 @@ export default function LandingClient() {
       <section className="pb-24 pt-4 mv-amb alt">
         <div className="max-w-4xl lg:max-w-6xl mx-auto px-6">
           <ScrollReveal delay={60} direction="scale">
-            <div className="mv-frost relative overflow-hidden rounded-3xl p-8 md:p-12">
+            <div className="why-plate mv-frost relative overflow-hidden rounded-3xl p-8 md:p-12">
               <div className="relative z-10 space-y-6 lg:space-y-0 lg:grid lg:grid-cols-[1fr_1.08fr] lg:gap-0 why-cols">
                 <div className="why-col">
                   <h2 data-fx="mask" className="text-3xl md:text-4xl font-black text-white mb-7 lg:mb-6 font-display">Γιατί είναι δωρεάν;</h2>
                   <span className="why-num" aria-hidden="true">01</span>
-                  <p className="text-white text-lg md:text-xl lg:text-[1.22rem] leading-relaxed border-l-2 border-electric-cyan/70 pl-5 lg:border-l-0 lg:pl-0" data-lit>
+                  <p className="why-lead text-white text-lg md:text-xl lg:text-[1.22rem] leading-relaxed border-l-2 border-electric-cyan/70 pl-5 lg:border-l-0 lg:pl-0" data-lit>
                     Στη σημερινή εποχή, δεν νοείται επιχείρηση ή επαγγελματίας χωρίς παρουσία στο διαδίκτυο. Μια δική σας ιστοσελίδα δεν είναι πολυτέλεια — είναι αναγκαιότητα: είναι ο χώρος όπου σας βρίσκουν όσοι σας αναζητούν και όπου παρουσιάζεστε όπως πραγματικά σας αξίζει.
                   </p>
                 </div>
@@ -457,8 +466,8 @@ const LANDING_FAQS = [
   {
     q: { el: 'Μπορώ να αλλάξω πράγματα στη σελίδα αργότερα;', en: 'Can I change things later?' },
     a: {
-      el: 'Ναι. Μέχρι να βγει online, οι αλλαγές είναι απεριόριστες και χωρίς χρέωση. Μετά τη δημοσίευση, κάθε αίτημα αλλαγών κοστίζει 50€ — ένα αίτημα μπορεί να περιλαμβάνει όσες αλλαγές θέλετε, σε ένα μήνυμα — και ολοκληρώνεται εντός 3 εργάσιμων ημερών. Αν προτιμάτε να αλλάζετε μόνοι σας κείμενα και εικόνες, προσθέτουμε πίνακα διαχείρισης (180€ εφάπαξ).',
-      en: 'Yes. Until it goes live, changes are unlimited and free. After publishing, each change request costs 50€ — one request can include as many changes as you like, in one message — and is done within 3 working days. If you prefer to change texts and images yourself, we add an admin panel (180€ one-off).',
+      el: 'Ναι. Μέχρι να βγει online, οι αλλαγές είναι απεριόριστες και χωρίς χρέωση. Μετά τη δημοσίευση, κάθε αίτημα αλλαγών κοστίζει 50€ + ΦΠΑ — ένα αίτημα μπορεί να περιλαμβάνει όσες αλλαγές θέλετε, σε ένα μήνυμα — και ολοκληρώνεται εντός 3 εργάσιμων ημερών. Αν προτιμάτε να τις κάνετε μόνοι σας: μία ενότητα που επεξεργάζεστε εσείς (π.χ. άρθρα ή εκδηλώσεις) 70€ + ΦΠΑ εφάπαξ, ή πλήρης πίνακας διαχείρισης για όλη τη σελίδα 130€ + ΦΠΑ εφάπαξ.',
+      en: 'Yes. Until it goes live, changes are unlimited and free. After publishing, each change request costs €50 + VAT — one request can include as many changes as you like, in one message — and is done within 3 working days. If you prefer to make them yourself: one section you edit (e.g. articles or events) €70 + VAT one-off, or a full admin panel for the whole site €130 + VAT one-off.',
     },
   },
 ];
