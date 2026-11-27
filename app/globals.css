@@ -1890,3 +1890,22 @@ html.light .chg-card ul, html.light .chg-card .border-white\/8 { border-color: v
   html.light .kat-cover { border-radius: 1.25rem; padding: 1.6rem 1.25rem 1.5rem; border: 1px solid var(--line); margin-top: 1.25rem; }
   html.light .kat-cover > p:first-child { margin-top: 0; }
 }
+/* «Τις κάνετε εσείς»: one card, two ways — 1 section or the whole website (27 Nov 2026) */
+.ds-way + .ds-way { border-top: 1px solid rgba(255,255,255,.08); }
+@media (min-width: 768px) { .ds-way + .ds-way { border-top: 0; border-left: 1px solid rgba(255,255,255,.08); } }
+.ds-all { background: linear-gradient(180deg, rgba(71,200,245,.07), transparent 70%); border-bottom-right-radius: 1rem; }
+@media (max-width: 767px) { .ds-all { border-bottom-left-radius: 1rem; } }
+.ds-or { position: absolute; z-index: 2; left: 50%; top: 50%; translate: -50% -50%; width: 2.4rem; height: 2.4rem; border-radius: 999px;
+  display: grid; place-items: center; font-weight: 800; font-size: .8rem; color: #47C8F5; background: #0b0d12; border: 1px solid rgba(71,200,245,.35); }
+@media (max-width: 767px) { .ds-or { top: 50%; } }
+.ds-scope .ds-page { fill: rgba(255,255,255,.03); stroke: rgba(255,255,255,.22); stroke-width: 1.5; }
+.ds-scope .ds-off { fill: rgba(255,255,255,.10); }
+.ds-scope .ds-on { fill: #47C8F5; filter: drop-shadow(0 0 5px rgba(71,200,245,.55)); }
+.ds-addon { display: inline-block; margin-right: .35rem; padding: .15rem .55rem; border-radius: 999px; font-size: .66rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #47C8F5; border: 1px solid rgba(71,200,245,.35); vertical-align: 1px; }
+html.light .ds-way + .ds-way, html.light .ds-head { border-color: var(--line); }
+html.light .ds-or { background: var(--card); color: var(--cy); border-color: rgba(23,128,180,.35); }
+html.light .ds-scope .ds-page { fill: #fff; stroke: rgba(16,24,40,.22); }
+html.light .ds-scope .ds-off { fill: rgba(16,24,40,.10); }
+html.light .ds-scope .ds-on { fill: #1C8FD0; filter: none; }
+html.light .ds-all { background: linear-gradient(180deg, rgba(71,200,245,.09), transparent 70%); }
+html.light .ds-addon { color: var(--cy); border-color: rgba(23,128,180,.35); }

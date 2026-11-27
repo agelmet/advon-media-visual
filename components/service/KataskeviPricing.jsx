@@ -241,67 +241,106 @@ export default function KataskeviPricing({ infra = true }) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-            {(lang === 'el' ? [
-              { who: 'Τις κάνουμε εμείς', price: '50€', per: '+ ΦΠΑ / αίτημα', title: 'Αίτημα αλλαγών', icon: 'edit',
-                text: 'Μας στέλνετε ό,τι θέλετε να αλλάξει και το ολοκληρώνουμε εντός 3 εργάσιμων ημερών.',
-                list: ['Ένα αίτημα = όλες οι αλλαγές που γράψετε σε ένα μήνυμα', 'Κείμενα, φωτογραφίες, υπηρεσίες, ωράριο, νέα ενότητα', 'Πληρώνετε μόνο όταν χρειαστείτε κάτι'] },
-              { who: 'Τις κάνετε εσείς · μία ενότητα', price: '70€', per: '+ ΦΠΑ · εφάπαξ', title: 'Απλή ενότητα', icon: 'book',
+          {(() => {
+            const el = lang === 'el';
+            const Tick = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 mt-0.5 text-electric-cyan shrink-0" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>;
+            const List = ({ items }) => (
+              <ul className="mt-auto space-y-2.5 pt-4 border-t border-white/8">
+                {items.map((li) => <li key={li} className="flex items-start gap-2.5 text-sm text-gray-200"><Tick /><span>{li}</span></li>)}
+              </ul>
+            );
+            /* a tiny drawn page: one row lit = one section, every row lit = the whole website */
+            const Scope = ({ all }) => (
+              <svg viewBox="0 0 64 80" className="ds-scope w-12 h-[60px] shrink-0" aria-hidden="true">
+                <rect x="1.5" y="1.5" width="61" height="77" rx="7" className="ds-page" />
+                {[12, 26, 40, 54].map((y, i) => (
+                  <rect key={y} x="9" y={y} width="46" height={i === 1 ? 14 : 9} rx="2.5" className={all || i === 1 ? 'ds-on' : 'ds-off'} />
+                ))}
+              </svg>
+            );
+            const self = el ? [
+              { all: false, scope: '1 ενότητα', price: '70€', per: '+ ΦΠΑ · εφάπαξ', title: 'Απλή ενότητα',
                 text: 'Μία ενότητα της σελίδας που αλλάζετε μόνοι σας, όποτε θέλετε, χωρίς να μας ρωτάτε.',
                 list: ['Άρθρα, εκδηλώσεις / σεμινάρια ή φωτογραφίες', 'Προσθέτετε, αλλάζετε και διαγράφετε από υπολογιστή ή κινητό', 'Για όλα τα υπόλοιπα, αίτημα αλλαγών'] },
-              { who: 'Τις κάνετε εσείς · όλα', price: '130€', per: '+ ΦΠΑ · εφάπαξ', title: 'Πλήρης πίνακας διαχείρισης', icon: 'panel', hot: true,
+              { all: true, scope: 'Όλη η ιστοσελίδα', price: '130€', per: '+ ΦΠΑ · εφάπαξ', title: 'Πλήρης πίνακας διαχείρισης',
                 text: 'Ο δικός σας πίνακας διαχείρισης για ολόκληρη την ιστοσελίδα — αλλάζετε τα πάντα μόνοι σας.',
                 list: ['Όλα τα κείμενα και όλες οι φωτογραφίες', 'Υπηρεσίες, τιμές, ωράριο, άρθρα, εκδηλώσεις', 'Χωρίς χρέωση ανά αλλαγή, όσες φορές θέλετε'] },
             ] : [
-              { who: 'We make them', price: '€50', per: '+ VAT / request', title: 'Change request', icon: 'edit',
-                text: 'Send us whatever you want changed and we finish it within 3 working days.',
-                list: ['One request = every change you write in one message', 'Texts, photos, services, hours, a new section', 'You pay only when you need something'] },
-              { who: 'You make them · one section', price: '€70', per: '+ VAT · one-off', title: 'A simple section', icon: 'book',
+              { all: false, scope: '1 section', price: '€70', per: '+ VAT · one-off', title: 'A simple section',
                 text: 'One section of the site that you change yourself, whenever you like, without asking us.',
                 list: ['Articles, events / seminars or photos', 'Add, edit and delete from a computer or phone', 'For everything else, a change request'] },
-              { who: 'You make them · everything', price: '€130', per: '+ VAT · one-off', title: 'Full admin panel', icon: 'panel', hot: true,
+              { all: true, scope: 'The whole website', price: '€130', per: '+ VAT · one-off', title: 'Full admin panel',
                 text: 'Your own admin panel for the whole website — you change everything yourself.',
                 list: ['All texts and all photos', 'Services, prices, hours, articles, events', 'No charge per change, as often as you like'] },
-            ]).map((o) => (
-              <div key={o.title} className={`chg-card glass-panel rounded-2xl p-7 h-full flex flex-col border ${o.hot ? 'border-electric-cyan/45 chg-hot' : 'border-white/10'}`}>
-                <div className="flex items-center gap-3 mb-5">
-                  <span className="w-11 h-11 bg-electric-cyan/10 border border-electric-cyan/25 rounded-xl flex items-center justify-center text-electric-cyan shrink-0">
-                    {o.icon === 'edit' && <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>}
-                    {o.icon === 'book' && <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>}
-                    {o.icon === 'panel' && <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>}
-                  </span>
-                  <span className="chg-who text-[0.68rem] font-black tracking-[0.16em] uppercase text-electric-cyan">{o.who}</span>
+            ];
+            return (
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-6 items-stretch">
+                {/* 1 · we make the changes */}
+                <div className="chg-card glass-panel rounded-2xl p-7 h-full flex flex-col border border-white/10">
+                  <div className="flex items-center gap-3 mb-5">
+                    <span className="w-11 h-11 bg-electric-cyan/10 border border-electric-cyan/25 rounded-xl flex items-center justify-center text-electric-cyan shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>
+                    </span>
+                    <span className="chg-who text-[0.7rem] font-black tracking-[0.16em] uppercase text-electric-cyan">{el ? 'Τις κάνουμε εμείς' : 'We make them'}</span>
+                  </div>
+                  <div className="flex items-baseline gap-2 mb-1">
+                    <span className="text-4xl font-black price-gradient tabular-nums">{el ? '50€' : '€50'}</span>
+                    <span className="text-gray-400 text-sm font-semibold">{el ? '+ ΦΠΑ / αίτημα' : '+ VAT / request'}</span>
+                  </div>
+                  <h3 className="text-white font-bold text-lg mt-2 mb-2">{el ? 'Αίτημα αλλαγών' : 'Change request'}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed mb-4">{el ? 'Μας στέλνετε ό,τι θέλετε να αλλάξει και το ολοκληρώνουμε εντός 3 εργάσιμων ημερών.' : 'Send us whatever you want changed and we finish it within 3 working days.'}</p>
+                  <List items={el
+                    ? ['Ένα αίτημα = όλες οι αλλαγές που γράψετε σε ένα μήνυμα', 'Κείμενα, φωτογραφίες, υπηρεσίες, ωράριο, νέα ενότητα', 'Πληρώνετε μόνο όταν χρειαστείτε κάτι']
+                    : ['One request = every change you write in one message', 'Texts, photos, services, hours, a new section', 'You pay only when you need something']} />
                 </div>
-                <div className="flex items-baseline gap-2 mb-1">
-                  <span className="text-4xl font-black price-gradient tabular-nums">{o.price}</span>
-                  <span className="text-gray-400 text-sm font-semibold">{o.per}</span>
-                </div>
-                <h3 className="text-white font-bold text-lg mt-2 mb-2">{o.title}</h3>
-                <p className="chg-text text-gray-400 text-sm leading-relaxed mb-4">{o.text}</p>
-                <ul className="mt-auto space-y-2.5 pt-4 border-t border-white/8">
-                  {o.list.map((li) => (
-                    <li key={li} className="flex items-start gap-2.5 text-sm text-gray-200">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 mt-0.5 text-electric-cyan shrink-0"><path d="M20 6 9 17l-5-5"/></svg>
-                      <span>{li}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
 
-          {/* the contact form — a separate small add-on */}
+                {/* 2 · you make them yourself — one card, two ways: one section or the whole website */}
+                <div className="chg-card ds-card glass-panel rounded-2xl h-full flex flex-col border border-electric-cyan/40 chg-hot">
+                  <div className="flex items-center gap-3 px-7 pt-7 pb-5 border-b border-white/8 ds-head">
+                    <span className="w-11 h-11 bg-electric-cyan/10 border border-electric-cyan/25 rounded-xl flex items-center justify-center text-electric-cyan shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                    </span>
+                    <div>
+                      <span className="chg-who block text-[0.7rem] font-black tracking-[0.16em] uppercase text-electric-cyan">{el ? 'Τις κάνετε εσείς' : 'You make them'}</span>
+                      <span className="block text-gray-300 text-sm mt-1">{el ? 'Με δικό σας πίνακα διαχείρισης — διαλέξτε πόσο από τη σελίδα θα αλλάζετε:' : 'With your own admin panel — choose how much of the site you will edit:'}</span>
+                    </div>
+                  </div>
+                  <div className="ds-ways relative grid grid-cols-1 md:grid-cols-2 flex-1">
+                    <span className="ds-or" aria-hidden="true">{el ? 'ή' : 'or'}</span>
+                    {self.map((o) => (
+                      <div key={o.title} className={`ds-way flex flex-col p-7 ${o.all ? 'ds-all' : ''}`}>
+                        <div className="flex items-center gap-4 mb-5">
+                          <Scope all={o.all} />
+                          <span className="ds-scope-t text-xl md:text-2xl font-black text-white leading-tight">{o.scope}</span>
+                        </div>
+                        <div className="flex items-baseline gap-2 mb-1">
+                          <span className="text-4xl font-black price-gradient tabular-nums">{o.price}</span>
+                          <span className="text-gray-400 text-sm font-semibold">{o.per}</span>
+                        </div>
+                        <h3 className="text-white font-bold text-lg mt-2 mb-2">{o.title}</h3>
+                        <p className="chg-text text-gray-400 text-sm leading-relaxed mb-4">{o.text}</p>
+                        <List items={o.list} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* the contact form — a small add-on (plugin) */}
           <div className="chg-extra glass-panel mt-6 rounded-2xl px-6 py-5 border border-white/10 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
             <span className="w-11 h-11 bg-electric-cyan/10 border border-electric-cyan/25 rounded-xl flex items-center justify-center text-electric-cyan shrink-0">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             </span>
             <p className="text-sm text-gray-300 leading-relaxed flex-1">
+              <span className="ds-addon">{lang === 'el' ? 'Πρόσθετο' : 'Add-on'}</span>{' '}
               <b className="text-white">{lang === 'el' ? 'Φόρμα επικοινωνίας' : 'Contact form'}</b>{' '}
               {lang === 'el'
                 ? '— κάθε φορά που κάποιος τη συμπληρώνει, λαμβάνετε αμέσως email στη διεύθυνση που θέλετε.'
                 : '— every time someone fills it in, you get an email right away at the address you choose.'}
             </p>
-            <span className="whitespace-nowrap"><b className="text-2xl font-black price-gradient tabular-nums">{lang === 'el' ? '50€' : '€50'}</b> <span className="text-gray-400 text-sm font-semibold">{lang === 'el' ? '+ ΦΠΑ · εφάπαξ' : '+ VAT · one-off'}</span></span>
+            <span className="whitespace-nowrap"><b className="text-2xl font-black price-gradient tabular-nums">{lang === 'el' ? '+20€' : '+€20'}</b> <span className="text-gray-400 text-sm font-semibold">{lang === 'el' ? '+ ΦΠΑ · εφάπαξ' : '+ VAT · one-off'}</span></span>
           </div>
 
           <div className="mt-10 text-center">
