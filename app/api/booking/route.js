@@ -12,6 +12,7 @@ import { ghConf, ghReady, commit, readAtHead } from '@/lib/ghdata';
 import { checkStamp, makeStamp, phoneVerdict, contentVerdict, emailShapeOk, tooMany, clientIp } from '@/lib/antispam';
 import { mailConf, sendTelegram, tgEsc } from '@/lib/chatcore';
 import { sendMetaEvent } from '@/lib/metacapi';
+import { isBlocked } from '@/lib/blocklist';
 import {
   BOOKING, gcalReady, freeSlots, isFree, createEvent, moveEvent, deleteEvent, newId, newRef, manageToken, readToken,
   publicBooking, sendBookingMail, sendOwnerMail, bookingStats, dayLabel, endTime, athensToDate, todayAthens,
@@ -125,6 +126,9 @@ export async function POST(req) {
     if (!emailShapeOk(f.email)) return json({ ok: false, code: 'bad_email' }, 400);
     const cv = contentVerdict({ name: f.name, message: f.msg, email: f.email, profession: f.job });
     if (cv) { console.warn('[booking] spam', cv); return json({ ok: true, booking: null, robot: true }); }
+    // blocked by Angelo (leads/blocked.json): book nothing, send nothing; the page shows its plain «something went wrong»
+    const blk = await isBlocked({ phone: f.phone, email: f.email });
+    if (blk) { console.warn('[booking] blocked', blk.name || ''); return json({ ok: false, code: 'unavailable' }, 403); }
     if (!(await isFree(f.day, f.time).catch(() => false))) return json({ ok: false, code: 'taken' }, 409);
 
     // a second booking from the same e-mail while one is still ahead → keep only the new one? No: refuse, offer the link.

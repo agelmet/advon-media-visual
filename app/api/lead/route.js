@@ -20,6 +20,7 @@ import { crmCors, crmPreflight } from '@/lib/crmcors';
 import { makeStamp, checkStamp, contentVerdict, phoneVerdict, tooMany, clientIp } from '@/lib/antispam';
 import { sendMetaLead } from '@/lib/metacapi';
 import { buildLeadConfirm } from '@/lib/leadconfirm';
+import { isBlocked } from '@/lib/blocklist';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -340,6 +341,10 @@ async function __POST(req) {
   if (!phoneOk) return json({ ok: false, error: 'invalid_phone' }, 400);
   const invalid = validLead(lead);
   if (invalid) return json({ ok: false, error: `invalid_${invalid}` }, 400);
+
+  // blocked by Angelo (leads/blocked.json): answered like a robot — nothing stored, e-mailed or sent to Telegram
+  const blk = await isBlocked({ phone: lead.phone, email: lead.email });
+  if (blk) { console.warn('[lead] blocked', blk.name || ''); return fakeOk(); }
 
   const capi = sendMetaLead(req, body).catch(() => false);
   const res = await deliver(c, lead, siteBase(req));
