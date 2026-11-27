@@ -11,37 +11,6 @@ import { GoogleStar, GoogleG } from '@/components/ReviewsGlyphs';
    only when the reviews are about 700px away from the screen. Same cards, same motion —
    the page just does not pay for them before anyone can see them. */
 const Spotlight = dynamic(() => import('@/components/ReviewsColumns').then((m) => m.Spotlight), { ssr: false, loading: () => <div className="rvs-ph" aria-hidden="true" /> });
-const OthersTitle = dynamic(() => import('@/components/ReviewsColumns').then((m) => function OthersTitle({ lang }) {
-  return (
-    <h3 className="rvs-others-t">
-      {lang === 'el' ? `Και ακόμη ${m.OTHER_COUNT} αξιολογήσεις πελατών μας` : `And ${m.OTHER_COUNT} more reviews from our clients`}
-    </h3>
-  );
-}), { ssr: false, loading: () => null });
-const Others = dynamic(() => import('@/components/ReviewsColumns').then((m) => function Others({ lang, columnCount, reduced }) {
-  return reduced
-    ? <m.StaticGrid lang={lang} reviews={m.OTHERS} />
-    : <m.MarqueeColumns lang={lang} columnCount={columnCount} reviews={m.OTHERS} />;
-}), { ssr: false, loading: () => null });
-
-/* How many columns for the current viewport (desktop 4 / tablet 2 / mobile 1). */
-function useColumnCount() {
-  const [count, setCount] = useState(4);
-  useEffect(() => {
-    const mobile = window.matchMedia('(max-width: 767px)');
-    const tablet = window.matchMedia('(min-width: 768px) and (max-width: 1023px)');
-    const update = () => setCount(mobile.matches ? 1 : tablet.matches ? 2 : 4);
-    update();
-    mobile.addEventListener('change', update);
-    tablet.addEventListener('change', update);
-    return () => {
-      mobile.removeEventListener('change', update);
-      tablet.removeEventListener('change', update);
-    };
-  }, []);
-  return count;
-}
-
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false);
   useEffect(() => {
@@ -72,7 +41,6 @@ function useNear(rootMargin = '700px 0px') {
 
 export default function Reviews() {
   const { lang } = useLangStore();
-  const columnCount = useColumnCount();
   const reducedMotion = useReducedMotion();
   const [nearRef, near] = useNear();
 
@@ -118,18 +86,14 @@ export default function Reviews() {
           </div>
         </ScrollReveal>
 
-        {/* 1 · each review next to the website we built for that person, changing every few seconds
-            2 · under it, the reviews whose website is not in the portfolio, as plain moving cards */}
+        {/* one show: each review next to the website we built for that person, changing every few seconds;
+            the reviews with no website in the portfolio come at the very end of the same show */}
         <ScrollReveal direction="fade" delay={60}>
           <div ref={nearRef}>
             {!near ? (
               <div className="rvs-ph" aria-hidden="true" />
             ) : (
-              <>
-                <Spotlight lang={lang} reduced={reducedMotion} />
-                <OthersTitle lang={lang} />
-                <Others lang={lang} columnCount={columnCount} reduced={reducedMotion} />
-              </>
+              <Spotlight lang={lang} reduced={reducedMotion} />
             )}
           </div>
 

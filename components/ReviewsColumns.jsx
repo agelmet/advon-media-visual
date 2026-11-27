@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { googleReviews } from '@/lib/reviews';
 import { portfolioData } from '@/lib/data';
 import { REVIEW_SITE } from '@/lib/review-sites';
+import { REVIEWS_URL } from '@/lib/reviews-meta';
 import { GoogleStar, GoogleG } from '@/components/ReviewsGlyphs';
 
 const INITIAL_VISIBLE = 12;
@@ -114,16 +115,17 @@ const PAIRS = (() => {
 })();
 const PAIRED = new Set(PAIRS.map((x) => x.review));
 export const OTHERS = googleReviews.filter((r) => !PAIRED.has(r));
-export const PAIR_COUNT = PAIRS.length;
-export const OTHER_COUNT = OTHERS.length;
+// one show: first every review that has a website, then (at the very end) the ones without
+const SLIDES = [...PAIRS, ...OTHERS.map((review) => ({ review, site: null }))];
 
 const host = (url) => url.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
-const SLIDE_MS = 5000;
+const SLIDE_MS = 3200;
 
 export function Spotlight({ lang, reduced }) {
   const el = lang === 'el';
-  const n = PAIRS.length;
+  const n = SLIDES.length;
   const [i, setI] = useState(0);
+  const [dir, setDir] = useState(1);            // 1 = came from the right, -1 = from the left
   const [prev, setPrev] = useState(null);
   const [open, setOpen] = useState(false);       // «Περισσότερα» pressed: the text scrolls, the show waits
   const [paused, setPaused] = useState(false);   // the visitor pressed pause
@@ -133,10 +135,30 @@ export function Spotlight({ lang, reduced }) {
   const railRef = useRef(null);
   const textRef = useRef(null);
 
-  const go = useCallback((to) => {
-    setI((cur) => { const next = ((to % n) + n) % n; if (next !== cur) setPrev(cur); return next; });
+  const go = useCallback((to, d) => {
+    setI((cur) => {
+      const next = ((to % n) + n) % n;
+      if (next !== cur) { setPrev(cur); setDir(d || (to >= cur ? 1 : -1)); }
+      return next;
+    });
     setOpen(false);
   }, [n]);
+
+  // phones: swipe left / right over the frame to change review
+  const touch = useRef(null);
+  const swipedAt = useRef(0);
+  const onTouchStart = (e) => { const t = e.touches[0]; touch.current = { x: t.clientX, y: t.clientY }; };
+  const onTouchEnd = (e) => {
+    const from = touch.current; touch.current = null;
+    if (!from) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - from.x, dy = t.clientY - from.y;
+    if (Math.abs(dx) < 42 || Math.abs(dx) < Math.abs(dy) * 1.3) return;
+    swipedAt.current = Date.now();
+    if (dx < 0) go(i + 1, 1); else go(i - 1, -1);
+  };
+  // a swipe that ends on the website link must not open the website
+  const onClickCapture = (e) => { if (Date.now() - swipedAt.current < 450) { e.preventDefault(); e.stopPropagation(); } };
 
   // only run while the spotlight is on screen
   useEffect(() => {
@@ -162,43 +184,58 @@ export function Spotlight({ lang, reduced }) {
   }, [i, reduced]);
 
   const running = seen && !open && !paused && !reduced;
-  const { review, site } = PAIRS[i];
-  const before = prev != null ? PAIRS[prev] : null;
-  const after = PAIRS[(i + 1) % n];
+  const { review, site } = SLIDES[i];
+  const before = prev != null ? SLIDES[prev] : null;
+  const after = SLIDES[(i + 1) % n];
   const text = el ? review.text : review.textEn;
-  const siteName = el ? site.name : site.nameEn;
+  const siteName = site ? (el ? site.name : site.nameEn) : '';
   const sizes = '(max-width: 1023px) 92vw, 700px';
 
   return (
-    <div ref={rootRef} className={`rvs ${running ? 'is-running' : ''}`}>
-      <div className="rvs-frame">
+    <div ref={rootRef} className={`rvs ${running ? 'is-running' : ''} ${dir < 0 ? 'from-left' : 'from-right'}`}>
+      <div className="rvs-frame" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} onClickCapture={onClickCapture}>
         {/* the bar that fills = the time left; when it is full the next review comes */}
-        <span key={`bar-${i}`} className="rvs-bar" style={{ animationDuration: `${SLIDE_MS}ms` }} onAnimationEnd={() => go(i + 1)} aria-hidden="true" />
+        <span key={`bar-${i}`} className="rvs-bar" style={{ animationDuration: `${SLIDE_MS}ms` }} onAnimationEnd={() => go(i + 1, 1)} aria-hidden="true" />
 
         <div className="rvs-grid">
-          {/* the website */}
-          <a href={site.url} target="_blank" rel="noopener noreferrer" className="rvs-site group" aria-label={`${siteName} — ${host(site.url)}`}>
-            <span className="rvs-chrome" aria-hidden="true">
-              <i /><i /><i />
-              <b key={`h-${i}`} className="rvs-url">{host(site.url)}</b>
-              <em>Live</em>
-            </span>
-            <span className="rvs-shot">
-              {before && before.site !== site && (
-                <Image key={`o-${prev}`} src={before.site.image} alt="" fill sizes={sizes} className="rvs-img rvs-out" />
-              )}
-              <Image key={`c-${i}`} src={site.image} alt={siteName} fill sizes={sizes} className="rvs-img rvs-in" priority={false} />
-              {/* the next one is fetched quietly so the switch is instant */}
-              <Image key={`n-${(i + 1) % n}`} src={after.site.image} alt="" fill sizes={sizes} className="rvs-img rvs-next" aria-hidden="true" />
-              <span key={`cap-${i}`} className="rvs-cap">
-                <span className="rvs-cap-t">{siteName}</span>
-                <span className="rvs-cap-b">
-                  <span className="rvs-cap-l">{el ? 'Δείτε την ιστοσελίδα' : 'Visit the website'}</span>
+          {/* the website (shown whole, never cropped) — or, for a review with no website, a Google panel of the same size */}
+          {site ? (
+            <a href={site.url} target="_blank" rel="noopener noreferrer" className="rvs-site group" aria-label={`${siteName} — ${host(site.url)}`}>
+              <span className="rvs-chrome" aria-hidden="true">
+                <i /><i /><i />
+                <b key={`h-${i}`} className="rvs-url">{host(site.url)}</b>
+                <em>Live</em>
+              </span>
+              <span className="rvs-shot">
+                {before && before.site && before.site !== site && (
+                  <Image key={`o-${prev}`} src={before.site.image} alt="" fill sizes={sizes} className="rvs-img rvs-out" />
+                )}
+                <Image key={`c-${i}`} src={site.image} alt={siteName} fill sizes={sizes} className="rvs-img rvs-in" priority={false} />
+                <span key={`cap-${i}`} className="rvs-cap">
+                  <span className="rvs-cap-t">{siteName}</span>
+                  <span className="rvs-cap-b">
+                    <span className="rvs-cap-l">{el ? 'Δείτε την ιστοσελίδα' : 'Visit the website'}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg>
+                  </span>
+                </span>
+              </span>
+            </a>
+          ) : (
+            <a href={REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="rvs-site rvs-nosite group" aria-label={el ? 'Δείτε την αξιολόγηση στη Google' : 'See the review on Google'}>
+              <span key={`g-${i}`} className="rvs-gpanel">
+                <GoogleG className="w-14 h-14 md:w-16 md:h-16" />
+                <span className="rvs-gscore">{'5,0'}</span>
+                <span className="rvs-stars flex gap-1 text-[#FBBC05]">{[1, 2, 3, 4, 5].map((k) => <GoogleStar key={k} className="w-7 h-7 md:w-8 md:h-8" style={{ '--s': k }} />)}</span>
+                <span className="rvs-gtext">{el ? 'Αξιολόγηση στη Google' : 'Review on Google'}</span>
+                <span className="rvs-cap-b rvs-gbtn">
+                  <span>{el ? 'Δείτε τη στη Google' : 'See it on Google'}</span>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg>
                 </span>
               </span>
-            </span>
-          </a>
+            </a>
+          )}
+          {/* the next website is fetched quietly so the switch is instant */}
+          {after.site && <span className="rvs-pre" aria-hidden="true"><Image key={`n-${(i + 1) % n}`} src={after.site.image} alt="" fill sizes={sizes} /></span>}
 
           {/* the review, as it is on Google */}
           <div className="rvs-review">
@@ -227,15 +264,18 @@ export function Spotlight({ lang, reduced }) {
                 </div>
               )}
 
-              {(long || open) && (
-                <button type="button" onClick={() => setOpen((o) => !o)} className="rvs-more">
-                  {open ? (el ? 'Λιγότερα' : 'Less') : (el ? 'Περισσότερα' : 'More')}
-                </button>
-              )}
+              {/* the row is always there, so the card keeps one height whether the button shows or not */}
+              <div className="rvs-more-row">
+                {(long || open) && (
+                  <button type="button" onClick={() => setOpen((o) => !o)} className="rvs-more">
+                    {open ? (el ? 'Λιγότερα' : 'Less') : (el ? 'Περισσότερα' : 'More')}
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="rvs-ctrl">
-              <span className="rvs-count" aria-live="off"><b>{String(i + 1).padStart(2, '0')}</b> / {n}</span>
+              <span className="rvs-count" aria-live="off"><b>{i + 1}</b> / 140+</span>
               <span className="rvs-btns">
                 <button type="button" onClick={() => go(i - 1)} aria-label={el ? 'Προηγούμενη αξιολόγηση' : 'Previous review'}>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
@@ -258,11 +298,13 @@ export function Spotlight({ lang, reduced }) {
 
       {/* every site in one strip: tap one to jump to its review */}
       <div className="rvs-rail-wrap">
-        <div ref={railRef} className="rvs-rail" role="group" aria-label={el ? 'Όλες οι ιστοσελίδες με αξιολόγηση' : 'All websites with a review'}>
-          {PAIRS.map((x, k) => (
-            <button key={k} type="button" onClick={() => go(k)} className={`rvs-thumb ${k === i ? 'is-on' : ''}`}
-              aria-label={`${x.review.name} — ${host(x.site.url)}`} aria-current={k === i ? 'true' : undefined}>
-              <Image src={x.site.image} alt="" width={160} height={120} sizes="132px" loading="lazy" draggable={false} />
+        <div ref={railRef} className="rvs-rail" role="group" aria-label={el ? 'Όλες οι αξιολογήσεις' : 'All reviews'}>
+          {SLIDES.map((x, k) => (
+            <button key={k} type="button" onClick={() => go(k)} className={`rvs-thumb ${k === i ? 'is-on' : ''} ${x.site ? '' : 'rvs-thumb-g'}`}
+              aria-label={x.site ? `${x.review.name} — ${host(x.site.url)}` : x.review.name} aria-current={k === i ? 'true' : undefined}>
+              {x.site
+                ? <Image src={x.site.image} alt="" width={160} height={120} sizes="132px" loading="lazy" draggable={false} />
+                : <span className="rvs-thumb-in"><i style={{ backgroundColor: avatarColor(x.review.name) }}>{x.review.name.charAt(0).toUpperCase()}</i><GoogleG className="w-3.5 h-3.5" /></span>}
             </button>
           ))}
         </div>

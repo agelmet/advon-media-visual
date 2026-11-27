@@ -2022,3 +2022,37 @@ html.light .rvs-others-t { color: var(--ink); }
 }
 /* short laptop screens (e.g. 1366×657): a narrower frame so the whole spotlight fits under the header */
 @media (min-width: 1024px) and (max-height: 760px) { .rvs-frame { max-width: 1040px; margin-inline: auto; } }
+
+/* Reviews spotlight v2 (27 Nov 2026, later): websites shown whole, faster, swipe on phones, the reviews with no website at the end */
+.rvs-frame { touch-action: pan-y; }
+.rvs-shot { background: #0d1016; }
+html.light .rvs-shot { background: #0d1016; }
+.rvs-img { object-fit: contain; object-position: top center; }
+.rvs-in { animation: rvsImgIn .5s cubic-bezier(.22,.8,.2,1) both; }
+.rvs-out { animation: rvsImgOut .5s ease both; }
+@keyframes rvsImgIn { from { opacity: 0; transform: translateX(calc(var(--rvd, 1) * 26px)); } to { opacity: 1; transform: none; } }
+.rvs.from-left { --rvd: -1; }
+.rvs.from-right { --rvd: 1; }
+.rvs-slide { animation: rvsSlide .42s cubic-bezier(.22,.8,.2,1) both; }
+@keyframes rvsSlide { from { opacity: 0; transform: translateX(calc(var(--rvd, 1) * 30px)); } to { opacity: 1; transform: none; } }
+.rvs-cap { animation-duration: .4s; animation-delay: .06s; }
+.rvs-stars svg { animation-duration: .32s; animation-delay: calc(var(--s) * 45ms + 80ms); }
+.rvs-pre { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }
+.rvs-thumb img { object-fit: cover; }
+
+/* a review with no website: a Google panel the same size as the browser window, so nothing jumps */
+.rvs-nosite { justify-content: stretch; }
+.rvs-gpanel { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .7rem; text-align: center;
+  aspect-ratio: 4 / 3.24; border-radius: .9rem; border: 1px solid rgba(255,255,255,.1);
+  background: radial-gradient(80% 70% at 50% 0%, rgba(71,200,245,.14), transparent 70%), #0d1016; animation: rvsSlide .42s cubic-bezier(.22,.8,.2,1) both; }
+.rvs-gscore { color: #fff; font-weight: 900; font-size: clamp(2.6rem, 6vw, 4rem); line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.rvs-gtext { color: rgba(255,255,255,.72); font-weight: 600; font-size: .95rem; }
+.rvs-gbtn { margin-top: .5rem; width: auto !important; height: auto !important; padding: .5rem .95rem !important; }
+html.light .rvs-gpanel { border-color: var(--line); }
+.rvs-thumb-g { background: #fff !important; }
+.rvs-thumb-in { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; gap: .35rem; }
+.rvs-thumb-in i { width: 1.9rem; height: 1.9rem; border-radius: 50%; display: grid; place-items: center; color: #fff; font-style: normal; font-weight: 600; font-size: .95rem; }
+.rvs-gpanel { aspect-ratio: 4 / 3; box-sizing: content-box; padding-top: 2.4rem; flex: none; }
+@media (max-width: 1023px) { .rvs-gpanel { padding-top: 2.05rem; } }
+.rvs-more-row { min-height: 1.95rem; display: flex; align-items: flex-end; }
+.rvs-more-row .rvs-more { margin-top: 0; }
