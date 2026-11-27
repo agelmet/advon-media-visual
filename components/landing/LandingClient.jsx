@@ -248,7 +248,7 @@ export default function LandingClient() {
           {/* desktop: what the 130€ covers | the pitch, side by side; phones: stacked */}
           <div className="mt-12 grid gap-6 lg:grid-cols-2 lg:items-stretch text-left">
             <ScrollReveal delay={160} direction="left" className="h-full">
-              <div className="mv-frost relative overflow-hidden rounded-3xl p-7 md:p-9 h-full">
+              <div className="incl-plate mv-frost relative overflow-hidden rounded-3xl p-7 md:p-9 h-full">
                 <div className="relative z-10">
                   <p className="text-xs font-black tracking-[0.22em] uppercase text-electric-cyan mb-2">Τι περιλαμβάνουν τα 130€</p>
                   <p className="text-gray-300 text-[15px] leading-relaxed mb-5">
@@ -279,12 +279,12 @@ export default function LandingClient() {
       <section className="pb-24 pt-4 mv-amb alt">
         <div className="max-w-4xl lg:max-w-6xl mx-auto px-6">
           <ScrollReveal delay={60} direction="scale">
-            <div className="mv-frost relative overflow-hidden rounded-3xl p-8 md:p-12">
+            <div className="why-plate mv-frost relative overflow-hidden rounded-3xl p-8 md:p-12">
               <div className="relative z-10 space-y-6 lg:space-y-0 lg:grid lg:grid-cols-[1fr_1.08fr] lg:gap-0 why-cols">
                 <div className="why-col">
                   <h2 data-fx="mask" className="text-3xl md:text-4xl font-black text-white mb-7 lg:mb-6 font-display">Γιατί είναι δωρεάν;</h2>
                   <span className="why-num" aria-hidden="true">01</span>
-                  <p className="text-white text-lg md:text-xl lg:text-[1.22rem] leading-relaxed border-l-2 border-electric-cyan/70 pl-5 lg:border-l-0 lg:pl-0" data-lit>
+                  <p className="why-lead text-white text-lg md:text-xl lg:text-[1.22rem] leading-relaxed border-l-2 border-electric-cyan/70 pl-5 lg:border-l-0 lg:pl-0" data-lit>
                     Στη σημερινή εποχή, δεν νοείται επιχείρηση ή επαγγελματίας χωρίς παρουσία στο διαδίκτυο. Μια δική σας ιστοσελίδα δεν είναι πολυτέλεια — είναι αναγκαιότητα: είναι ο χώρος όπου σας βρίσκουν όσοι σας αναζητούν και όπου παρουσιάζεστε όπως πραγματικά σας αξίζει.
                   </p>
                 </div>

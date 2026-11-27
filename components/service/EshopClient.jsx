@@ -1,6 +1,6 @@
 // components/service/EshopClient.jsx
 // «Κατασκευή E-shop» (24 Nov 2026). Two ways, one shop:
-//   A · orders arrive by e-mail (cash on delivery / transfer), build 0€, 180€ + ΦΠΑ a year — recommended to start;
+//   A · orders arrive by e-mail (cash on delivery / transfer), build 0€, 240€ + ΦΠΑ a year — recommended to start;
 //   B · card payments through the owner's own Stripe account, 350€ + ΦΠΑ build, 240€ + ΦΠΑ a year.
 // Signature: a drawn shop + the order e-mail the owner receives, which changes with the A/B switch.
 // Everything is CSS/SVG — no images, nothing loaded from outside.
@@ -25,7 +25,7 @@ const T = {
 
     oLabel: 'Οι δύο επιλογές', oTitle: 'Ίδιο κατάστημα. Διαλέγετε πώς πληρώνει ο πελάτης.',
     oLead: 'Και στις δύο φτιάχνουμε εμείς όλο το κατάστημα και ανεβάζουμε τα προϊόντα σας. Η μόνη διαφορά: αν ο πελάτης πληρώνει online με κάρτα ή αργότερα, όταν του τηλεφωνήσετε.',
-    a: ['E-shop με παραγγελία στο email', '0€', 'κατασκευή', '180€ + ΦΠΑ τον χρόνο · φιλοξενία, domain και πίνακας διαχείρισης', [
+    a: ['E-shop με παραγγελία στο email', '0€', 'κατασκευή', '240€ + ΦΠΑ τον χρόνο · φιλοξενία, domain και πίνακας διαχείρισης', [
       'Ολοκληρωμένο κατάστημα: κατηγορίες, φωτογραφίες, τιμές, καλάθι',
       'Ο πελάτης στέλνει την παραγγελία με ένα κουμπί — έρχεται στο email σας',
       'Πληρωμή με αντικαταβολή, με κατάθεση ή στο κατάστημα — όπως ορίσετε',
@@ -64,7 +64,7 @@ const T = {
     cmpHead: ['', 'Παραγγελία στο email', 'Πληρωμή με κάρτα'],
     cmp: [
       ['Κατασκευή', '0€', '350€ + ΦΠΑ, μία φορά'],
-      ['Κάθε χρόνο', '180€ + ΦΠΑ', '240€ + ΦΠΑ'],
+      ['Κάθε χρόνο', '240€ + ΦΠΑ', '240€ + ΦΠΑ'],
       ['Πώς πληρώνει ο πελάτης', 'Αντικαταβολή, κατάθεση ή στο κατάστημα', 'Με κάρτα, τη στιγμή της παραγγελίας'],
       ['Προμήθεια ανά παραγγελία', 'Καμία', 'Περίπου 1,5% + 0,25€ (Stripe)'],
       ['Σύνδεση με τράπεζα', 'Δεν χρειάζεται', 'Ναι, μέσω του λογαριασμού σας στη Stripe'],
@@ -84,7 +84,7 @@ const T = {
 
     bandLabel: 'Ας ξεκινήσουμε', bandTitle: 'Πείτε μας τι πουλάτε. Το κατάστημα το στήνουμε εμείς.',
     bandLead: 'Μια σύντομη δωρεάν κλήση αρκεί: τι προϊόντα έχετε, πώς στέλνετε, και ποια από τις δύο επιλογές σας ταιριάζει.',
-    bandCta: 'Θέλω e-shop', trust: ['0€ κατασκευή', '180€ + ΦΠΑ τον χρόνο', '260+ ιστοσελίδες', '140+ κριτικές 5★'],
+    bandCta: 'Θέλω e-shop', trust: ['0€ κατασκευή', '240€ + ΦΠΑ τον χρόνο', '260+ ιστοσελίδες', '140+ κριτικές 5★'],
   },
   en: {
     label: 'E-shop Creation',
@@ -137,7 +137,7 @@ const T = {
     cmpHead: ['', 'Order by email', 'Card payment'],
     cmp: [
       ['Build', '€0', '€350 + VAT, once'],
-      ['Every year', '€180 + VAT', '€240 + VAT'],
+      ['Every year', '€240 + VAT', '€240 + VAT'],
       ['How the customer pays', 'On delivery, by transfer or in store', 'By card, when ordering'],
       ['Fee per order', 'None', 'About 1.5% + €0.25 (Stripe)'],
       ['Bank connection', 'Not needed', 'Yes, through your Stripe account'],
@@ -157,7 +157,7 @@ const T = {
 
     bandLabel: 'Let’s start', bandTitle: 'Tell us what you sell. We build the shop.',
     bandLead: 'A short free call is enough: what products you have, how you ship, and which of the two options suits you.',
-    bandCta: 'I want an e-shop', trust: ['€0 build', '€180 + VAT a year', '260+ websites', '140+ 5★ reviews'],
+    bandCta: 'I want an e-shop', trust: ['€0 build', '€240 + VAT a year', '260+ websites', '140+ 5★ reviews'],
   },
 };
 

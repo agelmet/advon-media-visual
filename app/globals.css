@@ -1858,3 +1858,25 @@ html.light .save-field input[type=range] { accent-color: var(--cy); }
   .save-calc-grid { grid-template-columns: minmax(0, 1fr); gap: .8rem; }
   .save-out { grid-template-columns: minmax(0, 1fr); gap: .5rem; }
 }
+
+/* Phones (27 Nov 2026): «Γιατί είναι δωρεάν;» and the pitch plates looked boxed-in — a frosted card with
+   32px padding inside a 24px page margin left a narrow column (one or two words per line). On phones the
+   «why» text sits on the page itself (no card), the lead keeps a slim cyan bar, the reasons are split by
+   short hairlines; the remaining plates get tighter padding so the text uses the width. */
+@media (max-width: 767px) {
+  .why-plate { background: none !important; border: 0 !important; box-shadow: none !important; border-radius: 0 !important; padding: 0 !important; overflow: visible !important; }
+  .why-plate::before, .why-plate::after { display: none !important; }
+  .why-plate h2 { margin-bottom: 1.1rem; }
+  .why-plate .why-lead { padding-left: .9rem; font-size: 1.08rem; line-height: 1.6; }
+  .why-plate .why-col + .why-col > div { position: relative; padding-top: 1.4rem; }
+  .why-plate .why-col + .why-col > div::before { content: ''; position: absolute; top: 0; left: 0; width: 2.6rem; height: 1px; background: linear-gradient(90deg, rgba(71,200,245,.75), transparent); }
+  .pitch-quote.mv-frost { padding: 1.35rem 1.25rem !important; border-radius: 1.1rem; }
+  .incl-plate { padding: 1.35rem 1.25rem !important; border-radius: 1.1rem; }
+}
+@media (max-width: 767px) {
+  /* the quote mark and the cyan edge go back to floating (the frost rule made them take up space) */
+  .pitch-quote.mv-frost > span[aria-hidden] { position: absolute !important; top: .15rem; left: .95rem; font-size: 3.4rem; }
+  .pitch-quote.mv-frost > div[aria-hidden] { position: absolute !important; }
+  .pitch-quote.mv-frost { padding-top: 2.1rem !important; }
+  .pitch-quote.mv-frost > p { padding-left: .35rem; font-size: 1.08rem; }
+}

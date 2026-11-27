@@ -150,14 +150,14 @@ export default function KataskeviClient() {
       <section className="pb-24 pt-6 mv-amb alt">
         <div className="max-w-4xl lg:max-w-6xl mx-auto px-6">
           <ScrollReveal delay={60} direction="scale">
-            <div className="mv-frost relative overflow-hidden rounded-3xl p-8 md:p-12">
+            <div className="why-plate mv-frost relative overflow-hidden rounded-3xl p-8 md:p-12">
               <div className="relative z-10 space-y-6 lg:space-y-0 lg:grid lg:grid-cols-[1fr_1.08fr] lg:gap-0 why-cols">
                 <div className="why-col">
                   <h2 data-fx="mask" className="text-3xl md:text-4xl font-black text-white mb-7 lg:mb-6 font-display">
                     {lang === 'el' ? 'Γιατί είναι Δωρεάν;' : 'Why is it Free?'}
                   </h2>
                   <span className="why-num" aria-hidden="true">01</span>
-                  <p className="text-white text-lg md:text-xl lg:text-[1.22rem] leading-relaxed border-l-2 border-electric-cyan/70 pl-5 lg:border-l-0 lg:pl-0" data-lit>
+                  <p className="why-lead text-white text-lg md:text-xl lg:text-[1.22rem] leading-relaxed border-l-2 border-electric-cyan/70 pl-5 lg:border-l-0 lg:pl-0" data-lit>
                     {lang === 'el'
                       ? 'Στη σημερινή εποχή, δεν νοείται επιχείρηση ή επαγγελματίας χωρίς παρουσία στο διαδίκτυο. Μια δική σας ιστοσελίδα δεν είναι πολυτέλεια — είναι αναγκαιότητα: είναι ο χώρος όπου σας βρίσκουν όσοι σας αναζητούν και όπου παρουσιάζεστε όπως πραγματικά σας αξίζει — με το δικό σας περιεχόμενο, τα δικά σας λόγια, τη δική σας ταυτότητα.'
                       : "In today's world, no business or professional can afford to be invisible online. A website of your own isn't a luxury — it's a necessity: it's where people find you when they're looking for you, and where you present yourself the way you truly deserve — with your own content, your own words, your own identity."}
