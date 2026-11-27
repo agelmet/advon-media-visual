@@ -121,6 +121,20 @@ const SLIDES = [...PAIRS, ...OTHERS.map((review) => ({ review, site: null }))];
 const host = (url) => url.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
 const SLIDE_MS = 3200;
 
+// How a website picture sits in its window, so there is never an empty band under it and its sides are never cut:
+// a picture at least as wide as the window is shown whole; a taller one fills the window from the top
+// (only its bottom strip, under the caption, is left out). The first guess is by file (our own 4:3 thumbnails
+// live in /img/portfolio/), then the real size decides once the picture has loaded.
+const fitOf = (src) => (typeof src === 'string' && src.startsWith('/img/portfolio/') ? 'cover' : 'contain');
+const fitImg = (e) => {
+  const img = e.currentTarget;
+  const box = img.parentElement;
+  if (!img.naturalWidth || !box || !box.clientHeight) return;
+  const pic = img.naturalWidth / img.naturalHeight;
+  const win = box.clientWidth / box.clientHeight;
+  img.dataset.fit = pic >= win * 1.01 ? 'contain' : 'cover';
+};
+
 export function Spotlight({ lang, reduced }) {
   const el = lang === 'el';
   const n = SLIDES.length;
@@ -208,9 +222,9 @@ export function Spotlight({ lang, reduced }) {
               </span>
               <span className="rvs-shot">
                 {before && before.site && before.site !== site && (
-                  <Image key={`o-${prev}`} src={before.site.image} alt="" fill sizes={sizes} className="rvs-img rvs-out" />
+                  <Image key={`o-${prev}`} src={before.site.image} alt="" fill sizes={sizes} className="rvs-img rvs-out" data-fit={fitOf(before.site.image)} onLoad={fitImg} />
                 )}
-                <Image key={`c-${i}`} src={site.image} alt={siteName} fill sizes={sizes} className="rvs-img rvs-in" priority={false} />
+                <Image key={`c-${i}`} src={site.image} alt={siteName} fill sizes={sizes} className="rvs-img rvs-in" priority={false} data-fit={fitOf(site.image)} onLoad={fitImg} />
                 <span key={`cap-${i}`} className="rvs-cap">
                   <span className="rvs-cap-t">{siteName}</span>
                   <span className="rvs-cap-b">

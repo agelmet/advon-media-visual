@@ -2056,3 +2056,19 @@ html.light .rvs-gpanel { border-color: var(--line); }
 @media (max-width: 1023px) { .rvs-gpanel { padding-top: 2.05rem; } }
 .rvs-more-row { min-height: 1.95rem; display: flex; align-items: flex-end; }
 .rvs-more-row .rvs-more { margin-top: 0; }
+
+/* Reviews spotlight v3 (27 Nov 2026, 16:00): no empty band under a website picture on a computer.
+   The window is wider there (16:10); a wide picture is shown whole, a 4:3 one fills it from the top (sides never cut).
+   The Google panel of a review with no website follows the same shape, so the frame never changes height. */
+.rvs-frame { --rvr: 4 / 3; }
+.rvs-shot, .rvs-gpanel { aspect-ratio: var(--rvr); }
+.rvs-img[data-fit="cover"] { object-fit: cover; object-position: top center; }
+@media (min-width: 1024px) {
+  .rvs-frame { --rvr: 16 / 10; }
+  .rvs-grid { grid-template-columns: minmax(0, 1.42fr) minmax(0, 1fr); }
+  .rvs-cap { padding-top: 3.2rem; background: linear-gradient(180deg, rgba(13,16,22,0) 0%, rgba(13,16,22,.8) 44%, #0d1016 78%); }
+  /* the website window alone decides the height of the frame: a long review never makes it taller (it gets «Περισσότερα») */
+  .rvs-text { flex: 1 1 0; height: 0; min-height: 0; }
+  .rvs-staronly { flex: 1 1 0; min-height: 0; }
+}
+@media (min-width: 1024px) and (max-height: 760px) { .rvs-frame { max-width: 1160px; } }
