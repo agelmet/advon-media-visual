@@ -34,7 +34,7 @@ export const metadata = {
 export const viewport = { themeColor: '#050608' };
 
 // Light / dark (24 Nov 2026): applied before the first paint so the page never flashes the other theme.
-const THEME_BOOT = `(function(){try{var t=localStorage.getItem('advon-theme');if(t==='light'){var d=document.documentElement;d.classList.add('light');d.style.colorScheme='light';var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#f6f5f1')}}catch(e){}})();`;
+const THEME_BOOT = `(function(){try{var t=localStorage.getItem('advon-theme');if(t==='light'&&!/^\/istoselida(\/|$)/.test(location.pathname)){var d=document.documentElement;d.classList.add('light');d.style.colorScheme='light';var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#f6f5f1')}}catch(e){}})();`;
 
 const MV_BOOT = `(function(){var d=document.documentElement;try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;d.classList.add('mv-js');var force=/[?&]intro=1/.test(location.search);if(!document.hidden&&(force||!sessionStorage.getItem('advon-intro'))){sessionStorage.setItem('advon-intro','1');d.classList.add('mv-intro');setTimeout(function(){d.classList.remove('mv-intro','mvi-dock')},3000)}}catch(e){}setTimeout(function(){if(!window.__mvOn){var n=document.querySelectorAll('[data-io],main h2');for(var i=0;i<n.length;i++)n[i].classList.add('in')}},6000)})();`;
 

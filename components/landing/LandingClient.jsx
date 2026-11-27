@@ -197,7 +197,7 @@ export default function LandingClient() {
       {/* ─── THE RIVER — real client sites, moving (27 Nov 2026) ─── */}
       <SiteRiver className="river-up">
         <a href="#portfolio" onClick={(e) => goTo(e, 'portfolio')} className="river-link">
-          Πραγματικές ιστοσελίδες πελατών μας — δείτε περισσότερες
+          Δείτε πάνω από 200 live σελίδες πελατών μας
           {arrow('w-4 h-4')}
         </a>
       </SiteRiver>

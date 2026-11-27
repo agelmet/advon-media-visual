@@ -6,7 +6,7 @@ import { useLangStore } from '@/store/langStore';
 import { usePathname } from 'next/navigation';
 import { NAV_SERVICES as services } from '@/lib/nav';
 import { isLanding } from '@/lib/landing';
-import ThemeToggle from '@/components/ThemeToggle';
+import ThemeToggle, { paintTheme, storedTheme } from '@/components/ThemeToggle';
 
 export default function Header() {
   const { lang, toggleLang } = useLangStore();
@@ -30,6 +30,9 @@ export default function Header() {
   // Every new page starts at the top (27 Nov 2026: going from /istoselida to the home page kept the
   // old scroll position, so the visitor landed half-way down the home page). Back/forward keeps
   // the browser's own scroll position.
+  // The ads page always opens dark (27 Nov 2026); every other page follows the visitor's own choice.
+  useEffect(() => { paintTheme(landing ? 'dark' : storedTheme()); }, [landing]);
+
   useEffect(() => {
     const onPop = () => { window.__advonPop = Date.now(); };
     window.addEventListener('popstate', onPop);

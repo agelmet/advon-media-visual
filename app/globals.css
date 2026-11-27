@@ -1811,3 +1811,11 @@ html.light .river-link { color: var(--cy); background: rgba(255,255,255,.8); bor
 .river { z-index: 2; }
 .river-view { pointer-events: none; }
 @media (min-width: 768px) { .river.river-up { margin-top: -112px; } .river.river-up-s { margin-top: -44px; } }
+
+/* 27 Nov 2026 (later): the home river sits closer to «Κάντε scroll», and on phones both rivers move a bit faster */
+@media (min-width: 768px) { .river.river-up-s { margin-top: -104px; } }
+@media (max-width: 767px) {
+  .river.river-up-s { margin-top: -92px; }
+  .river-row { animation-duration: 50s; }
+  .river-row.r { animation-duration: 60s; }
+}

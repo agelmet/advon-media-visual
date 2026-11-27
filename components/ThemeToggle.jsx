@@ -6,6 +6,21 @@
 import { useEffect, useState } from 'react';
 import { useLangStore } from '@/store/langStore';
 
+// Paint a theme without remembering it (27 Nov 2026: the ads page /istoselida always opens dark,
+// whatever the visitor chose on the rest of the site; leaving it puts their own choice back).
+export function paintTheme(t) {
+  const d = document.documentElement;
+  if (d.classList.contains('light') === (t === 'light')) return;
+  d.classList.toggle('light', t === 'light');
+  d.style.colorScheme = t === 'light' ? 'light' : 'dark';
+  const m = document.querySelector('meta[name="theme-color"]');
+  if (m) m.setAttribute('content', t === 'light' ? '#f6f5f1' : '#050608');
+  window.dispatchEvent(new Event('advon-theme'));
+}
+export function storedTheme() {
+  try { return localStorage.getItem('advon-theme') === 'light' ? 'light' : 'dark'; } catch (e) { return 'dark'; }
+}
+
 export function setTheme(t) {
   const d = document.documentElement;
   d.classList.toggle('light', t === 'light');
